@@ -1,0 +1,22 @@
+# Team registry. Read by ai-tools to attribute contributions to a person.
+#
+# The git emails matter: contribution attribution and the weekly log both resolve an email to a
+# member through this file. If you commit from a new machine with a different email, add it here
+# rather than letting the entry fall through to "unknown".
+
+members:
+  - id: mikhail
+    name: Mikhail Novikov
+    roll: GE26Z858
+    github: rikire
+    emails:
+      - rizireY@yandex.ru
+
+  - id: abdirakhim
+    name: Abdirakhim Ismailov
+    roll: GE26Z860
+    github: abdra04-gif
+    emails: []
+    # TODO: add Abdirakhim's git email before the first ownership run.
+
+contact: ge26z860@smail.iitm.ac.in

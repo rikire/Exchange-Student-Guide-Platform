@@ -1,0 +1,88 @@
+# Phase 0 — Initialisation
+
+**Status: in progress.** Target: 6 September 2026.
+
+## Goal
+
+Prepare the repository and the process so that the work that follows is traceable and protected from
+documentation drifting away from the code — before the first line of feature code exists.
+
+## Steps
+
+- [x] Maven wrapper, since neither Maven nor make is installed locally
+- [x] Multi-module build (`app` + `tools`); the Spring Boot application starts empty
+- [x] `.editorconfig`, `.gitattributes`, `.dockerignore`
+- [x] `tools/` module producing `ai-tools.jar`: `hook prompt|guard|stop|note`, `commit-msg`
+- [x] `CLAUDE.md` and `docs/ai/` — the agent's instructions
+- [x] `docs/repository-map.md` — ID space, anchors, commit convention
+- [x] Documentation skeleton: requirements, cjm, architecture, features, adr, roadmap, team,
+      stakeholder, course, design, handoff, verification, viva
+- [x] `docs/course/rubric.md` — all 25 marks mapped to evidence
+- [x] Claude Code hooks and slash commands
+- [x] Git hooks and `scripts/`
+- [x] CI, pull request and issue templates
+- [x] `.env.example`, `README.md`, `docker-compose.yml` placeholder
+- [ ] `docs/team/members.yml` completed — Abdirakhim's git email is still missing
+- [ ] Article format fixed and the first three to five drafts written
+
+## Readiness criterion
+
+`scripts/check.sh` passes on the empty scaffold; `scripts/hooks.sh` installs the git hooks; the
+prompt journal writes non-empty entries — verified by hand, not assumed.
+
+## Changes to the original plan
+
+[docs/ai/PLAN-PROMPT.md](../ai/PLAN-PROMPT.md) is frozen, so deviations are recorded here instead.
+
+- **Java 17 to Java 21** (3 Sep). The plan settled on 17 only because it was the JDK that happened to
+  be installed. Temurin 21 is now installed and is the default, which also removes a smaller problem:
+  the local JDK was GraalVM while CI uses Temurin, and that mismatch is a class of "works on my
+  machine" waiting to happen. Nothing in the code needs a 21-only feature; this is alignment, not
+  capability.
+  **Consequence for the team:** Abdirakhim needs Temurin 21 as well before his build will work.
+- **Maven is deliberately not installed.** The wrapper pins 3.9.16, which is what makes the build
+  identical on both machines and in CI. A system-wide Maven would be a second way to build, at a
+  possibly different version.
+- **The prompt journal is written in English** (3 Sep). Our conversation is in Russian and the
+  evaluator reads English, so `ai-tools hook english` takes the rendering from the agent during the
+  turn. The original prompt is kept next to the translation: it is the artefact, and the translation
+  is an interpretation of it.
+- **A sixth rule was added: sharpen a vague prompt before acting on it** (3 Sep). New document
+  [docs/ai/prompting.md](../ai/prompting.md) and the `/sharpen` command. It is deliberately narrow —
+  restating an unambiguous instruction is noise, and a rule that produces noise gets skipped when it
+  matters. `stop-and-ask.md` was amended at the same time so the two do not contradict each other:
+  an ambiguous *request* is sharpened and carried on with, while an ambiguous *written requirement*
+  still stops.
+- **`.vscode/settings.json` is committed** (3 Sep). User-level VS Code settings on one machine
+  pinned JDK 17 into the integrated terminal's environment, which would make every terminal build
+  fail against `release 21`. The workspace file cancels that override and puts `JAVA_HOME/bin`
+  first on PATH. It deliberately contains no machine-specific paths, so it works for both of us;
+  `.gitignore` now excludes `.vscode/*` but keeps `settings.json`.
+
+## Verified
+
+All of the following was run, not assumed. Dates are when the check actually passed.
+
+- `scripts/check.sh` — 19 tests green across both modules, Spotless enforced (2 Sep).
+- Spring Boot 3.5.16 and Spring Modulith 1.4.13 resolve and run together. This was the version risk
+  flagged in the plan, and it is now closed (2 Sep).
+- `ai-tools commit-msg` accepts a conforming message and exits 1 on a non-conforming one (2 Sep).
+- The `guard` hook asks on `docs/requirements/functional.md` and stays silent on an ordinary source
+  file (2 Sep).
+- The journal writes a non-empty entry containing the prompt, the outcome and the checks (2 Sep).
+- **Detection of edits made by hand works**: a modified file and a deleted file between two turns
+  were both reported. This is the one thing the assistant cannot learn on its own, so it was worth
+  testing rather than trusting (2 Sep).
+- `scripts/hooks.sh` builds the jar and sets `core.hooksPath` to `.githooks` (2 Sep).
+- Clean build on Temurin 21 in a fresh shell with no environment overrides — 25 tests green
+  (3 Sep).
+- The journal keeps the original prompt and adds the English rendering beside it, and a translation
+  does not leak into the next entry (3 Sep, `JournalTest`).
+
+## Open questions
+
+1. Abdirakhim's git email, for `docs/team/members.yml`. Attribution falls back to "unknown" until it
+   is there, and the weekly log cannot resolve his commits.
+2. Whether to keep the `PostToolUse` documentation reminder out of phase 0. It is currently not
+   wired: the mapping table it would enforce points at documents that do not exist yet, so it would
+   fire on everything. Planned for phase 2 with the rest of the gate.
