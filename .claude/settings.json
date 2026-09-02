@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": ["-jar", "tools/target/ai-tools.jar", "hook", "prompt"],
+            "timeout": 30,
+            "statusMessage": "Recording the prompt in the journal"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": ["-jar", "tools/target/ai-tools.jar", "hook", "guard"],
+            "timeout": 30,
+            "statusMessage": "Checking whether this file belongs to the human"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": ["-jar", "tools/target/ai-tools.jar", "hook", "stop"],
+            "timeout": 120,
+            "statusMessage": "Closing the journal entry"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw:*)",
+      "Bash(java -jar tools/target/ai-tools.jar:*)",
+      "Bash(scripts/check.sh:*)",
+      "Bash(scripts/hooks.sh:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(docker compose config:*)"
+    ]
+  }
+}
