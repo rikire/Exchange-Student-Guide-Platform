@@ -13,6 +13,7 @@ import java.util.List;
  *   hook stop              Stop             — close the journal entry
  *   hook note &lt;text&gt;       add a note to the current journal entry
  *   hook english           supply the English rendering of the prompt and the outcome
+ *   hook author &lt;id&gt;       record who is sending the prompts, when git could not say
  *   commit-msg &lt;file&gt;      check the commit message convention
  * </pre>
  *

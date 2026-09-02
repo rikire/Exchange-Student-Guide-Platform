@@ -10,7 +10,7 @@ final class HookCommand {
 
     static void run(String[] args) throws Exception {
         if (args.length == 0) {
-            System.err.println("usage: ai-tools hook <prompt|guard|stop|note>");
+            System.err.println("usage: ai-tools hook <prompt|guard|stop|note|english|author>");
             System.exit(64);
         }
         switch (args[0]) {
@@ -19,6 +19,7 @@ final class HookCommand {
             case "stop" -> stop();
             case "note" -> note(String.join(" ", List.of(args).subList(1, args.length)));
             case "english" -> english(java.util.Arrays.copyOfRange(args, 1, args.length));
+            case "author" -> author(java.util.Arrays.copyOfRange(args, 1, args.length));
             default -> System.err.println("ai-tools: unknown hook " + args[0]);
         }
     }
@@ -97,6 +98,11 @@ final class HookCommand {
         List<String> humanEdits = journal.startEntry(event.prompt());
 
         StringBuilder message = new StringBuilder(SHARPEN_REMINDER);
+
+        String unresolved = resolveAuthor(repo, journal);
+        if (unresolved != null) {
+            message.append("\n\n").append(unresolved);
+        }
         if (!humanEdits.isEmpty()) {
             message.append("\n\nFiles the human changed by hand since your last answer:\n");
             humanEdits.forEach(line -> message.append("- ").append(line).append('\n'));
@@ -106,6 +112,75 @@ final class HookCommand {
                     .append("(docs/ai/collaboration.md).");
         }
         HookEvent.emitContext("UserPromptSubmit", message.toString());
+    }
+
+    /**
+     * Works out who is sending the prompts, and records it on the session.
+     *
+     * <p>A hook cannot put a question to a person: it can only hand context to the agent. So when
+     * the git identity matches nobody in the registry, this returns the text that tells the agent to
+     * ask, and the answer comes back through {@code hook author}.
+     *
+     * @return null once the author is known, otherwise the instruction to ask the human
+     */
+    private static String resolveAuthor(Repo repo, Journal journal) throws Exception {
+        if (!journal.author().isBlank()) {
+            return null;
+        }
+        Members members = Members.load(repo);
+        String email = Members.gitEmail(repo).orElse("");
+
+        var matched = members.byEmail(email);
+        if (matched.isPresent()) {
+            journal.setAuthorIfUnknown(matched.get().id(), matched.get().name());
+            journal.save();
+            return null;
+        }
+
+        String known = members.all().isEmpty()
+                ? "(the registry is empty)"
+                : members.all().stream()
+                        .map(m -> m.id() + " = " + m.name())
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse("");
+        return "The author of this prompt could not be determined: the git identity "
+                + (email.isBlank() ? "is not configured" : "is " + email)
+                + ", which matches nobody in docs/team/members.yml. Known members: " + known + ".\n\n"
+                + "Ask which of them is sending these prompts, before doing the work, and record the answer:\n"
+                + "  java -jar tools/target/ai-tools.jar hook author <id>\n\n"
+                + "It is asked once per session, not once per prompt. Then propose adding this email to "
+                + "docs/team/members.yml so the question stops being necessary — that file is the human's "
+                + "to change, so propose it and wait.";
+    }
+
+    /**
+     * Records the author the human named when git could not identify them.
+     *
+     * <p>Fills a blank only. Overwriting a resolved author would turn this into a way to attribute
+     * work to whoever is convenient, and the journal would stop being evidence of anything.
+     */
+    private static void author(String[] args) throws Exception {
+        if (args.length == 0) {
+            System.err.println("usage: ai-tools hook author <member-id>");
+            System.exit(64);
+        }
+        Repo repo = Repo.find(null);
+        Members members = Members.load(repo);
+        var member = members.byId(args[0]);
+        if (member.isEmpty()) {
+            System.err.println("ai-tools: no member with id " + args[0] + " in docs/team/members.yml");
+            System.exit(64);
+            return;
+        }
+
+        Journal journal = Journal.open(repo, latestSession(repo));
+        if (!journal.setAuthorIfUnknown(member.get().id(), member.get().name())) {
+            System.err.println("ai-tools: the author of this session is already " + journal.author()
+                    + "; this command fills a blank, it does not reassign work.");
+            System.exit(1);
+            return;
+        }
+        journal.save();
     }
 
     /** Asks the human before an edit lands in a file that belongs to their decision space. */

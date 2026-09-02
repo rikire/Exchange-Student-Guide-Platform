@@ -63,6 +63,29 @@ public final class Journal {
     }
 
     /**
+     * Records who sent the prompts in this session.
+     *
+     * <p>Resolved from the git identity where possible. When it cannot be, the agent asks the human
+     * and calls this — which is why it fills a blank but never overwrites: an answer typed into the
+     * chat must not be able to contradict what git says, or the record stops being evidence.
+     *
+     * @return false when an author is already known and was therefore kept
+     */
+    public boolean setAuthorIfUnknown(String memberId, String displayName) {
+        if (!state.path("authorName").asText("").isBlank()) {
+            return false;
+        }
+        state.put("authorId", memberId);
+        state.put("authorName", displayName);
+        return true;
+    }
+
+    /** The author of this session's prompts, or empty when it is still unresolved. */
+    public String author() {
+        return state.path("authorName").asText("");
+    }
+
+    /**
      * Records an English rendering of the prompt and of the outcome for the current entry.
      *
      * <p>The journal is read by an English-speaking evaluator, but the conversation is not always in
@@ -89,6 +112,16 @@ public final class Journal {
 
         StringBuilder entry = new StringBuilder();
         entry.append("\n## ").append(ZonedDateTime.now(ZONE).format(TIME)).append("\n\n");
+
+        // Per entry rather than once per file: a session is usually one person, but two people at
+        // one machine would break a file-level header silently, and this costs one line.
+        String author = author();
+        entry.append("**Author:** ")
+                .append(
+                        author.isBlank()
+                                ? "unresolved — the git identity matched nobody in docs/team/members.yml"
+                                : author)
+                .append("\n\n");
 
         // The original prompt is the artefact the course asks us to show; the translation is an
         // interpretation of it. Keeping both lets a reader of either language check the other.

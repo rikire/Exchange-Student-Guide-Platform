@@ -109,6 +109,52 @@ class JournalTest {
     }
 
     @Test
+    void names_the_author_of_every_entry() throws IOException {
+        Journal journal = Journal.open(repo, "session-g");
+        journal.setAuthorIfUnknown("mikhail", "Mikhail Novikov");
+        journal.startEntry("do the thing");
+        journal.finishEntry("Done.", List.of(), List.of());
+
+        assertTrue(journalContent().contains("**Author:** Mikhail Novikov"));
+    }
+
+    @Test
+    void says_so_plainly_when_the_author_could_not_be_resolved() throws IOException {
+        Journal journal = Journal.open(repo, "session-h");
+        journal.startEntry("do the thing");
+        journal.finishEntry("Done.", List.of(), List.of());
+
+        assertTrue(journalContent().contains("unresolved"), "a blank author must read as unresolved, not as absent");
+    }
+
+    @Test
+    void an_author_named_by_hand_cannot_overwrite_one_git_resolved() throws IOException {
+        Journal journal = Journal.open(repo, "session-i");
+        journal.setAuthorIfUnknown("mikhail", "Mikhail Novikov");
+
+        assertFalse(
+                journal.setAuthorIfUnknown("abdirakhim", "Abdirakhim Ismailov"),
+                "filling a blank is allowed; reassigning work to someone else is not");
+        assertEquals("Mikhail Novikov", journal.author());
+    }
+
+    @Test
+    void the_author_carries_across_entries_in_one_session() throws IOException {
+        Journal first = Journal.open(repo, "session-j");
+        first.setAuthorIfUnknown("mikhail", "Mikhail Novikov");
+        first.startEntry("first");
+        first.finishEntry("one", List.of(), List.of());
+        first.save();
+
+        Journal second = Journal.open(repo, "session-j");
+        second.startEntry("second");
+        second.finishEntry("two", List.of(), List.of());
+
+        // The question is asked once per session, not once per prompt.
+        assertEquals(2, occurrences(journalContent(), "**Author:** Mikhail Novikov"));
+    }
+
+    @Test
     void records_the_files_the_human_changed_by_hand() throws IOException {
         Journal journal = Journal.open(repo, "session-f");
         journal.startEntry("carry on");
