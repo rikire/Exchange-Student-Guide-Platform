@@ -56,10 +56,38 @@ final class HookCommand {
     }
 
     /**
-     * Opens a journal entry and tells the assistant which files the human touched by hand.
+     * The rule that CLAUDE.md cannot enforce on its own.
      *
-     * <p>Without this message such an edit is silently lost: the assistant sees the file only when
-     * it happens to read it again, and by then it may have already overwritten it.
+     * <p>Instructions are read once when a session starts and then compete with everything else in
+     * the context window. That is fine for rules with a gate behind them, and not fine for this one,
+     * which applies at exactly one moment: when a request arrives. So it is delivered with every
+     * request instead of being trusted to survive.
+     *
+     * <p>It is emitted unconditionally rather than guessed at from the wording of the prompt.
+     * A heuristic over imperative verbs in two languages would miss the cases that matter, and a
+     * reminder that fires only sometimes teaches the reader to ignore it.
+     */
+    private static final String SHARPEN_REMINDER =
+            """
+            Before writing code, a document or a schema: if this request leaves open anything that \
+            changes what you would build - the input contract, the boundary, the acceptance \
+            condition - ask closed questions with a suggested answer for each, and WAIT.
+
+            Choosing a sensible default and announcing it is not compliance: the target is still one \
+            nobody picked. "The task is small" is not an exception; a five-line function has an input \
+            contract whether or not anyone wrote it down.
+
+            Do not ask when the request is a direct command with a checkable result, when it already \
+            states its acceptance condition, or when the answer is already written down in a \
+            requirement, an ADR or the roadmap - cite it instead. Details: docs/ai/prompting.md.\
+            """;
+
+    /**
+     * Opens a journal entry, carries the sharpening rule into the turn, and reports the files the
+     * human touched by hand.
+     *
+     * <p>The report of hand edits exists because the assistant does not observe the file system
+     * between turns: without it such an edit is silently lost, and may be overwritten.
      */
     private static void prompt() throws Exception {
         HookEvent event = HookEvent.readFromStdin();
@@ -67,15 +95,16 @@ final class HookCommand {
         Journal journal = Journal.open(repo, event.sessionId());
 
         List<String> humanEdits = journal.startEntry(event.prompt());
-        if (humanEdits.isEmpty()) {
-            return;
-        }
 
-        StringBuilder message = new StringBuilder("Files the human changed by hand since your last answer:\n");
-        humanEdits.forEach(line -> message.append("- ").append(line).append('\n'));
-        message.append("\nRead them before continuing: this is a correction of course, not something to argue with.\n")
-                .append("If an edit contradicts an instruction, propose changing the instruction ")
-                .append("(docs/ai/collaboration.md).");
+        StringBuilder message = new StringBuilder(SHARPEN_REMINDER);
+        if (!humanEdits.isEmpty()) {
+            message.append("\n\nFiles the human changed by hand since your last answer:\n");
+            humanEdits.forEach(line -> message.append("- ").append(line).append('\n'));
+            message.append(
+                            "\nRead them before continuing: this is a correction of course, not something to argue with.\n")
+                    .append("If an edit contradicts an instruction, propose changing the instruction ")
+                    .append("(docs/ai/collaboration.md).");
+        }
         HookEvent.emitContext("UserPromptSubmit", message.toString());
     }
 
