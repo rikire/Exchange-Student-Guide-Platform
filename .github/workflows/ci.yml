@@ -9,12 +9,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Majors verified against the release feeds on 3 Sep 2026, not recalled.
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: "21"
           distribution: temurin
