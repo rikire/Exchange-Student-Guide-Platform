@@ -1,7 +1,23 @@
 # Prompt journal
 
-One file per session, named `YYYY-MM-DD-<session>.md`. Each entry records the prompt, what came out
-of it, and **what the human changed by hand afterwards**.
+One file per session, named `YYYY-MM-DD-<session>.md`. Each entry records who sent the prompt, the
+prompt itself, what came out of it, and **what the human changed by hand afterwards**.
+
+## Who sent the prompt
+
+Resolved from `git config user.email` against [docs/team/members.yml](../../team/members.yml) — the
+same registry the weekly contribution log uses, because two registries would disagree inside a week.
+
+When the email matches nobody, the hook cannot ask a person; it can only hand context to the agent.
+So it tells the agent to ask, and the answer comes back through
+`ai-tools hook author <id>`. Asked once per session, not once per prompt.
+
+That command **fills a blank and never overwrites**. An answer typed into a chat must not be able to
+contradict what git says, or the record stops being evidence and becomes a claim.
+
+**What this can and cannot show.** It records whose machine the prompt came from, not who was
+holding the keyboard. For two people at one machine that is false precision, and it is said here so
+that nobody presents the journal at the viva as more than it is.
 
 The files are written by `ai-tools hook`, wired to the `UserPromptSubmit` and `Stop` hooks in
 [.claude/settings.json](../../../.claude/settings.json). Do not write entries by hand; to add your

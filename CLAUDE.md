@@ -93,6 +93,9 @@ scripts/hooks.sh                # build the jar and install the git hooks
 
   The original prompt is kept alongside the translation: it is the artefact, and the translation is
   an interpretation of it. Skip the flag that is already English.
+- **Authorship** — each journal entry names who sent the prompt, resolved from the git identity via
+  `docs/team/members.yml`. If the hook says it could not tell, ask which member is at the keyboard
+  and record it with `hook author <id>` before doing the work.
 - **Report of the human's edits** — if files changed between turns, you receive the list. Read it
   before continuing.
 - **Confirmation on protected files** — editing requirements, ADRs, the schema, the stakeholder
