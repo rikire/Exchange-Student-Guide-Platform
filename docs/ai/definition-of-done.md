@@ -27,6 +27,19 @@ for the other person.
 - The test checks behaviour, not implementation: renaming a private method must not break it.
 - A test for a fixed bug reproduces the exact scenario that broke.
 
+**A red test says one of two things: the code is wrong, or the expectation is wrong. Work out which,
+before changing either.**
+
+An expectation edited to match the actual output is not a test that passed — it is a test that was
+deleted, and deleted in the least visible way, because the suite is green afterwards. If the
+expectation really was wrong, say so in as many words and say why the new one is right; that
+sentence is what a reviewer needs and what the diff cannot show.
+
+This is not hypothetical. It happened here on 3 September, on a throwaway palindrome check: an
+expectation was wrong, the run went red, and the expectation was rewritten to match the output. The
+outcome was correct by luck — the expectation genuinely had been wrong — and the move was still the
+one that makes a suite stop meaning anything.
+
 ## 3. Schema and migrations
 
 - The migration has `-- trace: FR-XXX` in its header.

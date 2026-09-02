@@ -78,6 +78,9 @@ Repeated for each acceptance criterion:
 1. **Red test.** One criterion, one test; the test name repeats the wording of the criterion. Run
    it and see it **fail**: a test that is green before the implementation checks nothing, and this
    is the only way to notice that.
+   When a test goes red later, first decide whether the code or the expectation is the wrong one —
+   an expectation rewritten to match the output is a deleted test
+   ([definition-of-done.md](definition-of-done.md)).
 2. **Minimal implementation** — exactly enough to turn the test green. Nothing beyond the test:
    code written "while we are here" is neither covered nor requested.
 3. **Refactor** with the tests green. Change the structure without changing behaviour.
