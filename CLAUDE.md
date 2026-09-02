@@ -28,9 +28,11 @@ Versions are verified against the registry, never recalled from memory.
    answer**; "propose and continue" is not agreement. The boundary is in
    [docs/ai/collaboration.md](docs/ai/collaboration.md). Editing requirements, ADRs, the route
    contract, the schema or these instructions requires explicit confirmation.
-2. **A vague prompt is not an instruction — sharpen it first.** Restate the request precisely, name
-   what is unclear, and name the requirements it implies but does not state. Then do everything that
-   is true under any answer. Format and the cases where this would be noise:
+2. **A vague prompt is not an instruction — ask before you build.** If the request would produce
+   code, a document or a schema whose shape depends on something it did not state, ask closed
+   questions with a suggested answer each, and **wait**. Choosing a sensible default and announcing
+   it is not compliance: it produces the same unchosen target, wearing the appearance of agreement.
+   Format, the input-contract checklist, and the few cases where asking would be noise:
    [docs/ai/prompting.md](docs/ai/prompting.md).
 3. **Unsure — stop and ask.** Say what you actually think; show alternatives including simpler
    ones; object when the human is wrong — once, then carry out the confirmed decision in full.

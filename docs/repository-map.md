@@ -155,7 +155,7 @@ refactor(DEBT-007): replace the in-memory rate limiter
 
 | Mechanism | When it fires | What it does |
 |---|---|---|
-| `UserPromptSubmit` hook | A prompt is submitted | Opens a journal entry, reports the human's own edits |
+| `UserPromptSubmit` hook | A prompt is submitted | Delivers the sharpening rule, opens a journal entry, reports the human's own edits |
 | `PreToolUse` hook | An edit lands in the human's decision space | Asks for confirmation |
 | `PostToolUse` hook | An edit lands in a tracked area | Says which document must now be updated |
 | `Stop` hook | The assistant ends a turn | Runs the gate, closes the journal entry |

@@ -3,8 +3,7 @@
 A vague prompt does not produce no work. It produces confident, plausible work aimed at a target
 nobody stated — and that is more expensive than a refusal, because it looks finished.
 
-So: **before acting on an underspecified request, restate it sharply, name what is unclear, and name
-the requirements the request implies but does not mention.** Then act.
+So: **before acting on an underspecified request, ask what it left open — and wait for the answer.**
 
 For this project specifically, there is a second reason. The course asks each of us to explain any
 line we submit at the viva. Code produced from a fuzzy instruction is the code neither of us can
@@ -12,43 +11,76 @@ defend, because nobody ever decided what it was supposed to do.
 
 ## The rule
 
-When a request is underspecified in a way that changes the work, answer first with:
+**If the request would produce code, a document or a schema whose shape depends on something it did
+not state — ask, and wait for the answer. Do not pick a default and build on it.**
+
+Picking a sensible default and announcing it is *not* compliance with this rule. It looks
+cooperative and it produces the same failure: work aimed at a target nobody chose, now with the
+appearance of agreement. The point is that the human decides, before there is code to argue with.
+
+Answer with:
 
 ```
 Understood as: <one sentence — what I think you are asking for>
 
-Sharper version:
-  <the prompt as it should have been written: goal, boundary, acceptance condition>
+Before I write anything:
+  1. <closed question>  — suggested: <answer>
+  2. <closed question>  — suggested: <answer>
+  3. <closed question>  — suggested: <answer>
 
-Unclear:
-  1. <question> — I would otherwise assume <X>
-  2. <question> — I would otherwise assume <Y>
-
-Not mentioned but needed:
+Also worth deciding now:
   - <the requirement the request implies and did not state>
+
+Say "all as suggested" or answer the ones you want differently.
 ```
 
-Then, without waiting:
+Three things make this cheap enough to keep doing:
 
-- **Do everything that is true under any answer.** A question does not freeze the whole task.
-- **Wait** only for what falls in the human's decision space ([collaboration.md](collaboration.md)),
-  or where proceeding under either reading would waste the work.
-- Otherwise **carry on under the stated assumptions**. They are written down; that is what makes
-  them correctable.
+- **Closed questions.** "Ignore case?" not "how should case be handled?" — the second one makes the
+  human do the drafting.
+- **A suggested answer for every question.** They can reply "all as suggested" in three words. What
+  matters is that the choice was theirs, not that they typed it out.
+- **Only questions that change the artefact.** If both answers produce the same code, it is not a
+  question, it is chatter.
+
+While waiting, do anything that is true under **every** answer — that is usually nothing for a small
+piece of code, and quite a lot for a feature.
 
 ## When not to do this
 
-The rule earns its place by firing rarely. Do not restate when:
+The exceptions are deliberately few, because the failure this guards against is far more common than
+the noise it can cause. Do not ask when:
 
-- the request is direct and checkable — "run the tests", "show the git log", "fix the typo on
-  line 12";
+- the request is a **direct command with a checkable result** — "run the tests", "show the git log",
+  "push", "fix the typo on line 12";
 - it already carries its acceptance condition — "make the importer reject a ZIP with no manifest,
   with a test";
-- it is a follow-up inside a context where the ambiguity was already settled;
+- the answer is **already written down** in a requirement, an ADR or the roadmap. Then cite it
+  instead of asking; asking about a settled decision is worse than silence, because it suggests the
+  decision was never recorded.
+- it is a follow-up inside a context where the ambiguity was already settled in this session;
 - the human is correcting you. A correction is a decision, not a request to be re-scoped.
 
-A restatement attached to an unambiguous instruction is noise, and a rule that produces noise gets
-skipped when it matters.
+Note what is *not* on this list: "the task is small". A five-line function has an input contract
+whether or not anyone wrote it down, and that contract is exactly the thing that is wrong later.
+
+## The input contract — the questions people forget
+
+For anything that takes input and returns a result, these change the code and are almost never
+stated:
+
+| Question | Why it changes the code |
+|---|---|
+| What may the input contain — letters, digits, punctuation, whitespace, other scripts? | Decides the filter, and whether code points or chars are iterated |
+| Is case significant? | One `toLowerCase` that is either right or wrong |
+| Which characters are ignored rather than compared? | Whitespace and punctuation are the usual pair, and the usual disagreement |
+| What is the behaviour on empty input? | Very often "vacuously true" is right and nobody said so |
+| What on `null`, or on input that is not valid at all? | A return value hides the caller's bug; an exception surfaces it. Different contracts |
+| How long can the input be? | Decides whether an O(n²) reading is acceptable |
+| Where will this live — a throwaway, or repository code? | Repository code needs a requirement, a slice, tests and an anchor |
+
+For work that lands in the repository, [the second checklist](#what-not-mentioned-but-needed-means)
+applies on top of this one.
 
 ## What counts as "unclear"
 
@@ -92,6 +124,21 @@ original still above it, since [the journal keeps both](journal/README.md).
 
 That record is worth marks on its own: it shows scope being negotiated rather than assumed, which is
 exactly what the course says is the hard part of software.
+
+## How this rule is kept alive
+
+It is delivered by the `UserPromptSubmit` hook with **every** request, not left to be remembered
+from the start of the session. That is not belt and braces: it was added after a session read this
+rule at startup, then answered a request for a palindrome function with two implementations and no
+questions at all. Instructions read once compete with everything that arrives later, and lose.
+
+The reminder is emitted unconditionally rather than guessed at from the wording. A heuristic over
+imperative verbs in two languages would miss the cases that matter, and a reminder that fires only
+sometimes teaches the reader to ignore it.
+
+No hook can judge whether a request was actually vague, so this reinforces the rule rather than
+gating it. The audit trail is the journal: prompts and outcomes are recorded, so whether vague
+requests were met with questions can be reviewed after the fact.
 
 ## On demand
 

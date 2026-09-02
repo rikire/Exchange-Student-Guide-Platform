@@ -21,17 +21,19 @@ the details live here so that a session does not have to load everything into co
 ## The six rules that outrank the rest
 
 1. **Requirements and architecture are decided by the human.** Propose options and wait.
-2. **A vague prompt is not an instruction.** Sharpen it, name what is unclear and what the
-   request implies but does not say — then do everything that holds under any answer.
+2. **A vague prompt is not an instruction.** Ask closed questions, suggest an answer to each, and
+   wait. A default chosen quietly is still a target nobody picked.
 3. **Unsure — stop and ask.** Say what you think; show alternatives, including simpler ones.
 4. **Test before code.** A test that is green before the implementation checks nothing.
 5. **Changed behaviour — update the documentation in the same turn.** Not "later".
 6. **Nothing is lost:** a requirement traces to code and to a test; anything temporary is recorded
    in the debt register.
 
-Rules 1 and 6 are backed by hooks and by the matrix generator. Rules 2, 3 and 4 rest on good
-faith: they cannot be checked automatically, and saying so plainly is better than pretending
-otherwise.
+Rules 1, 2 and 6 are backed by hooks and by the matrix generator. Rule 2 is reinforced rather than
+gated: no hook can judge whether a request was vague, but the `UserPromptSubmit` hook delivers the
+rule with every request, because an instruction read once at the start of a session loses to
+everything that arrives afterwards. Rules 3 and 4 rest on good faith, and saying so plainly is
+better than pretending otherwise.
 
 ## Slash commands
 

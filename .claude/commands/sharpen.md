@@ -5,7 +5,7 @@ argument-hint: <the request to sharpen>
 
 Apply [docs/ai/prompting.md](../../docs/ai/prompting.md) to: **$ARGUMENTS**
 
-Do **not** act on the request. Produce only the sharpened version:
+Do **not** act on the request. Produce only the questions it should have answered:
 
 1. **Understood as** — one sentence saying what you think is being asked.
 2. **Sharper version** — the request as it should have been written: the goal, the boundary, and the
