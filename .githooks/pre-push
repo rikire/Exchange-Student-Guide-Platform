@@ -1,0 +1,10 @@
+#!/bin/sh
+# Full run before pushing. Slower, but cheaper than a red pipeline.
+set -e
+
+if [ -x scripts/check.sh ]; then
+	exec scripts/check.sh
+fi
+
+echo "scripts/check.sh not found; running Maven directly" >&2
+exec ./mvnw -B verify

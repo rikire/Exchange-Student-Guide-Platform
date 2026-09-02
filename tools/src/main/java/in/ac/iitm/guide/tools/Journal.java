@@ -1,0 +1,190 @@
+package in.ac.iitm.guide.tools;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * The prompt journal: what was asked, what came out of it, and what the human changed afterwards.
+ *
+ * <p>The course asks students to be able to explain how the code was produced. Reconstructing that
+ * at the end of the semester is not possible, so the record is written as the work happens, by the
+ * hooks rather than by hand.
+ */
+public final class Journal {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
+    private static final ZoneId ZONE = ZoneId.systemDefault();
+
+    private final Repo repo;
+    private final String sessionId;
+    private final Path stateFile;
+    private final ObjectNode state;
+
+    private Journal(Repo repo, String sessionId, Path stateFile, ObjectNode state) {
+        this.repo = repo;
+        this.sessionId = sessionId;
+        this.stateFile = stateFile;
+        this.state = state;
+    }
+
+    public static Journal open(Repo repo, String sessionId) throws IOException {
+        String id = (sessionId == null || sessionId.isBlank()) ? "no-session" : sessionId;
+        Path file = repo.resolve(".claude/.journal-state/" + id + ".json");
+        ObjectNode state = Files.isRegularFile(file)
+                ? (ObjectNode) MAPPER.readTree(Files.readString(file))
+                : MAPPER.createObjectNode();
+        return new Journal(repo, id, file, state);
+    }
+
+    /** Opens an entry for a new prompt and returns the files the human edited since the last turn. */
+    public List<String> startEntry(String prompt) throws IOException {
+        Map<String, String> previous = readSnapshot();
+        Map<String, String> current = Snapshot.take(repo);
+        List<String> humanEdits = previous.isEmpty() ? List.of() : Snapshot.diff(previous, current);
+
+        state.put("promptAt", ZonedDateTime.now(ZONE).toString());
+        state.put("prompt", prompt == null ? "" : prompt);
+        state.remove("remindedRules");
+        writeSnapshot(current);
+        save();
+        return humanEdits;
+    }
+
+    /**
+     * Records an English rendering of the prompt and of the outcome for the current entry.
+     *
+     * <p>The journal is read by an English-speaking evaluator, but the conversation is not always in
+     * English. The hooks cannot translate, so the agent supplies the rendering during the turn and
+     * {@link #finishEntry} writes it alongside the original.
+     */
+    public void setEnglish(String prompt, String outcome) {
+        if (prompt != null && !prompt.isBlank()) {
+            state.put("promptEn", prompt);
+        }
+        if (outcome != null && !outcome.isBlank()) {
+            state.put("outcomeEn", outcome);
+        }
+    }
+
+    /** Closes the entry: appends prompt, outcome and the human's edits to today's journal file. */
+    public void finishEntry(String assistantMessage, List<String> checks, List<String> humanEdits) throws IOException {
+        String prompt = state.path("prompt").asText("");
+        String promptEn = state.path("promptEn").asText("");
+        String outcomeEn = state.path("outcomeEn").asText("");
+        if (prompt.isBlank() && (assistantMessage == null || assistantMessage.isBlank())) {
+            return;
+        }
+
+        StringBuilder entry = new StringBuilder();
+        entry.append("\n## ").append(ZonedDateTime.now(ZONE).format(TIME)).append("\n\n");
+
+        // The original prompt is the artefact the course asks us to show; the translation is an
+        // interpretation of it. Keeping both lets a reader of either language check the other.
+        entry.append("**Prompt**\n\n").append(quote(prompt)).append("\n\n");
+        if (!promptEn.isBlank() && !promptEn.strip().equals(prompt.strip())) {
+            entry.append("**Prompt (English)**\n\n").append(quote(promptEn)).append("\n\n");
+        }
+
+        String outcome = outcomeEn.isBlank() ? assistantMessage : outcomeEn;
+        entry.append("**Outcome**\n\n").append(quote(outcome)).append("\n\n");
+
+        if (!humanEdits.isEmpty()) {
+            entry.append("**Edited by hand afterwards**\n\n");
+            humanEdits.forEach(line -> entry.append("- ").append(line).append('\n'));
+            entry.append('\n');
+        }
+        if (!checks.isEmpty()) {
+            entry.append("**Checks**\n\n");
+            checks.forEach(line -> entry.append("- ").append(line).append('\n'));
+            entry.append('\n');
+        }
+
+        appendToTodaysFile(entry.toString());
+        state.remove("prompt");
+        state.remove("promptEn");
+        state.remove("outcomeEn");
+        writeSnapshot(Snapshot.take(repo));
+        save();
+    }
+
+    /** Adds a free-form note written by a person into today's journal file. */
+    public void addNote(String note) throws IOException {
+        appendToTodaysFile("\n## " + ZonedDateTime.now(ZONE).format(TIME) + " — note\n\n" + note + "\n");
+    }
+
+    /**
+     * Records that a reminder rule already fired in this session.
+     *
+     * @return {@code true} the first time only; a hint repeated every turn stops being read.
+     */
+    public boolean markReminded(String rule) {
+        var reminded = state.withArray("remindedRules");
+        for (var node : reminded) {
+            if (rule.equals(node.asText())) {
+                return false;
+            }
+        }
+        reminded.add(rule);
+        return true;
+    }
+
+    public String lastStopHash() {
+        return state.path("lastStopHash").asText("");
+    }
+
+    public void setStopHash(String hash) {
+        state.put("lastStopHash", hash);
+    }
+
+    public void save() throws IOException {
+        repo.write(stateFile, MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(state));
+    }
+
+    private void appendToTodaysFile(String text) throws IOException {
+        String shortId = sessionId.length() > 8 ? sessionId.substring(0, 8) : sessionId;
+        Path file = repo.resolve("docs/ai/journal/" + LocalDate.now(ZONE) + "-" + shortId + ".md");
+        if (!Files.isRegularFile(file)) {
+            String header = "# Session " + shortId + " — " + LocalDate.now(ZONE) + "\n\n"
+                    + "Written by the `hook` commands of `ai-tools`, not by hand.\n";
+            repo.write(file, header);
+        }
+        Files.writeString(file, text, java.nio.file.StandardOpenOption.APPEND);
+    }
+
+    private Map<String, String> readSnapshot() {
+        Map<String, String> result = new TreeMap<>();
+        state.path("snapshot")
+                .fields()
+                .forEachRemaining(e -> result.put(e.getKey(), e.getValue().asText()));
+        return result;
+    }
+
+    private void writeSnapshot(Map<String, String> snapshot) {
+        ObjectNode node = MAPPER.createObjectNode();
+        snapshot.forEach(node::put);
+        state.set("snapshot", node);
+    }
+
+    private static String quote(String text) {
+        if (text == null || text.isBlank()) {
+            return "> _(empty)_";
+        }
+        List<String> lines = new ArrayList<>();
+        for (String line : text.strip().split("\r?\n")) {
+            lines.add("> " + line);
+        }
+        return String.join("\n", lines);
+    }
+}

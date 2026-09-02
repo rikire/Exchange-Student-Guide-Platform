@@ -1,7 +1,11 @@
 # IDE
 .idea/
-.vscode/
 *.iml
+# Editor config is shared so both of us get the same JDK and formatting;
+# git cannot re-include a file under an excluded directory, hence .vscode/* not .vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 
 # OS
 .DS_Store
@@ -41,3 +45,14 @@ target/
 # Misc
 *.tmp
 *.bak
+
+# Maven wrapper jar — downloaded on first run of ./mvnw, not committed
+.mvn/wrapper/maven-wrapper.jar
+
+# Journal state: per-session working files for the prompt journal.
+# The journal itself (docs/ai/journal/) is committed; this is scratch.
+.claude/.journal-state/
+.claude/settings.local.json
+
+# Local runtime data
+/data/

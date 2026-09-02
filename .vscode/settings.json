@@ -1,0 +1,37 @@
+{
+  // Shared editor settings. Deliberately free of machine-specific paths: this file is committed,
+  // and the two of us install our JDKs in different places.
+
+  // Why this exists at all: user-level VS Code settings can pin a JDK into the integrated
+  // terminal's environment, and on one of our machines they did — JDK 17, which makes every
+  // terminal build fail because the application compiles with release 21.
+  //
+  // ${env:...} resolves against VS Code's own process environment, so this restores the JDK that
+  // the operating system actually has configured and cancels any user-level override. Workspace
+  // settings win over user settings, so this only affects this project.
+  //
+  // JAVA_HOME/bin is put first explicitly rather than trusting PATH order: an old JRE sitting
+  // earlier on PATH is a classic way for `java -jar` to fail with an unhelpful version error, and
+  // the hooks invoke the tooling exactly that way.
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "${env:JAVA_HOME}",
+    "PATH": "${env:JAVA_HOME}\\bin;${env:PATH}"
+  },
+
+  "java.configuration.updateBuildConfiguration": "automatic",
+
+  // Match .editorconfig, so the editor and Spotless never disagree about a file.
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  "[java]": {
+    "editor.tabSize": 4
+  },
+  "[xml]": {
+    "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.tabSize": 2
+  }
+}

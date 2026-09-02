@@ -1,0 +1,13 @@
+.git
+.github
+.githooks
+.claude
+.mvn/wrapper/maven-wrapper.jar
+docs
+**/target
+!app/target/*.jar
+*.md
+!README.md
+.env
+.env.*
+!.env.example

@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+          cache: maven
+
+      - name: Build, test and check formatting
+        run: ./mvnw -B verify
+
+      # The traceability and documentation-sync gate is added here in phase 2, once
+      # `ai-tools trace` exists. Listing it earlier would make CI red from day one, and a
+      # permanently red pipeline is one nobody reads.
+
+      - name: Commit messages follow the convention
+        if: github.event_name == 'pull_request'
+        run: |
+          git log --format=%H origin/${{ github.base_ref }}..HEAD | while read -r sha; do
+            git log -1 --format=%B "$sha" > /tmp/msg
+            java -jar tools/target/ai-tools.jar commit-msg /tmp/msg || exit 1
+          done
+
+      - name: Both members are present in the history
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Authors in this branch:"
+          git log --format='%an <%ae>' origin/${{ github.base_ref }}..HEAD | sort -u

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: exchange-student-guide
+  thymeleaf:
+    cache: false
+
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    root: INFO
+    in.ac.iitm.guide: DEBUG

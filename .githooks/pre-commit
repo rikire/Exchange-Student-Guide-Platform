@@ -1,0 +1,31 @@
+#!/bin/sh
+# Fast checks before a commit. The full run is in pre-push and in CI.
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+# Instructions for the AI govern every future action of the agent, so they change in their own
+# commit: a rule edit arriving alongside code slips past review.
+instructions=$(printf '%s\n' "$staged" | grep -E '^(CLAUDE\.md|docs/ai/|\.claude/)' | grep -v '^docs/ai/journal/' || true)
+code=$(printf '%s\n' "$staged" | grep -E '\.(java|sql|ya?ml|xml|html)$|^scripts/|^\.githooks/' || true)
+
+if [ -n "$instructions" ] && [ -n "$code" ]; then
+	echo "AI instructions are mixed with code in one commit." >&2
+	echo "" >&2
+	echo "Instructions:" >&2
+	printf '  %s\n' $instructions >&2
+	echo "Code:" >&2
+	printf '  %s\n' $code >&2
+	echo "" >&2
+	echo "Split this into two commits: a rule change must be reviewable on its own." >&2
+	echo "See docs/ai/security.md, section \"Working through the AI\"." >&2
+	exit 1
+fi
+
+# Formatting only when Java actually changed: a hook that runs on every docs commit gets bypassed.
+if printf '%s\n' "$staged" | grep -qE '\.java$'; then
+	./mvnw -q -B spotless:check
+fi
+
+exit 0

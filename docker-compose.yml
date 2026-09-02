@@ -1,0 +1,12 @@
+# Demo and handover stand. The deliverable for the stakeholder is this file plus the instructions
+# in docs/handoff/, so it has to work on a clean machine with nothing but Docker installed.
+#
+# Placeholder: the application service is added in phase 2 once there is something to run, and the
+# database in phase 4 with the PostgreSQL profile. The volumes are declared now because they are the
+# reason the deployment story works at all — both media and the search index need to survive a
+# container restart.
+
+volumes:
+  guide-media:
+  guide-index:
+  guide-db:

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Checks the commit message convention. Installed by scripts/hooks.sh
+set -e
+
+jar="tools/target/ai-tools.jar"
+if [ ! -f "$jar" ]; then
+	echo "commit-msg: $jar is missing; run scripts/hooks.sh" >&2
+	exit 0
+fi
+
+exec java -jar "$jar" commit-msg "$1"
