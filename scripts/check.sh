@@ -7,6 +7,23 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# We develop on Windows, where git does not track the executable bit (core.filemode=false), so a
+# chmod made locally never reaches the index. On Linux and macOS that is not merely inconvenient:
+# a git hook without the bit does not fail, it is silently skipped, and the commit-message gate
+# stops existing without anyone noticing. Fix with:
+#   git update-index --chmod=+x <file>
+echo "==> executable bits"
+missing=""
+for f in mvnw scripts/check.sh scripts/hooks.sh .githooks/commit-msg .githooks/pre-commit .githooks/pre-push; do
+	mode=$(git ls-files -s "$f" 2>/dev/null | awk '{print $1}')
+	[ "$mode" = "100755" ] || missing="$missing $f($mode)"
+done
+if [ -n "$missing" ]; then
+	echo "These files must be executable in git but are not:$missing" >&2
+	echo "Fix: git update-index --chmod=+x$(echo "$missing" | sed 's/([0-9]*)//g')" >&2
+	exit 1
+fi
+
 echo "==> build, tests and formatting"
 ./mvnw -B verify
 

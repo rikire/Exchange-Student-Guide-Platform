@@ -20,12 +20,14 @@ jobs:
           distribution: temurin
           cache: maven
 
+      # Invoked through `sh` on purpose: if the executable bit were missing this would still
+      # run, and the script's first check reports exactly which file lost it. Calling ./mvnw
+      # directly fails with "Permission denied", which says nothing about the cause.
+      #
+      # CI runs the same script we run locally, so "it passed on my machine" means the same
+      # thing here. The traceability gate is added inside it in phase 2.
       - name: Build, test and check formatting
-        run: ./mvnw -B verify
-
-      # The traceability and documentation-sync gate is added here in phase 2, once
-      # `ai-tools trace` exists. Listing it earlier would make CI red from day one, and a
-      # permanently red pipeline is one nobody reads.
+        run: sh scripts/check.sh
 
       - name: Commit messages follow the convention
         if: github.event_name == 'pull_request'

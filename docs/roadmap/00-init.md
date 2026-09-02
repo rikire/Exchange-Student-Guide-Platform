@@ -59,6 +59,17 @@ prompt journal writes non-empty entries — verified by hand, not assumed.
   first on PATH. It deliberately contains no machine-specific paths, so it works for both of us;
   `.gitignore` now excludes `.vscode/*` but keeps `settings.json`.
 
+## Problems found after the first push
+
+- **The executable bit never reached git** (3 Sep). We develop on Windows, where
+  `core.filemode` is false, so a local `chmod +x` is not recorded in the index. CI failed on
+  `./mvnw: Permission denied`, which was the harmless half of the problem: `.githooks/*` lost the
+  bit too, and on Linux or macOS a hook without it is not an error — it is silently skipped, so the
+  commit-message gate would simply have stopped existing for whoever cloned the repository.
+  Fixed with `git update-index --chmod=+x`, and `scripts/check.sh` now refuses to pass while any of
+  those six files is not `100755`. CI calls that script through `sh` so the check still runs when
+  the bit is the thing that is broken.
+
 ## Verified
 
 All of the following was run, not assumed. Dates are when the check actually passed.
