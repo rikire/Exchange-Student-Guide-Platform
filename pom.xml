@@ -22,7 +22,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- Versions verified against Maven Central on 2026-09-02, not recalled from memory. -->
-    <spring-boot.version>3.5.16</spring-boot.version>
+    <spring-boot.version>4.1.1</spring-boot.version>
     <spring-modulith.version>1.4.13</spring-modulith.version>
     <hibernate-search.version>7.2.6.Final</hibernate-search.version>
     <jackson.version>2.18.2</jackson.version>
