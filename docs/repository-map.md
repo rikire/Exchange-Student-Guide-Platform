@@ -159,7 +159,7 @@ refactor(DEBT-007): replace the in-memory rate limiter
 | `PreToolUse` hook (edits) | An edit is about to be written | Asks when the file is the human's; refuses a marker with no debt reference |
 | `PreToolUse` hook (shell) | A command is about to run | Refuses the flags that skip checks; asks when a build is piped somewhere that hides its exit code |
 | `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
-| `Stop` hook | The assistant ends a turn | Refuses to end the turn while the documentation check is red — once per distinct cause, so a session cannot deadlock; then closes the journal entry |
+| `Stop` hook | The assistant ends a turn | Refuses while the turn owes the journal an English rendering, or while the documentation check is red — once per cause either way, so a session cannot deadlock; then closes the journal entry and commits it |
 | `commit-msg` | `git commit` | Checks the message convention |
 | `pre-commit` | `git commit` | Instructions not mixed with code, Spotless, fast tests |
 | `pre-push` | `git push` | The full `scripts/check.sh` |
@@ -167,3 +167,9 @@ refactor(DEBT-007): replace the in-memory rate limiter
 
 Claude Code hooks are configured in [.claude/settings.json](../.claude/settings.json); git hooks are
 installed with `scripts/hooks.sh`.
+
+**The `Stop` hook makes a commit, and it is the only automation that writes to history.** A journal
+entry is appended after the turn's last action, so the turn it describes can never be the turn that
+commits it — which is how an entry sat outside the history until a person opened the file. The
+commit always names the pathspec `docs/ai/journal`, so work staged elsewhere is left exactly where
+it was, and it does nothing during a merge, a rebase or on a detached HEAD.

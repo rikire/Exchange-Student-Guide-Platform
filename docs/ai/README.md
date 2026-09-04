@@ -39,10 +39,16 @@ the details live here so that a session does not have to load everything into co
 | 4. Test before code | Good faith. After the fact, a test written first is indistinguishable from one written second |
 | 5. Documentation in the same turn | Partly: the turn cannot end while a document describes something the repository does not contain |
 | 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half arrives in phase 2 |
+| The journal is in English | The turn cannot end while it owes a rendering, and the entry is committed when it is written |
 
 Rule 6 was described here as backed by the matrix generator before that generator existed. It was
 not, and the claim was corrected on 4 September — a document overstating its own enforcement is the
 exact defect this repository keeps auditing itself for.
+
+The journal row is the newest, and it was added for the same reason. The rendering rule had a
+reminder and a record: the hook asked at the start of the turn, and wrote `NOT supplied` into the
+entry at the end of it. Both fired correctly, and the rendering still did not appear — **watching a
+rule break is not enforcing it.** The refusal is the difference.
 
 ## Slash commands
 

@@ -85,9 +85,11 @@ is absent, because it is tried.
 ## What happens automatically
 
 - **Prompt journal** — hooks write the prompt, the outcome and the human's own edits into
-  `docs/ai/journal/`. Do not duplicate this by hand.
+  `docs/ai/journal/`, and commit the entry once it is written. An entry is appended after the turn's
+  last action, so the turn it describes cannot be the one that commits it. Do not duplicate this by
+  hand, and do not commit `docs/ai/journal/` yourself unless the hook reports that it could not.
 - **The journal is in English.** When the conversation is not, supply the rendering **before ending
-  the turn** — a hook cannot translate:
+  the turn** — a hook cannot translate, and **the turn will not end until you have**:
 
   ```bash
   java -jar tools/target/ai-tools.jar hook english \

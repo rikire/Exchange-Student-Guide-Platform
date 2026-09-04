@@ -58,6 +58,26 @@ original to preserve.
 
 If the prompt was already in English, the translation block is omitted rather than duplicated.
 
+## How an entry reaches the history
+
+The `Stop` hook commits it. That is unusual enough to justify here, because a hook writing to git
+history is not free.
+
+An entry is appended **after** the turn's last action. So the turn an entry describes can never be
+the turn that commits it — the record is structurally one turn behind, and on 4 September an entry
+sat outside the history until someone opened the file and noticed. Nothing owned getting it in, and
+"remember to commit the journal" is the kind of rule this repository has already watched fail.
+
+What keeps the cost bounded:
+
+- the pathspec is always `docs/ai/journal`, so a commit someone is building elsewhere is never swept
+  in — anything staged stays staged;
+- during a merge, a rebase, a cherry-pick or on a detached HEAD it does nothing and says so;
+- a failed commit leaves the entry pending, and the next turn that ends tries again.
+
+The commit message is `docs: record the journal entry for <date> <time>`, which passes the same
+`commit-msg` gate as everyone else's.
+
 ## The times this was written by hand
 
 Twice, both on 4 September, and both to add a rendering that should have been captured in the
