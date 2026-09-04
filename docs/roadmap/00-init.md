@@ -1,6 +1,6 @@
 # Phase 0 — Initialisation
 
-**Status: in progress.** Target: 6 September 2026.
+**Status: done.** Closed 4 September 2026.
 
 ## Goal
 
@@ -22,8 +22,9 @@ documentation drifting away from the code — before the first line of feature c
 - [x] Git hooks and `scripts/`
 - [x] CI, pull request and issue templates
 - [x] `.env.example`, `README.md`, `docker-compose.yml` placeholder
-- [ ] `docs/team/members.yml` completed — Abdirakhim's git email is still missing
-- [ ] Article format fixed and the first three to five drafts written
+- [x] `docs/team/members.yml` completed — Abdirakhim's git email (`abdraoper@gmail.com`) is recorded
+- [x] ~~Article format fixed and the first three to five drafts written~~ — moved to phase 1, see
+      below
 
 ## Readiness criterion
 
@@ -58,6 +59,13 @@ prompt journal writes non-empty entries — verified by hand, not assumed.
   fail against `release 21`. The workspace file cancels that override and puts `JAVA_HOME/bin`
   first on PATH. It deliberately contains no machine-specific paths, so it works for both of us;
   `.gitignore` now excludes `.vscode/*` but keeps `settings.json`.
+- **"Article format fixed and the first three to five drafts written" moved to phase 1** (4 Sep).
+  The seed front-matter shape (title, tags, author, dates) is not process/tooling — it is a first
+  cut at what an article *is*, which overlaps directly with phase 1's own glossary and ERD work
+  ([01-requirements-design.md](01-requirements-design.md)). Deciding it alone here, ahead of that
+  joint work, risked a shape phase 1 would immediately revise. Phase 1 already plans "10 or more
+  articles drafted" as its own content step; the moved item is folded into that rather than kept as
+  a separate quota under a schema likely to be superseded within days.
 
 ## Problems found after the first push
 
@@ -115,11 +123,12 @@ All of the following was run, not assumed. Dates are when the check actually pas
   (3 Sep).
 - The journal keeps the original prompt and adds the English rendering beside it, and a translation
   does not leak into the next entry (3 Sep, `JournalTest`).
+- `scripts/check.sh` reconfirmed green — including `docs-check` and the link check — after closing
+  the phase's last two items: `docs/team/members.yml` verified to already carry Abdirakhim's email,
+  and the article-format item moved to phase 1 (4 Sep).
 
 ## Open questions
 
-1. Abdirakhim's git email, for `docs/team/members.yml`. Attribution falls back to "unknown" until it
-   is there, and the weekly log cannot resolve his commits.
-2. Whether to keep the `PostToolUse` documentation reminder out of phase 0. It is currently not
+1. Whether to keep the `PostToolUse` documentation reminder out of phase 0. It is currently not
    wired: the mapping table it would enforce points at documents that do not exist yet, so it would
    fire on everything. Planned for phase 2 with the rest of the gate.
