@@ -56,7 +56,6 @@ public final class Journal {
 
         state.put("promptAt", ZonedDateTime.now(ZONE).toString());
         state.put("prompt", prompt == null ? "" : prompt);
-        state.remove("remindedRules");
         writeSnapshot(current);
         save();
         return humanEdits;
@@ -155,30 +154,6 @@ public final class Journal {
     /** Adds a free-form note written by a person into today's journal file. */
     public void addNote(String note) throws IOException {
         appendToTodaysFile("\n## " + ZonedDateTime.now(ZONE).format(TIME) + " — note\n\n" + note + "\n");
-    }
-
-    /**
-     * Records that a reminder rule already fired in this session.
-     *
-     * @return {@code true} the first time only; a hint repeated every turn stops being read.
-     */
-    public boolean markReminded(String rule) {
-        var reminded = state.withArray("remindedRules");
-        for (var node : reminded) {
-            if (rule.equals(node.asText())) {
-                return false;
-            }
-        }
-        reminded.add(rule);
-        return true;
-    }
-
-    public String lastStopHash() {
-        return state.path("lastStopHash").asText("");
-    }
-
-    public void setStopHash(String hash) {
-        state.put("lastStopHash", hash);
     }
 
     public void save() throws IOException {

@@ -37,11 +37,11 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 
 | File | Written by | How to refresh |
 |---|---|---|
-| `docs/traceability.md` | `ai-tools trace` | `java -jar tools/target/ai-tools.jar trace` |
-| `docs/features/README.md` | `ai-tools trace` | the same command |
-| `docs/team/ownership.md` | `ai-tools ownership` | `java -jar tools/target/ai-tools.jar ownership` |
-| `docs/gap-list.md` | `ai-tools gaps` | `java -jar tools/target/ai-tools.jar gaps` |
-| `docs/diagrams/out/**` | PlantUML | `scripts/diagrams.sh` |
+| `docs/traceability.md` | `ai-tools trace` _(phase 2)_ | `java -jar tools/target/ai-tools.jar trace` |
+| `docs/features/README.md` | `ai-tools trace` _(phase 2)_ | the same command |
+| `docs/team/ownership.md` | `ai-tools ownership` _(phase 2)_ | `java -jar tools/target/ai-tools.jar ownership` |
+| `docs/gap-list.md` | `ai-tools gaps` _(phase 3)_ | `java -jar tools/target/ai-tools.jar gaps` |
+| `docs/diagrams/out/**` | PlantUML | the render script, which arrives in phase 1 with the diagrams |
 
 Each carries a `GENERATED` marker in its header. A hand edit is detected and breaks the build —
 deliberately: a generated file edited by hand creates false confidence that the state is current.
@@ -157,8 +157,8 @@ refactor(DEBT-007): replace the in-memory rate limiter
 |---|---|---|
 | `UserPromptSubmit` hook | A prompt is submitted | Delivers the sharpening rule, resolves the author, opens a journal entry, reports the human's own edits |
 | `PreToolUse` hook | An edit lands in the human's decision space | Asks for confirmation |
-| `PostToolUse` hook | An edit lands in a tracked area | Says which document must now be updated |
-| `Stop` hook | The assistant ends a turn | Runs the gate, closes the journal entry |
+| `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
+| `Stop` hook | The assistant ends a turn | Closes the journal entry; the gate itself arrives in phase 2 |
 | `commit-msg` | `git commit` | Checks the message convention |
 | `pre-commit` | `git commit` | Instructions not mixed with code, Spotless, fast tests |
 | `pre-push` | `git push` | The full `scripts/check.sh` |

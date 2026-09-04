@@ -95,8 +95,4 @@ public final class Snapshot {
             throw new IllegalStateException("SHA-256 is required by the Java platform", e);
         }
     }
-
-    public static String fingerprint(String text) {
-        return sha256(text.getBytes(java.nio.charset.StandardCharsets.UTF_8)).substring(0, 16);
-    }
 }

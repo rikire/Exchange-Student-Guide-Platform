@@ -70,6 +70,32 @@ prompt journal writes non-empty entries — verified by hand, not assumed.
   those six files is not `100755`. CI calls that script through `sh` so the check still runs when
   the bit is the thing that is broken.
 
+## Audit of 4 September, and what it found
+
+The phase was walked against its own criteria before being closed. `scripts/check.sh` was green and
+CI had passed four runs, and eight divergences were still there — every one of them documentation
+claiming something the code did not do.
+
+- `CLAUDE.md` advertised three slash commands that did not exist.
+- `/dod` told the agent to run `ai-tools trace`, which does not exist and has no fallback, so the
+  readiness checklist itself failed halfway.
+- The `PostToolUse` hook was listed as active automation. It is not wired.
+- Four links in `docs/course/rubric.md` — the document an evaluator reads — pointed at missing files.
+- `scripts/diagrams.sh` was named as the way to refresh the diagrams. There is no such file.
+- `docs/team/members.yml` carried a bare `TODO` with no debt reference, which `CLAUDE.md` forbids.
+- Four methods in `tools/` were written for phase 2 and never called.
+- Six directories the map describes are absent from a fresh clone: git does not track empty ones.
+
+All eight are fixed. The dead code was deleted rather than parked behind a debt entry: the rule in
+[definition-of-done.md](../ai/definition-of-done.md) already says code written for later is deleted,
+and proposing an exception to it was the wrong instinct.
+
+**The lesson is about the shape of the failure, not the eight items.** Every one lived in the gap
+between a document and the thing it described, and every one was invisible to a green build. The
+mechanisms that would have caught them — a link checker and the traceability gate — are exactly the
+ones deferred to phase 2, so phase 0 documented a discipline it could not yet enforce on itself.
+`scripts/check.sh` now runs a link check for this reason.
+
 ## Verified
 
 All of the following was run, not assumed. Dates are when the check actually passed.
