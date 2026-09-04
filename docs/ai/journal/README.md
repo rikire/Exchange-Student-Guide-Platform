@@ -58,21 +58,28 @@ original to preserve.
 
 If the prompt was already in English, the translation block is omitted rather than duplicated.
 
-## The one time this was written by hand
+## The times this was written by hand
 
-On 4 September, seven entries from that day were given renderings after the fact. They had been
-written with none at all: the rule to supply one lived in `CLAUDE.md` and lost to everything that
-arrived after it, which is why the `UserPromptSubmit` hook now asks for a rendering whenever a
-prompt is not in English.
+Twice, both on 4 September, and both to add a rendering that should have been captured in the
+moment. Every block added afterwards is labelled **"added 2026-09-04, retrospectively"**, the
+originals were not touched, and nothing was removed — including the `Checks` line that says
+`English rendering: NOT supplied`. That line is the record of what happened; the block below it is
+the repair. Both belong.
 
-Every one of those blocks is labelled **"added 2026-09-04, retrospectively"**, and the originals
-were not touched — 56 lines were added and none removed. The label is the whole point: a translation
-inserted afterwards must not be able to pass for one captured in the moment, or the journal stops
-being a record of what happened and becomes a record of what we would like to have happened.
+**Seven entries, in the morning.** They had been written with no rendering at all: the rule to
+supply one lived in `CLAUDE.md` and lost to everything that arrived after it. That is why the
+`UserPromptSubmit` hook now asks for a rendering whenever a prompt is not in English.
 
-That is the only edit by hand this journal has had, and the bar for another one is the same: add,
-never alter, and say when it was added. Editing an entry to make the past look tidier is the failure
-this file exists to prevent.
+**One entry, that afternoon** — the entry describing the audit that mechanised six other rules. The
+reminder had fired correctly and was ignored anyway, and the `Stop` hook only *recorded* the
+omission. A mechanism that observes a rule is not a mechanism that enforces it, so `Stop` now
+refuses to end a turn that owes a rendering.
+
+The label is the whole point: a translation inserted afterwards must not be able to pass for one
+captured in the moment, or the journal stops being a record of what happened and becomes a record of
+what we would like to have happened. The bar for a third time is the same: add, never alter, and say
+when it was added. Editing an entry to make the past look tidier is the failure this file exists to
+prevent.
 
 ## Why the human's edits are recorded
 
