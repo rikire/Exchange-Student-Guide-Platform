@@ -13,7 +13,7 @@ applicable. Run the checks for real, not from memory:
 
 The traceability and documentation-sync generator lands in phase 2. Until it exists, do items 6
 and 7 by reading, the way `/trace-check` describes, and say in the verdict that they were checked
-by hand rather than by a tool. Do not run `ai-tools trace`: it is not there, and reporting a
+by hand rather than by a tool. Do not run `ai-tools trace` (phase 2): it is not there, and reporting a
 checklist item as passed on the strength of a command that failed is the exact failure this list
 exists to prevent.
 

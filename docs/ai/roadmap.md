@@ -25,6 +25,16 @@ When a phase closes, its file records the date and how the criterion was verifie
 was run, or what was checked by hand. "Done" without evidence is the thing the mid-demo rubric
 specifically penalises.
 
+**A phase does not close until it has been audited**: every claim its documents make, checked against
+what the repository actually contains. The findings go in the phase file, including "none". This is a
+step, not a courtesy — phase 0 passed its own readiness criterion with a green build and CI, and an
+audit still found eight divergences, seven of which were documents describing things that were not
+there.
+
+`ai-tools docs-check` now catches that class mechanically. The audit remains anyway, because the
+check compares names and links while the audit reads for meaning: a hook described as doing something
+other than what it does passes every automated check there is.
+
 ## Changing the plan
 
 Adding an item to the current phase is the agent's business. Moving work between phases, or changing

@@ -36,7 +36,7 @@ between slices block — the three things whose divergence is most expensive.
 Manual run:
 
 ```bash
-java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
+java -jar tools/target/ai-tools.jar trace --docs-sync HEAD   # phase 2
 ```
 
 The generator lands in phase 2. Until then this rule is followed by reading the table above, and

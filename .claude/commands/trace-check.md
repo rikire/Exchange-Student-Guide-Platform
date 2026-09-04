@@ -5,7 +5,7 @@ description: Check traceability and show the gaps in requirement coverage
 Check that nothing has fallen out of the chain "requirement to code to test".
 
 ```
-java -jar tools/target/ai-tools.jar trace
+java -jar tools/target/ai-tools.jar trace   # phase 2; until then use the reading check below
 ```
 
 If the generator is not built yet, do the check by reading:
