@@ -29,11 +29,20 @@ the details live here so that a session does not have to load everything into co
 6. **Nothing is lost:** a requirement traces to code and to a test; anything temporary is recorded
    in the debt register.
 
-Rules 1, 2 and 6 are backed by hooks and by the matrix generator. Rule 2 is reinforced rather than
-gated: no hook can judge whether a request was vague, but the `UserPromptSubmit` hook delivers the
-rule with every request, because an instruction read once at the start of a session loses to
-everything that arrives afterwards. Rules 3 and 4 rest on good faith, and saying so plainly is
-better than pretending otherwise.
+**What is actually enforced, as opposed to asked for:**
+
+| Rule | How it holds |
+|---|---|
+| 1. The human decides | A hook asks before an edit lands in a protected file |
+| 2. Sharpen a vague prompt | Delivered with every prompt by a hook — reinforced, not gated: no mechanism can judge whether a request was vague |
+| 3. Stop and ask when unsure | Good faith. Nothing can measure confidence |
+| 4. Test before code | Good faith. After the fact, a test written first is indistinguishable from one written second |
+| 5. Documentation in the same turn | Partly: the turn cannot end while a document describes something the repository does not contain |
+| 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half arrives in phase 2 |
+
+Rule 6 was described here as backed by the matrix generator before that generator existed. It was
+not, and the claim was corrected on 4 September — a document overstating its own enforcement is the
+exact defect this repository keeps auditing itself for.
 
 ## Slash commands
 

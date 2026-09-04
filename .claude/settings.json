@@ -7,7 +7,14 @@
           {
             "type": "command",
             "command": "java",
-            "args": ["-jar", "tools/target/ai-tools.jar", "hook", "prompt"],
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "tools/target/ai-tools.jar",
+              "hook",
+              "prompt"
+            ],
             "timeout": 30,
             "statusMessage": "Recording the prompt in the journal"
           }
@@ -21,9 +28,35 @@
           {
             "type": "command",
             "command": "java",
-            "args": ["-jar", "tools/target/ai-tools.jar", "hook", "guard"],
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "tools/target/ai-tools.jar",
+              "hook",
+              "guard"
+            ],
             "timeout": 30,
-            "statusMessage": "Checking whether this file belongs to the human"
+            "statusMessage": "Checking whose file this is and what it would write"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "tools/target/ai-tools.jar",
+              "hook",
+              "bash"
+            ],
+            "timeout": 30,
+            "statusMessage": "Checking the command does not skip or hide a check"
           }
         ]
       }
@@ -34,9 +67,16 @@
           {
             "type": "command",
             "command": "java",
-            "args": ["-jar", "tools/target/ai-tools.jar", "hook", "stop"],
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "tools/target/ai-tools.jar",
+              "hook",
+              "stop"
+            ],
             "timeout": 120,
-            "statusMessage": "Closing the journal entry"
+            "statusMessage": "Checking the documentation before the turn ends"
           }
         ]
       }

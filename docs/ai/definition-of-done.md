@@ -5,6 +5,11 @@ memory: "should work" and "works" are different states.
 
 Run the whole list with `/dod`.
 
+Four of these items no longer depend on being remembered. A turn cannot end while item 6 is
+red; an edge introducing a marker without a debt entry is refused before it lands (item 8); a
+command that skips the checks is refused outright, and one that pipes a build somewhere that
+hides its exit code is questioned (items 1 and 12). The rest still rest on reading this list.
+
 ## 1. It builds and passes static analysis
 
 ```bash
