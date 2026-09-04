@@ -17,7 +17,8 @@ Both of us take whatever task we like â€” a feature, a chore, a piece of debt â€
 own authorship. There are no assigned areas; both of us are responsible for the whole project.
 
 That creates one problem the rubric cares about: it asks for a named owner per module and a rough
-balance between us. So ownership is **measured rather than assigned**. `ai-tools ownership` reads
+balance between us. So ownership is **measured rather than assigned**.
+`ai-tools ownership` (phase 2) reads
 the git history and reports who has actually done more in each slice.
 
 The point is not bookkeeping. It is that at the final viva each of us has to answer questions about

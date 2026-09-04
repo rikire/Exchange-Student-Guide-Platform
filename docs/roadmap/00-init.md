@@ -77,11 +77,11 @@ CI had passed four runs, and eight divergences were still there — every one of
 claiming something the code did not do.
 
 - `CLAUDE.md` advertised three slash commands that did not exist.
-- `/dod` told the agent to run `ai-tools trace`, which does not exist and has no fallback, so the
+- `/dod` told the agent to run `ai-tools trace` (phase 2), which does not exist and has no fallback, so the
   readiness checklist itself failed halfway.
 - The `PostToolUse` hook was listed as active automation. It is not wired.
 - Four links in `docs/course/rubric.md` — the document an evaluator reads — pointed at missing files.
-- `scripts/diagrams.sh` was named as the way to refresh the diagrams. There is no such file.
+- `scripts/diagrams.sh` was named as the way to refresh the diagrams; it arrives in phase 1 with them.
 - `docs/team/members.yml` carried a bare `TODO` with no debt reference, which `CLAUDE.md` forbids.
 - Four methods in `tools/` were written for phase 2 and never called.
 - Six directories the map describes are absent from a fresh clone: git does not track empty ones.

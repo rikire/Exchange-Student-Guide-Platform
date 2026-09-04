@@ -15,6 +15,7 @@ import java.util.List;
  *   hook english           supply the English rendering of the prompt and the outcome
  *   hook author &lt;id&gt;       record who is sending the prompts, when git could not say
  *   commit-msg &lt;file&gt;      check the commit message convention
+ *   docs-check             find documentation that describes what the repository lacks
  * </pre>
  *
  * <p>A failure inside a hook must not break the human's session: every error is reported on stderr
@@ -29,18 +30,35 @@ public final class Main {
             System.exit(64);
         }
         try {
+            // The set is the authority, not the switch: a case added without it is rejected
+            // loudly rather than drifting away from what DocsCheck believes exists.
+            if (!Commands.TOP_LEVEL.contains(args[0])) {
+                System.err.println("ai-tools: unknown command " + args[0] + "; expected one of "
+                        + Commands.describe(Commands.TOP_LEVEL));
+                System.exit(64);
+            }
             switch (args[0]) {
                 case "hook" -> HookCommand.run(Arrays.copyOfRange(args, 1, args.length));
                 case "commit-msg" -> commitMsg(Arrays.copyOfRange(args, 1, args.length));
-                default -> {
-                    System.err.println("ai-tools: unknown command " + args[0]);
-                    System.exit(64);
-                }
+                case "docs-check" -> docsCheck();
+                default -> throw new IllegalStateException("dispatch missing for " + args[0]);
             }
         } catch (Exception e) {
             System.err.println("ai-tools: " + e.getMessage());
             System.exit(0);
         }
+    }
+
+    private static void docsCheck() throws Exception {
+        List<DocsCheck.Problem> problems = DocsCheck.run(Repo.find(null));
+        if (problems.isEmpty()) {
+            return;
+        }
+        System.err.println("Documentation describes things the repository does not contain:");
+        problems.forEach(problem -> System.err.println("  " + problem));
+        System.err.println();
+        System.err.println("Either build the thing, or say on the same line which phase it belongs to.");
+        System.exit(1);
     }
 
     private static void commitMsg(String[] args) throws Exception {

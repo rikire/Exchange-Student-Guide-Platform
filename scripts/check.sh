@@ -24,42 +24,21 @@ if [ -n "$missing" ]; then
 	exit 1
 fi
 
-# The audit on 4 September found eight divergences on a green build, and five of them were a
-# document pointing at something that did not exist. Both checks below are cheap, and the
-# traceability gate that would subsume them does not arrive until phase 2.
-echo "==> documentation points at things that exist"
-report=$(mktemp)
+# The tooling is built before the application so that the documentation check below can run even
+# when the application does not compile: a broken build should not also blind the other checks.
+echo "==> process tooling"
+./mvnw -q -B -pl tools package
 
-# Relative markdown links, resolved from the linking file's own directory.
-find . -name "*.md" -not -path "./.git/*" -not -path "*/target/*" -print | while read -r file; do
-	dir=$(dirname "$file")
-	grep -oE '\]\(([^)#]+\.md)(#[^)]*)?\)' "$file" 2>/dev/null \
-		| sed -E 's/^\]\(//; s/\)$//; s/#.*$//' \
-		| while read -r link; do
-			case "$link" in http*) continue ;; esac
-			[ -e "$dir/$link" ] || echo "broken link: $file -> $link" >>"$report"
-		done
-done
-
-# A slash command named in the instructions but absent from .claude/commands errors when tried,
-# which is worse than one that was never advertised.
-for name in $(grep -ohE '`/[a-z-]+`' CLAUDE.md docs/ai/README.md 2>/dev/null | tr -d '`/' | sort -u); do
-	[ -f ".claude/commands/$name.md" ] || echo "advertised but missing: /$name" >>"$report"
-done
-
-if [ -s "$report" ]; then
-	echo "Documentation refers to things that are not there:" >&2
-	sed 's/^/  /' "$report" >&2
-	rm -f "$report"
-	exit 1
-fi
-rm -f "$report"
+# The audit on 4 September found eight divergences on a green build. Seven were a document
+# describing something the repository did not contain, which no test could ever have failed on.
+echo "==> documentation describes what exists"
+java -jar tools/target/ai-tools.jar docs-check
 
 echo "==> build, tests and formatting"
 ./mvnw -B verify
 
-# The traceability and documentation-sync gate is added here in phase 2, once `ai-tools trace`
-# exists. See docs/roadmap/02-skeleton.md.
+# The traceability gate is added here in phase 2, once `ai-tools trace` exists.
+# See docs/roadmap/02-skeleton.md.
 
 echo
 echo "All checks passed."

@@ -10,7 +10,12 @@ final class HookCommand {
 
     static void run(String[] args) throws Exception {
         if (args.length == 0) {
-            System.err.println("usage: ai-tools hook <prompt|guard|stop|note|english|author>");
+            System.err.println("usage: ai-tools hook <" + Commands.describe(Commands.HOOK) + ">");
+            System.exit(64);
+        }
+        if (!Commands.HOOK.contains(args[0])) {
+            System.err.println(
+                    "ai-tools: unknown hook " + args[0] + "; expected one of " + Commands.describe(Commands.HOOK));
             System.exit(64);
         }
         switch (args[0]) {
@@ -20,7 +25,7 @@ final class HookCommand {
             case "note" -> note(String.join(" ", List.of(args).subList(1, args.length)));
             case "english" -> english(java.util.Arrays.copyOfRange(args, 1, args.length));
             case "author" -> author(java.util.Arrays.copyOfRange(args, 1, args.length));
-            default -> System.err.println("ai-tools: unknown hook " + args[0]);
+            default -> throw new IllegalStateException("dispatch missing for " + args[0]);
         }
     }
 
