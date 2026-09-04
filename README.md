@@ -17,6 +17,11 @@ Phase 0 — the repository scaffolding. No application features yet. See
 
 ## Getting started
 
+**Setting up for the first time: [docs/onboarding.md](docs/onboarding.md).** Open the repository
+with an AI assistant and say "work through docs/onboarding.md" — it checks what is missing,
+asks before installing anything, and finishes on a criterion rather than on a checklist. Works by
+hand too, on macOS, Windows and Linux.
+
 Requires JDK 21. Maven is **not** needed and should not be installed: the wrapper pins 3.9.16,
 so the build is identical on both our machines and in CI. A system-wide Maven would add a second
 way to build with a possibly different version.

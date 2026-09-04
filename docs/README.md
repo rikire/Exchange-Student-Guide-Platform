@@ -1,7 +1,8 @@
 # Documentation
 
 Map of the project documentation. How the repository is laid out:
-[repository-map.md](repository-map.md).
+[repository-map.md](repository-map.md). Setting up a machine to work here:
+[onboarding.md](onboarding.md).
 
 ## Requirements
 

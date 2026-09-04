@@ -30,13 +30,36 @@ jobs:
       - name: Build, test and check formatting
         run: sh scripts/check.sh
 
+      # Also on push, not only on pull requests. The local `commit-msg` hook only exists once
+      # someone has run scripts/hooks.sh, and that step is easy to forget -- it was forgotten, and a
+      # commit reached main with a message the convention rejects, seen by nobody. CI is the one
+      # path every commit takes regardless of what is installed on whose laptop.
+      #
+      # Every message in the range is checked before failing, so a bad push reports all of its
+      # problems at once rather than one per re-run.
       - name: Commit messages follow the convention
-        if: github.event_name == 'pull_request'
         run: |
-          git log --format=%H origin/${{ github.base_ref }}..HEAD | while read -r sha; do
-            git log -1 --format=%B "$sha" > /tmp/msg
-            java -jar tools/target/ai-tools.jar commit-msg /tmp/msg || exit 1
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            revisions=$(git log --format=%H "origin/${{ github.base_ref }}..HEAD")
+          else
+            before="${{ github.event.before }}"
+            case "$before" in
+              ""|0000000000000000000000000000000000000000)
+                # A new branch, or history the runner cannot see: check the tip only.
+                revisions=$(git log -1 --format=%H) ;;
+              *) revisions=$(git log --format=%H "$before..${{ github.sha }}") ;;
+            esac
+          fi
+
+          failed=0
+          for sha in $revisions; do
+            git log -1 --format=%B "$sha" > "$RUNNER_TEMP/message"
+            if ! java -jar tools/target/ai-tools.jar commit-msg "$RUNNER_TEMP/message"; then
+              echo "  ^ in commit $sha by $(git log -1 --format='%an' "$sha")" >&2
+              failed=1
+            fi
           done
+          exit $failed
 
       - name: Both members are present in the history
         if: github.event_name == 'pull_request'
