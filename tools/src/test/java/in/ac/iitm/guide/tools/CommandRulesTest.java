@@ -45,6 +45,15 @@ class CommandRulesTest {
     }
 
     @Test
+    void a_flag_that_switches_the_tests_back_on_is_not_a_bypass() {
+        // This refused `./mvnw package -DskipTests=false` within an hour of the rule being written.
+        // The command asks for the tests; the substring made it look like it was dodging them.
+        assertEquals(ALLOW, command("./mvnw -B -pl tools package -DskipTests=false"));
+        assertEquals(ALLOW, command("./mvnw package -Dmaven.test.skip=false"));
+        assertEquals(DENY, command("./mvnw package -DskipTests=true"));
+    }
+
+    @Test
     void an_ordinary_command_runs() {
         assertEquals(ALLOW, command("git status --porcelain"));
         assertEquals(ALLOW, command("./mvnw -B verify"));

@@ -41,8 +41,10 @@ public final class ProtectedPaths {
         if (relativePath == null) {
             return null;
         }
-        // The journal is written by the hooks themselves, so it must not trigger the guard.
-        if (relativePath.startsWith("docs/ai/journal/")) {
+        // Journal entries are written by the hooks themselves, so they must not trigger the guard.
+        // The README beside them is not an entry: it is an instruction file, and the blanket
+        // exemption was quietly letting it be edited without asking.
+        if (relativePath.startsWith("docs/ai/journal/") && !relativePath.equals("docs/ai/journal/README.md")) {
             return null;
         }
         for (var rule : RULES.entrySet()) {

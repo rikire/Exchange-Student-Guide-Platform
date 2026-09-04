@@ -56,9 +56,43 @@ public final class Journal {
 
         state.put("promptAt", ZonedDateTime.now(ZONE).toString());
         state.put("prompt", prompt == null ? "" : prompt);
+        // Both belong to one turn. A new prompt is a new turn, and so a fresh chance for the gate to
+        // refuse once - otherwise a single refusal would exempt every turn after it in the session.
+        state.remove("needsEnglish");
+        state.remove("renderingRefused");
         writeSnapshot(current);
         save();
         return humanEdits;
+    }
+
+    /**
+     * Records that this turn owes the journal an English rendering.
+     *
+     * <p>Decided by the hook that reads the prompt, so that the condition lives in one place: the
+     * gate at the end of the turn checks exactly what the reminder at the start of it asked for.
+     */
+    public void setNeedsEnglish() {
+        state.put("needsEnglish", true);
+    }
+
+    /** True when the prompt was not in English, so a rendering is owed before the turn ends. */
+    public boolean needsEnglish() {
+        return state.path("needsEnglish").asBoolean(false);
+    }
+
+    /**
+     * True once the gate has already refused this turn over a missing rendering.
+     *
+     * <p>It refuses once. A gate that can refuse for ever leaves no way to end a turn in which the
+     * rendering genuinely cannot be produced, and a session nobody can end is worse than an entry
+     * whose {@code Checks} line admits the omission.
+     */
+    public boolean renderingRefused() {
+        return state.path("renderingRefused").asBoolean(false);
+    }
+
+    public void setRenderingRefused() {
+        state.put("renderingRefused", true);
     }
 
     /**
@@ -185,6 +219,8 @@ public final class Journal {
         state.remove("prompt");
         state.remove("promptEn");
         state.remove("outcomeEn");
+        state.remove("needsEnglish");
+        state.remove("renderingRefused");
         writeSnapshot(Snapshot.take(repo));
         save();
     }

@@ -30,6 +30,13 @@ class ProtectedPathsTest {
     }
 
     @Test
+    void the_journals_own_instructions_are_not_an_entry() {
+        // The exemption above is for what the hooks write. It was also exempting the README beside
+        // them, which is an instruction file and was being edited without anyone being asked.
+        assertNotNull(ProtectedPaths.reasonFor("docs/ai/journal/README.md"));
+    }
+
+    @Test
     void feature_files_and_the_debt_register_are_kept_by_the_assistant_itself() {
         assertNull(ProtectedPaths.reasonFor("docs/features/FEAT-001-article-view.md"));
         assertNull(ProtectedPaths.reasonFor("docs/tech-debt.md"));

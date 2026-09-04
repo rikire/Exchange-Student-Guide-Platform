@@ -67,7 +67,10 @@ public final class CommandRules {
 
         for (String segment : SEGMENT.split(command)) {
             for (String[] rule : BYPASS) {
-                if (segment.contains(rule[0]) && segment.contains(rule[1])) {
+                // `-DskipTests=false` switches the tests on. Reading it as a bypass refused the one
+                // spelling that says out loud what it wants, which is the wrong thing to punish.
+                String used = segment.replace(rule[0] + "=false", "");
+                if (used.contains(rule[0]) && segment.contains(rule[1])) {
                     return new Verdict(
                             Verdict.Decision.DENY,
                             "This command carries " + rule[0]

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The team registry, and the mapping from a git identity to a person.
@@ -83,7 +82,7 @@ public final class Members {
      */
     public List<String> unregisteredAuthors(Repo repo) {
         List<String> unknown = new ArrayList<>();
-        for (String email : run(repo, "git", "log", "--format=%ae")) {
+        for (String email : Git.run(repo, "log", "--format=%ae").lines()) {
             if (!email.isBlank() && byEmail(email).isEmpty() && !unknown.contains(email)) {
                 unknown.add(email);
             }
@@ -91,37 +90,14 @@ public final class Members {
         return unknown;
     }
 
-    /** The git identity configured where this repository is checked out, or empty if there is none. */
-    public static Optional<String> gitEmail(Repo repo) {
-        List<String> output = run(repo, "git", "config", "user.email");
-        return output.isEmpty() || output.get(0).isBlank() ? Optional.empty() : Optional.of(output.get(0));
-    }
-
     /**
-     * Runs a command in the repository and returns its output lines, or nothing when it fails.
+     * The git identity configured where this repository is checked out, or empty if there is none.
      *
-     * <p>Failure is deliberately quiet. Authorship is worth reporting as unknown; it is never worth
-     * breaking someone's session over a git call that did not work.
+     * <p>A failed git call is deliberately quiet here. Authorship is worth reporting as unknown; it
+     * is never worth breaking someone's session over a git call that did not work.
      */
-    private static List<String> run(Repo repo, String... command) {
-        try {
-            Process process = new ProcessBuilder(command)
-                    .directory(repo.root().toFile())
-                    .redirectErrorStream(false)
-                    .start();
-            String output;
-            try (var stream = process.getInputStream()) {
-                output = new String(stream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
-            }
-            if (!process.waitFor(20, TimeUnit.SECONDS) || process.exitValue() != 0) {
-                return List.of();
-            }
-            return output.lines().map(String::strip).toList();
-        } catch (IOException | InterruptedException e) {
-            if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
-            return List.of();
-        }
+    public static Optional<String> gitEmail(Repo repo) {
+        Git.Result result = Git.run(repo, "config", "user.email");
+        return !result.ok() || result.first().isBlank() ? Optional.empty() : Optional.of(result.first());
     }
 }

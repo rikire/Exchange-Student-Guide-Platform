@@ -189,6 +189,34 @@ class JournalTest {
     }
 
     @Test
+    void a_new_prompt_gives_the_rendering_gate_a_fresh_refusal() throws IOException {
+        // Session-scoped state would mean one refusal exempts every later turn: forget the rendering
+        // once, be let through for the rest of the day. The debt is per turn, so the flags are too.
+        Journal journal = Journal.open(repo, "session-n");
+        journal.startEntry("сделай что-нибудь");
+        journal.setNeedsEnglish();
+        journal.setRenderingRefused();
+
+        journal.startEntry("сделай что-нибудь ещё");
+
+        assertFalse(journal.needsEnglish(), "the new turn decides for itself whether it owes one");
+        assertFalse(journal.renderingRefused(), "and the gate may refuse it once");
+    }
+
+    @Test
+    void closing_an_entry_clears_what_the_turn_owed() throws IOException {
+        Journal journal = Journal.open(repo, "session-o");
+        journal.startEntry("сделай что-нибудь");
+        journal.setNeedsEnglish();
+        journal.setRenderingRefused();
+
+        journal.finishEntry("Done.", List.of(), List.of());
+
+        assertFalse(journal.needsEnglish());
+        assertFalse(journal.renderingRefused());
+    }
+
+    @Test
     void records_the_files_the_human_changed_by_hand() throws IOException {
         Journal journal = Journal.open(repo, "session-f");
         journal.startEntry("carry on");

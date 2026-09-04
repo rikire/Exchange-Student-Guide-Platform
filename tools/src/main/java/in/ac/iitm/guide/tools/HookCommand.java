@@ -176,6 +176,10 @@ final class HookCommand {
 
         if (event.prompt() != null && CYRILLIC.matcher(event.prompt()).find()) {
             message.append("\n\n").append(TRANSLATION_REMINDER);
+            // The condition is decided here and remembered, so the gate at the end of the turn asks
+            // for exactly what this reminder asked for, rather than judging the prompt a second time.
+            journal.setNeedsEnglish();
+            journal.save();
         }
 
         String unresolved = resolveAuthor(repo, journal);
@@ -321,6 +325,17 @@ final class HookCommand {
         Repo repo = Repo.find(event.cwd());
         Journal journal = Journal.open(repo, event.sessionId());
 
+        // First, because it is the cheapest and because this turn can always satisfy it. Recording
+        // the omission was not enough: on 4 September the reminder fired, was ignored, and the entry
+        // went into the file saying "NOT supplied" - a mechanism that watches a rule break is not a
+        // mechanism that stops it.
+        if (journal.needsEnglish() && !journal.hasEnglishRendering() && !journal.renderingRefused()) {
+            journal.setRenderingRefused();
+            journal.save();
+            HookEvent.emitDecision("Stop", "deny", RENDERING_OWED);
+            return;
+        }
+
         List<String> problems = new ArrayList<>();
         DocsCheck.run(repo).forEach(problem -> problems.add(problem.toString()));
 
@@ -356,7 +371,32 @@ final class HookCommand {
         }
 
         journal.finishEntry(event.lastAssistantMessage(), checks, List.of());
+
+        // After the entry is written, never before: this is the only moment at which the file the
+        // commit is for actually exists.
+        String failure = JournalCommit.commitPending(repo, java.time.ZonedDateTime.now());
+        if (!failure.isEmpty()) {
+            System.err.println("ai-tools: " + failure);
+        }
     }
+
+    /** What the gate says when the turn owes the journal an English rendering. */
+    private static final String RENDERING_OWED =
+            """
+            The turn cannot end: this prompt was not in English, and the journal has no English \
+            rendering of it. The journal is the evidence an English-speaking evaluator reads.
+
+            Record it, then finish:
+
+              java -jar tools/target/ai-tools.jar hook english \
+                --prompt "<the prompt in English>" --outcome "<what you did, in English>"
+
+            The original prompt is kept beside the rendering. Skip --prompt if the prompt was \
+            already English, and pass --outcome alone.
+
+            This refuses once. If the rendering genuinely cannot be produced, end the turn again and \
+            the entry will record that it was not supplied.\
+            """;
 
     private static void note(String text) throws Exception {
         if (text.isBlank()) {
