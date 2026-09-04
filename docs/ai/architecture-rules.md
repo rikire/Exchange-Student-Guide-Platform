@@ -21,6 +21,7 @@ in.ac.iitm.guide
 ├── taxonomy/          tags and navigation by tag
 ├── contribute/        creating an article and proposing an edit
 ├── moderate/          the queue, approval, rejection
+├── report/            flagging an article as a problem, and resolving that flag
 ├── media/             upload, storage, delivery
 ├── wikilink/          plain Java: the [[link]] parser and backlinks
 └── backup/            export and import of the whole knowledge base

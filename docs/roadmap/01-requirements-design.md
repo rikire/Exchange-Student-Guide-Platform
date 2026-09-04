@@ -27,7 +27,9 @@ design document is the deliverable; the repository documents are the source it i
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
 - [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
 - [ ] Assemble `docs/course/design-doc.md` and produce the PDF (2–4 pages)
-- [ ] Content: 10 or more articles drafted
+- [ ] Content: 10 or more articles drafted — absorbs the article-format-and-drafts item moved from
+      phase 0 (4 Sep, see [00-init.md](00-init.md)); the seed front-matter shape is decided here,
+      together with the glossary and ERD, not ahead of them
 
 ## Readiness criterion
 
@@ -38,8 +40,14 @@ no row resting on a template.
 
 1. How much of the version-history groundwork to commit to in the ADR. Storage is nearly free and
    must start in phase 2 or the history cannot be reconstructed later; the UI is a nice-to-have.
-2. Whether the landing page's pinned items are curated by the moderator or derived from activity.
-   This affects the schema, so it cannot wait past this phase.
+   **Still open, and sharper now (5 Sep):** the feature coverage tracker prioritizes it `should`, not
+   `must` — correct by the "does the system still function without it" test — but that priority label
+   says nothing about *when* it has to be built. If `should`-priority work defaults to phase 4–5
+   timing, the data is unrecoverable by then. Needs an explicit answer: build the retention groundwork
+   in phase 2 regardless of its `should` label, or accept that any article approved before phase 4 has
+   no history.
+2. ~~Whether the landing page's pinned items are curated by the moderator or derived from activity.~~
+   Resolved 5 Sep: moderator-curated, via direct homepage editing (UC-022, `home`).
 
 ## How the two of us work through this phase
 
@@ -108,13 +116,22 @@ something to split.
 **Process:** each of you lists candidate features independently first, against the three CJM roles —
 what a reader needs, a contributor needs, a moderator needs. Merge the two lists, then as a pair:
 
-- [ ] Sort every feature into a slice — a feature that doesn't fit is a sign the slice list itself
-  needs revisiting, which is stop-and-ask territory, not a solo call.
-- [ ] Prioritize: MVP now (this phase's design, phase 2–3's build) vs. later (phase 4–5) vs.
-  explicitly out — the "out" pile becomes CON entries with a rationale, not silently dropped.
-- [ ] Map MVP features onto the existing phase boundaries
+- [x] Sort every feature into a slice — a feature that doesn't fit is a sign the slice list itself
+  needs revisiting, which is stop-and-ask territory, not a solo call. Done 5 Sep: three features
+  didn't fit the original nine cleanly (reporting an article, submission status lookup, the
+  moderator's direct-publish path); resolved by adding a tenth slice, `report`
+  ([architecture-rules.md](../ai/architecture-rules.md)), and folding the other two into
+  `contribute`. See the Feature coverage tracker above for the full assignment.
+- [x] Prioritize: MVP now (this phase's design, phase 2–3's build) vs. later (phase 4–5) vs.
+  explicitly out — the "out" pile becomes CON entries with a rationale, not silently dropped. Done
+  5 Sep with MoSCoW: 11 must, 6 should, 6 could, 0 won't — see the Priority column in the Feature
+  coverage tracker above. Nothing was cut outright, so no constraint entry was needed.
+- [x] Map MVP features onto the existing phase boundaries
   ([02-skeleton.md](02-skeleton.md), [03-main-flow.md](03-main-flow.md)) — this is what "revised
-  milestone plan" (step above) actually revises.
+  milestone plan" (step above) actually revises. Done 5 Sep: all 11 `must` features already trace to
+  a step named in phase 2 or phase 3 — no edit to either file was needed. The `should`/`could` items
+  are not yet placed in phase 4 ([04-hardening.md](04-hardening.md)); Open question 1 above flags the
+  one case (version-history groundwork) where that can't just wait.
 
 What falls out of this, recorded rather than written as a separate task: the FR skeleton (titles +
 one-line scope, tagged by slice), first-cut CON with rationale, first-cut
@@ -131,9 +148,41 @@ document.
 Seeded once stage 1 produces the feature list — populated by the humans doing stage 1, not written in
 advance — and grows or gets re-tagged as the standing rule above kicks in.
 
-| Feature | Slice | FR id | ADR | CJM step | ERD entity | Route | Screen |
-|---|---|---|---|---|---|---|---|
-| _(one row per feature, added during §1)_ | | | | | | | |
+| Feature | Priority | Slice | FR id | ADR | CJM step | ERD entity | Route | Screen |
+|---|---|---|---|---|---|---|---|---|
+| Full-text search across articles | must | `search` | | | UC-001 | | | |
+| Browse/filter articles by tag | should | `taxonomy` | | | UC-002 | | | |
+| Read a published article (body, tags, media, wiki links) | must | `articleview` | | | UC-003 | | | |
+| Download a media attachment | should | `media` | | | UC-004 | | | |
+| Parse and render `[[wiki links]]` | must | `wikilink` | | | UC-005 | | | |
+| Backlinks on an article | could | `wikilink` | | | UC-006 | | | |
+| Landing page: pinned items + search | must | `home` | | | UC-007 | | | |
+| Red-link rendering | could | `wikilink` | | | UC-008 | | | |
+| Report an article | should | `report` | | | UC-009 | | | |
+| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | | | UC-010 | | | |
+| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | | | UC-011 | | | |
+| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | | | UC-012 | | | |
+| Look up a submission's status by its number | could | `contribute` | | | UC-013 | | | |
+| Abuse handling without accounts (rate limiting + honeypot) | should | `shared/security` | | | _(none — not a use case)_ | | | |
+| Moderation queue: list pending submissions | must | `moderate` | | | UC-014 | | | |
+| Review a submission's full text and attachments | must | `moderate` | | | UC-015 | | | |
+| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | | | UC-016 | | | |
+| Reject a submission | must | `moderate` | | | UC-017 | | | |
+| Version-history groundwork: retain each approved revision | should | `moderate` | | | UC-018 | | | |
+| Handle a reported article | should | `report` | | | UC-019 | | | |
+| Write and publish a new article directly, bypassing the queue | could | `contribute` | | | UC-020 | | | |
+| Edit and publish an article directly, bypassing the queue | could | `contribute` | | | UC-021 | | | |
+| Edit the homepage, including what's pinned | could | `home` | | | UC-022 | | | |
+
+MoSCoW test used: **must** = the system does not function as this product without it; **should** = a
+real, non-cosmetic loss if missing, but the system still works; **could** = low impact if missing,
+easily deferred. Agreed 5 Sep: 11 must, 6 should, 6 could, 0 won't — nothing among these 23 was cut
+outright, so no constraint entry was needed for this pass.
+
+`backup` (export/import) has no row above: it is not a use case of Reader, Contributor or Moderator —
+it is a DevOps/deployment concern, justified by the already-agreed export-format ADR and the
+exportability NFR rather than by a CJM step. Recorded here so its absence from this table reads as a
+decision, not an oversight.
 
 - A cell is checked only when that specific feature's piece of that artifact exists — not when the
   artifact file has *some* content.
