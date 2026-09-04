@@ -16,7 +16,7 @@ members:
     name: Abdirakhim Ismailov
     roll: GE26Z860
     github: abdra04-gif
-    emails: []
-    # TODO: add Abdirakhim's git email before the first ownership run.
+    emails:
+      - abdirahim@mail.ru
 
 contact: ge26z860@smail.iitm.ac.in
