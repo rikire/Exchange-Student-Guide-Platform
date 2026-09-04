@@ -79,6 +79,28 @@ public final class Journal {
         return true;
     }
 
+    /**
+     * A stable short fingerprint of a set of problems, used to tell "the same cause again" from a
+     * new one.
+     */
+    public static String fingerprint(String text) {
+        return Snapshot.sha256(text.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                .substring(0, 16);
+    }
+
+    /** The cause the gate last refused on, so that it does not refuse on it twice. */
+    public String lastGateCause() {
+        return state.path("lastGateCause").asText("");
+    }
+
+    public void setLastGateCause(String cause) {
+        if (cause == null || cause.isBlank()) {
+            state.remove("lastGateCause");
+        } else {
+            state.put("lastGateCause", cause);
+        }
+    }
+
     /** When the open entry's prompt arrived, ISO-8601, or empty when no entry is open. */
     public String promptedAt() {
         return state.path("promptAt").asText("");

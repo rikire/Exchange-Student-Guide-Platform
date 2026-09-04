@@ -76,36 +76,75 @@ public final class DocsCheck {
         this.repo = repo;
     }
 
+    /** One markdown file, read once. */
+    private record Document(Path path, String relative, List<String> lines) {}
+
     public static List<Problem> run(Repo repo) throws IOException {
         DocsCheck check = new DocsCheck(repo);
+
+        // Walked and read once, then handed to every rule. Each rule used to fetch the file list
+        // itself, so the tree was walked four times and every file read three times - which was
+        // most of the cost of running this at all.
+        List<Document> documents = check.readMarkdown();
+
         List<Problem> problems = new ArrayList<>();
-        problems.addAll(check.brokenLinks());
+        for (Document document : documents) {
+            for (String line : document.lines()) {
+                check.checkLine(document, line, problems);
+            }
+        }
         problems.addAll(check.advertisedCommands());
-        problems.addAll(check.citedSubcommands());
-        problems.addAll(check.citedScripts());
         problems.addAll(check.documentedHooks());
         return problems;
     }
 
-    /** A relative link to a markdown file that is not there. */
-    private List<Problem> brokenLinks() throws IOException {
-        List<Problem> problems = new ArrayList<>();
-        for (Path file : markdownFiles()) {
-            Path dir = file.getParent();
-            for (String line : Files.readAllLines(file)) {
-                Matcher matcher = MARKDOWN_LINK.matcher(line);
-                while (matcher.find()) {
-                    String target = matcher.group(1);
-                    if (target.startsWith("http")) {
-                        continue;
-                    }
-                    if (!Files.exists(dir.resolve(target).normalize())) {
-                        problems.add(new Problem(relative(file), "link to a missing file: " + target));
-                    }
-                }
+    /** Every rule that judges a single line, applied in one pass. */
+    private void checkLine(Document document, String line, List<Problem> problems) {
+        Matcher links = MARKDOWN_LINK.matcher(line);
+        while (links.find()) {
+            String target = links.group(1);
+            if (!target.startsWith("http")
+                    && !Files.exists(document.path().getParent().resolve(target).normalize())) {
+                problems.add(new Problem(document.relative(), "link to a missing file: " + target));
             }
         }
-        return problems;
+
+        // Work that is genuinely still ahead is not a defect, so a line that names its phase is
+        // excused from the two rules below - but never from the broken-link rule above, because a
+        // link to a file that does not exist is broken whenever it is followed.
+        if (PHASE_MARKER.matcher(line).find()) {
+            return;
+        }
+
+        Matcher invocations = INVOCATION.matcher(line);
+        while (invocations.find()) {
+            String hook = invocations.group(1);
+            String top = invocations.group(2);
+            if (hook != null && !Commands.HOOK.contains(hook)) {
+                problems.add(new Problem(document.relative(), "cites `hook " + hook + "`, which is not dispatched"));
+            } else if (top != null && !Commands.TOP_LEVEL.contains(top)) {
+                problems.add(new Problem(
+                        document.relative(),
+                        "cites `ai-tools " + top + "`, which is not dispatched;"
+                                + " say on this line which phase it belongs to if it is still ahead"));
+            }
+        }
+
+        Matcher scripts = SCRIPT.matcher(line);
+        while (scripts.find()) {
+            String script = scripts.group(1);
+            if (!Files.isRegularFile(repo.resolve(script))) {
+                problems.add(new Problem(document.relative(), "names " + script + ", which does not exist"));
+            }
+        }
+    }
+
+    private List<Document> readMarkdown() throws IOException {
+        List<Document> documents = new ArrayList<>();
+        for (Path file : markdownFiles()) {
+            documents.add(new Document(file, relative(file), Files.readAllLines(file)));
+        }
+        return documents;
     }
 
     /**
@@ -128,52 +167,6 @@ public final class DocsCheck {
                     if (seen.add(command)
                             && !Files.isRegularFile(repo.resolve(".claude/commands/" + command + ".md"))) {
                         problems.add(new Problem(name, "advertises /" + command + ", which has no command file"));
-                    }
-                }
-            }
-        }
-        return problems;
-    }
-
-    /** A subcommand a document tells someone to run, that the tool does not dispatch. */
-    private List<Problem> citedSubcommands() throws IOException {
-        List<Problem> problems = new ArrayList<>();
-        for (Path file : markdownFiles()) {
-            for (String line : Files.readAllLines(file)) {
-                if (PHASE_MARKER.matcher(line).find()) {
-                    continue;
-                }
-                Matcher matcher = INVOCATION.matcher(line);
-                while (matcher.find()) {
-                    String hook = matcher.group(1);
-                    String top = matcher.group(2);
-                    if (hook != null && !Commands.HOOK.contains(hook)) {
-                        problems.add(new Problem(relative(file), "cites `hook " + hook + "`, which is not dispatched"));
-                    } else if (top != null && !Commands.TOP_LEVEL.contains(top)) {
-                        problems.add(new Problem(
-                                relative(file),
-                                "cites `ai-tools " + top + "`, which is not dispatched;"
-                                        + " say on this line which phase it belongs to if it is still ahead"));
-                    }
-                }
-            }
-        }
-        return problems;
-    }
-
-    /** A script a document names as the way to do something, that does not exist. */
-    private List<Problem> citedScripts() throws IOException {
-        List<Problem> problems = new ArrayList<>();
-        for (Path file : markdownFiles()) {
-            for (String line : Files.readAllLines(file)) {
-                if (PHASE_MARKER.matcher(line).find()) {
-                    continue;
-                }
-                Matcher matcher = SCRIPT.matcher(line);
-                while (matcher.find()) {
-                    String script = matcher.group(1);
-                    if (!Files.isRegularFile(repo.resolve(script))) {
-                        problems.add(new Problem(relative(file), "names " + script + ", which does not exist"));
                     }
                 }
             }

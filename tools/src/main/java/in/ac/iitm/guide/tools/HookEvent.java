@@ -21,16 +21,19 @@ public record HookEvent(
         String prompt,
         String lastAssistantMessage,
         String toolName,
-        String filePath) {
+        String filePath,
+        String command,
+        String content) {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static HookEvent readFromStdin() throws IOException {
         byte[] raw = System.in.readAllBytes();
         if (raw.length == 0) {
-            return new HookEvent(null, null, null, null, null, null, null);
+            return new HookEvent(null, null, null, null, null, null, null, null, null);
         }
         JsonNode node = MAPPER.readTree(new String(raw, StandardCharsets.UTF_8));
+        JsonNode input = node.path("tool_input");
         return new HookEvent(
                 text(node, "session_id"),
                 text(node, "cwd"),
@@ -38,7 +41,12 @@ public record HookEvent(
                 text(node, "prompt"),
                 text(node, "last_assistant_message"),
                 text(node, "tool_name"),
-                node.path("tool_input").path("file_path").asText(null));
+                input.path("file_path").asText(null),
+                input.path("command").asText(null),
+                // Write carries `content`; Edit carries the replacement text. Either is the text
+                // about to land, which is what makes a check possible before it does rather than
+                // a complaint afterwards.
+                input.path("content").asText(input.path("new_string").asText(null)));
     }
 
     private static String text(JsonNode node, String field) {

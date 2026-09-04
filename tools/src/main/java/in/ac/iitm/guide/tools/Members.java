@@ -74,27 +74,54 @@ public final class Members {
                 .findFirst();
     }
 
+    /**
+     * Author addresses in the history that belong to nobody in the registry.
+     *
+     * <p>Registering an address is not the same as committing with it: one of us registered one he
+     * does not use, and a person had to notice. Attribution silently resolves to nobody in that
+     * case, which is the failure this makes loud.
+     */
+    public List<String> unregisteredAuthors(Repo repo) {
+        List<String> unknown = new ArrayList<>();
+        for (String email : run(repo, "git", "log", "--format=%ae")) {
+            if (!email.isBlank() && byEmail(email).isEmpty() && !unknown.contains(email)) {
+                unknown.add(email);
+            }
+        }
+        return unknown;
+    }
+
     /** The git identity configured where this repository is checked out, or empty if there is none. */
     public static Optional<String> gitEmail(Repo repo) {
+        List<String> output = run(repo, "git", "config", "user.email");
+        return output.isEmpty() || output.get(0).isBlank() ? Optional.empty() : Optional.of(output.get(0));
+    }
+
+    /**
+     * Runs a command in the repository and returns its output lines, or nothing when it fails.
+     *
+     * <p>Failure is deliberately quiet. Authorship is worth reporting as unknown; it is never worth
+     * breaking someone's session over a git call that did not work.
+     */
+    private static List<String> run(Repo repo, String... command) {
         try {
-            Process process = new ProcessBuilder("git", "config", "user.email")
+            Process process = new ProcessBuilder(command)
                     .directory(repo.root().toFile())
                     .redirectErrorStream(false)
                     .start();
             String output;
             try (var stream = process.getInputStream()) {
-                output = new String(stream.readAllBytes()).strip();
+                output = new String(stream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
             }
-            if (!process.waitFor(10, TimeUnit.SECONDS) || process.exitValue() != 0 || output.isBlank()) {
-                return Optional.empty();
+            if (!process.waitFor(20, TimeUnit.SECONDS) || process.exitValue() != 0) {
+                return List.of();
             }
-            return Optional.of(output);
+            return output.lines().map(String::strip).toList();
         } catch (IOException | InterruptedException e) {
-            // Authorship is worth reporting as unknown, never worth breaking someone's session over.
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
-            return Optional.empty();
+            return List.of();
         }
     }
 }

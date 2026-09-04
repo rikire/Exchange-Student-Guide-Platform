@@ -34,6 +34,11 @@ echo "==> process tooling"
 echo "==> documentation describes what exists"
 java -jar tools/target/ai-tools.jar docs-check
 
+# Registering an address is not the same as committing with one. One of us registered an address
+# he does not use, and only a person noticed; attribution silently resolved to nobody meanwhile.
+echo "==> every committer resolves to a member"
+java -jar tools/target/ai-tools.jar authors
+
 echo "==> build, tests and formatting"
 ./mvnw -B verify
 

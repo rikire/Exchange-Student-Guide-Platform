@@ -26,6 +26,9 @@ public final class ProtectedPaths {
         RULES.put("docs/stakeholder/", "this records what the stakeholder actually said");
         RULES.put("docs/course/", "these documents are submitted for grading");
         RULES.put("docs/team/members.yml", "team identity drives contribution attribution");
+        RULES.put("pom.xml", "a dependency or a version is a decision the human makes");
+        RULES.put("app/pom.xml", "a dependency or a version is a decision the human makes");
+        RULES.put("tools/pom.xml", "a dependency or a version is a decision the human makes");
         RULES.put("CLAUDE.md", "these are the assistant's own instructions");
         RULES.put("docs/ai/", "these are the assistant's own instructions");
         RULES.put(".claude/", "these are the assistant's own instructions");

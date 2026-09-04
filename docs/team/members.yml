@@ -11,6 +11,8 @@ members:
     github: rikire
     emails:
       - rizireY@yandex.ru
+      # GitHub used this for the repository's first commit, made through the web UI.
+      - 56105683+rikire@users.noreply.github.com
 
   - id: abdirakhim
     name: Abdirakhim Ismailov

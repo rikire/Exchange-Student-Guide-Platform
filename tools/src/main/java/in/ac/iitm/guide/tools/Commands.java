@@ -12,9 +12,9 @@ import java.util.Set;
  */
 public final class Commands {
 
-    public static final Set<String> TOP_LEVEL = Set.of("hook", "commit-msg", "docs-check");
+    public static final Set<String> TOP_LEVEL = Set.of("hook", "commit-msg", "docs-check", "authors");
 
-    public static final Set<String> HOOK = Set.of("prompt", "guard", "stop", "note", "english", "author");
+    public static final Set<String> HOOK = Set.of("prompt", "guard", "bash", "stop", "note", "english", "author");
 
     private Commands() {}
 

@@ -16,6 +16,7 @@ import java.util.List;
  *   hook author &lt;id&gt;       record who is sending the prompts, when git could not say
  *   commit-msg &lt;file&gt;      check the commit message convention
  *   docs-check             find documentation that describes what the repository lacks
+ *   authors                check every committer resolves to a member of the team registry
  * </pre>
  *
  * <p>A failure inside a hook must not break the human's session: every error is reported on stderr
@@ -41,6 +42,7 @@ public final class Main {
                 case "hook" -> HookCommand.run(Arrays.copyOfRange(args, 1, args.length));
                 case "commit-msg" -> commitMsg(Arrays.copyOfRange(args, 1, args.length));
                 case "docs-check" -> docsCheck();
+                case "authors" -> authors();
                 default -> throw new IllegalStateException("dispatch missing for " + args[0]);
             }
         } catch (Exception e) {
@@ -58,6 +60,20 @@ public final class Main {
         problems.forEach(problem -> System.err.println("  " + problem));
         System.err.println();
         System.err.println("Either build the thing, or say on the same line which phase it belongs to.");
+        System.exit(1);
+    }
+
+    private static void authors() throws Exception {
+        Repo repo = Repo.find(null);
+        List<String> unknown = Members.load(repo).unregisteredAuthors(repo);
+        if (unknown.isEmpty()) {
+            return;
+        }
+        System.err.println("These author addresses belong to nobody in docs/team/members.yml:");
+        unknown.forEach(email -> System.err.println("  " + email));
+        System.err.println();
+        System.err.println("Registering an address is not the same as committing with one. Until they match,");
+        System.err.println("that person's work is attributed to nobody in the journal and the contribution log.");
         System.exit(1);
     }
 

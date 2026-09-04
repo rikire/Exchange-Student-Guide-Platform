@@ -21,6 +21,7 @@ final class HookCommand {
         switch (args[0]) {
             case "prompt" -> prompt();
             case "guard" -> guard();
+            case "bash" -> bash();
             case "stop" -> stop();
             case "note" -> note(String.join(" ", List.of(args).subList(1, args.length)));
             case "english" -> english(java.util.Arrays.copyOfRange(args, 1, args.length));
@@ -261,33 +262,99 @@ final class HookCommand {
         journal.save();
     }
 
-    /** Asks the human before an edit lands in a file that belongs to their decision space. */
+    /**
+     * Judges an edit before it lands: whose file it is, and what it is about to write.
+     *
+     * <p>Both checks share this one invocation. A hook launch costs about half a second and this one
+     * already happens on every edit, so folding the content rule in here is free, where a separate
+     * {@code PostToolUse} hook would have doubled the cost of editing anything.
+     */
     private static void guard() throws Exception {
         HookEvent event = HookEvent.readFromStdin();
         Repo repo = Repo.find(event.cwd());
         String relative = repo.relativize(event.filePath());
+
         String reason = ProtectedPaths.reasonFor(relative);
-        if (reason == null) {
+        if (reason != null) {
+            HookEvent.emitDecision(
+                    "PreToolUse",
+                    "ask",
+                    relative + " belongs to the human's decision space: " + reason + ".\n\n"
+                            + "Editing it is allowed only after explicit agreement "
+                            + "(docs/ai/collaboration.md, section \"Who decides what\").\n"
+                            + "If that agreement has not been given yet, describe the change you propose and wait.");
             return;
         }
-        HookEvent.emitDecision(
-                "PreToolUse",
-                "ask",
-                relative + " belongs to the human's decision space: " + reason + ".\n\n"
-                        + "Editing it is allowed only after explicit agreement "
-                        + "(docs/ai/collaboration.md, section \"Who decides what\").\n"
-                        + "If that agreement has not been given yet, describe the change you propose and wait.");
+
+        CommandRules.Verdict verdict = CommandRules.forContent(relative, event.content());
+        if (verdict.decision() != CommandRules.Verdict.Decision.ALLOW) {
+            HookEvent.emitDecision("PreToolUse", decisionOf(verdict), verdict.reason());
+        }
     }
 
-    /** Closes the journal entry for the turn. */
+    /** Judges a shell command before it runs. */
+    private static void bash() throws Exception {
+        HookEvent event = HookEvent.readFromStdin();
+        CommandRules.Verdict verdict = CommandRules.forCommand(event.command());
+        if (verdict.decision() != CommandRules.Verdict.Decision.ALLOW) {
+            HookEvent.emitDecision("PreToolUse", decisionOf(verdict), verdict.reason());
+        }
+    }
+
+    private static String decisionOf(CommandRules.Verdict verdict) {
+        return verdict.decision() == CommandRules.Verdict.Decision.DENY ? "deny" : "ask";
+    }
+
+    /**
+     * Runs the gate, then closes the journal entry for the turn.
+     *
+     * <p>Order matters: the checks run first, and the outcome is only recorded if the turn is
+     * actually allowed to end. Otherwise the journal would hold an interim answer as though it were
+     * the result.
+     *
+     * <p>Only cheap checks live here. `./mvnw verify` takes 27 seconds, and a gate that adds that to
+     * every turn is a gate someone switches off - which guarantees nothing at all. The full run
+     * stays in `pre-push` and CI.
+     */
     private static void stop() throws Exception {
         HookEvent event = HookEvent.readFromStdin();
         Repo repo = Repo.find(event.cwd());
         Journal journal = Journal.open(repo, event.sessionId());
 
+        List<String> problems = new ArrayList<>();
+        DocsCheck.run(repo).forEach(problem -> problems.add(problem.toString()));
+
         List<String> checks = new ArrayList<>();
         checks.add("traceability gate: not enabled yet (phase 2)");
         checks.add(journal.hasEnglishRendering() ? "English rendering: supplied" : "English rendering: NOT supplied");
+
+        if (!problems.isEmpty()) {
+            String cause = Journal.fingerprint(String.join("\n", problems));
+
+            // Blocked once per distinct cause. If the same problems come back, the turn is allowed
+            // to end - loudly. A gate that can refuse for ever deadlocks the session with no way for
+            // a person to intervene, which is worse than the divergence it was guarding against.
+            if (!cause.equals(journal.lastGateCause())) {
+                journal.setLastGateCause(cause);
+                journal.save();
+                HookEvent.emitDecision(
+                        "Stop",
+                        "deny",
+                        "The turn cannot end: documentation describes things the repository does not contain.\n\n"
+                                + String.join(
+                                        "\n",
+                                        problems.stream().map(p -> "  " + p).toList()) + "\n\n"
+                                + "Fix these, or say on the line itself which phase the work belongs to.\n"
+                                + "If it cannot be fixed, stop and ask (docs/ai/stop-and-ask.md).");
+                return;
+            }
+            checks.add("documentation gate: NOT PASSED (" + problems.size()
+                    + " unresolved; allowed through because it had already blocked once)");
+        } else {
+            journal.setLastGateCause("");
+            checks.add("documentation gate: passed");
+        }
+
         journal.finishEntry(event.lastAssistantMessage(), checks, List.of());
     }
 
