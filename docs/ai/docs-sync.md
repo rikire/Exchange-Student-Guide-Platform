@@ -39,6 +39,10 @@ Manual run:
 java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
 ```
 
+The generator lands in phase 2. Until then this rule is followed by reading the table above, and
+the `Stop` gate that would enforce it does not run — which is stated here rather than left to be
+discovered.
+
 ## What "update the document" means
 
 Update it in substance, not cosmetically.

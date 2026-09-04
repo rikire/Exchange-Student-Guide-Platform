@@ -68,7 +68,7 @@ one that makes a suite stop meaning anything.
 Rules: [docs-sync.md](docs-sync.md).
 
 ```bash
-java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
+java -jar tools/target/ai-tools.jar trace --docs-sync HEAD   # phase 2; until then, check by reading
 ```
 
 Documentation updated **in substance**: it describes the new behaviour, not the fact that an edit
@@ -77,8 +77,12 @@ happened.
 ## 7. Traceability
 
 ```bash
-java -jar tools/target/ai-tools.jar trace
+java -jar tools/target/ai-tools.jar trace   # phase 2; until then, check by reading
 ```
+
+Until the generator exists, walk the list in [`/trace-check`](../../.claude/commands/trace-check.md)
+by hand and say so in the verdict. An item reported as passed because a missing command produced
+no output is not a passed item.
 
 - New code carries `//trace:FR-XXX`; so does the test.
 - The status of the requirement and of the feature reflects reality.

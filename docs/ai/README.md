@@ -47,11 +47,12 @@ better than pretending otherwise.
 | `/dod` | Runs the readiness checklist |
 | `/journal-note <text>` | Adds a note to the journal |
 | `/weekly-log [--as member] <text>` | Adds a paragraph to this week's contribution log |
-| `/ownership` | Recomputes actual slice ownership and shows the balance |
 | `/stakeholder-note <text>` | Records stakeholder feedback and proposes what it becomes |
-| `/gap-list` | Regenerates the honest list of what is not done |
 | `/course-check [stage]` | Checks the rubric for the current stage |
-| `/viva-prep <slice>` | Prepares questions and answers about a slice |
 | `/article <topic>` | Starts a seed article draft in the target format |
+
+Three more — ownership, gap-list and viva-prep — arrive with their generators in phases 2 and 3. They
+are listed only once they work: a command that errors is worse than one that is absent, because
+it gets tried.
 
 The technical debt register is [docs/tech-debt.md](../tech-debt.md).

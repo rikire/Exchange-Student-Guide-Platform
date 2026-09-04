@@ -76,8 +76,11 @@ scripts/hooks.sh                # build the jar and install the git hooks
 
 ## Slash commands
 
-`/sharpen` · `/feature` · `/adr` · `/sync-docs` · `/trace-check` · `/dod` · `/journal-note` · `/weekly-log`
-· `/ownership` · `/stakeholder-note` · `/gap-list` · `/course-check` · `/viva-prep` · `/article`
+`/sharpen` · `/feature` · `/adr` · `/sync-docs` · `/trace-check` · `/dod` · `/journal-note`
+· `/weekly-log` · `/stakeholder-note` · `/course-check` · `/article`
+
+Three more — ownership, gap-list and viva-prep — arrive with their generators in phases 2 and 3. They are not listed above until they work — a command that errors is worse than one that
+is absent, because it is tried.
 
 ## What happens automatically
 

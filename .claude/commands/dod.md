@@ -10,7 +10,12 @@ applicable. Run the checks for real, not from memory:
 - `./mvnw -q verify`
 - `./mvnw test`
 - `./mvnw -pl app test -Dtest=ModularityTest`
-- `java -jar tools/target/ai-tools.jar trace --docs-sync HEAD`
+
+The traceability and documentation-sync generator lands in phase 2. Until it exists, do items 6
+and 7 by reading, the way `/trace-check` describes, and say in the verdict that they were checked
+by hand rather than by a tool. Do not run `ai-tools trace`: it is not there, and reporting a
+checklist item as passed on the strength of a command that failed is the exact failure this list
+exists to prevent.
 
 Then **re-read your own diff in full** (`git diff HEAD`) and say separately: what looks doubtful,
 what was added "just in case", and what should be deleted.
