@@ -40,3 +40,180 @@ no row resting on a template.
    must start in phase 2 or the history cannot be reconstructed later; the UI is a nice-to-have.
 2. Whether the landing page's pinned items are curated by the moderator or derived from activity.
    This affects the schema, so it cannot wait past this phase.
+
+## How the two of us work through this phase
+
+Three earlier drafts of this split by document type (one of us writes requirements, the other writes
+journeys/design) kept surfacing the same problem: NFR separated from the design it constrains, screens
+separated from the data model they need, a moderation ADR separated from the queue screen that
+visualizes it. The fix is already written down in
+[docs/ai/architecture-rules.md](../ai/architecture-rules.md): this project's unit of parallel work is
+the **vertical slice** — `home`, `articleview`, `search`, `taxonomy`, `contribute`, `moderate`,
+`media`, `wikilink`, `backup` — because a slice is "both the unit of work someone picks up and the
+unit ownership is measured against." Splitting this phase the same way means each of us owns a
+feature's requirement, its architecture decision, and its screen together, instead of trading files
+across a document-type boundary.
+
+Per [docs/ai/collaboration.md](../ai/collaboration.md) §6 — no assigned areas, ownership measured from
+git history — nobody is pre-assigned to a slice below. It's a shared pool, claimed as work starts.
+
+### Claiming convention
+
+Reuses the marks already defined in [docs/ai/roadmap.md](../ai/roadmap.md) (`[ ]` / `[~]` / `[x]`) as
+the claim mechanism:
+
+- **Before starting** a slice or item, mark it `[~] <your id>` (id from
+  [docs/team/members.yml](../team/members.yml) — `mikhail` or `abdirakhim`) in your own small commit,
+  then start. First to claim gets it.
+- **On finishing**, mark `[x] <your id>`.
+- If you both reach for the same thing, say so and pick — cheaper before either has started.
+- Aim for roughly even slice counts by the end of stage 3. If claiming lands lopsided, say so and
+  rebalance before stage 4 — even workload, not identical process.
+
+### Stages
+
+```
+1. Feature ideation & prioritization (joint)  -> check: every feature has a slice and a phase
+2. Design system (joint, short)               -> check: both people's screens read as one system
+3. Rough prototype (claimed, per slice)        -> check: exploratory, used to find real data/routes
+4. Formalize (claimed, per slice)              -> check: FR/ERD/ADR/CJM written from what stage 3 found
+5. Joint reconciliation + polish (joint)       -> check: each cross-slice pair agrees with itself
+6. Assembly (joint)                            -> check: /course-check design finds all 5 marks
+```
+
+Article drafts run alongside all six — no dependency on any of them, and no claiming needed (separate
+files can't collide) beyond a shared topic list so nobody duplicates one.
+
+### Standing rule: the feature list is never frozen
+
+Stage 1 produces a first cut, not a locked list — this file's own steps are not a contract, and change
+as things become visible. Sketching a screen (stage 3) or writing full FR text (stage 4) routinely
+surfaces that a feature is unneeded, missing, too big for this phase, or belongs to a different slice
+than assumed.
+
+- When that happens, say so to the other person immediately — don't hold it for stage 5.
+- Update the shared feature list / FR skeleton in the same sitting, then continue.
+- A change that moves a feature's phase, cuts it, or changes MVP scope is still a joint call (the
+  "dividing test" in collaboration.md §1) — flag and agree, don't silently redraw the boundary alone.
+
+### 1. Feature ideation & prioritization — joint, first pass
+
+Grounded in what's already committed: the stakeholder acknowledgement
+([docs/stakeholder/acknowledgement.md](../stakeholder/acknowledgement.md)) commits the project to "a
+centralised resource... covering administrative procedures, campus facilities, essential services and
+practical life at IITM and in Chennai," as a community-editable wiki with moderation — but explicitly
+*not* to a fixed feature list. That list is this phase's job, and it's a whole-product call, not
+something to split.
+
+**Process:** each of you lists candidate features independently first, against the three CJM roles —
+what a reader needs, a contributor needs, a moderator needs. Merge the two lists, then as a pair:
+
+- [ ] Sort every feature into a slice — a feature that doesn't fit is a sign the slice list itself
+  needs revisiting, which is stop-and-ask territory, not a solo call.
+- [ ] Prioritize: MVP now (this phase's design, phase 2–3's build) vs. later (phase 4–5) vs.
+  explicitly out — the "out" pile becomes CON entries with a rationale, not silently dropped.
+- [ ] Map MVP features onto the existing phase boundaries
+  ([02-skeleton.md](02-skeleton.md), [03-main-flow.md](03-main-flow.md)) — this is what "revised
+  milestone plan" (step above) actually revises.
+
+What falls out of this, recorded rather than written as a separate task: the FR skeleton (titles +
+one-line scope, tagged by slice), first-cut CON with rationale, first-cut
+[docs/stakeholder/acceptance.md](../stakeholder/acceptance.md) (protected — humans decide the
+content), glossary terms as they come up, and the two open questions above.
+
+### Feature coverage tracker
+
+A checklist like "§4: FR, full text, for the slice's features" hides how much of a slice is actually
+covered — one FR entry checks the whole row. This table is the real unit of progress: **one row per
+feature**, checked off per column as that specific feature gets each artifact, not per slice or per
+document.
+
+Seeded once stage 1 produces the feature list — populated by the humans doing stage 1, not written in
+advance — and grows or gets re-tagged as the standing rule above kicks in.
+
+| Feature | Slice | FR id | ADR | CJM step | ERD entity | Route | Screen |
+|---|---|---|---|---|---|---|---|
+| _(one row per feature, added during §1)_ | | | | | | | |
+
+- A cell is checked only when that specific feature's piece of that artifact exists — not when the
+  artifact file has *some* content.
+- "ADR" is slice-level, not feature-level — a feature's row can point at its slice's ADR (§4 mapping)
+  rather than repeating it per row.
+- This table is what "is the slice done" actually means: every feature tagged to that slice has every
+  applicable column checked, not "the FR file has text in it."
+
+### 2. Design system — joint, short
+
+Either of you drafts a first pass from the IITM reference (tokens: color, type scale, spacing, and the
+handful of components every screen reuses), the other reviews and adjusts in the same sitting.
+
+### 3. Rough prototype — claimed, one slice at a time
+
+Claim a slice with `[~] <id>` before sketching it. Sketch its prioritized features as rough screens
+with `/design`. This is a thinking tool, not the deliverable — it surfaces what data and routes are
+actually needed before either gets written up formally.
+
+| Slice | Claim |
+|---|---|
+| `contribute` | [ ] |
+| `moderate` | [ ] |
+| `media` | [ ] |
+| `backup` | [ ] |
+| `home` | [ ] |
+| `articleview` | [ ] |
+| `search` | [ ] |
+| `taxonomy` | [ ] |
+| `wikilink` | [ ] — likely a light touch; claim alongside `contribute` or `articleview` |
+
+### 4. Formalize — claimed, per slice, now genuinely parallel
+
+Whoever prototyped a slice in stage 3 formalizes it by default — context is fresh — but that's a
+default, not a rule. For each *feature* held (not each slice in bulk), write up what stage 3's sketch
+found and check the matching cell in the **feature coverage tracker** above as you go — not the file
+as a whole:
+
+| Artifact | Where | Tracker column |
+|---|---|---|
+| FR, full text, for one feature | `docs/requirements/functional.md` | FR id |
+| The feature's CJM step | `docs/cjm/*.md` | CJM step |
+| The feature's entity/fields, as your own rows in the shared ERD | `docs/architecture/data-model.md` | ERD entity |
+| The feature's route, as your own row in the shared route contract | `docs/architecture/ui-routes.md` | Route |
+| The feature's screen, polished from stage 3's rough sketch | — | Screen |
+
+Slice-level, done once per slice rather than per feature: the slice's ADR (below), carrying any NFR
+it implies, and the slice's component in C4 level 3.
+
+| Slice | ADR |
+|---|---|
+| `moderate` | moderation and version-history groundwork |
+| `media` | media storage and upload security — carries NFR: upload size limits |
+| `backup` | export format — carries NFR: exportability |
+| `contribute` | abuse handling without accounts |
+| `search` | search and multilingual content — carries NFR: search latency, multilingual content |
+| `taxonomy` | taxonomy |
+
+`data-model.md` and `ui-routes.md` are shared files — touch only the rows for slices you hold.
+
+### 5. Joint reconciliation + polish — joint, by slice pair
+
+Sit down together once most claims have landed:
+
+| Pair | Question |
+|---|---|
+| `moderate` vs. `articleview` | Does articleview's "published" filter match the states the moderation ADR defines? |
+| `media` vs. `articleview` | Does the article screen reference media the way the media ADR delivers it? |
+| `contribute` vs. `articleview` (wikilink) | Same `[[link]]` syntax entered and rendered? |
+| ADR: slices and Modulith | Nobody's slice alone. One drafts from what architecture-rules.md already documents, the other reviews before it's marked decided. |
+| C4 levels 1–2 | Joint — whole-system view, not one slice |
+| Test plan | Whoever holds a slice names its test; combine here |
+
+Then polish the rough screens to match the design system and the now-formalized routes/ERD.
+
+### 6. Assembly — joint
+
+Revised milestone plan/risks/plan B, assemble the design doc + PDF, run `/course-check design`.
+
+### File-conflict hygiene
+
+`data-model.md`, `ui-routes.md`, and this file are shared — touch only the rows/items for slices you
+hold, in your own small commits; pull/rebase before pushing.
