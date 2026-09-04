@@ -155,6 +155,40 @@ class JournalTest {
     }
 
     @Test
+    void an_entry_is_open_between_the_prompt_and_the_outcome() throws IOException {
+        Journal journal = Journal.open(repo, "session-k");
+        assertFalse(journal.hasOpenEntry(), "nothing is open before a prompt arrives");
+
+        journal.startEntry("do the thing");
+        assertTrue(journal.hasOpenEntry(), "open while the turn is in progress");
+
+        journal.finishEntry("Done.", List.of(), List.of());
+        assertFalse(journal.hasOpenEntry(), "closed once the outcome is written");
+    }
+
+    @Test
+    void an_open_entry_records_when_its_prompt_arrived() throws IOException {
+        // How a rendering finds its entry: newest open prompt wins. A session that ended without
+        // its Stop hook stays open for ever, so "exactly one open" stops being true after a few
+        // days, and ordering has to work rather than uniqueness.
+        Journal journal = Journal.open(repo, "session-m");
+        assertTrue(journal.promptedAt().isEmpty(), "nothing recorded before a prompt");
+
+        journal.startEntry("do the thing");
+        assertFalse(journal.promptedAt().isEmpty(), "an open entry knows when it opened");
+    }
+
+    @Test
+    void a_missing_rendering_is_visible_rather_than_silent() throws IOException {
+        Journal journal = Journal.open(repo, "session-l");
+        journal.startEntry("сделай что-нибудь");
+        assertFalse(journal.hasEnglishRendering());
+
+        journal.setEnglish("do something", null);
+        assertTrue(journal.hasEnglishRendering());
+    }
+
+    @Test
     void records_the_files_the_human_changed_by_hand() throws IOException {
         Journal journal = Journal.open(repo, "session-f");
         journal.startEntry("carry on");

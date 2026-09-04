@@ -22,9 +22,9 @@ constraint hides it.
 
 ### DEBT-001 — A journal translation is bound to a session, not to an entry
 
-**Status:** open
+**Status:** resolved 2026-09-04
 **Created:** 2026-09-03
-**Marker:** `tools/src/main/java/in/ac/iitm/guide/tools/HookCommand.java`, method `english`
+**Marker:** was in `tools/.../HookCommand.java`, method `english`; removed when this was resolved
 
 **Cause:** `hook english` writes the rendering into the state of the most recently touched session,
 which is the right entry only because `hook prompt` normally opens one first. Nothing enforces that
@@ -41,6 +41,18 @@ when `settings.json` had not yet been loaded by the running session.
 
 **Trigger:** before the first stage where the journal is submitted as evidence — the design document
 on 11 September. Until then the risk is only to our own records.
+
+**Resolved 2026-09-04.** Without entry ids, which turned out to be unnecessary. `hook english` now
+looks for the session that actually has an entry open — a prompt recorded and no outcome written
+yet — and refuses when there is none, or when there is more than one. The second case is not
+hypothetical: two of us worked at the same time on 4 September, and picking a session by
+modification time could have written one person's rendering into the other's entry.
+
+Found on the same day that seven entries were written with no rendering at all. The register entry
+only described the misattribution, so the more common failure — simply forgetting — was invisible to
+it. That one is now handled where it happens: a prompt containing Cyrillic makes the
+`UserPromptSubmit` hook ask for a rendering in that turn, and the `Stop` hook records
+"English rendering: NOT supplied" in the entry, so an omission leaves a trace instead of a gap.
 
 <!--
 ### DEBT-XXX — Short title

@@ -79,6 +79,16 @@ public final class Journal {
         return true;
     }
 
+    /** When the open entry's prompt arrived, ISO-8601, or empty when no entry is open. */
+    public String promptedAt() {
+        return state.path("promptAt").asText("");
+    }
+
+    /** True while a prompt has been recorded and its outcome has not been written yet. */
+    public boolean hasOpenEntry() {
+        return !state.path("prompt").asText("").isBlank();
+    }
+
     /** The author of this session's prompts, or empty when it is still unresolved. */
     public String author() {
         return state.path("authorName").asText("");
@@ -98,6 +108,12 @@ public final class Journal {
         if (outcome != null && !outcome.isBlank()) {
             state.put("outcomeEn", outcome);
         }
+    }
+
+    /** True when a rendering was supplied for the entry in progress. */
+    public boolean hasEnglishRendering() {
+        return !state.path("promptEn").asText("").isBlank()
+                || !state.path("outcomeEn").asText("").isBlank();
     }
 
     /** Closes the entry: appends prompt, outcome and the human's edits to today's journal file. */

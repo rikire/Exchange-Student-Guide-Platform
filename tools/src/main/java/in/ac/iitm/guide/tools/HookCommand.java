@@ -36,8 +36,6 @@ final class HookCommand {
      * always in English and a hook cannot translate. The agent therefore supplies the rendering
      * before it ends the turn, and the {@code stop} hook writes it next to the original.
      */
-    // TODO(DEBT-001): this binds the rendering to the latest session rather than to the entry that
-    // is actually open, so a rendering supplied with no entry in flight attaches to the next one.
     private static void english(String[] args) throws Exception {
         String prompt = valueOf(args, "--prompt");
         String outcome = valueOf(args, "--outcome");
@@ -46,9 +44,60 @@ final class HookCommand {
             System.exit(64);
         }
         Repo repo = Repo.find(null);
-        Journal journal = Journal.open(repo, latestSession(repo));
+
+        // Bound to an entry that is actually open, not to whichever session file was touched last:
+        // modification time is updated for reasons unrelated to the turn, and with two of us working
+        // at once it could put one person's rendering into the other's entry.
+        //
+        // Among open entries the newest prompt wins. A session that ended without its Stop hook
+        // leaves an entry open for ever, so "exactly one is open" is a state that stops occurring
+        // after a few days -- refusing on more than one would make the command permanently unusable,
+        // and a command that always refuses gets worked around.
+        String session = sessionWithNewestOpenEntry(repo);
+        if (session == null) {
+            System.err.println("ai-tools: no journal entry is open, so this rendering has nothing to belong to.");
+            System.err.println("  Supply it during the turn, between the prompt and the end of your answer.");
+            System.exit(1);
+            return;
+        }
+
+        Journal journal = Journal.open(repo, session);
         journal.setEnglish(prompt, outcome);
         journal.save();
+    }
+
+    /**
+     * The session whose open entry has the most recent prompt, or null when none is open.
+     *
+     * <p>Ordered by the recorded prompt time rather than by file modification time: the hook rewrites
+     * a state file for reasons that have nothing to do with a turn beginning.
+     */
+    private static String sessionWithNewestOpenEntry(Repo repo) throws Exception {
+        java.nio.file.Path dir = repo.resolve(".claude/.journal-state");
+        if (!java.nio.file.Files.isDirectory(dir)) {
+            return null;
+        }
+        String newest = null;
+        String newestAt = "";
+        try (var files = java.nio.file.Files.list(dir)) {
+            for (java.nio.file.Path file : files.toList()) {
+                String name = file.getFileName().toString();
+                if (!name.endsWith(".json")) {
+                    continue;
+                }
+                String session = name.substring(0, name.length() - ".json".length());
+                Journal journal = Journal.open(repo, session);
+                if (!journal.hasOpenEntry()) {
+                    continue;
+                }
+                // ISO-8601 with a fixed offset sorts correctly as text.
+                if (journal.promptedAt().compareTo(newestAt) > 0) {
+                    newestAt = journal.promptedAt();
+                    newest = session;
+                }
+            }
+        }
+        return newest;
     }
 
     /** Reads {@code --name value} from the argument list; returns null when the flag is absent. */
@@ -88,6 +137,26 @@ final class HookCommand {
             requirement, an ADR or the roadmap - cite it instead. Details: docs/ai/prompting.md.\
             """;
 
+    private static final java.util.regex.Pattern CYRILLIC = java.util.regex.Pattern.compile("\\p{IsCyrillic}");
+
+    /**
+     * Asked for only when it is actually needed.
+     *
+     * <p>Seven entries were written in one day with no rendering at all, because the instruction
+     * to supply one lived in CLAUDE.md and lost to everything that arrived after it. This fires on
+     * the prompts that need it and stays silent on the rest, so it does not become noise.
+     */
+    private static final String TRANSLATION_REMINDER =
+            """
+            This prompt is not in English, and the journal is evidence for an English-speaking \
+            evaluator. Before you finish this turn, record the rendering:
+
+              java -jar tools/target/ai-tools.jar hook english \
+                --prompt "<this prompt in English>" --outcome "<what you did, in English>"
+
+            The original is kept beside it. Skip --prompt only if the prompt was already English.\
+            """;
+
     /**
      * Opens a journal entry, carries the sharpening rule into the turn, and reports the files the
      * human touched by hand.
@@ -103,6 +172,10 @@ final class HookCommand {
         List<String> humanEdits = journal.startEntry(event.prompt());
 
         StringBuilder message = new StringBuilder(SHARPEN_REMINDER);
+
+        if (event.prompt() != null && CYRILLIC.matcher(event.prompt()).find()) {
+            message.append("\n\n").append(TRANSLATION_REMINDER);
+        }
 
         String unresolved = resolveAuthor(repo, journal);
         if (unresolved != null) {
@@ -214,6 +287,7 @@ final class HookCommand {
 
         List<String> checks = new ArrayList<>();
         checks.add("traceability gate: not enabled yet (phase 2)");
+        checks.add(journal.hasEnglishRendering() ? "English rendering: supplied" : "English rendering: NOT supplied");
         journal.finishEntry(event.lastAssistantMessage(), checks, List.of());
     }
 
