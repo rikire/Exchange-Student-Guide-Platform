@@ -33,6 +33,6 @@ UC-010 or UC-011.
 
 ## Not a use case, flagged during coverage
 
-Abuse handling without accounts (rate limiting and a honeypot — already decided in
-`docs/requirements/constraints.md`) protects UC-010/UC-011 but is not something the contributor
-does, so it does not get a use-case entry of its own here.
+Abuse handling without accounts (rate limiting and a CAPTCHA challenge — decided in
+`docs/ai/security.md`) protects UC-010/UC-011 but is not something the contributor does, so it does
+not get a use-case entry of its own here.

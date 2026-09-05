@@ -17,11 +17,14 @@ design document is the deliverable; the repository documents are the source it i
 - [ ] C4 levels 1–3 and the ERD in PlantUML — check: the diagram script renders them
 - [ ] ADRs: slices and Modulith; moderation and the version-history groundwork; search and
       multilingual content; taxonomy; media storage and upload security; export format;
-      abuse handling without accounts
+      abuse handling without accounts; article content format and injection safety (added 5 Sep,
+      while writing FR-001 — [ADR-0001](../architecture/adr/ADR-0001-article-body-format.md), decided)
       — check: each has at least two genuinely considered options
 - [ ] `docs/architecture/ui-routes.md` — the route contract
-- [ ] **Decided here, not earlier:** what the landing page contains beyond pinned items and search;
-      media quotas per file, per submission and for the volume; the allowed file types
+- [ ] **Decided here, not earlier:** ~~what the landing page contains beyond pinned items and
+      search~~ — resolved 6 Sep, FR-009: recently added articles + a tag list, pinned articles shown
+      first when any exist; media quotas per file, per submission and for the volume; the allowed
+      file types
 - [ ] Design reference from the IITM sites, into `docs/design/reference.md`
 - [ ] Draft screens with `/design`: landing, article, search results, submission form, queue
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
@@ -48,6 +51,10 @@ no row resting on a template.
    no history.
 2. ~~Whether the landing page's pinned items are curated by the moderator or derived from activity.~~
    Resolved 5 Sep: moderator-curated, via direct homepage editing (UC-022, `home`).
+3. ~~What happens when a new submission's title collides (case-insensitively) with an existing
+   published article's title.~~ Resolved 6 Sep: the submission is rejected at the point of
+   publishing, and the contributor is offered a link to propose an edit to the existing article
+   instead, or the option to change their own title. See FR-010.
 
 ## How the two of us work through this phase
 
@@ -150,22 +157,23 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 
 | Feature | Priority | Slice | FR id | ADR | CJM step | ERD entity | Route | Screen |
 |---|---|---|---|---|---|---|---|---|
-| Full-text search across articles | must | `search` | | | UC-001 | | | |
-| Browse/filter articles by tag | should | `taxonomy` | | | UC-002 | | | |
-| Read a published article (body, tags, media, wiki links) | must | `articleview` | | | UC-003 | | | |
+| Full-text search across articles | must | `search` | FR-007 | | UC-001 | | | |
+| Browse/filter articles by tag | should | `taxonomy` | FR-008 | | UC-002 | | | |
+| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | | |
 | Download a media attachment | should | `media` | | | UC-004 | | | |
-| Parse and render `[[wiki links]]` | must | `wikilink` | | | UC-005 | | | |
-| Backlinks on an article | could | `wikilink` | | | UC-006 | | | |
-| Landing page: pinned items + search | must | `home` | | | UC-007 | | | |
-| Red-link rendering | could | `wikilink` | | | UC-008 | | | |
+| Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | | |
+| Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | |
+| Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | | |
+| Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | | |
+| Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | |
 | Report an article | should | `report` | | | UC-009 | | | |
-| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | | | UC-010 | | | |
-| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | | | UC-011 | | | |
-| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | | | UC-012 | | | |
-| Look up a submission's status by its number | could | `contribute` | | | UC-013 | | | |
-| Abuse handling without accounts (rate limiting + honeypot) | should | `shared/security` | | | _(none — not a use case)_ | | | |
-| Moderation queue: list pending submissions | must | `moderate` | | | UC-014 | | | |
-| Review a submission's full text and attachments | must | `moderate` | | | UC-015 | | | |
+| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | | |
+| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | | |
+| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | | |
+| Look up a submission's status by its number | could | `contribute` | FR-012 | | UC-013 | | | |
+| Abuse handling without accounts (rate limiting + CAPTCHA) | should | `shared/security` | FR-013 | | _(none — not a use case)_ | | | |
+| Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | | |
+| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | | |
 | Approve a submission (adjust/finalize tags, publish) | must | `moderate` | | | UC-016 | | | |
 | Reject a submission | must | `moderate` | | | UC-017 | | | |
 | Version-history groundwork: retain each approved revision | should | `moderate` | | | UC-018 | | | |
@@ -176,8 +184,12 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 
 MoSCoW test used: **must** = the system does not function as this product without it; **should** = a
 real, non-cosmetic loss if missing, but the system still works; **could** = low impact if missing,
-easily deferred. Agreed 5 Sep: 11 must, 6 should, 6 could, 0 won't — nothing among these 23 was cut
-outright, so no constraint entry was needed for this pass.
+easily deferred. Agreed 5 Sep: 11 must, 6 should, 6 could, 0 won't across the original 23 — nothing
+was cut outright, so no constraint entry was needed for that pass.
+
+**Updated 6 Sep, while re-deriving FR-004:** red-link rendering raised from `could` to `must` (same
+priority as the wiki-link rendering it's part of), and a new feature was found — creating an article
+directly from a red link — added as `could`. Now 12 must, 6 should, 6 could, 24 features total.
 
 `backup` (export/import) has no row above: it is not a use case of Reader, Contributor or Moderator —
 it is a DevOps/deployment concern, justified by the already-agreed export-format ADR and the

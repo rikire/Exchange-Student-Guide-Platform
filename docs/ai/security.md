@@ -47,8 +47,10 @@ The largest source of risk in the project. Every point below is a requirement, n
 ## Forms and abuse
 
 - CSRF protection on every state-changing form.
-- A honeypot field rather than a captcha: cheaper, no third party, and it stops the bots that
-  actually show up.
+- A CAPTCHA challenge on submission, not a honeypot: research during phase 1 (6 Sep) found that
+  honeypot fields are increasingly detected and skipped by modern bots, so the cheaper option no
+  longer reliably stops what it was chosen to stop. The specific provider is a separate dependency
+  decision, not made here.
 - Rate limiting by IP on submission and on admin login.
 - A request body size limit at the container level, so an oversized upload is rejected before the
   application allocates for it.

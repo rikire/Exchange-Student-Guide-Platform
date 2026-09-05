@@ -46,3 +46,8 @@ Follows a link that has no target yet, and understands why.
 Flags an article as inaccurate, outdated or otherwise a problem. Routed to the moderator — see
 [moderator.md](moderator.md) once that journey names the matching step; not yet written as of this
 entry.
+
+### UC-023 — Follow a red link to a creation prompt
+
+Clicks a red link and is taken to a page inviting them to create the missing article. Added 6 Sep,
+alongside FR-004's priority change — see the Feature coverage tracker.
