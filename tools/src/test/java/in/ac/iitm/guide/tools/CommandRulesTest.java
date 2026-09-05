@@ -103,6 +103,73 @@ class CommandRulesTest {
         assertEquals(ALLOW, content("docs/notes.md", "The autodetect step runs first.\n"));
     }
 
+    private static final String TEST_FILE = "app/src/test/java/in/ac/iitm/guide/wikilink/LinkParserTest.java";
+
+    @Test
+    void a_switched_off_test_with_no_debt_entry_is_refused() {
+        assertEquals(DENY, content(TEST_FILE, "@Disabled\nvoid parses_a_link() {}\n"));
+        assertEquals(DENY, content(TEST_FILE, "@Disabled(\"flaky on CI\")\nvoid parses_a_link() {}\n"));
+    }
+
+    @Test
+    void a_switched_off_test_that_names_its_debt_entry_is_allowed() {
+        assertEquals(
+                ALLOW, content(TEST_FILE, "@Disabled(\"DEBT-004: waits on the search index\")\nvoid finds() {}\n"));
+    }
+
+    @Test
+    void a_sleep_in_a_test_is_refused() {
+        assertEquals(DENY, content(TEST_FILE, "void waits() {\nThread.sleep(200);\nassertTrue(done);\n}\n"));
+    }
+
+    @Test
+    void the_same_line_in_production_code_is_not_this_rules_business() {
+        // Sleeping in a scheduler may be wrong, but it is a different decision, and a rule that
+        // reaches beyond what it understands is one that gets argued with rather than obeyed.
+        assertEquals(ALLOW, content("app/src/main/java/in/ac/iitm/guide/media/Cleaner.java", "Thread.sleep(200);\n"));
+    }
+
+    @Test
+    void a_test_that_asserts_nothing_is_questioned() {
+        assertEquals(ASK, content(TEST_FILE, "@Test\nvoid parses_a_link() {\nparser.parse(\"[[Hostel]]\");\n}\n"));
+    }
+
+    @Test
+    void a_test_that_says_it_expects_no_failure_is_allowed() {
+        // The legitimate case, and why this asks rather than refuses: it must be said, not implied.
+        assertEquals(
+                ALLOW,
+                content(
+                        TEST_FILE,
+                        "@Test\nvoid parses_a_link() {\nassertDoesNotThrow(() -> parser.parse(\"x\"));\n}\n"));
+    }
+
+    @Test
+    void an_assertion_hidden_in_a_helper_still_counts() {
+        assertEquals(ALLOW, content(TEST_FILE, "@Test\nvoid rejects_it() {\nassertRejected(\"[[\");\n}\n"));
+    }
+
+    @Test
+    void one_test_without_an_assertion_among_several_is_still_found() {
+        String file = "@Test\nvoid first() {\nassertTrue(a);\n}\n\n@Test\nvoid second() {\nparser.parse(\"x\");\n}\n";
+
+        assertEquals(ASK, content(TEST_FILE, file));
+    }
+
+    @Test
+    void the_question_names_the_test_it_is_about() {
+        String reason = CommandRules.forContent(TEST_FILE, "@Test\nvoid second() {\nparser.parse(\"x\");\n}\n")
+                .reason();
+
+        assertTrue(reason.contains("second"), "a question that does not say which test is a riddle: " + reason);
+    }
+
+    @Test
+    void an_edit_that_is_not_a_whole_test_is_left_alone() {
+        // A fragment with no @Test in it says nothing about whether a test asserts anything.
+        assertEquals(ALLOW, content(TEST_FILE, "var parser = new LinkParser();\n"));
+    }
+
     @Test
     void the_refusal_says_which_line_caused_it() {
         String reason = CommandRules.forContent("A.java", "int x = 1;\n// HACK: works for now\n")

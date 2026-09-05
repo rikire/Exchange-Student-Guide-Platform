@@ -17,6 +17,16 @@ public final class ProtectedPaths {
 
     private static final Map<String, String> RULES = new LinkedHashMap<>();
 
+    /**
+     * The one place a fact about the outside world enters this repository.
+     *
+     * <p>So the question asks for evidence rather than for permission: a version recalled rather
+     * than checked is indistinguishable from one that exists, right up to the build failing.
+     */
+    private static final String DEPENDENCY = "a dependency or a version is a decision the human makes, and it needs "
+            + "evidence rather than permission: that the artefact and version exist on Maven Central, that it is "
+            + "still maintained, and what its licence is — checked, not recalled";
+
     static {
         RULES.put("docs/requirements/", "requirements and constraints are agreed with the human");
         RULES.put("docs/architecture/adr/", "an ADR records a decision that is expensive to reverse");
@@ -26,9 +36,9 @@ public final class ProtectedPaths {
         RULES.put("docs/stakeholder/", "this records what the stakeholder actually said");
         RULES.put("docs/course/", "these documents are submitted for grading");
         RULES.put("docs/team/members.yml", "team identity drives contribution attribution");
-        RULES.put("pom.xml", "a dependency or a version is a decision the human makes");
-        RULES.put("app/pom.xml", "a dependency or a version is a decision the human makes");
-        RULES.put("tools/pom.xml", "a dependency or a version is a decision the human makes");
+        RULES.put("pom.xml", DEPENDENCY);
+        RULES.put("app/pom.xml", DEPENDENCY);
+        RULES.put("tools/pom.xml", DEPENDENCY);
         RULES.put("CLAUDE.md", "these are the assistant's own instructions");
         RULES.put("docs/ai/", "these are the assistant's own instructions");
         RULES.put(".claude/", "these are the assistant's own instructions");

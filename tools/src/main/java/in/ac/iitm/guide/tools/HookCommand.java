@@ -293,7 +293,19 @@ final class HookCommand {
         CommandRules.Verdict verdict = CommandRules.forContent(relative, event.content());
         if (verdict.decision() != CommandRules.Verdict.Decision.ALLOW) {
             HookEvent.emitDecision("PreToolUse", decisionOf(verdict), verdict.reason());
+            return;
         }
+
+        // Last, and only for a file that does not exist yet: this asks about a decision, and the
+        // decision has already been made by the time anyone edits the file a second time.
+        String question = NewFileRules.questionFor(relative, alreadyThere(event.filePath()));
+        if (question != null) {
+            HookEvent.emitDecision("PreToolUse", "ask", question);
+        }
+    }
+
+    private static boolean alreadyThere(String filePath) {
+        return filePath != null && !filePath.isBlank() && java.nio.file.Files.exists(java.nio.file.Path.of(filePath));
     }
 
     /** Judges a shell command before it runs. */

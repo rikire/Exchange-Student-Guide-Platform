@@ -1,6 +1,7 @@
 package in.ac.iitm.guide.tools;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -99,8 +100,11 @@ public final class CommandRules {
     /**
      * Judges the text an edit is about to write.
      *
-     * <p>Only one rule, deliberately. A check that fires on something legitimate gets switched off,
-     * and then it protects nothing at all.
+     * <p>Every rule here is anchored to the **start** of a stripped line, and that is not
+     * incidental. Twice now a rule of this shape has refused the file that was documenting or
+     * testing it, because the forbidden text appeared inside a string literal: once for
+     * {@code --no-verify}, once for {@code -DskipTests}. A check that cannot tell a use from a
+     * mention is one people switch off, and then it protects nothing at all.
      */
     public static Verdict forContent(String path, String content) {
         if (content == null || content.isBlank() || path == null) {
@@ -111,7 +115,8 @@ public final class CommandRules {
             return ALLOWED;
         }
 
-        for (String line : content.split("\r?\n")) {
+        String[] lines = content.split("\r?\n");
+        for (String line : lines) {
             if (LOOSE_MARKER.matcher(line).find()
                     && !DEBT_REFERENCE.matcher(line).find()) {
                 return new Verdict(
@@ -124,6 +129,96 @@ public final class CommandRules {
                                 + "when the context is gone, is a line nobody can act on.");
             }
         }
-        return ALLOWED;
+        return path.contains("src/test/") ? forTestContent(lines) : ALLOWED;
+    }
+
+    /** A switched-off test with no debt entry: deferred work that reports itself as green. */
+    private static final Pattern DISABLED = Pattern.compile("^@Disabled\\b");
+
+    /** The standard source of a flaky suite. */
+    private static final Pattern SLEEP = Pattern.compile("^Thread\\.sleep\\s*\\(");
+
+    private static final Pattern TEST_ANNOTATION = Pattern.compile("^@(Test|ParameterizedTest|RepeatedTest)\\b");
+
+    /**
+     * Anything that can make a test fail.
+     *
+     * <p>Matching {@code assert} as a bare substring is deliberate: it also catches a call to a
+     * helper named {@code assertRejected}, which is where the real assertion lives in a test that
+     * reads well.
+     */
+    private static final Pattern ASSERTION = Pattern.compile("assert|verify\\s*\\(|fail\\s*\\(|expect");
+
+    private static final Pattern TEST_NAME = Pattern.compile("\\bvoid\\s+(\\w+)\\s*\\(");
+
+    /** Rules that apply only under {@code src/test/}, judged per stripped line. */
+    private static Verdict forTestContent(String[] lines) {
+        for (String raw : lines) {
+            String line = raw.strip();
+            if (DISABLED.matcher(line).find() && !DEBT_REFERENCE.matcher(line).find()) {
+                return new Verdict(
+                        Verdict.Decision.DENY,
+                        "This switches a test off with no debt entry behind it:\n\n  " + line + "\n\n"
+                                + "A disabled test is deferred work that reports itself as green, which is worse "
+                                + "than a deleted one: the suite still says everything passes.\n\n"
+                                + "Use `@Disabled(\"DEBT-007: ...\")` with an entry in docs/tech-debt.md, or fix "
+                                + "the test, or delete it and say why.");
+            }
+            if (SLEEP.matcher(line).find()) {
+                return new Verdict(
+                        Verdict.Decision.DENY,
+                        "This puts a sleep in a test:\n\n  " + line + "\n\n"
+                                + "It is the standard source of a suite that fails once in twenty runs, and a suite "
+                                + "like that teaches everyone to re-run rather than to read the failure.\n\n"
+                                + "Wait for the condition instead - Awaitility, a latch, or a clock you control "
+                                + "(docs/ai/testing.md). If the code genuinely needs real time to pass, the code is "
+                                + "what needs the seam, not the test.");
+            }
+        }
+        return withoutAnAssertion(lines);
+    }
+
+    /**
+     * Asks about a test that cannot fail.
+     *
+     * <p>An {@code ask} rather than a refusal: a test whose whole point is that a call does not
+     * throw is legitimate. It should say so - {@code assertDoesNotThrow} - rather than be a method
+     * that passes for ever in silence.
+     */
+    private static Verdict withoutAnAssertion(String[] lines) {
+        int testAt = -1;
+        for (int i = 0; i < lines.length; i++) {
+            if (TEST_ANNOTATION.matcher(lines[i].strip()).find()) {
+                if (testAt >= 0) {
+                    Verdict verdict = judgeRegion(lines, testAt, i);
+                    if (verdict != ALLOWED) {
+                        return verdict;
+                    }
+                }
+                testAt = i;
+            }
+        }
+        return testAt < 0 ? ALLOWED : judgeRegion(lines, testAt, lines.length);
+    }
+
+    private static Verdict judgeRegion(String[] lines, int from, int to) {
+        String name = "";
+        for (int i = from; i < to; i++) {
+            if (ASSERTION.matcher(lines[i]).find()) {
+                return ALLOWED;
+            }
+            Matcher named = TEST_NAME.matcher(lines[i]);
+            if (name.isEmpty() && named.find()) {
+                name = named.group(1);
+            }
+        }
+        return new Verdict(
+                Verdict.Decision.ASK,
+                "This test asserts nothing" + (name.isEmpty() ? "" : ": " + name) + ".\n\n"
+                        + "A test with no assertion passes for as long as the code does not throw, which means it "
+                        + "reports success without ever having checked anything.\n\n"
+                        + "If the point is that the call does not throw, say so with `assertDoesNotThrow`. If the "
+                        + "assertion is still to come, this is a red test - write the assertion first, watch it "
+                        + "fail, and read the message (docs/ai/testing.md).");
     }
 }
