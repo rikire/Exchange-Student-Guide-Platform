@@ -8,6 +8,7 @@ the details live here so that a session does not have to load everything into co
 | [collaboration.md](collaboration.md) | Who decides what, how the agent disagrees, plans and takes feedback |
 | [prompting.md](prompting.md) | Sharpening an underspecified request before acting on it |
 | [workflow.md](workflow.md) | A feature from statement to commit, TDD, technical debt |
+| [testing.md](testing.md) | What to assert, what to mock, and the corner cases nobody invents |
 | [stop-and-ask.md](stop-and-ask.md) | When stopping to ask is mandatory |
 | [definition-of-done.md](definition-of-done.md) | Readiness checklist and the double check |
 | [architecture-rules.md](architecture-rules.md) | Slices, their boundaries, dependency direction |
@@ -40,6 +41,9 @@ the details live here so that a session does not have to load everything into co
 | 5. Documentation in the same turn | Partly: the turn cannot end while a document describes something the repository does not contain |
 | 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half arrives in phase 2 |
 | The journal is in English | The turn cannot end while it owes a rendering, and the entry is committed when it is written |
+| Do not reinvent what a library does | Partly: creating a file whose name suggests a wheel asks first. Whether the answer is honest is not mechanisable |
+| The human takes part in domain, schema and security decisions | Partly: creating a file under `shared/`, in the schema or security packages, asks first |
+| A switched-off or sleeping test | An edit adding `@Disabled` without a debt entry, or `Thread.sleep` under `src/test/`, is refused; a `@Test` that asserts nothing is questioned |
 
 Rule 6 was described here as backed by the matrix generator before that generator existed. It was
 not, and the claim was corrected on 4 September — a document overstating its own enforcement is the
@@ -49,6 +53,12 @@ The journal row is the newest, and it was added for the same reason. The renderi
 reminder and a record: the hook asked at the start of the turn, and wrote `NOT supplied` into the
 entry at the end of it. Both fired correctly, and the rendering still did not appear — **watching a
 rule break is not enforcing it.** The refusal is the difference.
+
+**How much an "asks first" row is worth depends on the permission mode.** A hook can answer with
+`deny` or with `ask`, and in permissive modes an `ask` is answered automatically — so every rule in
+this table held by a question is weaker there than it looks, while the refusals still hold. Nothing
+in the repository can change that; it is said here so that nobody presents the table at the viva as
+more than it is.
 
 ## Slash commands
 

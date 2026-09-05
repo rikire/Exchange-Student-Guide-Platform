@@ -90,6 +90,14 @@ search/
 
 Layering inside a slice is a matter for whoever owns the slice that week; the boundary is not.
 
+**Validation always lives in the domain.** A form, a controller or a database constraint may
+validate as well — when it is needed, or when it makes something faster — but never *instead*.
+
+The reason is which layer can be walked past. A check on a form protects the one path that goes
+through that form; every other caller, every later feature, and every import walks straight around
+it. The domain is the layer with no way past it, so that is where the rule about what may exist
+belongs. The outer layers exist to give a person a better message sooner, not to be the guarantee.
+
 ## What belongs in `shared`
 
 Only what genuinely serves every slice: the JPA entities and migrations, the page layout and error

@@ -99,6 +99,34 @@ The production code is marked `//trace:FR-XXX`; so is the test.
 **The link to traceability.** Acceptance criterion to test to `//trace:FR-XXX`. That is what makes
 the matrix mean coverage of criteria rather than the existence of a file with tests in it.
 
+How the tests themselves are written — what to assert, what to mock, and the corner cases nobody
+invents under deadline: [testing.md](testing.md).
+
+### 7a. Before writing it, find out whether it already exists
+
+Applies inside the loop, at the moment a helper is about to be written.
+
+**Name the library that already does this** — the JDK, Spring, Apache Commons, Guava, Tika — and say
+why it does not fit, or use it. The honest reasons to write your own are: nothing does it, the
+library is far larger than the need, or it is unmaintained.
+
+**"It is only a few lines" is not one of them.** A few lines is how every wheel starts, and the
+library carries the edge cases you have not thought of yet — the Unicode rows in
+[testing.md](testing.md) are a list of them for exactly the kind of string helper that looks
+trivial.
+
+For a problem bigger than a helper, the question is not "which library" but **"what is this
+called"**. If the thing being built has a name, somebody has already made the mistakes: reviewed
+revisions, optimistic locking, diff algorithms, per-language analysers, token buckets. Find the name
+before designing. When to go and look, and when running something locally answers it faster:
+[collaboration.md](collaboration.md) §3.
+
+**Why this needs saying at all.** Adding a dependency is the human's decision and writing a private
+helper is not, so asking costs a round trip and writing does not. Left alone, that arithmetic points
+away from the library every single time — which is why **replacing a library with our own code is
+the same decision as adding one**, and gets proposed the same way. Creating a file whose name
+suggests a wheel — `*Utils`, `*Helper`, `*Formatter` — asks about this before it lands.
+
 ### 8. Technical debt
 
 If a workaround appeared along the way, or something was done temporarily, the entry is created

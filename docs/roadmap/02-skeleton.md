@@ -21,6 +21,9 @@ honest actually switched on.
       — check: the traceability matrix generates and is non-empty
 - [ ] Gate wired into the `Stop` hook and into CI
       — check: break a migration without touching the data model document; the turn must not close
+- [ ] Query-count gate for the N+1 rule in [security.md](../ai/security.md), which has no mechanism
+      until the persistence layer exists — a counter around the slice tests
+      — check: seed one row, then ten; the test fails if the number of queries moves
 - [ ] Spring Modulith documenter in the build; ArchUnit for the two rules Modulith does not cover
 - [ ] Slash commands for ownership and the gap list, once their generators exist
 - [ ] Design moved into Figma, tokens extracted

@@ -156,7 +156,7 @@ refactor(DEBT-007): replace the in-memory rate limiter
 | Mechanism | When it fires | What it does |
 |---|---|---|
 | `UserPromptSubmit` hook | A prompt is submitted | Delivers the sharpening rule, resolves the author, opens a journal entry, reports the human's own edits |
-| `PreToolUse` hook (edits) | An edit is about to be written | Asks when the file is the human's; refuses a marker with no debt reference |
+| `PreToolUse` hook (edits) | An edit is about to be written | Asks when the file is the human's; refuses a marker with no debt reference; refuses a disabled or sleeping test; asks about a test with no assertion, and about a **new** file under `shared/`, in the schema or security packages, or named like a wheel |
 | `PreToolUse` hook (shell) | A command is about to run | Refuses the flags that skip checks; asks when a build is piped somewhere that hides its exit code |
 | `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
 | `Stop` hook | The assistant ends a turn | Refuses while the turn owes the journal an English rendering, or while the documentation check is red — once per cause either way, so a session cannot deadlock; then closes the journal entry and commits it |
