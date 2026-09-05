@@ -8,7 +8,7 @@ Written in phase 1. The terms below are the ones already in use and will be defi
 
 | Term | Meaning |
 |---|---|
-| Article | A published page in the knowledge base |
+| Article | A published page in the knowledge base: a title (unique among published articles, case-insensitively), a body of text written in Markdown (which may contain `[[wiki link]]` markup — not raw HTML, see [ADR-0001](../architecture/adr/ADR-0001-article-body-format.md)), a set of tags, and zero or more attached media assets |
 | Submission | A proposed new article or a proposed edit, waiting in the moderation queue |
 | Moderator | An OGE staff member who approves or rejects submissions |
 | Contributor | Anyone who submits an article or an edit; no account is involved |
