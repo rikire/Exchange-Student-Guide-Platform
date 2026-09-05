@@ -2,7 +2,7 @@
 
 The cycle — red, green, refactor — is in [workflow.md](workflow.md) §7. The style rules are in
 [code-style.md](code-style.md). This document is the part neither of those covers: what a test is
-*for*, what to point it at, and the cases nobody invents under deadline.
+*for*, what to point it at, and how to derive the cases nobody thinks of under deadline.
 
 Written before the application code exists, deliberately. Otherwise the first slice becomes the
 place where the conventions get improvised, and every slice after it copies whatever that one did.
@@ -108,75 +108,77 @@ Getters, the framework, generated code, and a controller that only forwards to a
 is a floor, not a goal ([code-style.md](code-style.md)): a test written to move a number is a test
 nobody will maintain.
 
-## The corner-case checklist
+## How to find the corner cases
 
-The part worth writing down, because it is the part nobody invents under deadline. Organised by
-**what comes in**, not by which class handles it — a checklist organised by class gets skipped
-every time the class is new.
+Corner cases are **derived**, not recalled. This section is the derivation.
 
-### Text from a visitor — title, body, tag, search query
+That distinction matters more than it sounds. A list of specific cases — "a link to a missing page
+renders as *wanted*", "SVG is rejected" — is a list of **requirements**, and requirements live in
+`docs/requirements/`. Copying them here would create a second source of truth that drifts from the
+first, which is the defect this repository keeps auditing itself for. What belongs here is the
+method, because the method still works on a feature nobody has written yet.
 
-| Case | Why it bites here |
-|---|---|
-| Empty, whitespace only, a single character | the commonest crash, and the commonest silently accepted junk |
-| At the limit, one under, one over | off-by-one lives here or nowhere |
-| Hindi and Tamil text | article content is explicitly not English-only |
-| NFC vs NFD spelling of the same word | the same word twice must match in search and produce **one** slug, or one topic quietly becomes two pages |
-| Truncation cutting a grapheme cluster | `String.length()` counts UTF-16 code units; Devanagari and Tamil routinely use several per visible character, so a naive substring cuts a letter in half |
-| Zero-width characters, RTL marks | two titles that look identical and are not — a moderation problem, not a rendering one |
-| `<script>`, `<img onerror=…>`, a `javascript:` URL | test the sanitiser for what it **removes**, not only for what survives it |
-| A string shaped like SQL or JPQL | proves parameters are bound rather than concatenated |
-| One word of 5000 characters, no spaces | breaks layout and the index, and passes every check on body length |
-| A null byte | still terminates strings in the parts of the stack written in C |
+### 1. Write the input contract first
 
-### Wiki links
+One sentence: what may arrive, from whom, and what is promised back. If you cannot write it, there
+is nothing to test yet — that is a sharpening problem, not a testing one
+([prompting.md](prompting.md)).
 
-The cheapest tests in the project, because `wikilink` needs no Spring context.
+The contract is what the cases are derived from. Deriving them from the implementation instead
+produces tests that describe the code as written, including its bugs.
 
-Unclosed `[[`. Nested `[[a[[b]]]]`. Empty `[[]]`. A link to a page that does not exist yet — which
-renders as *wanted*, never as a failure. A self-link. A link inside a code block, which must stay
-text. A cycle A→B→A when backlinks are computed.
+### 2. Walk the dimensions
 
-And `[[Hostel]]` versus `[[hostel]]`: **whether those are one page is the human's decision**, and
-the test is where that decision gets pinned rather than discovered.
+Ten questions, asked of every input. Most will not apply; asking is cheap and remembering is not.
 
-### Uploads
+| Dimension | The question | Live here because |
+|---|---|---|
+| **Emptiness** | null, empty, whitespace-only, field absent entirely | forms submit empty strings, not nulls, and the two take different paths |
+| **Size** | zero, one, many, the limit, one under, one over | off-by-one lives here or nowhere |
+| **Encoding** | non-ASCII, several code points per visible character, two normalisation forms of one string, invisible characters, a null byte | article text is Hindi and Tamil as well as English, so this is not theoretical |
+| **Type confusion** | the value says it is one thing and is another | anonymous visitors upload files, and a declared type is attacker-controlled |
+| **Structure** | unbalanced delimiters, nesting, self-reference, a cycle | anything parsed, and anything that forms a graph |
+| **Ordering and time** | ties, clock boundaries, two events in one millisecond, a zone that is not the developer's | ordering that "just works" locally is ordering nobody specified |
+| **Concurrency** | the same operation twice at once; the thing changing under you mid-operation | two moderators, two authors, one article |
+| **State** | every transition **not** in the diagram; an operation whose prerequisite has since changed or gone | a queue with states has more illegal transitions than legal ones |
+| **Trust** | who chose this value, and what does it reach — a query, a path, a page, a log line | there are no accounts: every input is chosen by a stranger |
+| **Interruption** | the operation stops halfway — a dropped connection, a failure between two writes | a half-written file or a half-applied change is a state the happy path never visits |
 
-Zero bytes. One byte. Exactly the limit. One over.
+**Platform reality counts as a dimension too.** One of us develops on Windows and one on macOS, so
+path separators, reserved filenames, case-sensitivity of the filesystem and the default locale
+differ between our two machines. A test that passes on one and not the other is not flaky; it found
+something.
 
-A `.png` holding a PDF. A **polyglot** — a valid `GIF89a` header with an HTML body — which is the
-case that shows magic bytes alone do not settle the type ([security.md](security.md)). SVG and HTML
-rejected outright. A filename containing `../`, a null byte, 300 characters, Tamil script, or a
-reserved Windows name (`CON`, `NUL`) — the last matters because one of us develops on Windows.
-A double extension, `x.png.html`. An upload cut off mid-stream, which must leave no half-written
-file. The same file twice.
+The locale one is worth naming because it is invisible: `toLowerCase()` with no locale turns `I`
+into `ı` under a Turkish default. Any folding — for comparison, for a key, for a lookup — takes an
+explicit `Locale.ROOT`, and the test that proves it runs with the locale switched rather than with
+whichever one the machine happens to have.
 
-Video: no `Range` header, an open-ended range, and an unsatisfiable one.
+### 3. Keep the cases that change the behaviour
 
-### Moderation
+Not all of them. Two inputs that travel the same path and produce the same outcome are **one** test;
+writing both doubles the maintenance and proves the same thing twice. Coverage is a floor, not a
+goal ([code-style.md](code-style.md)).
 
-A forbidden transition (approved → submitted). Two moderators approving the same item at once. An
-edit proposed against an article that changed, or was deleted, in the meantime. Approving an item
-whose media has since been deleted.
+The ones to keep are where the answer *differs* — a boundary, a branch, a different error, a
+different audience for the message.
 
-### Search and pagination
+### 4. A case with no stated answer is a question, not a guess
 
-Nothing found. Exactly one. Exactly one page. One over a page. Page zero, a negative page, a page
-past the end. A query of only punctuation, or only stop words. Querying while the index is being
-rebuilt.
+This is the step that gets skipped, and it is the point of the whole exercise.
 
-### Time and ordering
+The dimensions above will produce cases the requirements never decided: what happens to two titles
+that differ only in case, whether search folds diacritics, which spelling is displayed when writers
+disagree. **Do not answer these in a test.** A test is the worst place to make a product decision:
+it looks like a fact, it is never read as a decision, and nobody who disagrees with it will ever
+find out that it was one.
 
-A timestamp on a daylight-saving boundary, with the zone **pinned in the test** rather than
-inherited from whoever's laptop is running it. Two items created in the same millisecond, whose
-order must still be defined.
+Take it to the human, record the answer where such answers live — a requirement, a constraint, an
+ADR — and *then* write the test that pins it. The test cites the decision; it does not contain it.
 
-### Where these came from
-
-The Unicode rows and the polyglot row are not recalled: they came out of reading, and the same
-reading found that [security.md](security.md) was presenting magic bytes as settling the file type
-when they do not. That is the argument for the rule in [collaboration.md](collaboration.md) §3 about
-when to go and look something up — a checklist written purely from memory would have had neither.
+**And it works in the other direction.** A derived case whose answer nobody has decided is a gap in
+the requirements found early and cheaply. That is a good outcome, not an obstacle: it costs a
+question now instead of a rewrite later.
 
 ## Techniques beyond example-based tests
 

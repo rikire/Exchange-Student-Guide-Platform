@@ -99,8 +99,8 @@ The production code is marked `//trace:FR-XXX`; so is the test.
 **The link to traceability.** Acceptance criterion to test to `//trace:FR-XXX`. That is what makes
 the matrix mean coverage of criteria rather than the existence of a file with tests in it.
 
-How the tests themselves are written — what to assert, what to mock, and the corner cases nobody
-invents under deadline: [testing.md](testing.md).
+How the tests themselves are written — what to assert, what to mock, and how to derive the corner
+cases: [testing.md](testing.md).
 
 ### 7a. Before writing it, find out whether it already exists
 
@@ -111,8 +111,8 @@ why it does not fit, or use it. The honest reasons to write your own are: nothin
 library is far larger than the need, or it is unmaintained.
 
 **"It is only a few lines" is not one of them.** A few lines is how every wheel starts, and the
-library carries the edge cases you have not thought of yet — the Unicode rows in
-[testing.md](testing.md) are a list of them for exactly the kind of string helper that looks
+library carries the edge cases you have not thought of yet — walk the encoding dimension in
+[testing.md](testing.md) against any string helper that looks trivial, and it stops looking
 trivial.
 
 For a problem bigger than a helper, the question is not "which library" but **"what is this

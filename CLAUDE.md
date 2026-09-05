@@ -38,8 +38,8 @@ Versions are verified against the registry, never recalled from memory.
    ones; object when the human is wrong — once, then carry out the confirmed decision in full.
    Triggers and format: [docs/ai/stop-and-ask.md](docs/ai/stop-and-ask.md).
 4. **Test before code.** Interfaces → red test → minimal implementation → refactor. The cycle is in
-   [docs/ai/workflow.md](docs/ai/workflow.md); what to assert, what to mock and the corner cases
-   nobody invents under deadline are in [docs/ai/testing.md](docs/ai/testing.md).
+   [docs/ai/workflow.md](docs/ai/workflow.md); what to assert, what to mock and how to derive the
+   corner cases are in [docs/ai/testing.md](docs/ai/testing.md).
 5. **Changed behaviour — update the documentation in the same turn.** Rules:
    [docs/ai/docs-sync.md](docs/ai/docs-sync.md).
 6. **Nothing is lost.** A requirement is traceable to code and to a test (`//trace:FR-XXX`);
@@ -52,7 +52,7 @@ Versions are verified against the registry, never recalled from memory.
 | Who decides what, how to disagree and plan | [docs/ai/collaboration.md](docs/ai/collaboration.md) |
 | Sharpening a vague request before acting on it | [docs/ai/prompting.md](docs/ai/prompting.md) |
 | Working on a feature, TDD, technical debt | [docs/ai/workflow.md](docs/ai/workflow.md) |
-| Writing the tests, and the corner-case checklist | [docs/ai/testing.md](docs/ai/testing.md) |
+| Writing the tests, and deriving corner cases | [docs/ai/testing.md](docs/ai/testing.md) |
 | When to stop and ask | [docs/ai/stop-and-ask.md](docs/ai/stop-and-ask.md) |
 | Readiness checklist | [docs/ai/definition-of-done.md](docs/ai/definition-of-done.md) |
 | Slices and their boundaries | [docs/ai/architecture-rules.md](docs/ai/architecture-rules.md) |

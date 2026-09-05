@@ -8,7 +8,7 @@ the details live here so that a session does not have to load everything into co
 | [collaboration.md](collaboration.md) | Who decides what, how the agent disagrees, plans and takes feedback |
 | [prompting.md](prompting.md) | Sharpening an underspecified request before acting on it |
 | [workflow.md](workflow.md) | A feature from statement to commit, TDD, technical debt |
-| [testing.md](testing.md) | What to assert, what to mock, and the corner cases nobody invents |
+| [testing.md](testing.md) | What to assert, what to mock, and how to derive the corner cases |
 | [stop-and-ask.md](stop-and-ask.md) | When stopping to ask is mandatory |
 | [definition-of-done.md](definition-of-done.md) | Readiness checklist and the double check |
 | [architecture-rules.md](architecture-rules.md) | Slices, their boundaries, dependency direction |
