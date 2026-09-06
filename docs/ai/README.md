@@ -19,6 +19,18 @@ the details live here so that a session does not have to load everything into co
 | [journal/](journal/) | Prompt journal and the human's own edits |
 | [PLAN-PROMPT.md](PLAN-PROMPT.md) | The original plan this repository was built from |
 
+**Four of these documents also exist as path-scoped rules** in `.claude/rules/`, carrying only their
+load-bearing lines: `java-style` and `testing` on Java files, `security` on the slices that touch
+uploads and templates, `schema` on migrations and the data model. Claude Code loads a rule when a
+matching file is opened, so the subset is in context at the moment it applies rather than available
+to be looked up afterwards. That is the whole point: rule 4 and the style rules were held by good
+faith, and good faith fails by forgetting rather than by deciding.
+
+**The documents here stay canonical.** A rule file is a pointer with an excerpt, never a second
+source of truth, and one that contradicts its document is a defect no check can catch — `docs-check`
+verifies that the link resolves, not that the excerpt is still faithful. When you change one of
+these documents, read the matching rule file in the same turn.
+
 ## The six rules that outrank the rest
 
 1. **Requirements and architecture are decided by the human.** Propose options and wait.
