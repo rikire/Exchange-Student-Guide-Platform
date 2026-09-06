@@ -69,6 +69,34 @@ class DocsCheckTest {
     }
 
     @Test
+    void a_slash_command_backed_by_a_skill_directory_is_not_a_problem() throws IOException {
+        // Skills replaced commands as the platform's mechanism; a command file is no longer the
+        // only thing that makes an advertised command real.
+        write("CLAUDE.md", "Slash commands: `/feature`.\n");
+        write(".claude/skills/feature/SKILL.md", "---\nname: feature\n---\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void a_skill_directory_without_a_skill_file_does_not_back_a_command() throws IOException {
+        // The directory alone is what a half-finished migration leaves behind, and it is exactly
+        // the state that reads as done.
+        write("CLAUDE.md", "Slash commands: `/feature`.\n");
+        write(".claude/skills/feature/reference.md", "Notes.\n");
+
+        assertTrue(details(check()).contains("advertises /feature"));
+    }
+
+    @Test
+    void a_link_inside_the_claude_directory_is_checked_like_any_other() throws IOException {
+        // Skills and rules carry links into docs/ai/ that go stale the same way the rest do.
+        write(".claude/rules/java-style.md", "The full rules: [code-style](../../docs/ai/code-style.md).\n");
+
+        assertTrue(details(check()).contains("link to a missing file"));
+    }
+
+    @Test
     void a_subcommand_the_tool_does_not_dispatch_is_a_problem() throws IOException {
         write("docs/a.md", "Run `ai-tools invented` to fix it.\n");
 
@@ -118,6 +146,16 @@ class DocsCheckTest {
         write(".claude/settings.json", "{\"hooks\": {\"Stop\": []}}");
 
         assertTrue(details(check()).contains("PostToolUse"));
+    }
+
+    @Test
+    void a_session_lifecycle_hook_presented_as_automation_but_not_wired_is_a_problem() throws IOException {
+        // The rule knew four hook names, so a table row about any of the others was unchecked
+        // prose - the same hole PostToolUse fell through before this check existed.
+        write("docs/repository-map.md", "| `SessionStart` hook | opens a session | reports the jar |\n");
+        write(".claude/settings.json", "{\"hooks\": {\"Stop\": []}}");
+
+        assertTrue(details(check()).contains("SessionStart"));
     }
 
     @Test

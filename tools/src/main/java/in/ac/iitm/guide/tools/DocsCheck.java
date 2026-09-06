@@ -51,8 +51,17 @@ public final class DocsCheck {
             "(?:java\\s+-jar\\s+\\S*ai-tools\\.jar|`ai-tools)\\s+(?:hook\\s+([a-z][a-z-]*)|([a-z][a-z-]*))");
 
     private static final Pattern SCRIPT = Pattern.compile("`?(scripts/[a-z][a-z-]*\\.sh)`?");
-    private static final Pattern DOCUMENTED_HOOK =
-            Pattern.compile("`(UserPromptSubmit|PreToolUse|PostToolUse|Stop)`\\s+hook");
+    /**
+     * The lifecycle events this repository may describe as its own automation.
+     *
+     * <p>The list started at the four events that were wired, which meant a table row about any
+     * other event was unchecked prose - the same hole {@code PostToolUse} fell through before this
+     * check existed. It is a list rather than a wildcard so that "the `Stop` hook" in a sentence
+     * about someone else's repository is not read as a claim about this one.
+     */
+    private static final Pattern DOCUMENTED_HOOK = Pattern.compile("`(UserPromptSubmit|PreToolUse|PostToolUse|Stop"
+            + "|SessionStart|SessionEnd|PreCompact|PostCompact|SubagentStop)`\\s+hook");
+
     private static final Pattern PHASE_MARKER = Pattern.compile("phase\\s+[0-9]", Pattern.CASE_INSENSITIVE);
 
     /** Files whose slash-command mentions are treated as advertising them as available. */
@@ -148,7 +157,7 @@ public final class DocsCheck {
     }
 
     /**
-     * A slash command named in the instructions but absent from {@code .claude/commands}.
+     * A slash command named in the instructions that nothing in {@code .claude} implements.
      *
      * <p>Worse than one that was never advertised, because it gets tried.
      */
@@ -164,14 +173,27 @@ public final class DocsCheck {
                 Matcher matcher = SLASH_COMMAND.matcher(line);
                 while (matcher.find()) {
                     String command = matcher.group(1);
-                    if (seen.add(command)
-                            && !Files.isRegularFile(repo.resolve(".claude/commands/" + command + ".md"))) {
+                    if (seen.add(command) && !isImplemented(command)) {
                         problems.add(new Problem(name, "advertises /" + command + ", which has no command file"));
                     }
                 }
             }
         }
         return problems;
+    }
+
+    /**
+     * Either shape counts, because both are real to whoever types the command.
+     *
+     * <p>Skills replaced commands as the platform's mechanism, and this repository migrated. The
+     * older shape is still accepted rather than dropped: a check that fails on a repository
+     * mid-migration is one that gets switched off for the duration, which is exactly when it is
+     * needed. The skill must have its {@code SKILL.md}, not merely its directory - the bare
+     * directory is what a half-finished move leaves behind, and it is the state that reads as done.
+     */
+    private boolean isImplemented(String command) {
+        return Files.isRegularFile(repo.resolve(".claude/commands/" + command + ".md"))
+                || Files.isRegularFile(repo.resolve(".claude/skills/" + command + "/SKILL.md"));
     }
 
     /**
