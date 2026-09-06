@@ -27,3 +27,19 @@ slices we each need to be able to explain — and if the balance drifts, the nex
 lighter side.
 
 `ownership.md` is generated. Editing it by hand defeats the only reason it is trustworthy.
+
+## The commits that must not be counted
+
+**`ai-tools ownership` and `ai-tools weekly` (both phase 2), and anything else that measures
+contribution, must exclude the journal commits the `Stop` hook writes**, and report them in their
+own column rather than dropping them silently. Their subject is `docs: record the journal entry for <date> <time>` and
+their path is always `docs/ai/journal/`.
+
+This is not a detail. The hook commits under the identity of whichever machine the session ran on,
+so it rewards prompting rather than authoring. On 6 September `git shortlog` read 57 to 38 one way
+while authored work was 35 to 8 the other — 49 of one member's 57 commits had been written by the
+hook. Every mechanism in the table above reads this history, and all of them would have read it
+backwards.
+
+Until the generator exists, `sh scripts/contribution.sh` reports it correctly, and the weekly log's
+"from git" figures come from there.

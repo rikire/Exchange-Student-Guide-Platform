@@ -17,8 +17,11 @@ honest actually switched on.
 - [ ] `backup`: export and import of the archive format; seeding runs through the importer
       — check: export, wipe, import produces an identical database
 - [ ] `ai-tools`: `trace` in full, `links`, the blocking `stop` gate, the edit reminder, `weekly`,
-      `ownership`
-      — check: the traceability matrix generates and is non-empty
+      `ownership`. `weekly` and `ownership` **exclude the journal commits the `Stop` hook writes**
+      and report them in a separate column — see [docs/team/README.md](../team/README.md); counting
+      them measures prompting rather than authoring, and would have read this team backwards
+      — check: the traceability matrix generates and is non-empty; `ownership` agrees with
+      `sh scripts/contribution.sh` on the authored/hook split
 - [ ] Gate wired into the `Stop` hook and into CI
       — check: break a migration without touching the data model document; the turn must not close
 - [ ] Query-count gate for the N+1 rule in [security.md](../ai/security.md), which has no mechanism
