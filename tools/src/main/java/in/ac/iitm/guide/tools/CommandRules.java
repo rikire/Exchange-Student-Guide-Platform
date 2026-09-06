@@ -111,7 +111,12 @@ public final class CommandRules {
             return ALLOWED;
         }
         // The debt register describes markers; the instructions quote them. Neither is a marker.
-        if (path.equals("docs/tech-debt.md") || path.startsWith("docs/ai/") || path.startsWith(".claude/")) {
+        // AGENTS.md is here for the same reason and was missed: it exists to restate CLAUDE.md for
+        // an agent that never reads CLAUDE.md, so quoting the rule is the whole of its job.
+        if (path.equals("docs/tech-debt.md")
+                || path.equals("AGENTS.md")
+                || path.startsWith("docs/ai/")
+                || path.startsWith(".claude/")) {
             return ALLOWED;
         }
 

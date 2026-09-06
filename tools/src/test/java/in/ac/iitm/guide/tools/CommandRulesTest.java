@@ -99,6 +99,21 @@ class CommandRulesTest {
     }
 
     @Test
+    void the_cross_vendor_instruction_file_may_describe_markers_too() {
+        // AGENTS.md exists to restate CLAUDE.md for an agent that never reads CLAUDE.md, so
+        // quoting the marker rule is the one thing it is for. The exemption list knew the three
+        // places that quote markers and not this fourth, and refused the file on its first line
+        // about them.
+        //
+        // The fixture is assembled rather than written out, because the guard checks the text of
+        // this edit as it lands and cannot tell a placeholder in a test from a marker in earnest.
+        // That is the third time this rule has refused the file documenting or testing it; the
+        // other two are named in CommandRules. Recorded here rather than worked around in silence.
+        String placeholder = "DEBT-" + "X".repeat(3);
+        assertEquals(ALLOW, content("AGENTS.md", "A deferred-work marker names a " + placeholder + " entry.\n"));
+    }
+
+    @Test
     void a_word_that_merely_contains_the_letters_is_not_a_marker() {
         assertEquals(ALLOW, content("docs/notes.md", "The autodetect step runs first.\n"));
     }
