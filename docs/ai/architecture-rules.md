@@ -43,6 +43,12 @@ Between slices there are exactly two allowed channels:
 
 Calling another slice's service or repository directly is not one of them.
 
+**Spring Modulith's event registry (event externalization/persistence) stays switched off.** Moved
+here from `docs/requirements/constraints.md` (7 Sep) — it is a framework-level detail, not a product
+simplification. Events are in-process only; nothing here needs at-least-once delivery or replay
+across a restart, and turning the registry on adds a persistence table and a completion step neither
+slice needs yet.
+
 ## Why there are no shared repositories
 
 The JPA entities are shared — there is one `articles` table, not one per slice. The repositories are

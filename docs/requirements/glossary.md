@@ -16,5 +16,6 @@ Written in phase 1. The terms below are the ones already in use and will be defi
 | Wiki link | A reference from one article to another, written in the article text |
 | Red link | A wiki link pointing at an article that does not exist yet |
 | Backlink | The reverse direction: which articles link to this one |
+| Revision | An article's retained content from before an approved edit changed it |
 | Media asset | An uploaded file attached to an article |
 | Seed | The starter content shipped with the application, in the export format |

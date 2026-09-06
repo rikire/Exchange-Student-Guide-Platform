@@ -31,8 +31,10 @@ Sees that each approved revision of an article is retained (no diff view — alr
 
 ### UC-019 — Handle a reported article
 
-Reviews an article flagged by a reader (see `reader.md`, UC-009) and decides whether to leave it,
-correct it or take it down.
+Sees a report in the inbox (`reader.md`, UC-009) and acts on it however they see fit — usually
+editing the article directly (UC-021) if it needs correcting — then closes the report (UC-025)
+whenever they consider it done. Revised 7 Sep: no separate accept/reject decision on the report
+itself; editing and closing are independent, existing actions.
 
 ### UC-020 — Write and publish an article directly
 
@@ -47,3 +49,13 @@ tags), but publishes the change immediately, bypassing the moderation queue.
 ### UC-022 — Edit the homepage
 
 Edits the homepage, including which items are pinned there.
+
+### UC-024 — Explain a rejection
+
+When rejecting a submission, optionally gives a reason, so the contributor can see why. Added
+7 Sep, alongside FR-018 — see the Feature coverage tracker.
+
+### UC-025 — Close a report
+
+Closes a report from the inbox at any time, whether or not the article was changed. Added 7 Sep,
+alongside FR-021/FR-022 — see the Feature coverage tracker.

@@ -278,6 +278,12 @@ IF the article's title matches an existing article's title, case-insensitively, 
 shall reject the submission, offering the contributor a link to propose an edit to the existing
 article or the option to change their own title.
 
+IF the attached media asset exceeds the configured size limit, THEN the system shall reject the
+submission and show an error message.
+
+IF the attached media asset is not of an accepted type, THEN the system shall reject the submission
+and show an error message.
+
 **Acceptance criteria:**
 
 ```
@@ -292,6 +298,16 @@ WHEN they attempt to submit
 THEN the submission is rejected
   AND they are offered a link to propose an edit to the existing article
   AND they are offered the option to change their title
+
+GIVEN an attached media asset exceeding the configured size limit
+WHEN a contributor attempts to submit
+THEN the submission is rejected
+  AND an error message is shown
+
+GIVEN an attached media asset not of an accepted type
+WHEN a contributor attempts to submit
+THEN the submission is rejected
+  AND an error message is shown
 ```
 
 ### FR-011 — Proposing an edit to an existing article
@@ -308,6 +324,12 @@ the system shall reject the proposal, offering the contributor a link to that ex
 the option to change their proposed title.
 
 IF the article being edited is no longer published, THEN the system shall reject the edit proposal.
+
+IF the attached media asset exceeds the configured size limit, THEN the system shall reject the
+proposal and show an error message.
+
+IF the attached media asset is not of an accepted type, THEN the system shall reject the proposal
+and show an error message.
 
 **Acceptance criteria:**
 
@@ -328,6 +350,16 @@ THEN the proposal is rejected
 GIVEN the article being edited is no longer published
 WHEN a contributor attempts to submit an edit to it
 THEN the proposal is rejected
+
+GIVEN an attached media asset exceeding the configured size limit
+WHEN a contributor attempts to submit the edit
+THEN the proposal is rejected
+  AND an error message is shown
+
+GIVEN an attached media asset not of an accepted type
+WHEN a contributor attempts to submit the edit
+THEN the proposal is rejected
+  AND an error message is shown
 ```
 
 ### FR-012 — Looking up a submission's status
@@ -338,6 +370,8 @@ THEN the proposal is rejected
 When a contributor enters a submission number, the system shall show its status: pending, approved,
 or rejected.
 
+IF the submission was rejected with a reason, THEN the system shall also show that reason.
+
 IF the submission number does not exist, THEN the system shall show that no such submission was
 found.
 
@@ -347,6 +381,10 @@ found.
 GIVEN a valid submission number
 WHEN a contributor looks it up
 THEN its status (pending, approved, or rejected) is shown
+
+GIVEN a rejected submission that has a stored reason
+WHEN a contributor looks it up
+THEN the reason is also shown
 
 GIVEN a submission number that does not exist
 WHEN a contributor looks it up
@@ -363,8 +401,8 @@ further submissions from them until the limit resets.
 
 IF a submission does not pass a CAPTCHA challenge, THEN the system shall reject it.
 
-The specific rate limit, and the CAPTCHA provider, are still undecided — open items, not repeated
-here.
+The rate limit itself is set by NFR-005. The CAPTCHA provider is still undecided — a separate
+dependency decision, not repeated here.
 
 **Acceptance criteria:**
 
@@ -421,4 +459,255 @@ THEN its full text and any attachments are shown
 GIVEN a submission that has already been decided
 WHEN a moderator attempts to open it
 THEN the system shows that it is no longer pending
+```
+
+### FR-016 — Downloading a media attachment
+
+**Status:** planned
+**Priority:** should
+
+When a reader requests a media asset attached to a published article, the system shall return it
+for download.
+
+IF a media asset is attached to a submission not yet approved by moderation, THEN the system shall
+not return it when requested directly.
+
+**Acceptance criteria:**
+
+```
+GIVEN a media asset attached to a published article
+WHEN a reader requests it
+THEN the file is returned for download
+
+GIVEN a media asset attached to a submission not yet approved by moderation
+WHEN a reader requests it directly
+THEN it is not returned
+
+GIVEN a media asset attached to a rejected submission
+WHEN a reader requests it directly
+THEN it is not returned
+```
+
+### FR-017 — Approving a submission
+
+**Status:** planned
+**Priority:** must
+
+When a moderator approves a new-article submission, adjusting its tags if needed, the system shall
+publish it as a new article.
+
+When a moderator approves an edit submission, adjusting its tags if needed, the system shall update
+the existing article with the proposed changes.
+
+IF the submission has already been decided, THEN the system shall reject the approval attempt.
+
+**Acceptance criteria:**
+
+```
+GIVEN a new-article submission awaiting a decision
+WHEN a moderator approves it
+THEN it is published as a new article
+
+GIVEN an edit submission awaiting a decision
+WHEN a moderator approves it
+THEN the existing article is updated with the proposed changes
+
+GIVEN a submission that has already been decided
+WHEN a moderator attempts to approve it
+THEN the approval is rejected
+```
+
+### FR-018 — Rejecting a submission
+
+**Status:** planned
+**Priority:** must
+
+When a moderator rejects a submission, the system shall mark it as rejected and remove it from the
+queue.
+
+IF the submission has already been decided, THEN the system shall reject the rejection attempt.
+
+**Acceptance criteria:**
+
+```
+GIVEN a submission awaiting a decision
+WHEN a moderator rejects it
+THEN it is marked as rejected
+  AND it no longer appears in the queue
+
+GIVEN a submission that has already been decided
+WHEN a moderator attempts to reject it
+THEN the rejection attempt is rejected
+```
+
+### FR-019 — Providing a rejection reason
+
+**Status:** planned
+**Priority:** could
+
+When a moderator rejects a submission, they may include a reason; the system shall store it
+alongside the rejection.
+
+**Acceptance criteria:**
+
+```
+GIVEN a moderator rejects a submission
+WHEN they include a reason
+THEN the reason is stored with the rejection
+
+GIVEN a moderator rejects a submission
+WHEN they do not include a reason
+THEN the rejection is stored without one
+```
+
+### FR-020 — Retaining article revisions
+
+**Status:** planned
+**Priority:** should
+
+When an edit submission is approved, the system shall retain the article's content prior to the
+change as a revision.
+
+**Acceptance criteria:**
+
+```
+GIVEN a published article
+WHEN an edit submission to it is approved
+THEN the article's content prior to the change is retained as a revision
+```
+
+### FR-021 — Reporting an article
+
+**Status:** planned
+**Priority:** could
+
+When a reader flags a published article, the system shall add it to the moderator's inbox of
+reported articles.
+
+**Acceptance criteria:**
+
+```
+GIVEN a published article
+WHEN a reader flags it
+THEN it is added to the moderator's inbox of reported articles
+```
+
+### FR-022 — Closing a report
+
+**Status:** planned
+**Priority:** could
+
+When a moderator closes a report, the system shall remove it from the inbox.
+
+**Acceptance criteria:**
+
+```
+GIVEN a report in the moderator's inbox
+WHEN a moderator closes it
+THEN it is removed from the inbox
+```
+
+### FR-023 — Publishing a new article directly
+
+**Status:** planned
+**Priority:** could
+
+When a moderator writes a new article directly, optionally attaching a photo, document or video,
+the system shall publish it immediately, without entering the moderation queue.
+
+IF the article's title matches an existing article's title, case-insensitively, THEN the system
+shall reject the publication.
+
+IF the attached media asset exceeds the configured size limit, THEN the system shall reject the
+publication and show an error message.
+
+IF the attached media asset is not of an accepted type, THEN the system shall reject the
+publication and show an error message.
+
+**Acceptance criteria:**
+
+```
+GIVEN a moderator writes a new article directly, optionally attaching a photo, document or video
+WHEN they publish it
+THEN it is published immediately, without entering the moderation queue
+
+GIVEN a moderator's chosen title matches an existing article's title, case-insensitively
+WHEN they attempt to publish
+THEN the publication is rejected
+
+GIVEN an attached media asset exceeding the configured size limit
+WHEN a moderator attempts to publish
+THEN the publication is rejected
+  AND an error message is shown
+
+GIVEN an attached media asset not of an accepted type
+WHEN a moderator attempts to publish
+THEN the publication is rejected
+  AND an error message is shown
+```
+
+### FR-024 — Editing an article directly
+
+**Status:** planned
+**Priority:** could
+
+When a moderator edits an existing article directly — its title, its body, or both, optionally
+attaching a photo, document or video — the system shall publish the change immediately, without
+entering the moderation queue, retaining the article's content prior to the change as a revision.
+
+IF the edit's proposed title matches a different existing article's title, case-insensitively, THEN
+the system shall reject the publication.
+
+IF the attached media asset exceeds the configured size limit, THEN the system shall reject the
+publication and show an error message.
+
+IF the attached media asset is not of an accepted type, THEN the system shall reject the
+publication and show an error message.
+
+**Acceptance criteria:**
+
+```
+GIVEN a moderator edits a published article directly, changing its title and/or body, optionally
+attaching a photo, document or video
+WHEN they publish the change
+THEN it is published immediately, without entering the moderation queue
+  AND the article's content prior to the change is retained as a revision
+
+GIVEN an attached media asset exceeding the configured size limit
+WHEN a moderator attempts to publish the change
+THEN the publication is rejected
+  AND an error message is shown
+
+GIVEN an attached media asset not of an accepted type
+WHEN a moderator attempts to publish the change
+THEN the publication is rejected
+  AND an error message is shown
+
+GIVEN a moderator's proposed new title matches a different existing article's title,
+case-insensitively
+WHEN they attempt to publish
+THEN the publication is rejected
+```
+
+### FR-025 — Editing the homepage's pinned articles
+
+**Status:** planned
+**Priority:** could
+
+When a moderator pins an article, the system shall show it on the landing page ahead of the
+recently added articles.
+
+When a moderator unpins an article, the system shall remove it from the landing page's pinned
+section.
+
+**Acceptance criteria:**
+
+```
+GIVEN a published article
+WHEN a moderator pins it
+THEN it appears in the landing page's pinned section
+
+GIVEN a pinned article
+WHEN a moderator unpins it
+THEN it no longer appears in the landing page's pinned section
 ```

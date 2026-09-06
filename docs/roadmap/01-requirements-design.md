@@ -9,8 +9,10 @@ design document is the deliverable; the repository documents are the source it i
 
 ## Steps
 
-- [ ] `FR` / `NFR` / `CON` in `docs/requirements/` for the product as agreed
-      — check: every `FR` has a status and every `CON` a rationale
+- [x] `FR` / `NFR` / `CON` in `docs/requirements/` for the product as agreed
+      — check: every `FR` has a status and every `CON` a rationale. Done 7 Sep: 25 `FR` (FR-001–025,
+      every Feature coverage tracker row has an id), 4 `NFR` (NFR-001–004), 5 `CON` (CON-001–005);
+      every `FR` carries Status/Priority, every `CON` a Rationale.
 - [ ] Glossary — one vocabulary for article, submission, revision, tag, media asset
 - [ ] CJM for three roles: reader, contributor, OGE moderator
       — check: the mid-demo scenario traces through the reader and contributor journeys end to end
@@ -21,10 +23,11 @@ design document is the deliverable; the repository documents are the source it i
       while writing FR-001 — [ADR-0001](../architecture/adr/ADR-0001-article-body-format.md), decided)
       — check: each has at least two genuinely considered options
 - [ ] `docs/architecture/ui-routes.md` — the route contract
-- [ ] **Decided here, not earlier:** ~~what the landing page contains beyond pinned items and
+- [x] **Decided here, not earlier:** ~~what the landing page contains beyond pinned items and
       search~~ — resolved 6 Sep, FR-009: recently added articles + a tag list, pinned articles shown
-      first when any exist; media quotas per file, per submission and for the volume; the allowed
-      file types
+      first when any exist; ~~media quotas per file, per submission and for the volume~~ — resolved
+      7 Sep, NFR-001: configurable, defaults 10 MB/image, 20 MB/document, 200 MB/video, 20 GB volume;
+      ~~the allowed file types~~ — resolved 7 Sep, CON-006: images, video, documents and audio only.
 - [ ] Design reference from the IITM sites, into `docs/design/reference.md`
 - [ ] Draft screens with `/design`: landing, article, search results, submission form, queue
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
@@ -41,14 +44,12 @@ no row resting on a template.
 
 ## Open questions
 
-1. How much of the version-history groundwork to commit to in the ADR. Storage is nearly free and
-   must start in phase 2 or the history cannot be reconstructed later; the UI is a nice-to-have.
-   **Still open, and sharper now (5 Sep):** the feature coverage tracker prioritizes it `should`, not
-   `must` — correct by the "does the system still function without it" test — but that priority label
-   says nothing about *when* it has to be built. If `should`-priority work defaults to phase 4–5
-   timing, the data is unrecoverable by then. Needs an explicit answer: build the retention groundwork
-   in phase 2 regardless of its `should` label, or accept that any article approved before phase 4 has
-   no history.
+1. ~~How much of the version-history groundwork to commit to in the ADR, and whether its `should`
+   priority conflicts with needing to start in phase 2 or lose the data.~~ Resolved 7 Sep: accept the
+   gap. There is no deployment after phase 1, so an article approved before FR-020's retention
+   groundwork lands (phase 4–5, per its `should` priority) simply has no history — a real but
+   low-stakes loss given the project's own timeline, not worth forcing into phase 2 ahead of its
+   priority.
 2. ~~Whether the landing page's pinned items are curated by the moderator or derived from activity.~~
    Resolved 5 Sep: moderator-curated, via direct homepage editing (UC-022, `home`).
 3. ~~What happens when a new submission's title collides (case-insensitively) with an existing
@@ -160,13 +161,13 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 | Full-text search across articles | must | `search` | FR-007 | | UC-001 | | | |
 | Browse/filter articles by tag | should | `taxonomy` | FR-008 | | UC-002 | | | |
 | Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | | |
-| Download a media attachment | should | `media` | | | UC-004 | | | |
+| Download a media attachment | should | `media` | FR-016 | | UC-004 | | | |
 | Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | | |
 | Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | |
 | Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | | |
 | Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | | |
 | Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | |
-| Report an article | should | `report` | | | UC-009 | | | |
+| Report an article | could | `report` | FR-021 | | UC-009 | | | |
 | Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | | |
 | Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | | |
 | Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | | |
@@ -174,13 +175,14 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 | Abuse handling without accounts (rate limiting + CAPTCHA) | should | `shared/security` | FR-013 | | _(none — not a use case)_ | | | |
 | Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | | |
 | Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | | |
-| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | | | UC-016 | | | |
-| Reject a submission | must | `moderate` | | | UC-017 | | | |
-| Version-history groundwork: retain each approved revision | should | `moderate` | | | UC-018 | | | |
-| Handle a reported article | should | `report` | | | UC-019 | | | |
-| Write and publish a new article directly, bypassing the queue | could | `contribute` | | | UC-020 | | | |
-| Edit and publish an article directly, bypassing the queue | could | `contribute` | | | UC-021 | | | |
-| Edit the homepage, including what's pinned | could | `home` | | | UC-022 | | | |
+| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | FR-017 | | UC-016 | | | |
+| Reject a submission | must | `moderate` | FR-018 | | UC-017 | | | |
+| Providing a rejection reason | could | `moderate` | FR-019 | | UC-024 | | | |
+| Version-history groundwork: retain each approved revision | should | `moderate` | FR-020 | | UC-018 | | | |
+| Closing a report (was "Handle a reported article" — narrowed 7 Sep: correcting the article reuses the existing direct-edit capability, closing is the only new action) | could | `report` | FR-022 | | UC-019 (via UC-021 + UC-025), UC-025 | | | |
+| Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | |
+| Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | |
+| Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | |
 
 MoSCoW test used: **must** = the system does not function as this product without it; **should** = a
 real, non-cosmetic loss if missing, but the system still works; **could** = low impact if missing,
@@ -190,6 +192,19 @@ was cut outright, so no constraint entry was needed for that pass.
 **Updated 6 Sep, while re-deriving FR-004:** red-link rendering raised from `could` to `must` (same
 priority as the wiki-link rendering it's part of), and a new feature was found — creating an article
 directly from a red link — added as `could`. Now 12 must, 6 should, 6 could, 24 features total.
+
+**Updated 7 Sep, while re-deriving FR-018:** a new feature was found — giving a reason when
+rejecting a submission — added as `could`. Now 12 must, 6 should, 7 could, 25 features total.
+
+**Updated 7 Sep, while re-deriving FR-021:** reporting an article lowered from `should` to `could` —
+low impact if missing, since a moderator can still notice a problem article on their own. Now
+12 must, 5 should, 8 could, 25 features total.
+
+**Updated 7 Sep, while re-deriving FR-022:** "Handle a reported article" narrowed to "Closing a
+report" — deciding to leave/correct/take down an article on its own turned out to just be the
+moderator's existing direct-edit capability (UC-021), reused rather than duplicated; the only new
+action is closing the report. Lowered from `should` to `could` to match. Now 12 must, 4 should,
+9 could, 25 features total.
 
 `backup` (export/import) has no row above: it is not a use case of Reader, Contributor or Moderator —
 it is a DevOps/deployment concern, justified by the already-agreed export-format ADR and the
