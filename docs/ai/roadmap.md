@@ -35,6 +35,18 @@ there.
 check compares names and links while the audit reads for meaning: a hook described as doing something
 other than what it does passes every automated check there is.
 
+Three built-in checkups belong to the same audit, because they read the configuration rather than
+the prose, and they see things a person rereading their own documents will not:
+
+- `/doctor` — proposes cuts to `CLAUDE.md`, dropping what an agent could derive from the code.
+- `/skill-doctor` — names the skills that never actually fire. A command nobody's request ever
+  matches is indistinguishable, from the inside, from one that works.
+- `/context` — shows what actually loaded this session, which is the only way to confirm that a
+  path-scoped rule in `.claude/rules/` reaches the model at all.
+
+Record their output in the phase's audit. An unrun checkup is not evidence, and the closing note
+should say which of the three were run rather than implying all of them.
+
 ## Changing the plan
 
 Adding an item to the current phase is the agent's business. Moving work between phases, or changing

@@ -17,6 +17,11 @@ to be looked up afterwards.
   package — those are the contract other slices depend on.
 - Never swallow an exception. An empty `catch` is a defect; an expected one carries a comment
   saying why. Messages name the value that caused the failure, never a secret.
+- **Do not accumulate fallbacks.** Default a value once, at the boundary where it enters; never
+  again downstream. Do not add a branch for a case you cannot name — "just in case" is not a case.
+  Prefer failing where the problem is over substituting a plausible value, because nobody
+  investigates a number that looks fine. A `catch` returning a default is swallowing. If the
+  fallback exists because the behaviour has not been decided, stop and ask instead of choosing.
 - SLF4J, never `System.out`, parameterised form only. Never log article content in full.
 - English in code, comments, commit messages, log messages and exception messages.
 - Any `TODO`, `FIXME` or `HACK` carries a `DEBT-XXX` that exists in

@@ -111,6 +111,23 @@ turn and the start of the next, and reports the difference.
 That difference is also the most interesting part of the record for the course: it shows where the
 generated code was not good enough and what a person had to correct.
 
+## The memory that is deliberately switched off
+
+Claude Code keeps an **auto memory** of its own: notes it writes to itself between sessions, at
+`~/.claude/projects/<repository>/memory/`, loaded into every conversation. It is on by default, and
+it was on here.
+
+It is switched off in [.claude/settings.json](../../../.claude/settings.json) — `autoMemoryEnabled`.
+Not because it is a bad feature, but because it is machine-local and outside git. Anything it held
+would be read by the assistant, would shape what the assistant did, and would be invisible to the
+other member of the team, to this journal, and to whoever grades the project. The claim this
+directory makes is that the record of working with the AI is complete and committed. A second store
+that only one laptop can see makes that claim false, and quietly.
+
+If it is ever switched back on, that is a decision to record here, along with what it means: the
+journal would then be a complete record of the *prompts* and no longer of the *context they were
+answered in*.
+
 ## What this is for
 
 The AI-usage statement of the proposal commits us to being able to explain any line we submit.

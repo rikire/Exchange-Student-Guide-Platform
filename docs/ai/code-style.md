@@ -56,6 +56,30 @@ write by hand, that is usually a sign it holds too much.
 - An exception message names the value that caused it, never a secret: file name yes, admin password
   no.
 
+## Fallbacks and defaults
+
+A fallback is a decision about what should happen when something is missing. It is not a way of
+avoiding that decision, and it is the cheapest thing in the world to add — which is why it
+accumulates.
+
+- **Default a value once, at the boundary where it enters**, and let it be absent everywhere else. A
+  value defaulted in the configuration, again in the constructor and again at the call site has
+  three answers and no source of truth. When they disagree, the bug is invisible: something
+  plausible is returned.
+- **Do not add a fallback for a case you have not seen and cannot name.** "Just in case" is not a
+  case. If you cannot say which input produces it, the branch is untested by construction and the
+  `/dod` reading will ask you to delete it.
+- **Prefer failing where the problem is to substituting a plausible value.** An article count that
+  quietly renders as `0` because a query returned null is worse than an error, because nobody
+  investigates a number that looks fine.
+- **A `catch` that returns a default is swallowing**, and the rule above about never swallowing
+  applies to it.
+- **If the fallback exists because the real behaviour has not been decided, that is a stop-and-ask,
+  not a default.** Choosing the value quietly produces the same unchosen target as any other silent
+  default — see [prompting.md](prompting.md).
+
+Two or three defaults on one path is the sign to stop and ask which one is the real rule.
+
 ## Logging
 
 SLF4J, never `System.out`.

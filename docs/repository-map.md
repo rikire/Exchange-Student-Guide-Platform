@@ -163,6 +163,7 @@ refactor(DEBT-007): replace the in-memory rate limiter
 | `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
 | `PreCompact` hook | The conversation is about to be shortened | Writes into the journal that it happened, and whether a person asked for it. Compaction is the one event that removes evidence and leaves no trace of having done so |
 | `Stop` hook | The assistant ends a turn | Refuses while the turn owes the journal an English rendering, or while the documentation check is red — once per cause either way, so a session cannot deadlock; then closes the journal entry and commits it |
+| `statusLine` | Continuously | Model, branch, context used, open debt count. Context pressure is the constraint the other rules follow from, so it is shown rather than left to a command someone remembers to run |
 | `commit-msg` | `git commit` | Checks the message convention |
 | `pre-commit` | `git commit` | Instructions not mixed with code, Spotless, fast tests |
 | `pre-push` | `git push` | The full `scripts/check.sh` |
@@ -170,6 +171,16 @@ refactor(DEBT-007): replace the in-memory rate limiter
 
 Claude Code hooks are configured in [.claude/settings.json](../.claude/settings.json); git hooks are
 installed with `scripts/hooks.sh`.
+
+**"Once per cause" is our rule, not the platform's.** Claude Code stops honouring a `Stop` hook
+after eight consecutive blocks, so a deadlock was never possible for longer than eight turns. Ours
+refuses once, which is stricter and still what we want — a gate that keeps refusing teaches people
+to work around it, and eight refusals is seven more than anyone reads. The reasoning that produced
+this rule assumed no platform limit; it is kept because it is right, not because it is necessary.
+
+Once application code exists, "the build is green" wants a gate too, and the ladder is prompt →
+`/goal` condition → `Stop` hook, in that order of cost. None of the three is in use yet, which is
+correct while there is nothing to build.
 
 **The `Stop` hook makes a commit, and it is the only automation that writes to history.** A journal
 entry is appended after the turn's last action, so the turn it describes can never be the turn that
