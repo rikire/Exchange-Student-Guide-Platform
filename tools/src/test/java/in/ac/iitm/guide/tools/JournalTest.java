@@ -48,6 +48,29 @@ class JournalTest {
     }
 
     @Test
+    void records_that_the_context_was_compacted() throws IOException {
+        // The journal exists so that the trail of decisions survives. Compaction discards part of
+        // the conversation those decisions were made in, so an entry that does not say it happened
+        // reads as a complete record of a turn that no longer has one.
+        Journal journal = Journal.open(repo, "session-c");
+        journal.startEntry("Work through the migration");
+        journal.addCompactionMarker("auto");
+
+        String content = journalContent();
+        assertTrue(content.contains("compacted"), content);
+        assertTrue(content.contains("auto"), "the trigger says whether a person asked for it");
+    }
+
+    @Test
+    void records_a_compaction_even_when_no_entry_is_open() throws IOException {
+        // Compaction does not wait for a turn to be in progress, and a marker that is dropped
+        // because the bookkeeping was between entries is the one case that most needs recording.
+        Journal.open(repo, "session-d").addCompactionMarker("manual");
+
+        assertTrue(journalContent().contains("compacted"));
+    }
+
+    @Test
     void keeps_the_original_prompt_and_adds_the_english_rendering() throws IOException {
         Journal journal = Journal.open(repo, "session-b");
         journal.startEntry("Настрой каркас репозитория");

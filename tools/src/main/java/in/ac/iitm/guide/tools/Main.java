@@ -10,7 +10,9 @@ import java.util.List;
  * <pre>
  *   hook prompt            UserPromptSubmit — open a journal entry, report edits made by hand
  *   hook guard             PreToolUse       — ask before editing a file the human owns
+ *   hook bash              PreToolUse       — refuse a command that skips or hides a check
  *   hook stop              Stop             — close the journal entry
+ *   hook compact           PreCompact       — record that the conversation was shortened
  *   hook note &lt;text&gt;       add a note to the current journal entry
  *   hook english           supply the English rendering of the prompt and the outcome
  *   hook author &lt;id&gt;       record who is sending the prompts, when git could not say

@@ -24,6 +24,7 @@ final class HookCommand {
             case "bash" -> bash();
             case "stop" -> stop();
             case "note" -> note(String.join(" ", List.of(args).subList(1, args.length)));
+            case "compact" -> compact();
             case "english" -> english(java.util.Arrays.copyOfRange(args, 1, args.length));
             case "author" -> author(java.util.Arrays.copyOfRange(args, 1, args.length));
             default -> throw new IllegalStateException("dispatch missing for " + args[0]);
@@ -409,6 +410,21 @@ final class HookCommand {
             This refuses once. If the rendering genuinely cannot be produced, end the turn again and \
             the entry will record that it was not supplied.\
             """;
+
+    /**
+     * Writes into the journal that the conversation was shortened.
+     *
+     * <p>Every other gate here defends a rule. This one defends the record itself: compaction is
+     * the one event that removes evidence, and it leaves nothing behind that a reader could tell
+     * apart from a turn whose context was never touched.
+     */
+    private static void compact() throws Exception {
+        HookEvent event = HookEvent.readFromStdin();
+        Repo repo = Repo.find(event.cwd());
+        String session = event.sessionId() == null ? latestSession(repo) : event.sessionId();
+        String trigger = event.trigger() == null ? "unknown" : event.trigger();
+        Journal.open(repo, session).addCompactionMarker(trigger);
+    }
 
     private static void note(String text) throws Exception {
         if (text.isBlank()) {

@@ -230,6 +230,25 @@ public final class Journal {
         appendToTodaysFile("\n## " + ZonedDateTime.now(ZONE).format(TIME) + " — note\n\n" + note + "\n");
     }
 
+    /**
+     * Records that the conversation was shortened, and by whose decision.
+     *
+     * <p>The journal's whole claim is that the trail of decisions survives. Compaction discards
+     * part of the conversation those decisions were made in, and it does so silently: an entry
+     * written afterwards looks exactly like one written over a conversation that is still whole.
+     * This marker is the difference between a complete record and one that only appears complete.
+     *
+     * <p>It is deliberately not gated on an entry being open. Compaction does not wait for a turn
+     * to be in progress, and the marker that would be dropped for landing between entries is the
+     * one that most needs writing down.
+     */
+    public void addCompactionMarker(String trigger) throws IOException {
+        String who = "manual".equals(trigger) ? "asked for by a person" : "triggered by the context filling up";
+        appendToTodaysFile("\n## " + ZonedDateTime.now(ZONE).format(TIME) + " — context compacted\n\n"
+                + "The conversation was shortened here (" + trigger + ", " + who + "). Anything the entries\n"
+                + "above do not record was summarised, and the detail behind it is no longer in the session.\n");
+    }
+
     public void save() throws IOException {
         repo.write(stateFile, MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(state));
     }
