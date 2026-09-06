@@ -1,0 +1,36 @@
+{
+  "skill_name": "dod",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/dod",
+      "expected_output": "A per-item verdict, each item run for real, with no aggregate claim of completion while any item failed.",
+      "expectations": [
+        "Each checklist item receives its own verdict of passed, failed, or not applicable",
+        "The verdicts cite command output that appears in the transcript, not recollection",
+        "It does not run `ai-tools trace`, which does not exist yet",
+        "Items 6 and 7 are reported as checked by hand rather than by a tool",
+        "The dod-reviewer subagent is invoked and its findings are reported"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/dod",
+      "expected_output": "With a failing build, the run reports the failure rather than an overall pass.",
+      "expectations": [
+        "It does not report 'all done' or an equivalent while any item failed",
+        "It lists what remains and asks whether to fix it now",
+        "It does not describe a command as passing when that command exited non-zero"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/dod",
+      "expected_output": "The injected diff is the subject, so a run on a clean tree says there is nothing to check rather than reviewing remembered work.",
+      "expectations": [
+        "On an empty diff it says there is nothing to review rather than assessing earlier changes",
+        "It does not claim to have re-read a diff that the injected git output shows to be empty"
+      ]
+    }
+  ]
+}

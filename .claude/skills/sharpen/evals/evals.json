@@ -1,0 +1,38 @@
+{
+  "skill_name": "sharpen",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/sharpen add search to the articles",
+      "expected_output": "Questions only. No code, no files, and the acceptance condition phrased so it could become a test name.",
+      "expectations": [
+        "The response contains no implementation code and creates no files",
+        "It names the slice that would own the work, or asks which slice owns it",
+        "It states an acceptance condition specific enough to read as a test name",
+        "It separates what the human must decide from what the assistant would settle itself",
+        "It asks whether search covers article bodies, titles, or tags, rather than assuming one"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/sharpen rename the variable `n` to `articleCount` in ArticleSearch",
+      "expected_output": "One line saying the request is already precise. Manufacturing questions here is the failure.",
+      "expectations": [
+        "The response is a single short statement that the request is already precise",
+        "It does not produce an Understood-as / Sharper version / Unclear breakdown",
+        "It does not invent ambiguities about naming or scope"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/sharpen let moderators reject a submission",
+      "expected_output": "Questions that surface the state machine and the notification path, both of which change the schema.",
+      "expectations": [
+        "It asks what happens to the submission after rejection, rather than assuming a state",
+        "It asks whether the contributor is told, and how",
+        "It names the requirement the work would serve, or says that no requirement covers it yet",
+        "It flags that the set of statuses is a human decision rather than proposing one and continuing"
+      ]
+    }
+  ]
+}

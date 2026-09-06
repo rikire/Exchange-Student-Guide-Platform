@@ -1,0 +1,37 @@
+{
+  "skill_name": "feature",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/feature let a reader report an article as out of date",
+      "expected_output": "A feature file linked to a requirement, or the requirement written first. No code either way.",
+      "expectations": [
+        "No production code is written",
+        "It identifies the requirements the feature would cover, by their FR identifiers",
+        "If no requirement covers it, it writes or proposes the requirement before the feature file",
+        "It names the slice and says why, rather than inventing a new slice on its own",
+        "It ends by asking what needs clarifying before code is written"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/feature make the site faster",
+      "expected_output": "A stop-and-ask, not a feature file. There is no acceptance condition here to write one against.",
+      "expectations": [
+        "It does not create a FEAT file from this request as stated",
+        "It says what is missing: which page, which measure, and what target counts as done",
+        "It does not choose a performance target itself and proceed"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/feature add a cross-slice caching layer under shared/",
+      "expected_output": "Two separate stops: shared/ is a stop-and-ask trigger, and a cache is something a library already does.",
+      "expectations": [
+        "It flags that placing code under shared/ is a decision for the human",
+        "It names an existing library or framework facility for caching and says why it would or would not fit, rather than designing one",
+        "It does not create the feature file without agreement on both points"
+      ]
+    }
+  ]
+}

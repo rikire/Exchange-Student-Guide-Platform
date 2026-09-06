@@ -57,6 +57,7 @@ these documents, read the matching rule file in the same turn.
 | The human takes part in domain, schema and security decisions | Partly: creating a file under `shared/`, in the schema or security packages, asks first |
 | A switched-off or sleeping test | An edit adding `@Disabled` without a debt entry, or `Thread.sleep` under `src/test/`, is refused; a `@Test` that asserts nothing is questioned |
 | The record survives a shortened conversation | A `PreCompact` hook writes into the entry that the context was compacted. It does not preserve what was discarded — it marks the gap as a gap |
+| The work is not graded only by whoever did it | Partly: `/dod` hands the diff to the `dod-reviewer` subagent, which sees the change and the criteria without the reasoning that produced them. It is still the same model, and it is still started by the run it is auditing |
 
 **Every row above except one runs from `tools/target/ai-tools.jar`, and that jar is a build
 artefact.** `target/` is not tracked, so on a fresh clone, after `mvnw clean`, or before anyone has
@@ -123,5 +124,23 @@ inferred that one was wanted is worse than no command.
 Three more — ownership, gap-list and viva-prep — arrive with their generators in phases 2 and 3. They
 are listed only once they work: a command that errors is worse than one that is absent, because
 it gets tried.
+
+## Do the instructions actually change anything?
+
+There are 100 tests over `tools/`, and they prove the *tooling* works: that a marker without a debt
+reference is refused, that a journal entry is written, that a document naming a missing file fails
+the build. **Not one of them shows that a single line in these documents changes what the assistant
+does.** For a repository whose subject is working with an AI, that is the largest untested surface
+in it, and it is the same defect the honesty table exists to catch — a rule believed to work because
+it is written down.
+
+`sharpen`, `dod` and `feature` now carry `evals/evals.json` beside them: a realistic prompt and a
+list of verifiable statements the answer has to satisfy. They are graded from the transcript, and
+the interesting number is the difference between the pass rate with the skill and without it — a
+skill that changes nothing is a skill whose instructions were already obvious.
+
+**They have been written and not yet run.** No pass rate is claimed anywhere, and none should be
+quoted until the runs exist. Recording that here rather than leaving the file to imply otherwise is
+the point of writing it down at all.
 
 The technical debt register is [docs/tech-debt.md](../tech-debt.md).
