@@ -1,6 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/session-start.sh", "${CLAUDE_PROJECT_DIR}"],
+            "timeout": 15,
+            "statusMessage": "Checking that the guard layer is actually running"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
@@ -11,7 +24,7 @@
               "-XX:TieredStopAtLevel=1",
               "-XX:+UseSerialGC",
               "-jar",
-              "tools/target/ai-tools.jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
               "hook",
               "prompt"
             ],
@@ -32,7 +45,7 @@
               "-XX:TieredStopAtLevel=1",
               "-XX:+UseSerialGC",
               "-jar",
-              "tools/target/ai-tools.jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
               "hook",
               "guard"
             ],
@@ -51,12 +64,32 @@
               "-XX:TieredStopAtLevel=1",
               "-XX:+UseSerialGC",
               "-jar",
-              "tools/target/ai-tools.jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
               "hook",
               "bash"
             ],
             "timeout": 30,
             "statusMessage": "Checking the command does not skip or hide a check"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
+              "hook",
+              "compact"
+            ],
+            "timeout": 30,
+            "statusMessage": "Recording in the journal that the context was shortened"
           }
         ]
       }
@@ -71,7 +104,7 @@
               "-XX:TieredStopAtLevel=1",
               "-XX:+UseSerialGC",
               "-jar",
-              "tools/target/ai-tools.jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
               "hook",
               "stop"
             ],
@@ -83,6 +116,18 @@
     ]
   },
   "permissions": {
+    "deny": [
+      "Bash(git * --no-verify)",
+      "Bash(git * --no-verify *)",
+      "Bash(./mvnw -DskipTests)",
+      "Bash(./mvnw -DskipTests *)",
+      "Bash(./mvnw * -DskipTests)",
+      "Bash(./mvnw * -DskipTests *)",
+      "Bash(./mvnw -Dmaven.test.skip=true)",
+      "Bash(./mvnw -Dmaven.test.skip=true *)",
+      "Bash(./mvnw * -Dmaven.test.skip=true)",
+      "Bash(./mvnw * -Dmaven.test.skip=true *)"
+    ],
     "allow": [
       "Bash(./mvnw:*)",
       "Bash(java -jar tools/target/ai-tools.jar:*)",

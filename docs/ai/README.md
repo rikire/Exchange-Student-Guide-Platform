@@ -44,6 +44,27 @@ the details live here so that a session does not have to load everything into co
 | Do not reinvent what a library does | Partly: creating a file whose name suggests a wheel asks first. Whether the answer is honest is not mechanisable |
 | The human takes part in domain, schema and security decisions | Partly: creating a file under `shared/`, in the schema or security packages, asks first |
 | A switched-off or sleeping test | An edit adding `@Disabled` without a debt entry, or `Thread.sleep` under `src/test/`, is refused; a `@Test` that asserts nothing is questioned |
+| The record survives a shortened conversation | A `PreCompact` hook writes into the entry that the context was compacted. It does not preserve what was discarded — it marks the gap as a gap |
+
+**Every row above except one runs from `tools/target/ai-tools.jar`, and that jar is a build
+artefact.** `target/` is not tracked, so on a fresh clone, after `mvnw clean`, or before anyone has
+run `scripts/hooks.sh`, it does not exist — and a hook whose command exits non-zero is a
+*non-blocking* error. The session then proceeds with no journal, no protected-path guard, no
+bash-bypass refusal and no documentation gate, and this table would still be claiming all of it
+held. That was true of this table for the whole of phase 0, and it was found by auditing the table
+against the platform rather than against itself.
+
+Two things changed on 6 September. A `SessionStart` hook now says so at the top of the session; it
+is plain shell precisely so that it can run when the jar cannot, and it is a reporter, not a gate —
+it can fail the same silent way if `sh` is not on PATH. And the two refusals that must not depend
+on a build succeeding moved to `permissions.deny` in
+[.claude/settings.json](../../.claude/settings.json), where the client enforces them and no process
+of ours has to survive. That layer is coarser than the jar's rules — it matches on the command text
+rather than on parsed segments — so both are kept: the jar refuses precisely, and the settings layer
+refuses at all.
+
+The exception matters more than the fix. **A mechanism that depends on a build is a mechanism with
+an off switch nobody has to touch on purpose.**
 
 Rule 6 was described here as backed by the matrix generator before that generator existed. It was
 not, and the claim was corrected on 4 September — a document overstating its own enforcement is the
