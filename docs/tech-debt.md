@@ -20,6 +20,36 @@ constraint hides it.
 
 ## Register
 
+### DEBT-002 — The process layer cannot be packaged for a second repository
+
+**Status:** open
+**Created:** 2026-09-06
+**Marker:** none in code — this is an absence, recorded here so it is not rediscovered
+
+**Cause:** the audit on 6 September set out to package `.claude/` and `tools/` as a Claude Code
+plugin, which is the documented answer to "a second repository needs the same setup" — and this
+scaffolding came from a template repository, so the second one already exists. Two things block it,
+both structural rather than fiddly. The hooks run `tools/target/ai-tools.jar`, a Maven artefact of
+*this* repository that `target/` keeps out of git, so an installed plugin has no jar to run and
+fails the way described in `docs/ai/README.md`. And every skill links into `docs/ai/`, which would
+not exist in the repository it was installed into, so the commands would load and then point at
+nothing.
+
+**Consequence:** the work does not travel. Each new repository re-derives the same rules by hand,
+and they drift apart immediately — which is how this repository came to differ from the template it
+started from. Nothing is broken today; the cost is paid the first time somebody wants this setup
+somewhere else.
+
+**How to fix:** decide what the portable unit actually is. Either the plugin bundles the documents
+it links to and ships a built jar as a release asset, or the jar's rules move into the plugin as
+scripts with no build step and the skills stop linking outward. The first keeps one source of truth
+and adds a release process; the second is portable immediately and forks the rules. That is a design
+decision, not an implementation detail, and it wants an ADR.
+
+**Trigger:** the first time a second repository needs this, or phase 5 handover — whichever comes
+first. Not before: a plugin that installs and then misbehaves is worse than none, for the same
+reason a slash command that errors is worse than one that is absent.
+
 ### DEBT-001 — A journal translation is bound to a session, not to an entry
 
 **Status:** resolved 2026-09-04

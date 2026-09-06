@@ -17,6 +17,7 @@ the details live here so that a session does not have to load everything into co
 | [docs-sync.md](docs-sync.md) | How documentation stays in step with code |
 | [roadmap.md](roadmap.md) | How the roadmap is kept and how items are closed |
 | [journal/](journal/) | Prompt journal and the human's own edits |
+| [audit-2026-09-06.md](audit-2026-09-06.md) | This layer audited against the platform: what was found, fixed, and deliberately not done |
 | [PLAN-PROMPT.md](PLAN-PROMPT.md) | The original plan this repository was built from |
 
 **Four of these documents also exist as path-scoped rules** in `.claude/rules/`, carrying only their
