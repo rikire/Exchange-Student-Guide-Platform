@@ -1,6 +1,8 @@
 ---
-description: Add a note to the prompt journal
+name: journal-note
+description: Add a note to the prompt journal. Writes into the record, so it is invoked by a person rather than inferred.
 argument-hint: <text of the note>
+disable-model-invocation: true
 ---
 
 Add a note to the current journal entry:

@@ -1,11 +1,22 @@
 ---
-description: Bring the documentation back in step with the current changes
+name: sync-docs
+description: Bring the documentation back in step with the current changes. Rewrites documentation across the repository, so it is invoked by a person rather than inferred.
+disable-model-invocation: true
+allowed-tools: Bash(git status:*), Bash(git diff:*)
 ---
 
-Bring the documentation in step with what has changed, following
-[docs/ai/docs-sync.md](../../docs/ai/docs-sync.md).
+## What has changed
 
-1. Look at what actually changed: `git diff HEAD --name-only` and `git status`.
+!`git status --short || true`
+
+!`git diff HEAD --name-only || true`
+
+## What to do about it
+
+Bring the documentation in step with what has changed, following
+[docs/ai/docs-sync.md](../../../docs/ai/docs-sync.md).
+
+1. The changed files are listed above. Read them if you need to see what the change actually was.
 2. For each changed area, apply the mapping table in `docs-sync.md` and say which document is now
    obliged to change.
 3. Update those documents **in substance**: describe the new behaviour, not the fact that an edit

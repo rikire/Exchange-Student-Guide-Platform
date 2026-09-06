@@ -1,9 +1,10 @@
 ---
-description: Restate an underspecified request precisely and name what it leaves open
+name: sharpen
+description: Restate an underspecified request precisely and name what it leaves open. Use when a request would produce code, a document or a schema whose shape depends on something it did not state - a vague feature ask, "add X", "make it better", a task with no acceptance condition - and before building anything from it.
 argument-hint: <the request to sharpen>
 ---
 
-Apply [docs/ai/prompting.md](../../docs/ai/prompting.md) to: **$ARGUMENTS**
+Apply [docs/ai/prompting.md](../../../docs/ai/prompting.md) to: **$ARGUMENTS**
 
 Do **not** act on the request. Produce only the questions it should have answered:
 

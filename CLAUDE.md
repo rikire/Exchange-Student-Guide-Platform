@@ -81,6 +81,10 @@ scripts/hooks.sh                # build the jar and install the git hooks
 `/sharpen` · `/feature` · `/adr` · `/sync-docs` · `/trace-check` · `/dod` · `/journal-note`
 · `/weekly-log` · `/stakeholder-note` · `/course-check` · `/article`
 
+They are skills, in `.claude/skills/<name>/SKILL.md`. Seven of them write into the record or into
+the human's decision space and can only be started by a person, not inferred by you; the table in
+[docs/ai/README.md](docs/ai/README.md) says which.
+
 Three more — ownership, gap-list and viva-prep — arrive with their generators in phases 2 and 3. They are not listed above until they work — a command that errors is worse than one that
 is absent, because it is tried.
 
@@ -107,6 +111,9 @@ is absent, because it is tried.
   before continuing.
 - **Confirmation on protected files** — editing requirements, ADRs, the schema, the stakeholder
   record, the course documents or these instructions asks the human first.
+- **A report at the start of the session** — whether the guard jar is missing or stale, the roadmap
+  phase, and the open debt count. Nearly everything above runs from that jar, and a missing jar
+  turns all of it off without failing anything, so read the report rather than assuming.
 
 ## What you must not do
 

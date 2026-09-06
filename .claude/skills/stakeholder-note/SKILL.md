@@ -1,6 +1,8 @@
 ---
-description: Record stakeholder feedback and propose what it changes
+name: stakeholder-note
+description: Record stakeholder feedback and propose what it changes. Writes the record of what the stakeholder actually said, so it is invoked by a person rather than inferred.
 argument-hint: <what the stakeholder said>
+disable-model-invocation: true
 ---
 
 Record stakeholder feedback: **$ARGUMENTS**

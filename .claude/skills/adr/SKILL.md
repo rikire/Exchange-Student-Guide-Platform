@@ -1,6 +1,8 @@
 ---
-description: Record an architectural decision as an ADR
+name: adr
+description: Record an architectural decision as an ADR. Writes into the human's decision space, so it is invoked by a person rather than inferred.
 argument-hint: <topic of the decision>
+disable-model-invocation: true
 ---
 
 Record an architectural decision: **$ARGUMENTS**
@@ -9,7 +11,7 @@ Record an architectural decision: **$ARGUMENTS**
    a non-obvious alternative. The moderation state machine is an ADR; a package name is not.
    If it is not an ADR, say so and stop.
 2. Find the next free number in `docs/architecture/adr/`.
-3. Create the file from [docs/architecture/adr/_TEMPLATE.md](../../docs/architecture/adr/_TEMPLATE.md).
+3. Create the file from [docs/architecture/adr/_TEMPLATE.md](../../../docs/architecture/adr/_TEMPLATE.md).
 4. Fill in, honestly:
    - **Context** — what forced the decision, with the constraint that actually binds.
    - **Options** — at least two, each with its cost. An ADR with one option is a rationalisation.

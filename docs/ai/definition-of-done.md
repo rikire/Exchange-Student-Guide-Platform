@@ -85,7 +85,7 @@ happened.
 java -jar tools/target/ai-tools.jar trace   # phase 2; until then, check by reading
 ```
 
-Until the generator exists, walk the list in [`/trace-check`](../../.claude/commands/trace-check.md)
+Until the generator exists, walk the list in [`/trace-check`](../../.claude/skills/trace-check/SKILL.md)
 by hand and say so in the verdict. An item reported as passed because a missing command produced
 no output is not a passed item.
 

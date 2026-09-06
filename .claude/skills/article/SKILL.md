@@ -1,6 +1,8 @@
 ---
-description: Start a seed article draft in the target format
+name: article
+description: Start a seed article draft in the target format. Creates content under app/src/main/resources/data/seed/, so it is invoked by a person rather than inferred.
 argument-hint: <topic>
+disable-model-invocation: true
 ---
 
 Start a draft article about: **$ARGUMENTS**

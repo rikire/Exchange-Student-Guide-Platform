@@ -29,7 +29,7 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `docs/tech-debt.md` | The debt register `DEBT-XXX` | human + AI |
 | `docs/ai/` | Instructions for the AI agent | human |
 | `docs/ai/journal/` | Prompt journal | **hooks** |
-| `.claude/` | Claude Code settings: hooks, slash commands | human |
+| `.claude/` | Claude Code settings: hooks, permission rules, skills | human |
 | `.githooks/` | `commit-msg`, `pre-commit`, `pre-push` | human |
 | `scripts/` | `check.sh`, `hooks.sh`, `session-start.sh` — what CI runs, hook installation, and the session-opening report | human + AI |
 

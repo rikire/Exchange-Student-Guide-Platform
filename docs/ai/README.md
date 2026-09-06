@@ -83,19 +83,30 @@ more than it is.
 
 ## Slash commands
 
-| Command | What it does |
-|---|---|
-| `/sharpen <text>` | Restates an underspecified request and names what it leaves open |
-| `/feature <description>` | Opens a feature file and links it to requirements |
-| `/adr <topic>` | Records an architectural decision |
-| `/sync-docs` | Brings documentation back in step with the changes |
-| `/trace-check` | Shows gaps in requirement coverage |
-| `/dod` | Runs the readiness checklist |
-| `/journal-note <text>` | Adds a note to the journal |
-| `/weekly-log [--as member] <text>` | Adds a paragraph to this week's contribution log |
-| `/stakeholder-note <text>` | Records stakeholder feedback and proposes what it becomes |
-| `/course-check [stage]` | Checks the rubric for the current stage |
-| `/article <topic>` | Starts a seed article draft in the target format |
+They live in `.claude/skills/<name>/SKILL.md`. They were `.claude/commands/*.md` until 6 September,
+when they moved: skills are what Claude Code reads now, and commands are kept only for backward
+compatibility. The move bought three things the older shape could not do — a command can inject the
+output of a real command into its own prompt instead of asking the assistant to run one and report
+back; a command that only reads can run in its own context instead of filling this one; and a
+command with side effects can be hidden from the assistant so that only a person can start it.
+
+The last column says which. **Person only** means the assistant cannot invoke it — those seven all
+write into the record or into the human's decision space, and a command that files an ADR because it
+inferred that one was wanted is worse than no command.
+
+| Command | What it does | Who can start it |
+|---|---|---|
+| `/sharpen <text>` | Restates an underspecified request and names what it leaves open | either |
+| `/feature <description>` | Opens a feature file and links it to requirements | person only |
+| `/adr <topic>` | Records an architectural decision | person only |
+| `/sync-docs` | Brings documentation back in step with the changes | person only |
+| `/trace-check` | Shows gaps in requirement coverage | either, own context |
+| `/dod` | Runs the readiness checklist | either |
+| `/journal-note <text>` | Adds a note to the journal | person only |
+| `/weekly-log [--as member] <text>` | Adds a paragraph to this week's contribution log | person only |
+| `/stakeholder-note <text>` | Records stakeholder feedback and proposes what it becomes | person only |
+| `/course-check [stage]` | Checks the rubric for the current stage | either, own context |
+| `/article <topic>` | Starts a seed article draft in the target format | person only |
 
 Three more — ownership, gap-list and viva-prep — arrive with their generators in phases 2 and 3. They
 are listed only once they work: a command that errors is worse than one that is absent, because

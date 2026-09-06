@@ -1,6 +1,8 @@
 ---
-description: Add a paragraph to this week's contribution log
+name: weekly-log
+description: Add a paragraph to this week's contribution log. Records attributed work for the course, so it is invoked by a person rather than inferred.
 argument-hint: [--as <member>] <what you did>
+disable-model-invocation: true
 ---
 
 Record work in this week's contribution log: **$ARGUMENTS**

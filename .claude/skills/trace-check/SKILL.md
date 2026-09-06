@@ -1,8 +1,14 @@
 ---
-description: Check traceability and show the gaps in requirement coverage
+name: trace-check
+description: Check traceability and show the gaps in requirement coverage. Use when asked whether requirements are covered by code and tests, before closing a feature, or when preparing evidence that nothing has been lost.
+context: fork
+agent: Explore
 ---
 
 Check that nothing has fallen out of the chain "requirement to code to test".
+
+This runs in its own context because it reads widely and returns a short answer. The files it opens
+are of no use to the conversation afterwards, and leaving them there crowds out the work itself.
 
 ```
 java -jar tools/target/ai-tools.jar trace   # phase 2; until then use the reading check below
