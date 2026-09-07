@@ -4,8 +4,8 @@
 
 Everything still planned or in progress, every open debt entry, and every acceptance criterion without a test. Hiding a known gap is explicitly worse than declaring it.
 
-**Not generated yet.** The generator arrives in phase 2 — see
-[docs/roadmap/02-skeleton.md](roadmap/02-skeleton.md).
+**Not generated yet.** The generator arrives in phase 3 — see
+[docs/roadmap/03-main-flow.md](roadmap/03-main-flow.md).
 
 Editing this file by hand is detected and breaks the build. That is deliberate: a generated
 file edited by hand creates false confidence that the state is current, which is worse than having

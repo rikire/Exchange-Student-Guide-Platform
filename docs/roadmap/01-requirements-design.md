@@ -1,6 +1,6 @@
 # Phase 1 — Requirements and design
 
-**Status: not started.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
+**Status: in progress.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
 
 ## Goal
 
