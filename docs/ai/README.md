@@ -18,6 +18,7 @@ the details live here so that a session does not have to load everything into co
 | [roadmap.md](roadmap.md) | How the roadmap is kept and how items are closed |
 | [journal/](journal/) | Prompt journal and the human's own edits |
 | [audit-2026-09-06.md](audit-2026-09-06.md) | This layer audited against the platform: what was found, fixed, and deliberately not done |
+| [audit-planning-2026-09-07.md](audit-planning-2026-09-07.md) | Whether the planning process is working, what it has produced, and five proposals awaiting a decision |
 | [PLAN-PROMPT.md](PLAN-PROMPT.md) | The original plan this repository was built from |
 
 **Four of these documents also exist as path-scoped rules** in `.claude/rules/`, carrying only their
@@ -59,6 +60,7 @@ these documents, read the matching rule file in the same turn.
 | A switched-off or sleeping test | An edit adding `@Disabled` without a debt entry, or `Thread.sleep` under `src/test/`, is refused; a `@Test` that asserts nothing is questioned |
 | The record survives a shortened conversation | A `PreCompact` hook writes into the entry that the context was compacted. It does not preserve what was discarded — it marks the gap as a gap |
 | The work is not graded only by whoever did it | Partly: `/dod` hands the diff to the `dod-reviewer` subagent, which sees the change and the criteria without the reasoning that produced them. It is still the same model, and it is still started by the run it is auditing |
+| A plan item says what would confirm it | A roadmap step with no `— check:` fails the documentation check. Naming a phase does not excuse it, unlike every other rule there — in a phase file all the work is still ahead, so that escape would switch the rule off |
 
 **Every row above except one runs from `tools/target/ai-tools.jar`, and that jar is a build
 artefact.** `target/` is not tracked, so on a fresh clone, after `mvnw clean`, or before anyone has
