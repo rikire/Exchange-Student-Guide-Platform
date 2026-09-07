@@ -109,13 +109,22 @@ most professional acceptance criteria. The Open questions sections are maintaine
 decorative: all three of phase 1's are now struck through with resolution dates and requirement
 references.
 
-### 6. The work split will not survive the viva
+### 6. The work split is not yet evidence of anything, and becomes measurable in phase 2
 
-All Java in this repository is one person's. Abdirakhim has touched `tools/` zero times, `app/` zero
-times, `.claude/` zero times; his contribution is documentation, and it is good documentation — the
-requirements layer above is largely his. The course states plainly: *"One person does everything and
-the other tests is not acceptable."* The final viva puts 3 marks on your own modules and 1 on your
-partner's, and there is currently no module he could be asked about.
+All Java in this repository is one person's: Abdirakhim has touched `tools/` zero times, `app/` zero
+times, `.claude/` zero times.
+
+**Corrected 7 September, after this was first written.** The original wording — "the work split will
+not survive the viva" — claimed more than the evidence supports, and the correction is worth keeping
+visible rather than quietly rewritten. No application code exists yet. What has been split so far is
+the process tooling, which Mikhail owns by agreement, against the requirements layer, which is
+largely Abdirakhim's and is good work. That is a reasonable division of pre-code work, not a
+freeloading signal, and the course's rule about one person doing everything is about the project, not
+about who set up the repository.
+
+What survives is narrower and still worth writing down: the final viva measures ownership of
+**modules**, and no modules exist. The question of who owns which slice becomes real the day phase 2
+opens the first one, which is 12 September. It is a scheduling question, not a present-tense finding.
 
 ---
 
@@ -262,21 +271,24 @@ cases are exactly what `docs/ai/testing.md`'s derivation method is for; and it i
 it gives him a named module to be examined on rather than a contribution to someone else's. Mikhail
 does not touch that package.
 
-### P-5 — Decompose the demo path into feature files, before phase 2 starts
+### P-5 — Decompose the demo path into feature files *(withdrawn, 7 September)*
 
-The unit already exists and has never been used: `docs/features/_TEMPLATE.md`, one file per tracker
-row, whose acceptance criteria become test names. **Proposed:** create them for the demo path only —
-seven files — in this dependency order, which the flat phase lists omit:
+The proposal was to create seven feature files up front, along the demo path, before phase 2 starts.
+**It contradicted the repository's own workflow and is withdrawn.**
 
-```
-shared/persistence  →  articleview + home  →  backup/import (gets content in)
-                                           →  search
-                                           →  contribute  →  media
-                                                          →  moderate  →  admin panel
-```
+`docs/ai/workflow.md` opens a feature file with `/feature` as step 1 of the cycle **for that one
+feature**, with no code at that step, and fills its `code`, `tests` and `status` fields at step 9 as
+the work lands. `_TEMPLATE.md` says the front matter "must reflect reality rather than intent".
+Seven files created in advance would have had guessed routes, guessed tables and empty code and test
+fields — intent wearing the shape of reality, which is the one thing that template forbids.
 
-Seven feature files is a morning's work and it is what turns "build the `moderate` slice" into
-something a person can pick up, finish, and be seen to have finished.
+The observation underneath it stands: phase 3 has no level between "a slice" and Java, nothing small
+enough for one person to finish in a sitting, and nothing for the `[~]` claim mechanism to be applied
+to. But the answer is already written down — call `/feature` when each feature starts — so nothing
+needs to change. The gap was in the doing, not in the plan.
+
+Recorded rather than deleted because a proposal that turned out to be wrong is cheaper to leave
+visible than to have made twice.
 
 ---
 
