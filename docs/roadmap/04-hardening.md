@@ -11,13 +11,24 @@ Make it survive real use and real inputs, and make it something a third person c
 - [ ] Edge cases: empty query, injection attempt, HTML in article text, duplicate titles, a title
       over 100 characters, circular wiki links, a corrupt import archive, a file whose extension
       lies about its content, a file over the limit
+      — check: each of the nine is a named test, and each fails when its guard is removed — nine
+      tests that pass against no implementation would be worse than none
 - [ ] The full list in `docs/ai/security.md`, plus a security review over the diff
+      — check: every item on that list is either a test or a recorded constraint in
+      [constraints.md](../requirements/constraints.md) saying why not; the review's findings are
+      closed or entered in the debt register, never merely discussed
 - [ ] Load check: 100 articles of 500 words, search under 2 seconds
+      — check: run on the demo stand, not a developer machine, and the number recorded
 - [ ] PostgreSQL profile with Testcontainers
+      — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
 - [ ] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
+      — check: media and the index survive `docker compose down` and come back on the next start
 - [ ] Demo stand: compose plus the real content
+      — check: the mid-demo scenario runs end to end on the stand, from a browser, in one sitting
 - [ ] **Meeting with OGE** — show Mr. Thukaram the working stand, record what he says in
       `docs/stakeholder/` and turn it into requirements or constraints
+      — check: every point he raises becomes a requirement, a recorded constraint with its reason,
+      or a line saying plainly that it is not being done — none is left as a note
 
 ## Readiness criterion
 

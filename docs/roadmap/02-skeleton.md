@@ -14,6 +14,9 @@ honest actually switched on.
 - [ ] `shared/persistence`: entities and Flyway migrations carrying trace anchors
       — check: the migration runs against an empty database and one with data; the ERD matches
 - [ ] **The schema freezes at the end of this phase.** After that it changes by agreement only
+      — check: every migration added after the closing date recorded in this file carries a header
+      line naming who agreed to it and when; a migration without one is the freeze being broken
+      quietly rather than deliberately
 - [ ] `backup`: export and import of the archive format; seeding runs through the importer
       — check: export, wipe, import produces an identical database
 - [ ] `ai-tools`: `trace` in full, `links`, the blocking `stop` gate, the edit reminder, `weekly`,
@@ -28,9 +31,17 @@ honest actually switched on.
       until the persistence layer exists — a counter around the slice tests
       — check: seed one row, then ten; the test fails if the number of queries moves
 - [ ] Spring Modulith documenter in the build; ArchUnit for the two rules Modulith does not cover
+      — check: `./mvnw verify` writes the module canvas, and each ArchUnit rule is demonstrated by
+      deleting it and watching a test go green that should not have
 - [ ] Slash commands for ownership and the gap list, once their generators exist
+      — check: `ai-tools docs-check` passes with both advertised in `CLAUDE.md`; it already refuses
+      a command named in the instructions with no skill behind it
 - [ ] Design moved into Figma, tokens extracted
+      — check: the first slice's template carries no literal colour or spacing value, only token
+      names, and every token name matches the Figma variable it came from
 - [ ] Content: 20 or more articles
+      — check: 20 or more files under `data/seed/` load through the importer without error, and the
+      count is read from the database rather than from the directory
 
 ## Readiness criterion
 
@@ -40,4 +51,16 @@ writing them by hand.
 
 ## Open questions
 
-None recorded yet; this phase has not been planned in detail.
+Raised on 7 September while giving every step a checkable result. Each one is a decision the check
+could not be written without, and none is the agent's to settle.
+
+1. **Which two rules does ArchUnit cover that Modulith does not?** The step names "the two rules"
+   and neither is written down. Until they are, the step cannot be finished, only declared finished.
+2. **What does "changes by agreement only" mean mechanically for the frozen schema?** A header line
+   in the migration naming who agreed is what the check above assumes; if the intended mechanism is
+   an ADR per change instead, the check is wrong.
+3. **Do the six `ai-tools` generators belong in this phase at all?** Six of the eleven steps here are
+   process tooling, in the nine days that are also the only window for the first line of application
+   code. The audit of 7 September proposes moving `trace`, `links`, the edit reminder and the stop
+   gate to phase 4 and keeping `weekly` and `ownership`, which carry rubric marks. Moving work
+   between phases is the human's decision, so this stays a question.

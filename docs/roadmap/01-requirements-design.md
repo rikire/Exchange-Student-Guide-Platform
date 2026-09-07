@@ -14,6 +14,8 @@ design document is the deliverable; the repository documents are the source it i
       every Feature coverage tracker row has an id), 4 `NFR` (NFR-001–004), 5 `CON` (CON-001–005);
       every `FR` carries Status/Priority, every `CON` a Rationale.
 - [ ] Glossary — one vocabulary for article, submission, revision, tag, media asset
+      — check: every term the requirements use is defined once, and no concept appears under two
+      names across `functional.md` and the journeys
 - [ ] CJM for three roles: reader, contributor, OGE moderator
       — check: the mid-demo scenario traces through the reader and contributor journeys end to end
 - [ ] C4 levels 1–3 and the ERD in PlantUML — check: the diagram script renders them
@@ -23,19 +25,32 @@ design document is the deliverable; the repository documents are the source it i
       while writing FR-001 — [ADR-0001](../architecture/adr/ADR-0001-article-body-format.md), decided)
       — check: each has at least two genuinely considered options
 - [ ] `docs/architecture/ui-routes.md` — the route contract
+      — check: every row names the requirement it serves, and the `Route` column of the feature
+      coverage tracker is filled from it for every `must` feature
 - [x] **Decided here, not earlier:** ~~what the landing page contains beyond pinned items and
       search~~ — resolved 6 Sep, FR-009: recently added articles + a tag list, pinned articles shown
       first when any exist; ~~media quotas per file, per submission and for the volume~~ — resolved
       7 Sep, NFR-001: configurable, defaults 10 MB/image, 20 MB/document, 200 MB/video, 20 GB volume;
       ~~the allowed file types~~ — resolved 7 Sep, CON-006: images, video, documents and audio only.
 - [ ] Design reference from the IITM sites, into `docs/design/reference.md`
+      — check: it names the specific pages looked at and what is being taken from each, rather than
+      describing "the IITM style" in general
 - [ ] Draft screens with `/design`: landing, article, search results, submission form, queue
+      — check: each screen shows the states that actually occur — empty search results, a queue with
+      nothing in it, a rejected submission — and not only the path where everything works
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
 - [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
+      — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a
+      revision; each risk names the signal that would tell us it is happening, and a plan B that
+      could be carried out in the days actually remaining
 - [ ] Assemble `docs/course/design-doc.md` and produce the PDF (2–4 pages)
+      — check: every rubric row for this stage points at a section that exists and says what the
+      criterion asks for; a section that exists but is a heading counts as missing
 - [ ] Content: 10 or more articles drafted — absorbs the article-format-and-drafts item moved from
       phase 0 (4 Sep, see [00-init.md](00-init.md)); the seed front-matter shape is decided here,
       together with the glossary and ERD, not ahead of them
+      — check: 10 or more drafts exist in the seed format, and one of them is a full article on FRRO
+      registration — that is the first step of the mid-demo scenario, so it cannot be a placeholder
 
 ## Readiness criterion
 
