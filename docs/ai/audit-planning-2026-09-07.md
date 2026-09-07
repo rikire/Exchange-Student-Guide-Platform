@@ -214,12 +214,22 @@ own timeline, and it is now struck through in phase 1's open questions with its 
 
 ---
 
-## Proposals — drafted, awaiting a decision
+## Proposals — all five decided, 7 September
 
 `docs/ai/roadmap.md` puts moving work between phases and changing readiness criteria in the human's
-hands. Everything in this section is therefore a proposal and none of it has been applied.
+hands. These were put to him the day they were written, and all five are now settled. The outcomes
+are recorded on each, including the four that were declined, because a proposal list that only keeps
+the accepted ones stops being evidence of what was considered.
 
-### P-1 — A checkpoint with a trigger, before the mid-demo scope is unsaveable
+| | Outcome |
+|---|---|
+| P-1 checkpoint with a trigger | **Declined** |
+| P-2 move four generators out of phase 2 | **Declined** — they stay |
+| P-3 cut two `must` features | **Declined** — both stay `must` |
+| P-4 first Java for the other member | **Deferred** — premature; no code has started |
+| P-5 seven feature files up front | **Withdrawn by the author** — it contradicted the workflow |
+
+### P-1 — A checkpoint with a trigger *(declined, 7 September)*
 
 The schedule assumes a rate of application output that has **not been observed once**. The first
 real evidence arrives at the end of phase 2 on 20 September — four days after the design document
@@ -227,10 +237,20 @@ and nineteen before the mid-demo. One checkpoint, and no time to react if it is 
 
 **Proposed:** a dated checkpoint on **16 September**, halfway through phase 2, with a stated trigger —
 *if `home` and `articleview` are not serving a real article from a real database by then, the
-mid-demo scope is cut on that day rather than hoped at.* This is also the honest content of the
-"Risks and plan B" mark due on 11 September.
+mid-demo scope is cut on that day rather than hoped at.*
 
-### P-2 — Move four of the six generators out of phase 2
+**Declined.** Recorded with one fact attached rather than re-argued: the design document due
+11 September carries a mark for *"Risks and plan B are honest, not boilerplate"*, and its evidence
+file `docs/course/design-doc.md` is a twelve-line stub. Whatever fills that section, this proposal
+is not it.
+
+### P-2 — Move four of the six generators out of phase 2 *(declined, 7 September)*
+
+**Declined: they stay in phase 2**, to be ready when the code arrives. One correction came out of the
+discussion — `links` was one of the six and was defined nowhere in the repository. It meant link
+checking, `docs-check` already refuses a broken link to a missing `.md` file, and it has been dropped
+from the step as a duplicate. Five generators remain. The cost of keeping them is recorded in that
+phase's open questions rather than argued here.
 
 Six of phase 2's eleven items are process tooling occupying the only window for first product code.
 Three of them cannot usefully be built yet in any case:
@@ -245,7 +265,10 @@ Three of them cannot usefully be built yet in any case:
 `gaps` is already phase 3. This frees roughly half of phase 2 for the persistence layer and the
 first vertical slice.
 
-### P-3 — A MoSCoW cut that the mid-demo scenario justifies
+### P-3 — A MoSCoW cut that the mid-demo scenario justifies *(declined, 7 September)*
+
+**Declined: both features stay `must`.** The lever remains unpulled and available; the arithmetic in
+§3 is unchanged by the decision.
 
 The demo scenario is fixed: search, read, follow a wiki link, propose an edit with a photo, moderator
 approves, live. Two of the twelve `must` features are **not on that path**:
@@ -260,7 +283,11 @@ from a 32-day window, with a reason anybody can check against the scenario. The 
 applies: *a justified simplification recorded as a constraint is worth more than an unconsidered
 feature.*
 
-### P-4 — Abdirakhim's first Java, sized so it is genuinely his
+### P-4 — Abdirakhim's first Java, sized so it is genuinely his *(deferred, 7 September)*
+
+**Deferred as premature**, on the same grounds that corrected §6: no application code has started, and
+the process tooling is Mikhail's by agreement. The question opens when phase 2 opens the first slice
+on 12 September. The proposal below is left intact so it does not have to be re-derived then.
 
 Three viva marks and an explicit course rule depend on him owning a module. **Proposed: he takes the
 `wikilink` slice end to end**, starting with the link parser by TDD.

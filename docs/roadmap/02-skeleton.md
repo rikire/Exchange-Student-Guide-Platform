@@ -19,7 +19,7 @@ honest actually switched on.
       quietly rather than deliberately
 - [ ] `backup`: export and import of the archive format; seeding runs through the importer
       — check: export, wipe, import produces an identical database
-- [ ] `ai-tools`: `trace` in full, `links`, the blocking `stop` gate, the edit reminder, `weekly`,
+- [ ] `ai-tools`: `trace` in full, the blocking `stop` gate, the edit reminder, `weekly`,
       `ownership`. `weekly` and `ownership` **exclude the journal commits the `Stop` hook writes**
       and report them in a separate column — see [docs/team/README.md](../team/README.md); counting
       them measures prompting rather than authoring, and would have read this team backwards
@@ -59,13 +59,20 @@ could not be written without, and none is the agent's to settle.
 2. **What does "changes by agreement only" mean mechanically for the frozen schema?** A header line
    in the migration naming who agreed is what the check above assumes; if the intended mechanism is
    an ADR per change instead, the check is wrong.
-3. **What is `links`?** It is one of the six things that step asks for, and the step is its only
-   mention anywhere in the repository — there is no description of what it would generate or check.
-   It cannot be built or confirmed as written. Either say what it does, or drop it: a name in a
-   checklist that nobody can define is a box that will eventually be ticked because the rest of the
-   line was done.
-4. **Do the six `ai-tools` generators belong in this phase at all?** Six of the eleven steps here are
-   process tooling, in the nine days that are also the only window for the first line of application
-   code. The audit of 7 September proposes moving `trace`, `links`, the edit reminder and the stop
-   gate to phase 4 and keeping `weekly` and `ownership`, which carry rubric marks. Moving work
-   between phases is the human's decision, so this stays a question.
+3. ~~**What is `links`?** The step was its only mention anywhere in the repository — nothing said
+   what it would generate or check.~~ Resolved 7 Sep: it meant checking links, and `ai-tools
+   docs-check` already refuses a broken markdown link to a missing `.md` file. Dropped from the step
+   as a duplicate rather than built twice.
+
+   What `docs-check` does **not** verify, if this ever matters: an `#anchor` within a file, and a
+   link whose target is not markdown. Both would be rules inside `docs-check`, not a separate
+   generator.
+4. ~~**Do the six `ai-tools` generators belong in this phase at all?**~~ Decided 7 Sep: they stay.
+   The audit of 7 September argued for moving `trace` and `ownership` to phase 3, since one reads
+   code anchors and feature files and the other measures per slice, and neither exists until phase 3
+   — so in this phase they would generate an empty matrix and an ownership table over no slices. The
+   decision is to build them here anyway, so that they are ready when the code arrives.
+
+   The cost is recorded rather than argued: five of the nine days of this phase are shared between
+   process tooling and the first vertical slice, and the two generators cannot be confirmed by their
+   own check clause until phase 3 gives them something to read.
