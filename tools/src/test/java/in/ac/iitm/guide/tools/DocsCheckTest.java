@@ -167,6 +167,61 @@ class DocsCheckTest {
     }
 
     @Test
+    void a_roadmap_item_with_no_checkable_result_is_a_problem() throws IOException {
+        // docs/ai/roadmap.md: "An item without a checkable result is not an item." The roadmap
+        // broke that rule in 30 of its own 48 open items before anything enforced it.
+        write("docs/roadmap/03-main-flow.md", "- [ ] `search` — indexing and querying\n");
+
+        assertTrue(details(check()).contains("no checkable result"));
+    }
+
+    @Test
+    void the_check_may_sit_on_a_continuation_line() throws IOException {
+        write(
+                "docs/roadmap/03-main-flow.md",
+                "- [ ] `search` — indexing and querying\n" + "      — check: FR-007's four criteria are four tests\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void the_check_may_sit_on_the_item_line_itself() throws IOException {
+        // Both shapes are in use, written by different people. A rule that accepted only the one
+        // its author happened to use would reject the other's work on its first run.
+        write("docs/roadmap/01-requirements-design.md", "- [ ] C4 diagrams — check: the script renders them\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void a_finished_roadmap_item_needs_no_check() throws IOException {
+        // Phase 0 closed with fourteen of these and its evidence in a separate section.
+        write("docs/roadmap/00-init.md", "- [x] Build, gates and CI\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void naming_a_phase_does_not_excuse_a_roadmap_item() throws IOException {
+        // The phase-marker escape exists so a document may mention work that is still ahead. Every
+        // line in a roadmap file is about work still ahead, so letting it apply here would mean the
+        // rule could be switched off by writing the word "phase".
+        write("docs/roadmap/02-skeleton.md", "- [ ] The traceability generator, in phase 2\n");
+
+        assertTrue(details(check()).contains("no checkable result"));
+    }
+
+    @Test
+    void a_checkbox_outside_the_roadmap_is_not_a_roadmap_item() throws IOException {
+        // The feature template's acceptance criteria and the pull request template are checkboxes
+        // too, and neither is a plan item.
+        write("docs/features/_TEMPLATE.md", "- [ ] A checkable statement, not \"works correctly\"\n");
+        write("docs/roadmap/README.md", "- [ ] this file is an index, not a phase\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
     void the_journal_is_never_checked() throws IOException {
         // It is an append-only record that legitimately says something was missing at the time.
         // Failing a build over it would invite editing the evidence to satisfy the checker.

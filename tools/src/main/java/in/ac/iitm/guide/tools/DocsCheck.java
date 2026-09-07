@@ -104,7 +104,66 @@ public final class DocsCheck {
         }
         problems.addAll(check.advertisedCommands());
         problems.addAll(check.documentedHooks());
+        for (Document document : documents) {
+            problems.addAll(check.roadmapItemsWithoutAResult(document));
+        }
         return problems;
+    }
+
+    /** A phase file of the roadmap. The index and the session notes beside it are not plans. */
+    private static final Pattern PHASE_FILE = Pattern.compile("^docs/roadmap/0[0-9]-[a-z-]+\\.md$");
+
+    private static final Pattern OPEN_ITEM = Pattern.compile("^- \\[[ ~]] ");
+    private static final Pattern ANY_ITEM = Pattern.compile("^- \\[[ x~]] ");
+    private static final Pattern CONTINUATION = Pattern.compile("^\\s+\\S");
+
+    /** Either shape is in use, written by different people, and both say the same thing. */
+    private static final Pattern RESULT = Pattern.compile("[—-]\\s*check:");
+
+    /**
+     * A roadmap step that does not say what would confirm it.
+     *
+     * <p>{@code docs/ai/roadmap.md} states the rule — "an item without a checkable result is not an
+     * item" — and the roadmap broke it in 30 of its own 48 open items, phase 3 entirely. A rule the
+     * plan states and does not keep is the same defect as a document describing what the repository
+     * lacks, which is what the rest of this class exists to catch.
+     *
+     * <p>Deliberately not subject to {@link #PHASE_MARKER}. Every line in a phase file is about work
+     * still ahead, so that escape would let the rule be switched off by writing the word "phase".
+     */
+    private List<Problem> roadmapItemsWithoutAResult(Document document) {
+        if (!PHASE_FILE.matcher(document.relative()).matches()) {
+            return List.of();
+        }
+        List<Problem> problems = new ArrayList<>();
+        String open = null;
+        boolean found = false;
+
+        for (String line : document.lines()) {
+            if (open != null
+                    && CONTINUATION.matcher(line).find()
+                    && !ANY_ITEM.matcher(line).find()) {
+                found = found || RESULT.matcher(line).find();
+                continue;
+            }
+            if (open != null && !found) {
+                problems.add(problemFor(document, open));
+            }
+            open = OPEN_ITEM.matcher(line).find() ? line : null;
+            found = open != null && RESULT.matcher(line).find();
+        }
+        if (open != null && !found) {
+            problems.add(problemFor(document, open));
+        }
+        return problems;
+    }
+
+    private Problem problemFor(Document document, String item) {
+        String text = item.strip();
+        return new Problem(
+                document.relative(),
+                "this step has no checkable result — say what confirms it, after a `— check:`:\n      "
+                        + (text.length() > 90 ? text.substring(0, 90) + "…" : text));
     }
 
     /** Every rule that judges a single line, applied in one pass. */

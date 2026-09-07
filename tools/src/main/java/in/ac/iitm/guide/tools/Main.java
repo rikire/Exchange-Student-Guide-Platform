@@ -61,7 +61,11 @@ public final class Main {
         System.err.println("Documentation describes things the repository does not contain:");
         problems.forEach(problem -> System.err.println("  " + problem));
         System.err.println();
+        // The phase escape covers the rules about things that do not exist yet. It does not cover a
+        // roadmap step with no checkable result, and telling someone to name a phase there sends
+        // them to do something that will not work - which is how a check earns its reputation.
         System.err.println("Either build the thing, or say on the same line which phase it belongs to.");
+        System.err.println("A roadmap step is the exception: it needs a `— check:`, and naming a phase will not do.");
         System.exit(1);
     }
 
