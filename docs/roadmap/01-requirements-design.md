@@ -101,6 +101,13 @@ the claim mechanism:
 - Aim for roughly even slice counts by the end of stage 3. If claiming lands lopsided, say so and
   rebalance before stage 4 — even workload, not identical process.
 
+**Untested as of 7 September:** `[~]` has never been used, here or anywhere else in the repository,
+and every cell in the slice table below is still unclaimed. That is not a failure — stages 1 and 2
+are joint, so there has been nothing to claim. It is worth saying because stage 3 is the first time
+two people work in parallel, and a coordination mechanism that has never run is a mechanism nobody
+has found the problem with yet. Claim the first slice in its own commit, and check that the other
+person sees it, before relying on it for the second.
+
 ### Stages
 
 ```

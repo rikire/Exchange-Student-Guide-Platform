@@ -55,6 +55,30 @@ a readiness criterion, is the human's: those decisions change what gets delivere
 When a deadline is at risk, say so in the phase file **and** in the answer, with what would have to
 be dropped. A roadmap that stays green while the work slips is worse than no roadmap.
 
+## Session notes between working days
+
+A long piece of work inside a phase may leave a note beside the phase file, named
+`phaseN-session-YYYY-MM-DD.md`, so the next session resumes without re-deriving the context. Two of
+these carried phase 1 through requirement-writing on 5 and 6 September, and the convention is
+recorded here because it was in use and written down nowhere.
+
+Three rules, all of which those two followed and which is why this works:
+
+- **It supersedes, it does not accumulate.** A new note replaces the previous one and says so. Two
+  notes describing the same work are two answers to "where are we".
+- **It names the condition under which it is deleted**, and that condition is checkable by someone
+  else — "once the `FR id` column has no empty cells", not "once this is finished".
+- **Nothing lives only there.** A decision goes into the phase file, a requirement into
+  `docs/requirements/`, a convention into the document that owns it. The note holds the position of
+  the work, not its results.
+
+The last rule is the one that costs something. When those two notes were deleted on 7 September
+their condition had been met, but they still held two adopted rules — prefer a glossary term to a
+cross-reference, and treat "not yet approved" and "rejected" as two scenarios — that existed in no
+permanent document. Both were moved into `docs/requirements/` first. **Check a note for that before
+deleting it**; the prompt journal records what was said, but a convention adopted in passing is not
+a decision anybody will think to look for.
+
 ## The relationship with the course stages
 
 Each phase ends at a course deadline, so the roadmap and the course calendar are the same schedule

@@ -28,6 +28,16 @@ A requirement's `**Status:**`, `**Priority:**` fields, and its
 constrains the normative sentence only. EARS is the contract; the GWT scenarios beneath it are the
 test cases derived from that contract.
 
+## An FR is readable on its own
+
+**Prefer a glossary term to a cross-reference.** `FR-002` says "renders as a red link", not "see
+`FR-004`". A requirement that can only be understood by following a chain of other requirements is
+one requirement pretending to be several, and it breaks the moment one of them is renumbered or
+rewritten. When two requirements need to mean the same thing by a word, the place that fixes the
+meaning is [glossary.md](glossary.md).
+
+Adopted 6 September while re-deriving `FR-001`–`FR-015`.
+
 ## Why here
 
 Kills the specific failure a free-text paragraph invites: a requirement that reads fine but turns

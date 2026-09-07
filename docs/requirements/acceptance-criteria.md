@@ -24,6 +24,17 @@ THEN the response is 200
 An `FR` with more than one scenario lists them one after another, each its own Given/When/Then
 block.
 
+## Unapproved and rejected are two scenarios, not one
+
+Every happy-path `FR` that touches submissions gets criteria for **both** a submission that has not
+yet been approved **and** one that was rejected. In English they collapse into the same phrase —
+"not published" — which is exactly why they get written as one scenario and one test, leaving the
+second path unverified. They are different states reached by different routes, and a bug can live in
+either without touching the other.
+
+Adopted 6 September while re-deriving `FR-001`–`FR-015`; `FR-007`'s four criteria are the worked
+example.
+
 ## Why here
 
 The same reason [docs/ai/workflow.md](../ai/workflow.md) asks for a red test before code: a
