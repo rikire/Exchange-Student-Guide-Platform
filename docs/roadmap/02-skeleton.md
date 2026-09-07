@@ -59,7 +59,12 @@ could not be written without, and none is the agent's to settle.
 2. **What does "changes by agreement only" mean mechanically for the frozen schema?** A header line
    in the migration naming who agreed is what the check above assumes; if the intended mechanism is
    an ADR per change instead, the check is wrong.
-3. **Do the six `ai-tools` generators belong in this phase at all?** Six of the eleven steps here are
+3. **What is `links`?** It is one of the six things that step asks for, and the step is its only
+   mention anywhere in the repository — there is no description of what it would generate or check.
+   It cannot be built or confirmed as written. Either say what it does, or drop it: a name in a
+   checklist that nobody can define is a box that will eventually be ticked because the rest of the
+   line was done.
+4. **Do the six `ai-tools` generators belong in this phase at all?** Six of the eleven steps here are
    process tooling, in the nine days that are also the only window for the first line of application
    code. The audit of 7 September proposes moving `trace`, `links`, the edit reminder and the stop
    gate to phase 4 and keeping `weekly` and `ownership`, which carry rubric marks. Moving work
