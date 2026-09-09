@@ -1,0 +1,62 @@
+@startuml c4-component
+' C4 level 3 — the slices inside the web application.
+' The slice list is docs/ai/architecture-rules.md; the boundary rule is ADR-0002. Only two channels
+' cross a slice boundary — a published type, or a Spring ApplicationEvent — so an arrow here is one
+' of those and never a direct call into another slice's service or repository.
+!pragma layout smetana
+!include <C4/C4_Component>
+
+title Exchange Student Guide — slices inside the web application (C4 level 3)
+
+Container_Boundary(web, "Web application") {
+  Component(home, "home", "slice", "Landing page: pinned articles, recent articles, tag list, search entry (FR-009, FR-025)")
+  Component(articleview, "articleview", "slice", "Reading a published article (FR-001)")
+  Component(search, "search", "slice", "Indexing and querying (FR-007)")
+  Component(taxonomy, "taxonomy", "slice", "Tags, and browsing by tag. Owns tag creation and normalisation (FR-008, ADR-0005)")
+  Component(contribute, "contribute", "slice", "New articles, proposed edits, status lookup (FR-010 to FR-012, FR-023, FR-024)")
+  Component(moderate, "moderate", "slice", "The queue, approval, rejection, revisions, removal (FR-014 to FR-020, FR-026)")
+  Component(report, "report", "slice", "Flagging an article, and closing the flag (FR-021, FR-022)")
+  Component(media, "media", "slice", "Upload, storage, safe delivery (FR-016)")
+  Component(wikilink, "wikilink", "plain Java", "The [[link]] parser and backlinks. No Spring, no JPA — so its tests run without a context (FR-002 to FR-006)")
+  Component(backup, "backup", "slice", "Export and import of the whole knowledge base (NFR-004, ADR-0007)")
+
+  Component(shared, "shared", "persistence · web · security", "JPA entities and Flyway migrations, layout fragments, CSRF, rate limiting, admin authentication")
+}
+
+ContainerDb(db, "Relational database")
+ContainerDb(index, "Search index")
+ContainerDb(mediaroot, "Media root")
+
+' Between slices: only a published type or an ApplicationEvent, never a direct call (ADR-0002).
+Rel(articleview, wikilink, "Renders links, resolves red links, reads backlinks", "published type")
+Rel(contribute, wikilink, "Parses links out of a submission", "published type")
+Rel(articleview, taxonomy, "Asks for an article's tags", "published type")
+Rel(home, taxonomy, "Asks for the tag list", "published type")
+Rel(articleview, media, "Asks for the article's media assets", "published type")
+Rel(contribute, media, "Stores an upload against the submission", "published type")
+Rel(moderate, media, "Moves media to the article on approval", "published type")
+Rel(report, articleview, "Links the inbox to the reported article", "published type")
+Rel(moderate, search, "Approved, edited or removed — reindex", "ApplicationEvent")
+Rel(contribute, search, "Published directly by a moderator — reindex (FR-023, FR-024)", "ApplicationEvent")
+Rel(backup, search, "Reindex after an import", "ApplicationEvent")
+
+' To the stores. Each slice declares its own Spring Data repository over the entities in
+' shared/persistence — there is no shared repository (ADR-0002). wikilink is the one slice with no
+' arrow here: ArchUnit forbids it from importing jakarta.persistence at all.
+Rel(home, db, "Pinned and recent articles", "own repository")
+Rel(articleview, db, "One published article", "own repository")
+Rel(search, db, "Article content, to index", "own repository")
+Rel(taxonomy, db, "Tags and article_tag", "own repository")
+Rel(contribute, db, "Submissions", "own repository")
+Rel(moderate, db, "Queue, approvals, revisions", "own repository")
+Rel(report, db, "Reports", "own repository")
+Rel(media, db, "Media metadata", "own repository")
+Rel(backup, db, "Everything published", "own repository")
+
+Rel(shared, db, "Entities and Flyway migrations", "JPA")
+Rel(search, index, "Indexes and queries", "Hibernate Search")
+Rel(media, mediaroot, "Writes on upload, streams with Range", "File I/O")
+Rel(backup, mediaroot, "Media travels with the export", "File I/O")
+
+SHOW_LEGEND()
+@enduml

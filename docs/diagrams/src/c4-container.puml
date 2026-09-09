@@ -1,0 +1,31 @@
+@startuml c4-container
+' C4 level 2 — containers.
+' Three stores rather than one, and each is a decision with an ADR: the relational database, the
+' Lucene index (ADR-0004) and the media root on the filesystem (ADR-0006). The index and the media
+' root are the two things a restore forgets.
+!pragma layout smetana
+!include <C4/C4_Container>
+
+title Exchange Student Guide — containers (C4 level 2)
+
+Person(reader, "Reader")
+Person(contributor, "Contributor")
+Person(moderator, "OGE moderator")
+
+System_Boundary(guide, "Exchange Student Guide") {
+  Container(web, "Web application", "Java 21, Spring Boot 3.5.16, Thymeleaf", "Server-rendered HTML. Ten vertical slices, boundary enforced by Spring Modulith (ADR-0002).")
+  ContainerDb(db, "Relational database", "H2 in development, PostgreSQL in production", "Articles, submissions, revisions, tags, reports, media metadata. Schema migrated by Flyway.")
+  ContainerDb(index, "Search index", "Lucene, via Hibernate Search 7.2.6", "A directory on disk. Same engine in development and production, which is why it was chosen (ADR-0004).")
+  ContainerDb(media, "Media root", "Filesystem directory", "Uploaded bytes under system-generated names. Metadata stays in the database (ADR-0006).")
+}
+
+Rel(reader, web, "Reads, searches, browses by tag", "HTTPS")
+Rel(contributor, web, "Submits an article or an edit", "HTTPS")
+Rel(moderator, web, "Moderates, behind a shared password", "HTTPS")
+
+Rel(web, db, "Reads and writes", "JDBC")
+Rel(web, index, "Indexes on publish, queries on search", "Hibernate Search")
+Rel(web, media, "Writes on upload, streams on download with Range", "File I/O")
+
+SHOW_LEGEND()
+@enduml

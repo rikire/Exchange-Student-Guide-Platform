@@ -1,0 +1,126 @@
+@startuml erd
+' Entity-relationship diagram. Every table here is decided by an ADR, named in its note:
+'   article / submission / revision  — ADR-0003 (a submission is its own row)
+'   tag / article_tag / submission_tag — ADR-0005 (tags are rows, normalised on the way in)
+'   media_asset                      — ADR-0006 (bytes on disk, metadata here)
+'   article_link                     — FR-006, and the one entity no ADR decided; see data-model.md
+!pragma layout smetana
+hide circle
+skinparam linetype ortho
+
+title Exchange Student Guide — data model
+
+entity "article" as article {
+  * id : uuid
+  --
+  * title : text <<unique, case-insensitive>>
+  * summary : text
+  * body : text <<Markdown>>
+  * published_at : timestamptz
+  * updated_at : timestamptz
+  * pinned : boolean
+}
+
+entity "submission" as submission {
+  * id : uuid
+  --
+  * submission_number : text <<unique>>
+  * type : enum <<NEW_ARTICLE | EDIT>>
+  target_article_id : uuid <<FK, edits only>>
+  * title : text
+  * summary : text
+  * body : text
+  * status : enum <<PENDING | APPROVED | REJECTED>>
+  rejection_reason : text
+  * submitted_at : timestamptz
+  decided_at : timestamptz
+}
+
+entity "revision" as revision {
+  * id : uuid
+  --
+  * article_id : uuid <<FK>>
+  * title : text
+  * summary : text
+  * body : text
+  * retained_at : timestamptz
+}
+
+entity "tag" as tag {
+  * id : uuid
+  --
+  * name : text <<unique, trimmed and lower-cased>>
+}
+
+entity "article_tag" as article_tag {
+  * article_id : uuid <<FK>>
+  * tag_id : uuid <<FK>>
+}
+
+entity "submission_tag" as submission_tag {
+  * submission_id : uuid <<FK>>
+  * tag_id : uuid <<FK>>
+}
+
+entity "media_asset" as media_asset {
+  * id : uuid
+  --
+  article_id : uuid <<FK>>
+  submission_id : uuid <<FK>>
+  * stored_name : text <<system-generated>>
+  * original_name : text <<display only>>
+  * content_type : text <<from magic bytes>>
+  * size_bytes : bigint
+  * uploaded_at : timestamptz
+}
+
+entity "report" as report {
+  * id : uuid
+  --
+  * article_id : uuid <<FK>>
+  * message : text
+  * reported_at : timestamptz
+  closed_at : timestamptz
+}
+
+entity "article_link" as article_link {
+  * source_article_id : uuid <<FK>>
+  * target_title : text
+  target_article_id : uuid <<FK, null when red>>
+}
+
+article ||--o{ article_tag
+tag ||--o{ article_tag
+submission ||--o{ submission_tag
+tag ||--o{ submission_tag
+article ||--o{ revision
+article ||--o{ submission : "edits target"
+article ||--o{ media_asset
+submission ||--o{ media_asset
+article ||--o{ report
+article ||--o{ article_link : "links from"
+article ||--o{ article_link : "linked to"
+
+note bottom of submission
+  Separate from **article** so that a query
+  against article cannot return unmoderated
+  content — ADR-0003.
+end note
+
+note bottom of tag
+  Stored trimmed and lower-cased, so
+  "SIM Card" and "sim card" are one row.
+  ADR-0005.
+end note
+
+note bottom of media_asset
+  Bytes live on the filesystem; only
+  metadata is here. Owned by a submission
+  until it is approved. ADR-0006.
+end note
+
+note bottom of article_link
+  Decided while drawing this diagram, not
+  by an ADR. See data-model.md.
+end note
+@enduml

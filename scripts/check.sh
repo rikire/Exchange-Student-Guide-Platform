@@ -14,7 +14,7 @@ cd "$(dirname "$0")/.."
 #   git update-index --chmod=+x <file>
 echo "==> executable bits"
 missing=""
-for f in mvnw scripts/check.sh scripts/hooks.sh scripts/session-start.sh scripts/contribution.sh .githooks/commit-msg .githooks/pre-commit .githooks/pre-push; do
+for f in mvnw scripts/check.sh scripts/hooks.sh scripts/session-start.sh scripts/contribution.sh scripts/diagrams.sh .githooks/commit-msg .githooks/pre-commit .githooks/pre-push; do
 	mode=$(git ls-files -s "$f" 2>/dev/null | awk '{print $1}')
 	[ "$mode" = "100755" ] || missing="$missing $f($mode)"
 done

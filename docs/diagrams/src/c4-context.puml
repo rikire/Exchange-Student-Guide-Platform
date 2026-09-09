@@ -1,0 +1,28 @@
+@startuml c4-context
+' C4 level 1 — system context.
+' CON-008 fixes most of this diagram: every response is HTML for a person in a browser and there is
+' no machine-facing API, so nothing consumes this system. Outbound is a separate question - ADR-0008
+' leaves a hosted CAPTCHA provider open, and choosing one adds an external system here.
+!pragma layout smetana
+!include <C4/C4_Context>
+
+title Exchange Student Guide — system context (C4 level 1)
+
+Person(reader, "Reader", "An incoming exchange student looking for an answer. No account (CON-001).")
+Person(contributor, "Contributor", "Someone who has just solved a problem and can describe it. No account (CON-001).")
+Person(moderator, "OGE moderator", "Staff of the Office of Global Engagement. Not an account either — a shared admin password, ADR-0009.")
+
+System(guide, "Exchange Student Guide", "A community-editable knowledge base. Anyone submits; OGE approves what is published.")
+
+Rel(reader, guide, "Searches, reads, follows links, reports a problem", "HTTPS")
+Rel(contributor, guide, "Submits an article or an edit, with an optional file", "HTTPS")
+Rel(moderator, guide, "Reviews the queue, approves, rejects, edits, removes", "HTTPS")
+
+note bottom of guide
+  No external system is shown because none is
+  decided. If ADR-0008 settles on a **hosted**
+  CAPTCHA provider, it belongs on this diagram.
+end note
+
+SHOW_LEGEND()
+@enduml
