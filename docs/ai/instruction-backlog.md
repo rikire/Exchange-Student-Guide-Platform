@@ -31,6 +31,44 @@ checked before the work starts; "three hours" cannot.
 A possible mechanism: `ai-tools` derives the observed rate per unit from the journal and git, and an
 estimate must quote it or be marked as a guess.
 
+## IB-003 — The instruction layer is too large for what it achieves
+
+**Requested:** 9 September 2026.
+
+**Problem.** 2,375 lines across 15 documents, against 159 lines of product code. Volume has not
+produced compliance: the claim marker `[~]` has never been used, the roadmap's deadline rule never
+fired while the schedule slipped, and the course's scoping feedback sat unrecorded for twelve days
+under rule 6. Every one of those had a rule already.
+
+**Diagnosis.** The failures are not spread evenly. Five documents have a delivery mechanism —
+`.claude/rules/` loads them when a matching file is opened — and all five are code rules:
+`java-style`, `testing`, `security`, `schema`, `architecture`. The seven process documents
+(`collaboration`, `prompting`, `stop-and-ask`, `workflow`, `docs-sync`, `roadmap`,
+`definition-of-done`) have no trigger and rely on being remembered. Every failure above came from
+that second group.
+
+So the problem is not how many words a rule has. It is that a process rule has no moment at which it
+arrives. The one process rule that does fire — sharpening a vague prompt — fires because a
+`UserPromptSubmit` hook injects it into every turn.
+
+**Found while writing this entry:** [README.md](README.md) said four path-scoped rules exist. There
+are five; `architecture` was unnamed. Corrected in the same commit. At 2,375 lines the layer could
+not stay accurate about its own contents, which is the argument in miniature.
+
+**Options, none decided.**
+
+- **Give process rules a trigger.** Extend the pattern that already works: `stop-and-ask` on
+  protected paths, `docs-sync` when a document's subject file changes, the deadline rule at session
+  start when a deadline is near.
+- **Make a rule executable or delete it.** A rule a hook can check outranks a paragraph asking for
+  good faith. The rules that failed are exactly the ones nothing checks.
+- **Consolidate the seven process documents,** keeping each only if the journal shows it changed an
+  outcome.
+- **Cap the layer:** no new instruction document until an existing one is retired.
+
+**Check for whichever is chosen.** Name a rule that failed in the first fifteen days, and show the
+mechanism that would have fired. An option that cannot do that is a rewrite, not a fix.
+
 ## IB-002 — Documentation prose is too long
 
 **Requested:** 9 September 2026.

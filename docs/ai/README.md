@@ -22,9 +22,9 @@ the details live here so that a session does not have to load everything into co
 | [audit-planning-2026-09-07.md](audit-planning-2026-09-07.md) | Whether the planning process is working, what it has produced, and five proposals awaiting a decision |
 | [PLAN-PROMPT.md](PLAN-PROMPT.md) | The original plan this repository was built from |
 
-**Four of these documents also exist as path-scoped rules** in `.claude/rules/`, carrying only their
-load-bearing lines: `java-style` and `testing` on Java files, `security` on the slices that touch
-uploads and templates, `schema` on migrations and the data model. Claude Code loads a rule when a
+**Five of these documents also exist as path-scoped rules** in `.claude/rules/`, carrying only their
+load-bearing lines: `java-style`, `testing` and `architecture` on Java files, `security` on the
+slices that touch uploads and templates, `schema` on migrations and the data model. Claude Code loads a rule when a
 matching file is opened, so the subset is in context at the moment it applies rather than available
 to be looked up afterwards. That is the whole point: rule 4 and the style rules were held by good
 faith, and good faith fails by forgetting rather than by deciding.
