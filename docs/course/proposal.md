@@ -1,7 +1,15 @@
 # Project proposal
 
-**Revision 2 — 9 September 2026.** Source: [proposal.tex](proposal.tex) · Built:
+**Revision 2 — 9 September 2026. Sent to the course the same day**, attached to the reply in
+[scoping-feedback.md](scoping-feedback.md). Source: [proposal.tex](proposal.tex) · Built:
 [proposal.pdf](proposal.pdf) (5 pages).
+
+**It is now a submitted document, so it is frozen.** Editing `proposal.tex` would make this
+repository disagree with what the course actually received — the same reason revision 1 stays
+untouched in the repository root. A further change is revision 3, with its own file and its own
+send date, not an edit to this one. That includes §9's first risk, which says the reply had not been
+sent: it was true when the PDF went out, and correcting it in place would rewrite a submitted
+artefact.
 
 The `.tex` is the source of record and the `.md` is a pointer, not a copy — the same convention the
 design document uses. A second prose copy would drift from the submitted PDF within a day, and the

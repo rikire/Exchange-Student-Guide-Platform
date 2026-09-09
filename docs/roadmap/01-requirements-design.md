@@ -63,11 +63,12 @@ design document is the deliverable; the repository documents are the source it i
       — check: the feedback is in the repository verbatim, every verb it names maps to a requirement
       id, and the proposal's changed sections are listed rather than described as "updated". Done
       9 Sep; FR-026 / UC-026 came out of it.
-- [ ] **Added 9 Sep, and it is not ours to close.** The reply to that feedback is sent, and any
-      answer is pasted underneath it
-      — check: `scoping-feedback.md` names a send date instead of "not yet sent". The 1 September
-      deadline for it has already passed, so this is the phase's most overdue item and the first
-      risk in the design document
+- [x] **Added 9 Sep, closed the same day.** The reply to that feedback is sent
+      — check: `scoping-feedback.md` names a send date instead of "not yet sent". Sent 9 Sep with
+      revision 2 of the proposal attached, eight days after the 1 September deadline. What is *not*
+      closed by this: approval was made conditional on the reply, the reply has landed and no answer
+      has come back, so the design document states the approval as outstanding rather than assuming
+      it. Any answer is pasted into `scoping-feedback.md` when it arrives.
 - [x] **Added 9 Sep, from checking the design record.** Two defects found in
       [docs/design/](../design/): the canvas URL in the Canvases table does not resolve from the
       publishing account, and the typeface the design system actually uses (`Public Sans`) together

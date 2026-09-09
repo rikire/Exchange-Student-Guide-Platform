@@ -28,14 +28,15 @@ mailbox and are not reproduced here — they authenticate the message, they are 
 >
 > Deadline- 1st Sep 2026
 
-## Status: the reply was not sent by the deadline
+## Status: replied on 9 September, eight days after the deadline
 
-**The 1 September deadline passed with no reply.** Approval of the project was made conditional on
-that reply, so as of this entry the project has no final approval — the course asked for something
-and did not receive it.
+**The 1 September deadline passed with no reply.** The reply went on **9 September 2026**, with
+revision 2 of the proposal attached. The lateness stays in this record: it is what happened, and the
+design document's risk section rests on it.
 
-This is recorded plainly rather than softened. It is the first risk in the design document's risk
-section, and it is not a risk about the software.
+**Approval is still not confirmed.** The course made the decision conditional on receiving the
+reply; the reply has now been received, and no answer has come back yet. Those are two different
+states and only the first has changed.
 
 ## What the feedback asked for, and where each part now stands
 
@@ -57,9 +58,11 @@ arrived, and the proposal of 18 August already had the stakeholder adding and ed
 change is `FR-026`, and it makes the moderation queue a course requirement rather than only our
 design choice.
 
-## Our reply — drafted 9 September 2026, **not yet sent**
+## Our reply — sent 9 September 2026
 
-Sent by: _(fill in when it goes)_
+Sent by: Mikhail Novikov. Attachment: revision 2 of the proposal
+([proposal.md](proposal.md) → `proposal.pdf`). Sent verbatim as drafted below, so this text is the
+text the course received, not a draft of it.
 
 > Subject: Re: CS5013 Project — Team A (GE26Z858, GE26Z860): changes to the proposal
 >
@@ -93,8 +96,8 @@ Sent by: _(fill in when it goes)_
 > Mikhail Novikov (GE26Z858)
 > Abdirakhim Ismailov (GE26Z860)
 
-## When the reply is sent
+## When an answer arrives
 
-Replace "not yet sent" above with the date, and paste any answer received underneath. If the answer
-changes the scope, it is scoping feedback in its own right and belongs in this file, not only in
-somebody's memory of the thread.
+Paste it underneath. If it changes the scope it is scoping feedback in its own right and belongs in
+this file, not only in somebody's memory of the thread. If none arrives before the design document
+is submitted, that document says the approval is outstanding rather than assuming it.
