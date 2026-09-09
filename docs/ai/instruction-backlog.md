@@ -89,3 +89,48 @@ repeats a table. One sentence of rationale per decision, not a paragraph.
 **Check.** Point at any sentence and ask which of the three it carries. If the answer is none, it
 goes. Short is not the target — sufficient is; a deleted sentence that held a decision is a worse
 defect than a long one.
+
+## IB-004 — The process and its files need a pass of their own
+
+**Requested:** 10 September 2026.
+
+**Problem.** Three defects surfaced in one session, and none was found by a check:
+
+- **ADR-0002 to ADR-0008 were written retroactively**, in one sitting, from a list of decisions
+  someone remembered to look for. A reconstructed record cannot reveal a decision nobody listed —
+  there is nothing left to compare it against.
+- **The security architecture lived in `docs/ai/security.md`**, the assistant's instruction
+  directory, because that directory was the only home that existed on 3 September, three days before
+  the first ADR.
+- **`constraints.md` routed architecture into `docs/ai/`** — its rule sent every "framework-level or
+  implementation detail" to `architecture-rules.md`. The misfiling above followed the rule.
+
+The consequence is the part that matters: two rules in the misfiled document went stale against a
+later ADR and a later constraint — the upload allowlist lost `audio` that CON-006 accepts, and the
+document still demanded an HTML sanitizer that ADR-0001 had made unnecessary. Both survived every
+green build, because `docs-check` verifies that a document's links and commands resolve, not that
+its claims still hold.
+
+All three were fixed on 10 September. The pattern they share was not.
+
+**Scope of the requested pass.** The whole process and file layout, not these three sites. Open
+questions it should answer:
+
+- Which document owns which kind of statement, and how a writer knows before writing rather than
+  after review.
+- What fires when a decision is taken, so an ADR is written then rather than reconstructed later.
+- What could have caught a document contradicting a newer ADR or constraint. `docs-check` was green
+  through both defects above, so the answer is not "extend `docs-check`" without saying how.
+- Whether the remaining two entries in the ADR audit table
+  ([docs/architecture/adr/README.md](../architecture/adr/README.md)) become ADRs — the Modulith
+  event registry, and the tenth slice.
+
+**Relationship to IB-003.** IB-003 asks why a large instruction layer produces little compliance and
+answers it with delivery: process rules have no moment at which they arrive. IB-004 is the same
+argument one level up — the layer is also mis-*shaped*, so a rule can arrive on time and still land
+in a file whose readers are the wrong people. Whichever is done first should not be done without
+reading the other.
+
+**Check.** Name a document, and name what may not be written in it. If the boundary cannot be stated
+without listing the file's current contents, the pass has reorganised files rather than fixed the
+process.

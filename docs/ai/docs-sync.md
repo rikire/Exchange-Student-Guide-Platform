@@ -66,8 +66,16 @@ These files are written **only by the generator**:
 - `docs/features/README.md`
 - `docs/team/ownership.md`
 - `docs/gap-list.md`
-- `docs/diagrams/out/**`
+- `docs/diagrams/out/**` — refreshed by `scripts/diagrams.sh`, and **committed**, unlike the four
+  above: the architecture documents embed these as images and the forge previews them.
 
-Each carries a `GENERATED` marker in its header. A hand edit is detected and breaks the build. That
-is not over-caution: a generated file edited by hand creates false confidence that the state is
-current, which is worse than no file at all.
+Each carries a `GENERATED` marker in its header naming what wrote it, so that a file opened on its
+own says whether editing it is pointless. A generated file edited by hand creates false confidence
+that the state is current, which is worse than no file at all.
+
+**Corrected 10 September.** This section previously claimed "a hand edit is detected and breaks the
+build". No such detection exists — nothing in `tools/` reads the marker, for any of these files.
+The marker is a convention held by whoever is reading, which is exactly the class of rule
+[instruction-backlog.md](instruction-backlog.md) IB-003 identifies as the one that fails. The check
+belongs with `ai-tools trace` in phase 2, which is when the first two files acquire a generator at
+all; until then this section says what is true rather than what was intended.
