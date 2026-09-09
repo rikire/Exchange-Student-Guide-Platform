@@ -104,10 +104,10 @@ the repository stood when the reply went out:
 
 | Stated | Actual | Why it was wrong |
 |---|---|---|
-| 26 `FR` | 26 | correct |
-| 6 `NFR` | **5** | `NFR-050` is the illustrative example in the format section, not a requirement |
-| 7 `CON` | **6** | `CON-040` is the illustrative example, likewise. CON-008 was added later the same day, so there are now genuinely 7 — the sent figure was wrong when it was written, and is not made right by that |
-| 25 use cases | **26** | `UC-026` was added the same day, before the reply went, and the figure was not recounted |
+| functional — 26 | 26 | correct |
+| non-functional — 6 | **5** | `NFR-050` is the illustrative example in the format section, not a requirement |
+| constraints — 7 | **6** | `CON-040` is the illustrative example, likewise. CON-008 was added later the same day, so there are now genuinely 7 — the sent figure was wrong when it was written, and is not made right by that |
+| use cases — 25 | **26** | `UC-026` was added the same day, before the reply went, and the figure was not recounted |
 
 The cause is worth naming because it recurred. The same trap in `functional.md` — `FR-050` in the
 format section — was caught and excluded; the identical pattern in the other two files was not

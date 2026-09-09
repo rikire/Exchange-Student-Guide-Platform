@@ -82,6 +82,7 @@ these documents, read the matching rule file in the same turn.
 | A switched-off or sleeping test | An edit adding `@Disabled` without a debt entry, or `Thread.sleep` under `src/test/`, is refused; a `@Test` that asserts nothing is questioned |
 | The record survives a shortened conversation | A `PreCompact` hook writes into the entry that the context was compacted. It does not preserve what was discarded — it marks the gap as a gap |
 | The work is not graded only by whoever did it | Partly: `/dod` hands the diff to the `dod-reviewer` subagent, which sees the change and the criteria without the reasoning that produced them. It is still the same model, and it is still started by the run it is auditing |
+| A stated number of requirements is true | A document claiming a count that disagrees with the files fails the documentation check. `ai-tools count` prints the real figures; the entry under `## Format` in each requirements file demonstrates the shape and is not counted. Dated records — the audits, the weekly logs, the journal — and quotations in blockquotes are left alone, because correcting a record destroys what it is for |
 | A plan item says what would confirm it | A roadmap step with no `— check:` fails the documentation check. Naming a phase does not excuse it, unlike every other rule there — in a phase file all the work is still ahead, so that escape would switch the rule off |
 
 **Every row above except one runs from `tools/target/ai-tools.jar`, and that jar is a build
