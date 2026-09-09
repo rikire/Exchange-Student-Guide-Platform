@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { height: 30px; width: auto; }
+    .admin-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--maroon); border: 1px solid var(--maroon); border-radius: 4px; padding: 2px 8px; }
+    .header-nav { display: flex; gap: 20px; }
+    .header-nav a { font-size: 14px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
+    .body { padding: 40px; }
+    .title { font-size: 24px; font-weight: 700; margin: 0 0 20px 0; }
+    table { width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+    th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--sand); }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    .type-chip { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: #FBF3E3; color: var(--maroon-dark); }
+    .num { font-family: ui-monospace, monospace; color: var(--ink-soft); }
+    .btn-link { color: var(--maroon); font-weight: 600; text-decoration: none; font-size: 13px; }
+  </style>
+</helmet>
+<div class="page">
+  <div class="header-bar">
+    <div class="header-left"><img src="oge-logo.svg" alt="OGE logo" class="header-logo"><span class="admin-badge">Moderator</span></div>
+    <div class="header-nav"><a href="#">Queue</a><a href="#">Reports</a></div>
+  </div>
+  <div class="body">
+    <h1 class="title">Moderation queue</h1>
+    <table>
+      <tr><th>Submission</th><th>Type</th><th>Title</th><th>Submitted</th><th></th></tr>
+      <tr><td class="num">SUB-04815</td><td><span class="type-chip">New article</span></td><td>Getting a local SIM card</td><td>2 days ago</td><td><a class="btn-link" href="#">Review →</a></td></tr>
+      <tr><td class="num">SUB-04817</td><td><span class="type-chip">Edit</span></td><td>Opening a bank account</td><td>1 day ago</td><td><a class="btn-link" href="#">Review →</a></td></tr>
+      <tr><td class="num">SUB-04819</td><td><span class="type-chip">New article</span></td><td>Chennai monsoon survival guide</td><td>6 hours ago</td><td><a class="btn-link" href="#">Review →</a></td></tr>
+    </table>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

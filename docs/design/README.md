@@ -31,21 +31,29 @@ _(Filled in as each is published — feature, artifact URL, export file.)_
 
 | Canvas | Artifact URL | Export |
 |---|---|---|
-| Design system | `f471d758-83b2-47d8-9b5e-727860589366` — **does not resolve**, see below | [exports/Main.pdf](exports/Main.pdf) |
+| Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [exports/Main.pdf](exports/Main.pdf) |
+| Landing page | [claude.ai/code/artifact/91ba6eef](https://claude.ai/code/artifact/91ba6eef-67d4-415d-92cc-bdf59cc3f6c5) | _pending_ |
+| Flow overview — all nine screens on one canvas (Landing, Article, Search results, Tag browse, Submission form, Submission status, Moderation queue, Submission review, Report inbox), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _pending_ |
 
-**Checked 9 Sep: the design-system canvas URL does not resolve.** Reading it returns "artifact not
-found — it may have been deleted, or it has not been shared with you", and the publishing account
-lists no artifacts at all. It may still exist under the other member's account; that is the one
-thing to check before re-publishing, because re-seeding under a new URL when the old one is alive
-would leave two canvases and no way to tell which is current.
+**On the "does not resolve" report (9 Sep):** checked from the publishing account and each of these
+three still resolves, still owned by that account, still readable with full content — not deleted.
+Artifacts publish **private by default**: reading one from an account it wasn't shared with returns
+exactly the "not found — it may have been deleted, or has not been shared with you" message that
+prompted the original check, and the publisher's own artifact list is naturally empty to anyone
+else's account too. So the earlier check was almost certainly run from a different account than the
+one that published these — an access-scope read, not evidence of loss. Worth remembering for next
+time: before recording a canvas as gone, re-check from the account it was actually published under.
 
-This is the risk this section already anticipated two paragraphs above — an external link "can
-change or lapse" — and the mitigation held: the canvas source and its PDF export are both in git, so
-nothing was lost but the live editing surface. The link is presented as broken rather than removed,
-because a table that quietly drops a dead row stops being a record of what was published.
+**On "interactive"**: this canvas preview does not support a click on one artboard jumping to
+another — artboards share no runtime state (see "Known limits" in the `design` skill). The flow
+overview lays all nine out together with sticky notes naming the intended transition at each
+boundary, so the relationships are visible even though nothing is actually clickable between them.
+Real navigation is `ui-routes.md`'s job, once Stage 4 formalizes it from what these sketches found.
 
 Source `.dc.html` for each canvas lives under [canvas-src/](canvas-src/) and is kept in git — small,
-human-readable, and re-seeding from it is how a canvas gets edited again from here. The *seeded*
+human-readable, and re-seeding from it is how a canvas gets edited again from here. A single-artboard
+canvas's source sits directly in `canvas-src/`; a multi-artboard one (like the flow overview) gets
+its own subdirectory (`canvas-src/flow/`) since every canvas needs its own `Main.dc.html`. The *seeded*
 `.html` the `Artifact` tool actually publishes is **not** committed: it's the source plus ~2 MB of
 the canvas editor's own code, regenerated on demand with `seed-canvas.mjs` rather than tracked as a
 diff-hostile blob.

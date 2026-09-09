@@ -197,32 +197,32 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 
 | Feature | Priority | Slice | FR id | ADR | CJM step | ERD entity | Route | Screen |
 |---|---|---|---|---|---|---|---|---|
-| Full-text search across articles | must | `search` | FR-007 | | UC-001 | | | |
-| Browse/filter articles by tag | should | `taxonomy` | FR-008 | | UC-002 | | | |
-| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | | |
-| Download a media attachment | should | `media` | FR-016 | | UC-004 | | | |
-| Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | | |
-| Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | |
-| Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | | |
-| Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | | |
-| Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | |
-| Report an article | could | `report` | FR-021 | | UC-009 | | | |
-| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | | |
-| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | | |
-| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | | |
-| Look up a submission's status by its number | could | `contribute` | FR-012 | | UC-013 | | | |
-| Abuse handling without accounts (rate limiting + CAPTCHA) | should | `shared/security` | FR-013 | | _(none — not a use case)_ | | | |
-| Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | | |
-| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | | |
-| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | FR-017 | | UC-016 | | | |
-| Reject a submission | must | `moderate` | FR-018 | | UC-017 | | | |
-| Providing a rejection reason | could | `moderate` | FR-019 | | UC-024 | | | |
-| Version-history groundwork: retain each approved revision | should | `moderate` | FR-020 | | UC-018 | | | |
-| Closing a report (was "Handle a reported article" — narrowed 7 Sep: correcting the article reuses the existing direct-edit capability, closing is the only new action) | could | `report` | FR-022 | | UC-019 (via UC-021 + UC-025), UC-025 | | | |
-| Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | |
-| Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | |
-| Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | |
-| Remove a published article (added 9 Sep from the course's scoping feedback — see [scoping-feedback.md](../course/scoping-feedback.md)) | should | `moderate` | FR-026 | | UC-026 | | | |
+| Full-text search across articles | must | `search` | FR-007 | | UC-001 | | | Search results (canvas) |
+| Browse/filter articles by tag | should | `taxonomy` | FR-008 | | UC-002 | | | Tag browse (canvas) |
+| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | | Article (canvas) |
+| Download a media attachment | should | `media` | FR-016 | | UC-004 | | | Article (canvas) |
+| Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | | Article (canvas) |
+| Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | Article (canvas) |
+| Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | | Landing (canvas) |
+| Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | | Article (canvas) |
+| Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | — not sketched yet |
+| Report an article | could | `report` | FR-021 | | UC-009 | | | Article (canvas) |
+| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | | Submission form (canvas) |
+| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | | Submission form (canvas) |
+| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | | Submission form (canvas) |
+| Look up a submission's status by its number | could | `contribute` | FR-012 | | UC-013 | | | Submission status (canvas) |
+| Abuse handling without accounts (rate limiting + CAPTCHA) | should | `shared/security` | FR-013 | | _(none — not a use case)_ | | | Submission form (canvas) |
+| Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | | Moderation queue (canvas) |
+| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | | Submission review (canvas) |
+| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | FR-017 | | UC-016 | | | Submission review (canvas) |
+| Reject a submission | must | `moderate` | FR-018 | | UC-017 | | | Submission review (canvas) |
+| Providing a rejection reason | could | `moderate` | FR-019 | | UC-024 | | | Submission review (canvas) |
+| Version-history groundwork: retain each approved revision | should | `moderate` | FR-020 | | UC-018 | | | — not sketched (no UI of its own) |
+| Closing a report (was "Handle a reported article" — narrowed 7 Sep: correcting the article reuses the existing direct-edit capability, closing is the only new action) | could | `report` | FR-022 | | UC-019 (via UC-021 + UC-025), UC-025 | | | Report inbox (canvas) |
+| Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | Submission form (canvas) |
+| Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | Submission form (canvas) |
+| Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | — not sketched yet |
+| Remove a published article (added 9 Sep from the course's scoping feedback — see [scoping-feedback.md](../course/scoping-feedback.md)) | should | `moderate` | FR-026 | | UC-026 | | | — not sketched yet |
 
 MoSCoW test used: **must** = the system does not function as this product without it; **should** = a
 real, non-cosmetic loss if missing, but the system still works; **could** = low impact if missing,
@@ -280,15 +280,16 @@ actually needed before either gets written up formally.
 
 | Slice | Claim |
 |---|---|
-| `contribute` | [ ] |
-| `moderate` | [ ] |
-| `media` | [ ] |
-| `backup` | [ ] |
-| `home` | [ ] |
-| `articleview` | [ ] |
-| `search` | [ ] |
-| `taxonomy` | [ ] |
-| `wikilink` | [ ] — likely a light touch; claim alongside `contribute` or `articleview` |
+| `contribute` | [~] abdirakhim |
+| `moderate` | [~] abdirakhim |
+| `media` | [~] abdirakhim — light touch, sketched inside the Article and Submission Form screens |
+| `backup` | [ ] — no screen needs it; export/import has no UI in the current screen list |
+| `home` | [~] abdirakhim |
+| `articleview` | [~] abdirakhim |
+| `search` | [~] abdirakhim |
+| `taxonomy` | [~] abdirakhim |
+| `wikilink` | [~] abdirakhim — light touch, sketched inside the Article and Submission Form screens |
+| `report` | [~] abdirakhim — added 6 Sep after this table was written; missing until now |
 
 ### 4. Formalize — claimed, per slice, now genuinely parallel
 

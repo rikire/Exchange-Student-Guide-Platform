@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --gold:#D6A64F; --gold-dark:#BDA345; --red:#D9261C; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    a:hover { color: var(--maroon-dark); text-decoration: underline; }
+    a.redlink { color: var(--red); }
+    a.redlink:hover { color: var(--red); }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { height: 30px; width: auto; }
+    .header-name { font-size: 15px; font-weight: 700; }
+    .header-nav { display: flex; align-items: center; gap: 24px; }
+    .header-nav a { font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+    .header-nav a:hover { color: var(--maroon); text-decoration: none; }
+    .body { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; padding: 40px; }
+    .breadcrumb { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+    .tag-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .chip { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #FBF3E3; color: var(--maroon-dark); width: fit-content; }
+    .article-title { font-size: 32px; font-weight: 700; margin: 0 0 20px 0; }
+    .article-body { font-size: 16px; line-height: 1.7; }
+    .article-body p { margin: 0 0 16px 0; }
+    .media-block { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); margin: 20px 0; }
+    .media-name { font-size: 14px; font-weight: 600; }
+    .media-meta { font-size: 12px; color: var(--ink-soft); }
+    .icon { width: 18px; height: 18px; stroke: var(--ink-soft); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border-radius: 4px; font-size: 14px; font-weight: 600; border: 1.5px solid var(--maroon); background: transparent; color: var(--maroon); cursor: pointer; margin-left: auto; }
+    .sidebar { display: flex; flex-direction: column; gap: 24px; }
+    .side-card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
+    .side-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin: 0 0 12px 0; }
+    .backlink-item { font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+    .backlink-item:last-child { border-bottom: none; }
+    .report-btn { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-soft); background: none; border: none; cursor: pointer; padding: 0; }
+    .report-btn:hover { color: var(--red); }
+  </style>
+</helmet>
+<div class="page">
+  <div class="header-bar">
+    <div class="header-left"><img src="oge-logo.svg" alt="OGE logo" class="header-logo"><span class="header-name">Exchange Student Guide</span></div>
+    <div class="header-nav"><a href="#">Browse tags</a><a href="#">Submit an article</a><a href="#">Track a submission</a></div>
+  </div>
+  <div class="body">
+    <div>
+      <div class="breadcrumb"><a href="#">Home</a> / <a href="#">Visa</a> / Registering with FRRO</div>
+      <div class="tag-row"><span class="chip">visa</span><span class="chip">admin</span></div>
+      <h1 class="article-title">Registering with FRRO</h1>
+      <div class="article-body">
+        <p>Every exchange student must register with the Foreigner Regional Registration Office (FRRO) within 14 days of arrival. Bring your passport, visa page, and admission letter to the office on <a href="#">Kamarajar Salai</a>.</p>
+        <p>See also <a href="#">Opening a bank account</a> — many students do both errands on the same trip since the offices are a short walk apart. If you haven't set one up yet, read <a class="redlink" href="#">SIM card registration</a> first (this article does not exist yet).</p>
+        <div class="media-block">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <div><div class="media-name">frro-checklist.pdf</div><div class="media-meta">240 KB</div></div>
+          <button class="btn">Download</button>
+        </div>
+        <p>Processing usually takes one visit if all documents are in order. Keep the stamped copy — you will need it again when you leave the country.</p>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="side-card">
+        <div class="side-title">What links here</div>
+        <div class="backlink-item"><a href="#">Your first week checklist</a></div>
+        <div class="backlink-item"><a href="#">Opening a bank account</a></div>
+      </div>
+      <div class="side-card">
+        <button class="report-btn">
+          <svg class="icon" viewBox="0 0 24 24" style="stroke: currentColor;"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg>
+          Report this article
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

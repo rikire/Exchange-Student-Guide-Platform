@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root {
+      --maroon: #781F19;
+      --maroon-dark: #5C1712;
+      --gold: #D6A64F;
+      --gold-dark: #BDA345;
+      --ink: #1F1917;
+      --ink-soft: #5B534C;
+      --paper: #FFFFFF;
+      --sand: #F7F4EF;
+      --line: #E6DFD3;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    a:hover { color: var(--maroon-dark); text-decoration: underline; }
+    .page {
+      font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--sand);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { height: 30px; width: auto; }
+    .header-name { font-size: 15px; font-weight: 700; }
+    .header-nav { display: flex; align-items: center; gap: 24px; }
+    .header-nav a { font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+    .header-nav a:hover { color: var(--maroon); text-decoration: none; }
+    .hero {
+      background: var(--maroon);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .hero h1 { color: #FFFFFF; font-size: 30px; font-weight: 700; margin: 0; }
+    .hero p { color: #F0E4D8; font-size: 15px; margin: 0; }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 520px;
+      max-width: 100%;
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 0 16px;
+      height: 52px;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--ink);
+    }
+    .icon { width: 18px; height: 18px; stroke: var(--ink-soft); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 40px;
+      padding: 40px;
+    }
+    .section-title { font-size: 18px; font-weight: 700; margin: 0 0 16px 0; }
+    .section-gap { margin-top: 40px; }
+    .card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .article-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--paper);
+    }
+    .pinned-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #FBF3E3;
+      color: var(--maroon-dark);
+      width: fit-content;
+    }
+    .article-title { font-size: 16px; font-weight: 700; margin: 0; }
+    .article-excerpt { font-size: 13px; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+    .article-meta { font-size: 12px; color: var(--ink-soft); }
+    .sidebar {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag-cloud .chip { background: var(--sand); color: var(--ink); border: 1px solid var(--line); }
+  </style>
+</helmet>
+
+<div class="page">
+
+  <div class="header-bar">
+    <div class="header-left">
+      <img src="oge-logo.svg" alt="OGE logo" class="header-logo">
+      <span class="header-name">Exchange Student Guide</span>
+    </div>
+    <div class="header-nav">
+      <a href="#">Browse tags</a>
+      <a href="#">Submit an article</a>
+      <a href="#">Track a submission</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Everything you need to settle in at IIT Madras</h1>
+    <p>Visas, hostels, banking, and the things nobody tells you until you ask.</p>
+    <div class="search-box">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input placeholder="Search for FRRO, hostel, bank account...">
+    </div>
+  </div>
+
+  <div class="body">
+    <div>
+      <div>
+        <h2 class="section-title">Pinned</h2>
+        <div class="card-grid">
+          <div class="article-card">
+            <span class="pinned-badge">Pinned</span>
+            <span class="chip">visa</span>
+            <h3 class="article-title">Registering with FRRO</h3>
+            <p class="article-excerpt">What to bring, where to go, and what happens if you miss the 14-day window.</p>
+            <div class="article-meta">Updated 3 days ago</div>
+          </div>
+          <div class="article-card">
+            <span class="pinned-badge">Pinned</span>
+            <span class="chip">orientation</span>
+            <h3 class="article-title">Your first week checklist</h3>
+            <p class="article-excerpt">The exact order to do things in during your first seven days on campus.</p>
+            <div class="article-meta">Updated 1 week ago</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-gap">
+        <h2 class="section-title">Recently added</h2>
+        <div class="card-grid">
+          <div class="article-card">
+            <span class="chip">banking</span>
+            <h3 class="article-title">Opening a bank account</h3>
+            <p class="article-excerpt">Documents, branch locations near campus, and how long approval usually takes.</p>
+            <div class="article-meta">Added 2 days ago</div>
+          </div>
+          <div class="article-card">
+            <span class="chip">hostel</span>
+            <h3 class="article-title">Hostel move-in checklist</h3>
+            <p class="article-excerpt">What's provided, what to bring yourself, and who to contact on arrival day.</p>
+            <div class="article-meta">Added 4 days ago</div>
+          </div>
+          <div class="article-card">
+            <span class="chip">transport</span>
+            <h3 class="article-title">Getting around Chennai</h3>
+            <p class="article-excerpt">Buses, autos, and the local transit card that saves you money.</p>
+            <div class="article-meta">Added 5 days ago</div>
+          </div>
+          <div class="article-card">
+            <span class="chip">sim card</span>
+            <h3 class="article-title">Getting a local SIM card</h3>
+            <p class="article-excerpt">Which providers work best on campus and what ID you'll need.</p>
+            <div class="article-meta">Added 1 week ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar">
+      <h2 class="section-title">Browse by tag</h2>
+      <div class="tag-cloud">
+        <span class="chip">visa</span>
+        <span class="chip">banking</span>
+        <span class="chip">hostel</span>
+        <span class="chip">transport</span>
+        <span class="chip">sim card</span>
+        <span class="chip">orientation</span>
+        <span class="chip">food</span>
+        <span class="chip">academics</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; --olive:#4B7043; --red:#D9261C; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; gap: 14px; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-logo { height: 30px; width: auto; }
+    .admin-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--maroon); border: 1px solid var(--maroon); border-radius: 4px; padding: 2px 8px; }
+    .body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; padding: 40px; }
+    .num { font-size: 13px; color: var(--ink-soft); font-family: ui-monospace, monospace; margin-bottom: 6px; }
+    .title { font-size: 26px; font-weight: 700; margin: 0 0 16px 0; }
+    .article-body { font-size: 15px; line-height: 1.7; }
+    .side-card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 13px; font-weight: 600; }
+    .field-input, .field-textarea { border: 1.5px solid var(--line); border-radius: 4px; padding: 8px 12px; font-size: 14px; font-family: inherit; }
+    .field-textarea { min-height: 70px; }
+    .chip { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #FBF3E3; color: #5C1712; width: fit-content; }
+    .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; border-radius: 4px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; width: 100%; }
+    .btn-approve { background: var(--olive); color: #fff; }
+    .btn-reject { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
+  </style>
+</helmet>
+<div class="page">
+  <div class="header-bar"><img src="oge-logo.svg" alt="OGE logo" class="header-logo"><span class="admin-badge">Moderator</span></div>
+  <div class="body">
+    <div>
+      <div class="num">Submission SUB-04815 — new article</div>
+      <h1 class="title">Getting a local SIM card</h1>
+      <div class="article-body">
+        <p>Airtel and Jio both have booths near the campus main gate. You'll need your passport and admission letter — the same documents as for FRRO registration.</p>
+        <p>Activation usually takes a few hours; some providers require an in-person verification call.</p>
+      </div>
+    </div>
+    <div>
+      <div class="side-card">
+        <div class="field-label">Attachment</div>
+        <div style="font-size: 13px; color: var(--ink-soft);">sim-providers.jpg — 1.2 MB</div>
+      </div>
+      <div class="side-card">
+        <div class="field">
+          <label class="field-label">Tags (suggested by contributor)</label>
+          <div class="chip-row"><span class="chip">sim card</span><span class="chip">telecom</span></div>
+        </div>
+      </div>
+      <div class="side-card">
+        <button class="btn btn-approve">Approve &amp; publish</button>
+        <div class="field">
+          <label class="field-label">Reason (if rejecting)</label>
+          <textarea class="field-textarea" placeholder="Optional — shown to the contributor"></textarea>
+        </div>
+        <button class="btn btn-reject">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
