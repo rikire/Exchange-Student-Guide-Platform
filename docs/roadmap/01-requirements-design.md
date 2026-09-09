@@ -45,6 +45,13 @@ design document is the deliverable; the repository documents are the source it i
       state — see [docs/design/screens/](../design/README.md#canvases)); the rejected-submission
       state was already sketched in `SubmissionStatus.dc.html`. Plain per-screen HTML lives under
       `docs/design/screens/`, generated from the `.dc.html` sources.
+      **Updated 10 Sep, second pass — every `FR` with a UI now has a `Screen`:** the tracker had three
+      gaps (FR-005, FR-025, FR-026, all "not sketched yet"). Added two screens: a create-from-red-link
+      invite page (FR-005), and a moderator "Homepage & article administration" screen combining
+      pin/unpin (FR-025) and remove (FR-026), since both are the same actor acting on the same
+      published article. Thirteen screens total. The one `FR` still without a `Screen`, FR-020
+      (revision retention), stays that way deliberately — it names no reader- or moderator-facing
+      state, only what the system stores when an edit is approved; see the tracker note on that row.
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
 - [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
       — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a
@@ -218,7 +225,7 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 | Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | Article (canvas) |
 | Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | | Landing (canvas) |
 | Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | | Article (canvas) |
-| Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | — not sketched yet |
+| Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | Create-from-red-link invite (canvas) |
 | Report an article | could | `report` | FR-021 | | UC-009 | | | Article (canvas) |
 | Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | | Submission form (canvas) |
 | Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | | Submission form (canvas) |
@@ -234,8 +241,8 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 | Closing a report (was "Handle a reported article" — narrowed 7 Sep: correcting the article reuses the existing direct-edit capability, closing is the only new action) | could | `report` | FR-022 | | UC-019 (via UC-021 + UC-025), UC-025 | | | Report inbox (canvas) |
 | Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | Submission form (canvas) — layout only; its copy ("goes to OGE for review") is the contributor path's, not yet a moderator variant |
 | Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | Submission form (canvas) — same caveat as FR-023 |
-| Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | — not sketched yet |
-| Remove a published article (added 9 Sep from the course's scoping feedback — see [scoping-feedback.md](../course/scoping-feedback.md)) | should | `moderate` | FR-026 | | UC-026 | | | — not sketched yet |
+| Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | Homepage & article administration (canvas) |
+| Remove a published article (added 9 Sep from the course's scoping feedback — see [scoping-feedback.md](../course/scoping-feedback.md)) | should | `moderate` | FR-026 | | UC-026 | | | Homepage & article administration (canvas) |
 
 MoSCoW test used: **must** = the system does not function as this product without it; **should** = a
 real, non-cosmetic loss if missing, but the system still works; **could** = low impact if missing,

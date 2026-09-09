@@ -51,10 +51,12 @@ _(Filled in as each is published — feature, artifact URL, export file.)_
 |---|---|---|
 | Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [exports/Main.pdf](exports/Main.pdf) |
 | Landing page | [claude.ai/code/artifact/91ba6eef](https://claude.ai/code/artifact/91ba6eef-67d4-415d-92cc-bdf59cc3f6c5) | _superseded by the flow overview below_ |
-| Flow overview — all eleven screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Submission form, Submission status, Moderation queue + its empty state, Submission review, Report inbox), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
+| Flow overview — all thirteen screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Create-from-red-link invite, Submission form, Submission status, Moderation queue + its empty state, Submission review, Report inbox, Homepage & article administration), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
 
-The eleven screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
-for which FRs each one covers.
+The thirteen screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
+for which FRs each one covers. Every `FR` that names a reader- or moderator-facing state now has a
+screen, except FR-020 (revision retention), which by its own text names no such state — see the
+Feature coverage tracker's note on that row.
 
 **On the "does not resolve" report (9 Sep):** checked from the publishing account and each of these
 canvases still resolves, still owned by that account, still readable with full content — not
@@ -67,7 +69,7 @@ time: before recording a canvas as gone, re-check from the account it was actual
 
 **On "interactive"**: this canvas preview does not support a click on one artboard jumping to
 another — artboards share no runtime state (see "Known limits" in the `design` skill). The flow
-overview lays all eleven out together with sticky notes naming the intended transition at each
+overview lays all thirteen out together with sticky notes naming the intended transition at each
 boundary, so the relationships are visible even though nothing is actually clickable between them.
 Real navigation is `ui-routes.md`'s job, once Stage 4 formalizes it from what these sketches found.
 
@@ -99,15 +101,17 @@ The screen list is built by grouping the written `FR`s by *what page a person is
 
 | Screen | Fed by (slice) | Key FRs |
 |---|---|---|
-| [Landing page](screens/Landing.html) | `home`, `taxonomy`, `search` | FR-009, FR-025 |
-| [Article page](screens/Article.html) | `articleview`, `wikilink`, `taxonomy`, `media`, `report` | FR-001, 002, 004, 005, 006, 016, 021 |
+| [Landing page](screens/Landing.html) | `home`, `taxonomy`, `search` | FR-009 |
+| [Article page](screens/Article.html) | `articleview`, `wikilink`, `taxonomy`, `media`, `report` | FR-001, 002, 004, 006, 016, 021 |
 | [Search results](screens/SearchResults.html) ([no matches](screens/SearchResultsEmpty.html)) | `search` | FR-007 |
 | [Tag browse](screens/TagBrowse.html) | `taxonomy` | FR-008 |
+| [Create-from-red-link invite](screens/RedlinkInvite.html) | `wikilink` | FR-005 |
 | [Submission form](screens/SubmissionForm.html) (new / edit — shared) | `contribute` | FR-010, 011, 023, 024 |
 | [Submission status lookup](screens/SubmissionStatus.html) | `contribute` | FR-012, 019 |
 | [Moderation queue](screens/ModerationQueue.html) ([empty](screens/ModerationQueueEmpty.html)) | `moderate` | FR-014 |
 | [Submission review/decision](screens/SubmissionReview.html) | `moderate` | FR-015, 017, 018, 019, 020 |
 | [Moderator report inbox](screens/ReportInbox.html) | `report` | FR-021, 022 |
+| [Homepage & article administration](screens/HomeAdmin.html) | `home`, `moderate` | FR-025, FR-026 |
 
 The Stage 3 claim table in
 [01-requirements-design.md](../roadmap/01-requirements-design.md) still works for *ownership* —

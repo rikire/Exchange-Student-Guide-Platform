@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --red:#D9261C; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    a:hover { color: var(--maroon-dark); text-decoration: underline; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; gap: 14px; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-logo { height: 30px; width: auto; }
+    .body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .invite-card { max-width: 480px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 36px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .invite-icon { width: 40px; height: 40px; stroke: var(--red); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .invite-title { font-size: 20px; font-weight: 700; margin: 0; }
+    .invite-target { font-family: ui-monospace, monospace; font-size: 15px; color: var(--red); }
+    .invite-hint { font-size: 14px; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 22px; border-radius: 4px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; margin-top: 8px; }
+    .btn-primary { background: var(--maroon); color: #fff; }
+  </style>
+</helmet>
+<div class="page">
+  <div class="header-bar"><img src="oge-logo.svg" alt="OGE logo" class="header-logo"></div>
+  <div class="body">
+    <div class="invite-card">
+      <svg class="invite-icon" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+      <h1 class="invite-title">This article doesn't exist yet</h1>
+      <div class="invite-target">SIM card registration</div>
+      <p class="invite-hint">Someone linked to this title from another article, but nobody has written it. You can be the first — it goes through the same review as any other submission.</p>
+      <button class="btn btn-primary">Create this article</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

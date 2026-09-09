@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Homepage & article administration — Exchange Student Guide (draft screen)</title>
+<!-- Rough Stage-3 sketch, generated from canvas-src/flow/HomeAdmin.dc.html — not the deliverable,
+     a thinking tool. See docs/design/README.md for how this fits the design process. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --gold-dark:#BDA345; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; --red:#D9261C; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { height: 30px; width: auto; }
+    .admin-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--maroon); border: 1px solid var(--maroon); border-radius: 4px; padding: 2px 8px; }
+    .header-nav { display: flex; gap: 20px; }
+    .header-nav a { font-size: 14px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
+    .body { padding: 40px; }
+    .title { font-size: 24px; font-weight: 700; margin: 0 0 6px 0; }
+    .subtitle { font-size: 14px; color: var(--ink-soft); margin: 0 0 20px 0; }
+    table { width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+    th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--sand); }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .chip { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #FBF3E3; color: var(--maroon-dark); margin-right: 4px; }
+    .pin-toggle { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink-soft); cursor: pointer; }
+    .pin-toggle.is-pinned { border-color: var(--gold-dark); color: var(--gold-dark); background: #FBF3E3; }
+    .pin-dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+    .btn-remove { height: 30px; padding: 0 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; border: 1.5px solid var(--red); color: var(--red); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header-bar">
+    <div class="header-left"><img src="../assets/oge-logo.svg" alt="OGE logo" class="header-logo"><span class="admin-badge">Moderator</span></div>
+    <div class="header-nav"><a href="#">Queue</a><a href="#">Reports</a><a href="#">Homepage</a></div>
+  </div>
+  <div class="body">
+    <h1 class="title">Homepage &amp; published articles</h1>
+    <p class="subtitle">Pin an article to feature it above "Recently added," or remove one that no longer belongs on the site.</p>
+    <table>
+      <tr><th>Title</th><th>Tags</th><th>Pinned</th><th></th></tr>
+      <tr>
+        <td>Registering with FRRO</td>
+        <td><span class="chip">visa</span><span class="chip">admin</span></td>
+        <td><button class="pin-toggle is-pinned"><span class="pin-dot"></span>Pinned</button></td>
+        <td><button class="btn-remove">Remove</button></td>
+      </tr>
+      <tr>
+        <td>Your first week checklist</td>
+        <td><span class="chip">orientation</span></td>
+        <td><button class="pin-toggle is-pinned"><span class="pin-dot"></span>Pinned</button></td>
+        <td><button class="btn-remove">Remove</button></td>
+      </tr>
+      <tr>
+        <td>Opening a bank account</td>
+        <td><span class="chip">banking</span></td>
+        <td><button class="pin-toggle"><span class="pin-dot"></span>Pin</button></td>
+        <td><button class="btn-remove">Remove</button></td>
+      </tr>
+      <tr>
+        <td>Chennai monsoon survival guide</td>
+        <td><span class="chip">transport</span></td>
+        <td><button class="pin-toggle"><span class="pin-dot"></span>Pin</button></td>
+        <td><button class="btn-remove">Remove</button></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</body>
+</html>
