@@ -17,6 +17,7 @@ the details live here so that a session does not have to load everything into co
 | [docs-sync.md](docs-sync.md) | How documentation stays in step with code |
 | [roadmap.md](roadmap.md) | How the roadmap is kept and how items are closed |
 | [journal/](journal/) | Prompt journal and the human's own edits |
+| [instruction-backlog.md](instruction-backlog.md) | Changes to these instructions that the human has asked for but not yet adopted — a queue, not a rule |
 | [audit-2026-09-06.md](audit-2026-09-06.md) | This layer audited against the platform: what was found, fixed, and deliberately not done |
 | [audit-planning-2026-09-07.md](audit-planning-2026-09-07.md) | Whether the planning process is working, what it has produced, and five proposals awaiting a decision |
 | [PLAN-PROMPT.md](PLAN-PROMPT.md) | The original plan this repository was built from |
