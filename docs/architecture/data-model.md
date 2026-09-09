@@ -33,6 +33,15 @@ adjustable by the moderator (FR-017), and it appears wherever articles are liste
 The ellipsed extract in search results is a different thing — computed around the match at query
 time and stored nowhere.
 
+**`pinned_at` and `removed_at` are nullable timestamps, not booleans or a status column.** Decided
+10 Sep, resolving the two open decisions below. `pinned_at` is set when a moderator pins an article
+(FR-025) and cleared when they unpin it; the landing page's pinned section (FR-009) orders by it, so
+two pinned articles never tie. `removed_at` is set when a moderator removes a published article
+(FR-026) and never cleared — a soft delete. The row stays: `revision` (FR-020), `report.article_id`
+and any `submission.target_article_id` keep resolving, and a wiki link to the removed article keeps
+rendering, now as a red link (FR-004) because every read of `article` filters on `removed_at IS
+NULL`, the same filter that already excludes unapproved content.
+
 ## Moderation
 
 | Table | Holds | Decided by |
@@ -86,28 +95,22 @@ its own ADR before either is built; recording it here is not the same as decidin
 
 ## Open decisions found while reviewing this model
 
-Three, from checking every `FR` and every screen against the diagram on 10 September. None is
-decided here — entity fields, cardinality and enum values are the human's call
-(`.claude/rules/schema.md`).
+Found while checking every `FR` and every screen against the diagram on 10 September. Entity fields,
+cardinality and enum values are the human's call (`.claude/rules/schema.md`); two of the three below
+were made that day, one is still open.
 
-**1. A removed article has no representation.** FR-026 is `should` and says a removed article stops
-resolving, leaves search, tag listings and the landing page, and turns links to it red. The model
-has no `removed_at` and no state on `article`, so removal reads as a hard `DELETE` — which would
-take FR-020's retained revisions with it, and FR-020 exists precisely so that content survives a
-change. It would also strand `report.article_id` and any `submission.target_article_id` pointing at
-it. The two shapes are a soft-delete column on `article`, or a hard delete with an explicit answer
-for revisions, reports and pending edits. ADR-0003's own argument applies: choosing this later means
-migrating live rows.
+**1. ~~A removed article has no representation.~~** Resolved 10 Sep: `removed_at`, a nullable
+timestamp on `article` — a soft delete. See the `pinned_at`/`removed_at` paragraph above for what
+that keeps intact.
 
-**2. `pinned` is a boolean, so pinned articles have no order.** FR-009 shows pinned articles ahead
-of recent ones and FR-025 pins and unpins, but neither says what orders two pinned articles against
-each other — while [the landing screen](../design/screens/Landing.html) shows two of them in a
-definite order. A boolean cannot express that; an integer position or a `pinned_at` timestamp can.
+**2. ~~`pinned` is a boolean, so pinned articles have no order.~~** Resolved 10 Sep: replaced by
+`pinned_at`, a nullable timestamp — pin order is "most recently pinned first," with no separate
+reordering control needed. See the paragraph above.
 
-**3. Where the rate limit is counted**, per the removed column above — in-process, or a table of its
-own. [ADR-0008](adr/ADR-0008-abuse-handling-without-accounts.md) left it to the implementation, and
-that is still where it sits; it is listed here so the absence is visible in the schema rather than
-only in the ADR.
+**3. Where the rate limit is counted** — in-process, or a table of its own.
+[ADR-0008](adr/ADR-0008-abuse-handling-without-accounts.md) left it to the implementation, and that
+is still where it sits; it is listed here so the absence is visible in the schema rather than only
+in the ADR. Still open — not part of this pass.
 
 ## Not in this model
 

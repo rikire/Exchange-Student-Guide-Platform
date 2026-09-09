@@ -107,7 +107,7 @@ design document is the deliverable; the repository documents are the source it i
       published article. Thirteen screens total. The one `FR` still without a `Screen`, FR-020
       (revision retention), stays that way deliberately — it names no reader- or moderator-facing
       state, only what the system stores when an edit is approved; see the tracker note on that row.
-- [ ] **Added 10 Sep, from the diagram and data-model review.** Screens brought back in step with
+- [x] **Added 10 Sep, from the diagram and data-model review.** Screens brought back in step with
       the requirements — four gaps, listed with their slice in
       [docs/design/README.md](../design/README.md#screens-now-out-of-step-with-the-requirements).
       All four fall in slices claimed `[~] abdirakhim` in the Stage 3 table below; that table stays
@@ -117,14 +117,80 @@ design document is the deliverable; the repository documents are the source it i
       two screens that draw an action the schema does not support (pin order, remove) either match a
       decided model or are still waiting on it, said out loud rather than redrawn over the gap.
       Both the `.dc.html` source and the regenerated `screens/*.html` change together, or they have
-      drifted
-      — blocked in part: gaps 3 and 4 wait on open decisions 1 and 2 in
-      [data-model.md](../architecture/data-model.md), which are the human's to take
-- [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
-- [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
+      drifted. Done 10 Sep: gaps 1–2 fixed directly on the `Article`, `SubmissionForm` and
+      `SubmissionReview` screens (source and plain HTML together); gaps 3–4 resolved by deciding the
+      two schema questions below rather than by redrawing — neither screen contradicted the decided
+      model, so neither needed a redraw once it landed. `docs/design/README.md`'s gap table and
+      `docs/architecture/data-model.md` record both. The live "Flow overview" Artifact is re-seeded
+      from the updated `.dc.html` sources and republished — see `docs/design/README.md`.
+      — was blocked in part: gaps 3 and 4 waited on open decisions 1 and 2 in
+      [data-model.md](../architecture/data-model.md), which were the human's to take. Resolved 10 Sep:
+      `removed_at` (soft delete, decision 1) and `pinned_at` (pin order, decision 2), both nullable
+      timestamps on `article` — see `data-model.md` and the regenerated `erd.svg`.
+- [x] Test plan: at least one test per slice — check: the plan names the test, not just the module.
+      Done 10 Sep: drafted from the `GIVEN`/`WHEN`/`THEN` criteria already agreed in
+      [functional.md](../requirements/functional.md) — a starting point for whoever holds each slice
+      to adjust in Stage 5's joint reconciliation ("Whoever holds a slice names its test; combine
+      here"), not a final answer.
+
+      | Slice | Named test | From |
+      |---|---|---|
+      | `home` | `LandingPageTest.pinnedArticlesShownBeforeRecentWhenAnyExist` | FR-009 |
+      | `articleview` | `ArticleControllerTest.unapprovedSubmissionRouteDoesNotResolve` | FR-001 |
+      | `search` | `SearchServiceTest.unapprovedSubmissionExcludedFromResults` | FR-007 |
+      | `taxonomy` | `TagBrowseTest.unapprovedSubmissionExcludedFromTagResults` | FR-008 |
+      | `contribute` | `SubmissionControllerTest.newSubmissionEntersQueueAndIsNotPubliclyReachable` | FR-010 |
+      | `moderate` | `ModerationServiceTest.noPathPublishesAnUnapprovedSubmission` | The invariant named in [03-main-flow.md](03-main-flow.md)'s `moderate` step, covering FR-017/FR-018 |
+      | `media` | `MediaUploadTest.fileWhoseExtensionLiesAboutContentIsRejected` | Named in [03-main-flow.md](03-main-flow.md)'s `media` step |
+      | `wikilink` | `WikiLinkRendererTest.linkToMissingArticleRendersRed` | FR-004 |
+      | `backup` | `BackupServiceTest.exportWipeImportProducesIdenticalDatabase` | Named in [02-skeleton.md](02-skeleton.md)'s `backup` step |
+      | `report` | `ReportControllerTest.reportWithoutMessageIsRejected` | FR-021 |
+
+      Ten slices, one test each, from the acceptance criteria phase 1 already agreed — not the full
+      suite each slice needs (phase 3's steps name the rest), the minimum this checklist item asks
+      for: a named test, not just a module.
+- [x] Revised milestone plan, risks and plan B tied to seams that exist in the code
       — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a
       revision; each risk names the signal that would tell us it is happening, and a plan B that
-      could be carried out in the days actually remaining
+      could be carried out in the days actually remaining. Done 10 Sep.
+
+      **The seam that exists in the code today:** none beyond the application skeleton
+      (`GuideApplication.java`, `ApplicationSmokeTest`, `ModularityTest`) — no slice package exists,
+      no persistence. Phase 2 has not started. The risk this revision addresses is phase 3's
+      capacity, not a seam already in place.
+
+      **What was cut, and why.** Phase 3 packs six whole slices (`contribute`, `moderate`,
+      `wikilink`, `taxonomy`, `search`, `media` — 10 of the 12 `must` features) into its fixed
+      18 days (21 Sep – 8 Oct, [03-main-flow.md](03-main-flow.md)), starting from the skeleton
+      above. That capacity question was raised on 7 September and left for the human to decide
+      (open question 2 there). Resolved 10 Sep: six `should`/`could` items move from phase 3 to
+      phase 4, leaving each slice's `must`-priority acceptance criteria as the phase-3 exit bar.
+
+      | Moved | Slice | Priority | Why it can wait |
+      |---|---|---|---|
+      | FR-023, FR-024 (direct publish, bypassing the queue) + the admin-panel step | `contribute` | could | The panel exists only to serve these two `FR`s; without them it has no purpose in phase 3 |
+      | FR-019 (a rejection reason) | `moderate` | could | Rejection works as an action without a reason field |
+      | FR-006 (backlinks / "what links here") | `wikilink` | could | The parser and red links (`must`, FR-002/003/004) don't depend on it |
+      | FR-026 (removing a published article) | `moderate` | should | A moderator maintenance action, outside the mid-demo scenario |
+      | FR-016 (downloading a media attachment) | `media` | should | Attaching media to a submission (`must`, via FR-010/011) stays; a dedicated download endpoint does not |
+      | FR-020 (version-history groundwork) | `moderate` | should | Already deferred — decided 7 Sep, open question 1 above; listed here for completeness, not a new cut |
+
+      Recorded in the phases themselves: [03-main-flow.md](03-main-flow.md) narrows the
+      `contribute`, `moderate`, `wikilink` and `media` steps to their remaining `must` scope, moves
+      the admin-panel step out, and closes open question 2; [04-hardening.md](04-hardening.md)
+      gains the six moved items as new steps, each keeping the GIVEN/WHEN/THEN acceptance criteria
+      already written in [functional.md](../requirements/functional.md) as its check.
+
+      **Risk and signal.** Six whole slices may still not fit 18 days even after the cut. Signal: at
+      the midpoint of phase 3, fewer than three of the six slices above have their `must`
+      acceptance-criteria tests green.
+
+      **Plan B.** If the signal fires, `taxonomy` — the one `should`-priority slice still in
+      phase 3 — loses its own screen: tag storage and filtering stay (`search` and other `must` FRs
+      depend on tags existing), but the dedicated tag-browse screen (FR-008) moves to phase 4
+      alongside the six already moved. No further slice is cut without returning to the human —
+      removing a slice entirely changes the mid-demo scenario itself, which is a joint call, not a
+      mechanical extension of this one.
 - [ ] Assemble `docs/course/design-doc.md` and produce the PDF (2–4 pages)
       — check: every rubric row for this stage points at a section that exists and says what the
       criterion asks for; a section that exists but is a heading counts as missing
@@ -399,7 +465,7 @@ it implies, and the slice's component in C4 level 3.
 
 | Slice | ADR |
 |---|---|
-| `moderate` | moderation and version-history groundwork |
+| `moderate` | [ADR-0003](../architecture/adr/ADR-0003-moderation-and-revision-storage.md) — moderation and version-history groundwork |
 | `media` | media storage and upload security — carries NFR: upload size limits |
 | `backup` | export format — carries NFR: exportability |
 | `contribute` | abuse handling without accounts |

@@ -18,7 +18,8 @@ entity "article" as article {
   * body : text <<Markdown>>
   * published_at : timestamptz
   * updated_at : timestamptz
-  * pinned : boolean
+  pinned_at : timestamptz
+  removed_at : timestamptz
 }
 
 entity "submission" as submission {

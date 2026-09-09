@@ -8,6 +8,25 @@ Make it survive real use and real inputs, and make it something a third person c
 
 ## Steps
 
+- [ ] Moved from phase 3, 10 Sep — see the revised milestone plan in
+      [01-requirements-design.md](01-requirements-design.md): admin panel behind the single
+      password, plus FR-023 (publishing a new article directly) and FR-024 (editing an article
+      directly)
+      — check: FR-023's four criteria and FR-024's four criteria are eight tests; the admin-route
+      enumeration test from the original phase-3 step (every admin route redirects when
+      unauthenticated, enumerated from the route contract) is included
+- [ ] Moved from phase 3, 10 Sep: FR-019 — providing a rejection reason
+      — check: rejecting with a reason stores it, rejecting without one stores none — two tests
+- [ ] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
+      — check: a published article linking to another appears in its backlink list; a link from an
+      unapproved or rejected submission does not — three tests
+- [ ] Moved from phase 3, 10 Sep: FR-026 — removing a published article
+      — check: after removal the article's route no longer resolves, it drops from search and its
+      tags, a wiki link to it becomes red, and it drops from the pinned section if pinned — FR-026's
+      four criteria as four tests
+- [ ] Moved from phase 3, 10 Sep: FR-016 — downloading a media attachment
+      — check: a media asset on a published article downloads; one attached to an unapproved or a
+      rejected submission does not — three tests
 - [ ] Edge cases: empty query, injection attempt, HTML in article text, duplicate titles, a title
       over 100 characters, circular wiki links, a corrupt import archive, a file whose extension
       lies about its content, a file over the limit
