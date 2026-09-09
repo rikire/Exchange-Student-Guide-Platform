@@ -120,19 +120,31 @@ screen list, not a mockup per slice.
 
 ## Screens now out of step with the requirements
 
-Found 10 September, reviewing the diagrams and the data model against every `FR` and every screen.
-The loop below describes a gap found *while sketching*; these two are the reverse — the requirements
-moved and the screens did not. Both are recorded rather than quietly redrawn, because a screen is
-evidence of what was designed on a date.
+Found 10 September, reviewing the four diagrams and the data model against every `FR`, every `NFR`,
+every `CON` and all thirteen screens. The loop below describes a gap found *while sketching*; these
+are the reverse — the requirements moved, or an action was drawn that nothing behind it supports.
+Recorded rather than quietly redrawn, because a screen is evidence of what was designed on a date.
 
-| Gap | Screens | Why |
-|---|---|---|
-| **No summary field.** `summary` became an authored field on 10 September — written by the contributor (FR-010, FR-011), adjustable by the moderator (FR-017) — and appears on [Landing](screens/Landing.html) and [Tag browse](screens/TagBrowse.html). Neither screen that *captures* it has an input for it. | [Submission form](screens/SubmissionForm.html), [Submission review](screens/SubmissionReview.html) | The field was added to the requirements after these were sketched |
-| **No way to reach "propose an edit."** The article screen's only actions are Download and Report; its header offers Submit an article and Track a submission. FR-011 has a requirement, a use case and a shared form, and nothing routes a reader into it. | [Article](screens/Article.html) | Step 5 of the mid-demo scenario — see [scenario-trace.md](../cjm/scenario-trace.md) |
+**Who picks these up.** Every one of them sits in a slice already claimed `[~] abdirakhim` in the
+Stage 3 table in [01-requirements-design.md](../roadmap/01-requirements-design.md) — that table is
+the claim, not this list, and the `Slice` column below only says which row each belongs under. The
+roadmap carries the whole set as one step with a check that can fail.
 
-Neither is a data-model problem: `submission.summary` exists, and the submission form is already
-shared between new articles and edits. Both are affordances, and both resolve either on the screen
-or in [ui-routes.md](../architecture/ui-routes.md), which is not written yet.
+| # | Gap | Slice | Screens | Why |
+|---|---|---|---|---|
+| 1 | **No summary field.** `summary` became an authored field on 10 September — written by the contributor (FR-010, FR-011), adjustable by the moderator (FR-017) — and appears on [Landing](screens/Landing.html) and [Tag browse](screens/TagBrowse.html). Neither screen that *captures* it has an input for it. | `contribute` | [Submission form](screens/SubmissionForm.html), [Submission review](screens/SubmissionReview.html) | The field was added to the requirements after these were sketched |
+| 2 | **No way to reach "propose an edit."** The article screen's only actions are Download and Report; its header offers Submit an article and Track a submission. FR-011 has a requirement, a use case and a shared form, and nothing routes a reader into it. | `articleview` | [Article](screens/Article.html) | Step 5 of the mid-demo scenario — see [scenario-trace.md](../cjm/scenario-trace.md) |
+| 3 | **Pinned articles have no order.** The screen pins and unpins, which is all FR-025 asks for. But [Landing](screens/Landing.html) shows two pinned articles in a definite order, and neither the screen nor the model says what decides it — `pinned` is a boolean. | `home` | [Homepage & article administration](screens/HomeAdmin.html) | Found 10 Sep against the data model; the schema half is open decision 2 in [data-model.md](../architecture/data-model.md) |
+| 4 | **Remove is drawn, and nothing behind it is decided.** The screen offers Remove per article (FR-026). The data model has no `removed_at` and no state on `article`, so removal reads as a hard delete — which would take FR-020's retained revisions with it, and strand `report.article_id` and any pending `submission.target_article_id`. | `moderate` | [Homepage & article administration](screens/HomeAdmin.html) | Open decision 1 in [data-model.md](../architecture/data-model.md) |
+
+Rows 1 and 2 are affordances only — `submission.summary` exists and the submission form is already
+shared between new articles and edits — so both resolve either on the screen or in
+[ui-routes.md](../architecture/ui-routes.md), which is not written yet.
+
+Rows 3 and 4 are **not** screen fixes on their own. Entity fields and cardinality are the human's
+decision (`.claude/rules/schema.md`), so the schema half of each is recorded as an open decision in
+[data-model.md](../architecture/data-model.md) and waits there. Redrawing the screen before that is
+settled would only move the guess.
 
 ## Discovering a requirement or architecture gap while sketching
 
