@@ -229,4 +229,61 @@ class DocsCheckTest {
 
         assertEquals(List.of(), check());
     }
+
+    private void requirementsFixture() throws IOException {
+        // One illustrative entry in the format section, one real requirement after it.
+        write(
+                "docs/requirements/functional.md",
+                """
+                # Functional
+
+                ## Format
+
+                ### FR-050 - the shape
+
+                ## Requirements
+
+                ### FR-001 - reading
+                """);
+    }
+
+    @Test
+    void a_stated_requirement_count_that_disagrees_with_the_files_is_refused() throws IOException {
+        requirementsFixture();
+        write("docs/notes.md", "The specification now runs to 5 `FR`.\n");
+
+        assertTrue(details(check()).contains("5"), details(check()));
+    }
+
+    @Test
+    void the_illustrative_entry_is_not_what_makes_a_count_correct() throws IOException {
+        // Two `### FR-` lines exist; only one is a requirement. Stating 2 is the actual mistake
+        // that was made by hand, so it has to be refused.
+        requirementsFixture();
+        write("docs/notes.md", "The specification now runs to 2 `FR`.\n");
+
+        assertTrue(details(check()).contains("2"), details(check()));
+    }
+
+    @Test
+    void the_right_count_passes_in_either_wording() throws IOException {
+        requirementsFixture();
+        write("docs/notes.md", "There is 1 `FR`, and elsewhere: 1 functional requirement.\n");
+
+        assertEquals(
+                List.of(),
+                check().stream().filter(p -> p.detail().contains("count")).toList());
+    }
+
+    @Test
+    void a_quotation_is_evidence_rather_than_a_claim_and_is_left_alone() throws IOException {
+        // scoping-feedback.md holds the text actually sent to the course, wrong figures and all.
+        // Rewriting a quotation to satisfy a checker would destroy the only thing it is for.
+        requirementsFixture();
+        write("docs/notes.md", "> This is written up as 26 `FR` and 7 `CON`.\n");
+
+        assertEquals(
+                List.of(),
+                check().stream().filter(p -> p.detail().contains("count")).toList());
+    }
 }

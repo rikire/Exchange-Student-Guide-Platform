@@ -45,6 +45,7 @@ public final class Main {
                 case "commit-msg" -> commitMsg(Arrays.copyOfRange(args, 1, args.length));
                 case "docs-check" -> docsCheck();
                 case "authors" -> authors();
+                case "count" -> count();
                 default -> throw new IllegalStateException("dispatch missing for " + args[0]);
             }
         } catch (Exception e) {
@@ -67,6 +68,20 @@ public final class Main {
         System.err.println("Either build the thing, or say on the same line which phase it belongs to.");
         System.err.println("A roadmap step is the exception: it needs a `— check:`, and naming a phase will not do.");
         System.exit(1);
+    }
+
+    /**
+     * The number of requirements, so that nobody has to derive it by eye again.
+     *
+     * <p>Three of four figures sent to the course on 9 September were wrong because a count of
+     * `### FR-` lines took the illustrative entry in each format section for a real requirement.
+     */
+    private static void count() throws java.io.IOException {
+        Requirements.Counts counts = Requirements.of(Repo.find(null));
+        System.out.println("functional requirements:     " + counts.functional());
+        System.out.println("non-functional requirements: " + counts.nonFunctional());
+        System.out.println("constraints:                 " + counts.constraints());
+        System.out.println("use cases:                   " + counts.useCases());
     }
 
     private static void authors() throws Exception {

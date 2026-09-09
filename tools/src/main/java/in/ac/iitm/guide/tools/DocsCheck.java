@@ -85,11 +85,15 @@ public final class DocsCheck {
         this.repo = repo;
     }
 
+    /** What the requirements files actually contain, read once and compared against every claim. */
+    private Requirements.Counts counts;
+
     /** One markdown file, read once. */
     private record Document(Path path, String relative, List<String> lines) {}
 
     public static List<Problem> run(Repo repo) throws IOException {
         DocsCheck check = new DocsCheck(repo);
+        check.counts = Requirements.of(repo);
 
         // Walked and read once, then handed to every rule. Each rule used to fetch the file list
         // itself, so the tree was walked four times and every file read three times - which was
@@ -106,6 +110,7 @@ public final class DocsCheck {
         problems.addAll(check.documentedHooks());
         for (Document document : documents) {
             problems.addAll(check.roadmapItemsWithoutAResult(document));
+            problems.addAll(check.statedCounts(document));
         }
         return problems;
     }
@@ -164,6 +169,95 @@ public final class DocsCheck {
                 document.relative(),
                 "this step has no checkable result — say what confirms it, after a `— check:`:\n      "
                         + (text.length() > 90 ? text.substring(0, 90) + "…" : text));
+    }
+
+    /**
+     * A number of requirements, written down where it can go stale or be miscounted.
+     *
+     * <p>Both shapes the repository uses. `5 `NFR`` is the shorthand; the prose form is what goes
+     * into a document someone outside the project reads.
+     */
+    private static final Pattern COUNT_SHORTHAND = Pattern.compile("(\\d+) `(FR|NFR|CON)`");
+
+    private static final Pattern COUNT_PROSE = Pattern.compile("(\\d+) (functional requirements?"
+            + "|non-functional(?: ones| requirements?)?|(?:recorded )?constraints?|use cases?)");
+
+    /**
+     * Files that record a moment rather than describe the present.
+     *
+     * <p>A dated audit and a weekly log state what was true when they were written, and correcting
+     * their figures later would destroy the only thing they are for. The journal is already left
+     * out for the same reason.
+     */
+    private static boolean isARecord(String relative) {
+        return relative.startsWith("docs/ai/audit-") || relative.startsWith("docs/team/weekly-log/");
+    }
+
+    /** A date near a count marks it as a statement about that day, not about today. */
+    private static final Pattern DATED = Pattern.compile("\\d{1,2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+            + "|\\d{4}-\\d{2}-\\d{2}|Between .* September");
+
+    /**
+     * A stated number of requirements that disagrees with the files.
+     *
+     * <p>Three of the four figures in a reply sent to the course were wrong, because a count of
+     * `### FR-` lines takes the illustrative entry in each format section for a real requirement.
+     * Read across neighbouring lines rather than one at a time, because a sentence carrying a date
+     * and the figures it dates are routinely wrapped apart.
+     */
+    private List<Problem> statedCounts(Document document) {
+        if (isARecord(document.relative())) {
+            return List.of();
+        }
+        List<Problem> problems = new ArrayList<>();
+        List<String> lines = document.lines();
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            // A blockquote is a quotation - the text of a sent email, a stakeholder's own words.
+            // Rewriting one to satisfy a checker destroys what makes it evidence.
+            if (line.stripLeading().startsWith(">")) {
+                continue;
+            }
+            String window = (i > 0 ? lines.get(i - 1) + " " : "") + line;
+            if (DATED.matcher(window).find()) {
+                continue;
+            }
+            for (Pattern pattern : List.of(COUNT_SHORTHAND, COUNT_PROSE)) {
+                Matcher counted = pattern.matcher(line);
+                while (counted.find()) {
+                    String problem = countProblem(counted.group(1), counted.group(2));
+                    if (problem != null) {
+                        problems.add(new Problem(document.relative(), problem));
+                    }
+                }
+            }
+        }
+        return problems;
+    }
+
+    /** Reports a stated count that disagrees with the files, or null when it agrees. */
+    private String countProblem(String stated, String kind) {
+        int claimed = Integer.parseInt(stated);
+        int actual;
+        String name;
+        if (kind.equals("FR") || kind.startsWith("functional")) {
+            actual = counts.functional();
+            name = "functional requirements";
+        } else if (kind.equals("NFR") || kind.startsWith("non-functional")) {
+            actual = counts.nonFunctional();
+            name = "non-functional requirements";
+        } else if (kind.equals("CON") || kind.endsWith("constraint") || kind.endsWith("constraints")) {
+            actual = counts.constraints();
+            name = "constraints";
+        } else {
+            actual = counts.useCases();
+            name = "use cases";
+        }
+        return claimed == actual
+                ? null
+                : "states a count of " + claimed + " " + name + ", but there are " + actual
+                        + ". The entry under `## Format` in each requirements file demonstrates the shape and is"
+                        + " not a requirement. Take the number from `ai-tools count` rather than by eye.";
     }
 
     /** Every rule that judges a single line, applied in one pass. */
