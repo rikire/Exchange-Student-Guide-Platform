@@ -38,7 +38,7 @@ Legend: `[ ]` no evidence · `[~]` partial · `[x]` defensible
 |---|---|---|---|
 | Architecture note identifies modules and interfaces | 2 | [../architecture/overview.md](../architecture/overview.md), [../ai/architecture-rules.md](../ai/architecture-rules.md), generated Modulith diagrams | [ ] |
 | Test plan lists at least one test per module | 1 | [design-doc.md](design-doc.md), test plan section | [ ] |
-| Milestone plan revised in light of scoping feedback | 1 | [../roadmap/](../roadmap/) | [ ] |
+| Milestone plan revised in light of scoping feedback | 1 | [scoping-feedback.md](scoping-feedback.md) — the feedback itself; [proposal.md](proposal.md) §8 — the revision; [../roadmap/](../roadmap/) | [ ] |
 | Risks and plan B are honest, not boilerplate | 1 | [design-doc.md](design-doc.md), risks section | [ ] |
 
 **What earns the two architecture marks here:** slices are real packages with a boundary a test

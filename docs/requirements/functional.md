@@ -711,3 +711,36 @@ GIVEN a pinned article
 WHEN a moderator unpins it
 THEN it no longer appears in the landing page's pinned section
 ```
+
+### FR-026 — Removing a published article
+
+**Status:** planned
+**Priority:** should
+
+When a moderator removes a published article, the system shall stop resolving its route, and shall
+exclude it from search results, from tag listings and from the landing page.
+
+IF a removed article was the target of a wiki link in another published article, THEN the system
+shall render that link as a red link, as defined in [FR-004](#fr-004--red-link-rendering).
+
+**Acceptance criteria:**
+
+```
+GIVEN a published article
+WHEN a moderator removes it
+THEN its route no longer resolves
+  AND it no longer appears in search results
+  AND it no longer appears under any of its tags
+
+GIVEN a published article that another published article links to with a wiki link
+WHEN a moderator removes it
+THEN that wiki link renders as a red link
+
+GIVEN a published article pinned on the landing page
+WHEN a moderator removes it
+THEN it no longer appears in the pinned section
+
+GIVEN an article that has already been removed
+WHEN a reader requests its route
+THEN the system does not show its content
+```

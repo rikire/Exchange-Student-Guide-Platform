@@ -39,6 +39,24 @@ explicit font-size controls (Increase / Standard / Decrease) in its header — a
 pattern worth carrying into this product's own settings, separately from CON-005 (the interface
 stays single-language; font-size choice is not a translation).
 
+## Chosen in the design system, not observed on the IITM sites
+
+Recorded 9 Sep, after a check found these in [canvas-src/Main.dc.html](canvas-src/Main.dc.html) and
+in no document. Everything above this heading was read off a real site; everything below it is our
+own decision, and the split matters — the sections above can be re-verified against a source, these
+cannot.
+
+- **Typeface: `Public Sans`**, with `system-ui, -apple-system, sans-serif` behind it. The sites above
+  gave only "clean sans-serif", which is not a font. Public Sans is an open licence, has the weights
+  the scale needs, and reads at small sizes; nothing about it came from IITM.
+- **Derived neutrals**, warm rather than grey, so they sit with the OGE maroon and gold instead of
+  fighting them: `#F7F4EF` page ground, `#FBF3E3` raised ground, `#E6DFD3` borders, `#5B534C`
+  secondary text.
+- **Maroon, darkened: `#5C1712`** — a pressed/hover state for the `#781F19` brand maroon.
+- **Green: `#4B7043`** — the success/approved state in the status chips. There is no green in the
+  OGE identity; it is here because a moderation queue needs approved and rejected to be
+  distinguishable at a glance, and red is already the brand's accent.
+
 ## Layout patterns observed
 
 - **Card-based sections** with consistent padding and (on IITM) hover effects — the natural pattern

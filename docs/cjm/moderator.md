@@ -59,3 +59,10 @@ When rejecting a submission, optionally gives a reason, so the contributor can s
 
 Closes a report from the inbox at any time, whether or not the article was changed. Added 7 Sep,
 alongside FR-021/FR-022 — see the Feature coverage tracker.
+
+### UC-026 — Remove a published article
+
+Takes a published article off the site: its route stops resolving, it leaves search results, tag
+listings and the landing page, and links pointing at it turn red. Added 9 Sep, from the course's
+scoping feedback of 28 August, which names removal alongside adding and editing — see
+[scoping-feedback.md](../course/scoping-feedback.md) and FR-026.

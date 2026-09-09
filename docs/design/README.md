@@ -31,7 +31,18 @@ _(Filled in as each is published — feature, artifact URL, export file.)_
 
 | Canvas | Artifact URL | Export |
 |---|---|---|
-| Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [exports/Main.pdf](exports/Main.pdf) |
+| Design system | `f471d758-83b2-47d8-9b5e-727860589366` — **does not resolve**, see below | [exports/Main.pdf](exports/Main.pdf) |
+
+**Checked 9 Sep: the design-system canvas URL does not resolve.** Reading it returns "artifact not
+found — it may have been deleted, or it has not been shared with you", and the publishing account
+lists no artifacts at all. It may still exist under the other member's account; that is the one
+thing to check before re-publishing, because re-seeding under a new URL when the old one is alive
+would leave two canvases and no way to tell which is current.
+
+This is the risk this section already anticipated two paragraphs above — an external link "can
+change or lapse" — and the mitigation held: the canvas source and its PDF export are both in git, so
+nothing was lost but the live editing surface. The link is presented as broken rather than removed,
+because a table that quietly drops a dead row stops being a record of what was published.
 
 Source `.dc.html` for each canvas lives under [canvas-src/](canvas-src/) and is kept in git — small,
 human-readable, and re-seeding from it is how a canvas gets edited again from here. The *seeded*

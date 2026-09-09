@@ -51,6 +51,23 @@ design document is the deliverable; the repository documents are the source it i
       together with the glossary and ERD, not ahead of them
       — check: 10 or more drafts exist in the seed format, and one of them is a full article on FRRO
       registration — that is the first step of the mid-demo scenario, so it cannot be a placeholder
+- [x] **Added 9 Sep.** The course's scoping feedback of 28 August recorded, and the proposal revised
+      in answer to it — [scoping-feedback.md](../course/scoping-feedback.md),
+      [proposal.tex](../course/proposal.tex) → `proposal.pdf`, 5 pages
+      — check: the feedback is in the repository verbatim, every verb it names maps to a requirement
+      id, and the proposal's changed sections are listed rather than described as "updated". Done
+      9 Sep; FR-026 / UC-026 came out of it.
+- [ ] **Added 9 Sep, and it is not ours to close.** The reply to that feedback is sent, and any
+      answer is pasted underneath it
+      — check: `scoping-feedback.md` names a send date instead of "not yet sent". The 1 September
+      deadline for it has already passed, so this is the phase's most overdue item and the first
+      risk in the design document
+- [ ] **Added 9 Sep, from checking the design record.** Two defects found in
+      [docs/design/](../design/): the canvas URL in the Canvases table does not resolve from the
+      publishing account, and the typeface the design system actually uses (`Public Sans`) together
+      with its derived neutrals and status green appear in the canvas but in no document
+      — check: the table's link either resolves or says plainly that it does not, and every colour
+      and face used in `Main.dc.html` is named in [reference.md](../design/reference.md)
 
 ## Readiness criterion
 
@@ -205,6 +222,7 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 | Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | |
 | Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | |
 | Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | |
+| Remove a published article (added 9 Sep from the course's scoping feedback — see [scoping-feedback.md](../course/scoping-feedback.md)) | should | `moderate` | FR-026 | | UC-026 | | | |
 
 MoSCoW test used: **must** = the system does not function as this product without it; **should** = a
 real, non-cosmetic loss if missing, but the system still works; **could** = low impact if missing,
@@ -227,6 +245,15 @@ report" — deciding to leave/correct/take down an article on its own turned out
 moderator's existing direct-edit capability (UC-021), reused rather than duplicated; the only new
 action is closing the report. Lowered from `should` to `could` to match. Now 12 must, 4 should,
 9 could, 25 features total.
+
+**Updated 9 Sep, from the course's scoping feedback of 28 August:** that email names three verbs —
+information can be "added / edited / removed based on the consent of the community" — and we had
+written two. Removing a published article was covered by no requirement: `remove` appeared only for
+taking a rejected submission off the queue, closing a report and unpinning. Added as FR-026 /
+UC-026, `should`, slice `moderate`. The 7 Sep narrowing above is the near-miss: taking an article
+down was folded into the moderator's direct-edit capability, and editing is not removing. Now
+12 must, **5 should**, 9 could, **26 features total**. See
+[docs/course/scoping-feedback.md](../course/scoping-feedback.md).
 
 `backup` (export/import) has no row above: it is not a use case of Reader, Contributor or Moderator —
 it is a DevOps/deployment concern, justified by the already-agreed export-format ADR and the
