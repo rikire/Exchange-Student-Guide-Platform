@@ -118,6 +118,22 @@ The Stage 3 claim table in
 whoever holds a slice sketches the screen(s) that slice mainly feeds — but the deliverable is this
 screen list, not a mockup per slice.
 
+## Screens now out of step with the requirements
+
+Found 10 September, reviewing the diagrams and the data model against every `FR` and every screen.
+The loop below describes a gap found *while sketching*; these two are the reverse — the requirements
+moved and the screens did not. Both are recorded rather than quietly redrawn, because a screen is
+evidence of what was designed on a date.
+
+| Gap | Screens | Why |
+|---|---|---|
+| **No summary field.** `summary` became an authored field on 10 September — written by the contributor (FR-010, FR-011), adjustable by the moderator (FR-017) — and appears on [Landing](screens/Landing.html) and [Tag browse](screens/TagBrowse.html). Neither screen that *captures* it has an input for it. | [Submission form](screens/SubmissionForm.html), [Submission review](screens/SubmissionReview.html) | The field was added to the requirements after these were sketched |
+| **No way to reach "propose an edit."** The article screen's only actions are Download and Report; its header offers Submit an article and Track a submission. FR-011 has a requirement, a use case and a shared form, and nothing routes a reader into it. | [Article](screens/Article.html) | Step 5 of the mid-demo scenario — see [scenario-trace.md](../cjm/scenario-trace.md) |
+
+Neither is a data-model problem: `submission.summary` exists, and the submission form is already
+shared between new articles and edits. Both are affordances, and both resolve either on the screen
+or in [ui-routes.md](../architecture/ui-routes.md), which is not written yet.
+
 ## Discovering a requirement or architecture gap while sketching
 
 Sketching a screen routinely surfaces a missing field, an undecided route, or a state no `FR`

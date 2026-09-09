@@ -15,7 +15,7 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `app/src/main/resources/data/seed/` | Starter articles, in the export format | human |
 | `tools/` | `ai-tools.jar`: traceability, journal, hooks, weekly log | human + AI |
 | `docs/requirements/` | Requirements and constraints — `FR`, `NFR`, `CON` | human |
-| `docs/architecture/` | C4, data model, route contract, ADRs | human |
+| `docs/architecture/` | C4, data model, route contract, security architecture, ADRs | human |
 | `docs/features/` | Feature files `FEAT-XXX` | human + AI |
 | `docs/cjm/` | The paths of the reader, the contributor and the moderator | human |
 | `docs/roadmap/` | The roadmap: one file per phase, extended as work goes | human + AI |
@@ -41,7 +41,7 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `docs/features/README.md` | `ai-tools trace` _(phase 2)_ | the same command |
 | `docs/team/ownership.md` | `ai-tools ownership` _(phase 2)_ | `java -jar tools/target/ai-tools.jar ownership` |
 | `docs/gap-list.md` | `ai-tools gaps` _(phase 3)_ | `java -jar tools/target/ai-tools.jar gaps` |
-| `docs/diagrams/out/**` | PlantUML | the render script, which arrives in phase 1 with the diagrams |
+| `docs/diagrams/out/**` | PlantUML | `scripts/diagrams.sh`. Committed, unlike the other rows here — the architecture documents embed these as images (see `docs/diagrams/src/README.md`) |
 
 Each carries a `GENERATED` marker in its header. A hand edit is detected and breaks the build —
 deliberately: a generated file edited by hand creates false confidence that the state is current.

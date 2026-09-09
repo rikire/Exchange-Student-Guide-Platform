@@ -52,6 +52,16 @@ design document is the deliverable; the repository documents are the source it i
       published article. Thirteen screens total. The one `FR` still without a `Screen`, FR-020
       (revision retention), stays that way deliberately — it names no reader- or moderator-facing
       state, only what the system stores when an edit is approved; see the tracker note on that row.
+- [ ] **Added 10 Sep, from the diagram and data-model review.** Screens brought back in step with
+      the requirements — two gaps, both listed in [docs/design/README.md](../design/README.md):
+      the submission form and the submission review screen have no `summary` field although FR-010,
+      FR-011 and FR-017 now require one, and nothing on the article screen reaches "propose an
+      edit", which is step 5 of the mid-demo scenario
+      ([scenario-trace.md](../cjm/scenario-trace.md))
+      — check: a reader can get from the article screen to the edit form without typing a URL, and
+      every field an `FR` says a contributor supplies has an input on the form that captures it.
+      Both `.dc.html` source and the regenerated `screens/*.html` change together, or they have
+      drifted
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
 - [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
       — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a
