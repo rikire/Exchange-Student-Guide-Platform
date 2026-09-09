@@ -56,8 +56,3 @@ target/
 
 # Local runtime data
 /data/
-
-# Claude Design: keep the small .dc.html source, not the ~2MB seeded output
-# (regenerate on demand with seed-canvas.mjs — see docs/design/README.md)
-docs/design/canvas-src/**/*.html
-!docs/design/canvas-src/**/*.dc.html

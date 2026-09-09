@@ -32,12 +32,18 @@ design document is the deliverable; the repository documents are the source it i
       first when any exist; ~~media quotas per file, per submission and for the volume~~ — resolved
       7 Sep, NFR-001: configurable, defaults 10 MB/image, 20 MB/document, 200 MB/video, 20 GB volume;
       ~~the allowed file types~~ — resolved 7 Sep, CON-006: images, video, documents and audio only.
-- [ ] Design reference from the IITM sites, into `docs/design/reference.md`
+- [x] Design reference from the IITM sites, into `docs/design/reference.md`
       — check: it names the specific pages looked at and what is being taken from each, rather than
-      describing "the IITM style" in general
+      describing "the IITM style" in general. Done 7 Sep, extended 9 Sep: both fetches dated and
+      cited, and a separate section names what was chosen in the design system rather than observed
+      on the sites (typeface, derived neutrals, status-pill colors).
 - [ ] Draft screens with `/design`: landing, article, search results, submission form, queue
       — check: each screen shows the states that actually occur — empty search results, a queue with
-      nothing in it, a rejected submission — and not only the path where everything works
+      nothing in it, a rejected submission — and not only the path where everything works. Nine
+      screens exist (the five listed plus tag browse, submission status, submission review, report
+      inbox — [flow overview](../design/README.md#canvases)), but only one edge state is sketched
+      (a rejected submission, in `SubmissionStatus.dc.html`). **Not done:** no empty-search-results
+      state and no empty-queue state exist yet — the check requires both before this is checked off.
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
 - [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
       — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a
@@ -62,12 +68,17 @@ design document is the deliverable; the repository documents are the source it i
       — check: `scoping-feedback.md` names a send date instead of "not yet sent". The 1 September
       deadline for it has already passed, so this is the phase's most overdue item and the first
       risk in the design document
-- [ ] **Added 9 Sep, from checking the design record.** Two defects found in
+- [x] **Added 9 Sep, from checking the design record.** Two defects found in
       [docs/design/](../design/): the canvas URL in the Canvases table does not resolve from the
       publishing account, and the typeface the design system actually uses (`Public Sans`) together
       with its derived neutrals and status green appear in the canvas but in no document
       — check: the table's link either resolves or says plainly that it does not, and every colour
-      and face used in `Main.dc.html` is named in [reference.md](../design/reference.md)
+      and face used in `Main.dc.html` is named in [reference.md](../design/reference.md). Done 9 Sep
+      (second pass): the "does not resolve" report turned out to be an access-scope read from a
+      different account — checked again from the publishing account and all three canvases resolve;
+      `README.md` now says so instead of "does not resolve". The colour audit itself had missed two:
+      `#EDF2EA`/`#FBEAE8` (the status-pill backgrounds) were in `Main.dc.html` but not in
+      `reference.md` — added.
 
 ## Readiness criterion
 

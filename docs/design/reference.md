@@ -56,6 +56,10 @@ cannot.
 - **Green: `#4B7043`** — the success/approved state in the status chips. There is no green in the
   OGE identity; it is here because a moderation queue needs approved and rejected to be
   distinguishable at a glance, and red is already the brand's accent.
+- **Status pill backgrounds: `#EDF2EA`** (soft green, behind the approved-state text) and
+  **`#FBEAE8`** (soft red, behind the rejected-state text) — pale tints of the green above and of
+  the OGE red `#D9261C`, so a status pill reads at a glance without the saturated color dominating
+  a list.
 
 ## Layout patterns observed
 
