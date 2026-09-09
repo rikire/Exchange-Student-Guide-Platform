@@ -7,19 +7,23 @@ Agreed in phase 1, stage 1 — see the **Feature coverage tracker** in
 (`docs/requirements/constraints.md`); the submission number below is the only handle a contributor
 has on their own submission afterward.
 
+Step 5 of the mid-demo scenario runs through this journey — traced in
+[scenario-trace.md](scenario-trace.md), which also records that nothing on the article screen
+currently reaches UC-011.
+
 ## Use cases
 
 ### UC-010 — Submit a new article
 
-Writes and submits a new article, optionally attaching a photo, a document or a video and
-suggesting tags. The submission enters the moderation queue, and the contributor is shown a
-submission number.
+Writes and submits a new article — its title, a summary and its body — optionally attaching a
+photo, a document or a video and suggesting tags. The submission enters the moderation queue, and
+the contributor is shown a submission number.
 
 ### UC-011 — Propose an edit
 
-Proposes an edit to an existing article, optionally attaching a photo, a document or a video and
-suggesting tags. The proposal enters the moderation queue, and the contributor is shown a
-submission number.
+Proposes an edit to an existing article — its title, its summary, its body, or any combination —
+optionally attaching a photo, a document or a video and suggesting tags. The submission enters the
+moderation queue, and the contributor is shown a submission number.
 
 ### UC-012 — Write a wiki link
 

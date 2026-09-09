@@ -5,6 +5,9 @@ The OGE staff member who approves what goes live.
 Agreed in phase 1, stage 1 — see the **Feature coverage tracker** in
 [01-requirements-design.md](../roadmap/01-requirements-design.md).
 
+Steps 6–8 of the mid-demo scenario run through this journey — traced in
+[scenario-trace.md](scenario-trace.md).
+
 ## Use cases
 
 ### UC-014 — View the queue
@@ -17,8 +20,8 @@ Reads a submission in full — text and any attachments (photo, document or vide
 
 ### UC-016 — Approve a submission
 
-Approves a submission, adjusting or finalizing the tags the contributor suggested if needed. The
-article publishes.
+Approves a submission, adjusting or finalizing the summary and the tags the contributor suggested if
+needed. The article publishes.
 
 ### UC-017 — Reject a submission
 
@@ -40,13 +43,13 @@ shows, since FR-021 made it required rather than absent.
 
 ### UC-020 — Write and publish an article directly
 
-Writes a new article the same way a contributor does (UC-010: optional media, tags), but publishes
-it immediately, bypassing the moderation queue.
+Writes a new article the same way a contributor does (UC-010: title, summary, body, optional media
+asset, tags), but publishes it immediately, bypassing the moderation queue.
 
 ### UC-021 — Edit and publish an article directly
 
-Edits an existing article the same way a contributor proposes an edit (UC-011: optional media,
-tags), but publishes the change immediately, bypassing the moderation queue.
+Edits an existing article the same way a contributor proposes an edit (UC-011: title, summary, body,
+optional media asset, tags), but publishes the change immediately, bypassing the moderation queue.
 
 ### UC-022 — Edit the homepage
 

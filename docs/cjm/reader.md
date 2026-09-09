@@ -7,6 +7,9 @@ procedures, campus facilities, essential services, practical life) and reconcile
 feature list in the same sitting — see the **Feature coverage tracker** in
 [01-requirements-design.md](../roadmap/01-requirements-design.md).
 
+Steps 1–4 of the mid-demo scenario run through this journey — traced against requirements and
+screens in [scenario-trace.md](scenario-trace.md).
+
 ## Use cases
 
 ### UC-001 — Search by a known term

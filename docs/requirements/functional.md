@@ -270,9 +270,9 @@ THEN the most recently added articles are shown
 **Status:** planned
 **Priority:** must
 
-When a contributor submits a new article, optionally attaching a photo, document or video and
-suggesting tags, the system shall enter it into the moderation queue and show them a submission
-number.
+When a contributor submits a new article — its title, a summary and its body — optionally attaching
+a photo, document or video and suggesting tags, the system shall enter it into the moderation queue
+and show them a submission number.
 
 IF the article's title matches an existing article's title, case-insensitively, THEN the system
 shall reject the submission, offering the contributor a link to propose an edit to the existing
@@ -287,8 +287,8 @@ and show an error message.
 **Acceptance criteria:**
 
 ```
-GIVEN a contributor fills in a new article, optionally attaching a photo, document or video and
-suggesting tags
+GIVEN a contributor fills in a new article's title, summary and body, optionally attaching a photo,
+document or video and suggesting tags
 WHEN they submit it
 THEN it enters the moderation queue
   AND they are shown a submission number
@@ -315,27 +315,28 @@ THEN the submission is rejected
 **Status:** planned
 **Priority:** must
 
-When a contributor proposes an edit to a published article — changing its title, its body, or both,
-and optionally attaching a photo, document or video and suggesting tags — the system shall enter it
-into the moderation queue and show them a submission number.
+When a contributor proposes an edit to a published article — changing its title, its summary, its
+body, or any combination of them, and optionally attaching a photo, document or video and suggesting
+tags — the system shall enter it into the moderation queue and show them a submission number.
 
 IF the edit's proposed title matches a different existing article's title, case-insensitively, THEN
-the system shall reject the proposal, offering the contributor a link to that existing article or
+the system shall reject the submission, offering the contributor a link to that existing article or
 the option to change their proposed title.
 
-IF the article being edited is no longer published, THEN the system shall reject the edit proposal.
+IF the article being edited is no longer published, THEN the system shall reject the edit
+submission.
 
 IF the attached media asset exceeds the configured size limit, THEN the system shall reject the
-proposal and show an error message.
+submission and show an error message.
 
-IF the attached media asset is not of an accepted type, THEN the system shall reject the proposal
+IF the attached media asset is not of an accepted type, THEN the system shall reject the submission
 and show an error message.
 
 **Acceptance criteria:**
 
 ```
-GIVEN a contributor proposes an edit to a published article, optionally changing its title and/or
-body, attaching a photo, document or video, and suggesting tags
+GIVEN a contributor proposes an edit to a published article, optionally changing its title, summary
+and/or body, attaching a photo, document or video, and suggesting tags
 WHEN they submit it
 THEN it enters the moderation queue
   AND they are shown a submission number
@@ -343,22 +344,22 @@ THEN it enters the moderation queue
 GIVEN a contributor's proposed new title matches a different existing article's title,
 case-insensitively
 WHEN they attempt to submit
-THEN the proposal is rejected
+THEN the submission is rejected
   AND they are offered a link to that existing article
   AND they are offered the option to change their proposed title
 
 GIVEN the article being edited is no longer published
 WHEN a contributor attempts to submit an edit to it
-THEN the proposal is rejected
+THEN the submission is rejected
 
 GIVEN an attached media asset exceeding the configured size limit
 WHEN a contributor attempts to submit the edit
-THEN the proposal is rejected
+THEN the submission is rejected
   AND an error message is shown
 
 GIVEN an attached media asset not of an accepted type
 WHEN a contributor attempts to submit the edit
-THEN the proposal is rejected
+THEN the submission is rejected
   AND an error message is shown
 ```
 
@@ -444,7 +445,7 @@ THEN the system shows that the queue is empty
 **Priority:** must
 
 When a moderator opens a submission from the queue, the system shall show its full text and any
-attachments.
+media assets.
 
 IF the submission has already been decided, THEN the system shall show that it is no longer
 pending.
@@ -454,14 +455,14 @@ pending.
 ```
 GIVEN a submission awaiting a decision
 WHEN a moderator opens it
-THEN its full text and any attachments are shown
+THEN its full text and any media assets are shown
 
 GIVEN a submission that has already been decided
 WHEN a moderator attempts to open it
 THEN the system shows that it is no longer pending
 ```
 
-### FR-016 — Downloading a media attachment
+### FR-016 — Downloading a media asset
 
 **Status:** planned
 **Priority:** should
@@ -493,11 +494,11 @@ THEN it is not returned
 **Status:** planned
 **Priority:** must
 
-When a moderator approves a new-article submission, adjusting its tags if needed, the system shall
-publish it as a new article.
+When a moderator approves a new-article submission, adjusting its summary and tags if needed, the
+system shall publish it as a new article.
 
-When a moderator approves an edit submission, adjusting its tags if needed, the system shall update
-the existing article with the proposed changes.
+When a moderator approves an edit submission, adjusting its summary and tags if needed, the system
+shall update the existing article with the proposed changes.
 
 IF the submission has already been decided, THEN the system shall reject the approval attempt.
 

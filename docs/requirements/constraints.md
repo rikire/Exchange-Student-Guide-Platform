@@ -22,8 +22,20 @@ a CAPTCHA challenge instead.
 ```
 
 A constraint is product/requirements-level, not architecture — a decision about what the system
-does not do, not how it is built. A framework-level or implementation detail belongs in
-[docs/ai/architecture-rules.md](../ai/architecture-rules.md) instead.
+does not do, not how it is built. Something that is *not* a constraint goes to one of three places,
+and the distinction is who the reader is:
+
+| It is | It goes to |
+|---|---|
+| A decision about how the system is built, with alternatives that were weighed | an ADR in [docs/architecture/adr/](../architecture/adr/) |
+| A standing structural convention the codebase follows | [docs/ai/architecture-rules.md](../ai/architecture-rules.md) |
+| An instruction about how the assistant works | elsewhere in [docs/ai/](../ai/) |
+
+**Corrected 10 September.** This rule previously sent every "framework-level or implementation
+detail" to `docs/ai/architecture-rules.md` — which pointed architecture *into* the assistant's
+instruction directory, and is how the security architecture came to live in `docs/ai/security.md`
+and drift out of step with the ADR and the constraint that later superseded it. An architectural
+decision has a wider audience than the assistant, and needs a home that says so.
 
 ## Constraints
 
@@ -58,7 +70,7 @@ Full UI translation is out of scope for the team size and timeframe.
 
 ### CON-006 — Accepted media types
 
-**Rationale:** Only images, video, documents and audio are accepted as attachments — covering
+**Rationale:** Only images, video, documents and audio are accepted as media assets — covering
 everything the stakeholder's content genuinely needs (photos of forms, scanned documents,
 instructional video or audio) — everything else, including executables and archives, is rejected
 outright. A narrow allowlist keeps the upload surface small and reduces the attack surface for a
