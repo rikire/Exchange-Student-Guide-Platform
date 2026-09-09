@@ -56,3 +56,9 @@ target/
 
 # Local runtime data
 /data/
+
+# Claude Design: keep the small .dc.html source and the docs/design/screens/ output
+# (plain HTML per screen), not the ~2.5MB-per-canvas seeded editor bundle —
+# regenerate on demand with seed-canvas.mjs, see docs/design/README.md
+docs/design/canvas-src/**/*.html
+!docs/design/canvas-src/**/*.dc.html

@@ -37,13 +37,14 @@ design document is the deliverable; the repository documents are the source it i
       describing "the IITM style" in general. Done 7 Sep, extended 9 Sep: both fetches dated and
       cited, and a separate section names what was chosen in the design system rather than observed
       on the sites (typeface, derived neutrals, status-pill colors).
-- [ ] Draft screens with `/design`: landing, article, search results, submission form, queue
+- [x] Draft screens with `/design`: landing, article, search results, submission form, queue
       — check: each screen shows the states that actually occur — empty search results, a queue with
-      nothing in it, a rejected submission — and not only the path where everything works. Nine
-      screens exist (the five listed plus tag browse, submission status, submission review, report
-      inbox — [flow overview](../design/README.md#canvases)), but only one edge state is sketched
-      (a rejected submission, in `SubmissionStatus.dc.html`). **Not done:** no empty-search-results
-      state and no empty-queue state exist yet — the check requires both before this is checked off.
+      nothing in it, a rejected submission — and not only the path where everything works. Done
+      10 Sep: eleven screens exist (the five listed plus tag browse, submission status, submission
+      review, report inbox, and two added 10 Sep — an empty search-results state and an empty-queue
+      state — see [docs/design/screens/](../design/README.md#canvases)); the rejected-submission
+      state was already sketched in `SubmissionStatus.dc.html`. Plain per-screen HTML lives under
+      `docs/design/screens/`, generated from the `.dc.html` sources.
 - [ ] Test plan: at least one test per slice — check: the plan names the test, not just the module
 - [ ] Revised milestone plan, risks and plan B tied to seams that exist in the code
       — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderation queue — empty — Exchange Student Guide (draft screen)</title>
+<!-- Rough Stage-3 sketch, generated from canvas-src/flow/ModerationQueueEmpty.dc.html — not the deliverable,
+     a thinking tool. See docs/design/README.md for how this fits the design process. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; --olive:#4B7043; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { height: 30px; width: auto; }
+    .admin-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--maroon); border: 1px solid var(--maroon); border-radius: 4px; padding: 2px 8px; }
+    .header-nav { display: flex; gap: 20px; }
+    .header-nav a { font-size: 14px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
+    .body { padding: 40px; }
+    .title { font-size: 24px; font-weight: 700; margin: 0 0 20px 0; }
+    .empty-state { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: 72px 20px; border: 1.5px dashed var(--line); border-radius: 8px; background: var(--paper); }
+    .empty-icon { width: 40px; height: 40px; stroke: var(--olive); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .empty-title { font-size: 17px; font-weight: 700; margin: 0; }
+    .empty-hint { font-size: 14px; color: var(--ink-soft); margin: 0; max-width: 380px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header-bar">
+    <div class="header-left"><img src="../assets/oge-logo.svg" alt="OGE logo" class="header-logo"><span class="admin-badge">Moderator</span></div>
+    <div class="header-nav"><a href="#">Queue</a><a href="#">Reports</a></div>
+  </div>
+  <div class="body">
+    <h1 class="title">Moderation queue</h1>
+    <div class="empty-state">
+      <svg class="empty-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <h3 class="empty-title">Nothing waiting for review</h3>
+      <p class="empty-hint">Every submission has been decided. New ones will appear here as contributors submit them.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

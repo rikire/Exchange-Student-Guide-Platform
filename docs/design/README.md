@@ -12,10 +12,17 @@ editable page, separate from this git repository. "Save" publishes a new version
 artifact, not to a file here. That's a property of the tool, not a choice we made.
 
 Because this is graded coursework, an external, editable link is not sufficient evidence on its
-own — it can change or lapse, access to it is per-account (see the "does not resolve" note below),
-and the rubric needs evidence *in* the repository. **Revised 9 Sep** after that access-scope
-confusion: the seeded, self-contained page is now committed too, so opening the design needs
-neither claude.ai access nor the publishing account — a checkout and a double-click are enough.
+own — it can change or lapse, access to it is per-account (see the sharing note below), and the
+rubric needs evidence *in* the repository. **Revised 10 Sep**, after two iterations on what that
+evidence should look like:
+- 7 Sep: only the `.dc.html` source was committed; the rendered result lived only behind the
+  Artifact link.
+- 9 Sep: committed the seeded page itself instead (source plus the ~2.5 MB canvas-editor bundle)
+  after the access-scope confusion below — self-contained, but heavy and not something a reviewer
+  can quickly read as "the screen."
+- 10 Sep, current: committed a **plain, per-screen HTML file** for each screen instead — no editor
+  code, a few KB each, opens instantly and reads as the mockup itself. The seeded editor bundle is
+  back to regenerate-on-demand, not committed, since it now duplicates what the plain screens show.
 
 - **Lives outside git, as the editable surface:** the live Artifact — what either of us edits
   directly, and what `watch` (below) can subscribe to.
@@ -24,63 +31,65 @@ neither claude.ai access nor the publishing account — a checkout and a double-
     logo usage), sourced from the real IITM/OGE sites, not a design-tool export.
   - The `.dc.html` source for every artboard, under [canvas-src/](canvas-src/) — small,
     human-readable, and how a canvas gets edited again from here (see below).
-  - The **seeded page itself** — the seeded `.html` (source plus the canvas editor's own code),
-    next to its `.dc.html` sources. It is a single self-contained file: opening it in any browser,
-    online or off, renders and lets you interact with the exact canvas that was published, without
-    needing an account or a live link. This is what makes the repository the source of truth rather
-    than the hosted link — regenerate it with `seed-canvas.mjs` after editing the `.dc.html` source,
-    then re-publish *and* re-commit the regenerated file so the two never drift apart.
+  - A **plain HTML file per screen**, under [screens/](screens/) — the `.dc.html` source's markup
+    and styles unwrapped from the canvas editor's `<x-dc>`/`<helmet>` tags into an ordinary page, so
+    it opens in any browser with no editor, no account, and no network dependency but the Google
+    Fonts stylesheet (falls back to a system sans-serif without it). Regenerate after editing a
+    `.dc.html` source; the two must not drift apart.
   - The artifact URL for each canvas, recorded in this file's [Canvases](#canvases) section, for
     the live/editable copy.
   - A static export (PNG/PDF) of the design system board and every finished screen, under
     [exports/](exports/), when one is needed for a document that embeds an image rather than a
-    file — `docs/course/design-doc.md`'s PDF, since that PDF can't embed a live canvas or an
-    interactive HTML file. Not needed just to keep a screen safe any more; the seeded HTML above
-    already does that.
+    file — `docs/course/design-doc.md`'s PDF, since that PDF can't embed a live canvas or an HTML
+    file.
 
 ## Canvases
 
 _(Filled in as each is published — feature, artifact URL, export file.)_
 
-| Canvas | Artifact URL (live, editable) | Committed HTML (offline, read-only) | Export |
-|---|---|---|---|
-| Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [canvas-src/exchange-guide-design-system.html](canvas-src/exchange-guide-design-system.html) | [exports/Main.pdf](exports/Main.pdf) |
-| Landing page | [claude.ai/code/artifact/91ba6eef](https://claude.ai/code/artifact/91ba6eef-67d4-415d-92cc-bdf59cc3f6c5) | [canvas-src/exchange-guide-landing-screen.html](canvas-src/exchange-guide-landing-screen.html) | _not needed — superseded by the flow overview below_ |
-| Flow overview — all nine screens on one canvas (Landing, Article, Search results, Tag browse, Submission form, Submission status, Moderation queue, Submission review, Report inbox), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | [canvas-src/flow/exchange-guide-flow-overview.html](canvas-src/flow/exchange-guide-flow-overview.html) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
+| Canvas | Artifact URL (live, editable) | Export |
+|---|---|---|
+| Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [exports/Main.pdf](exports/Main.pdf) |
+| Landing page | [claude.ai/code/artifact/91ba6eef](https://claude.ai/code/artifact/91ba6eef-67d4-415d-92cc-bdf59cc3f6c5) | _superseded by the flow overview below_ |
+| Flow overview — all eleven screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Submission form, Submission status, Moderation queue + its empty state, Submission review, Report inbox), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
+
+The eleven screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
+for which FRs each one covers.
 
 **On the "does not resolve" report (9 Sep):** checked from the publishing account and each of these
-three still resolves, still owned by that account, still readable with full content — not deleted.
-Artifacts publish **private by default**: reading one from an account it wasn't shared with returns
-exactly the "not found — it may have been deleted, or has not been shared with you" message that
-prompted the original check, and the publisher's own artifact list is naturally empty to anyone
+canvases still resolves, still owned by that account, still readable with full content — not
+deleted. Artifacts publish **private by default**: reading one from an account it wasn't shared with
+returns exactly the "not found — it may have been deleted, or has not been shared with you" message
+that prompted the original check, and the publisher's own artifact list is naturally empty to anyone
 else's account too. So the earlier check was almost certainly run from a different account than the
 one that published these — an access-scope read, not evidence of loss. Worth remembering for next
 time: before recording a canvas as gone, re-check from the account it was actually published under.
 
 **On "interactive"**: this canvas preview does not support a click on one artboard jumping to
 another — artboards share no runtime state (see "Known limits" in the `design` skill). The flow
-overview lays all nine out together with sticky notes naming the intended transition at each
+overview lays all eleven out together with sticky notes naming the intended transition at each
 boundary, so the relationships are visible even though nothing is actually clickable between them.
 Real navigation is `ui-routes.md`'s job, once Stage 4 formalizes it from what these sketches found.
 
 Source `.dc.html` for each canvas lives under [canvas-src/](canvas-src/) and is kept in git — small,
-human-readable, and re-seeding from it is how a canvas gets edited again from here. A single-artboard
-canvas's source sits directly in `canvas-src/`; a multi-artboard one (like the flow overview) gets
-its own subdirectory (`canvas-src/flow/`) since every canvas needs its own `Main.dc.html`. The
-*seeded* `.html` next to it — what the `Artifact` tool actually publishes, source plus ~2.5 MB of the
-canvas editor's own code — **is committed** (see 9 Sep revision above): it is a diff-hostile blob,
-so it is replaced wholesale rather than reviewed line by line when it changes, but that is the
-accepted cost of being able to open the design without any external account.
+human-readable, and re-seeding from it is how a canvas gets edited again from here, or how
+[screens/](screens/) gets regenerated. A single-artboard canvas's source sits directly in
+`canvas-src/`; a multi-artboard one (like the flow overview) gets its own subdirectory
+(`canvas-src/flow/`) since every canvas needs its own `Main.dc.html`. The *seeded* `.html` next to
+it — what the `Artifact` tool actually publishes, source plus ~2.5 MB of the canvas editor's own
+code — is **not** committed: regenerate it on demand with `seed-canvas.mjs` when re-publishing.
 
 ### Making a canvas link shareable
 
-The live Artifact link publishes **private by default** — only the publishing account can open it;
-anyone else gets "not found" (the exact confusion the 9 Sep note above records). To let a teammate
-open the *live, editable* version (not needed just to view it — the committed HTML above covers
-that): open the canvas at its artifact URL, use its **Share** control, and switch it from private to
-"Anyone with the link can view" (or invite the other member's account by name, if that option is
-offered). This is a setting on the hosted page itself; no command in this repository's tooling can
-change it — it has to be done once, by whoever's account published the canvas, from the browser.
+The Artifact tool's own publish confirmation reports each of these three canvases as
+**"sharing public"** as of 10 Sep — which, if accurate, means the link already works for anyone
+without needing the publishing account, and the 9 Sep "does not resolve" report might have had a
+different cause than access scope (an old or mistyped URL, most likely). That status line is worth
+trusting only after checking it directly, though: open a canvas's artifact URL in a private/logged-out
+browser window (or have the other person try their own account) and confirm it actually loads. If it
+doesn't, the setting to fix is on the hosted page itself — its own **Share** control, switched to
+"Anyone with the link can view" — not something any command in this repository's tooling can change;
+whoever's account published the canvas has to do it once, from the browser.
 
 ## Screens come from requirements, not one slice each
 
@@ -90,15 +99,15 @@ The screen list is built by grouping the written `FR`s by *what page a person is
 
 | Screen | Fed by (slice) | Key FRs |
 |---|---|---|
-| Landing page | `home`, `taxonomy`, `search` | FR-009, FR-025 |
-| Article page | `articleview`, `wikilink`, `taxonomy`, `media`, `report` | FR-001, 002, 004, 005, 006, 016, 021 |
-| Search results | `search` | FR-007 |
-| Tag browse | `taxonomy` | FR-008 |
-| Submission form (new / edit — shared) | `contribute` | FR-010, 011, 023, 024 |
-| Submission status lookup | `contribute` | FR-012, 019 |
-| Moderation queue | `moderate` | FR-014 |
-| Submission review/decision | `moderate` | FR-015, 017, 018, 019, 020 |
-| Moderator report inbox | `report` | FR-021, 022 |
+| [Landing page](screens/Landing.html) | `home`, `taxonomy`, `search` | FR-009, FR-025 |
+| [Article page](screens/Article.html) | `articleview`, `wikilink`, `taxonomy`, `media`, `report` | FR-001, 002, 004, 005, 006, 016, 021 |
+| [Search results](screens/SearchResults.html) ([no matches](screens/SearchResultsEmpty.html)) | `search` | FR-007 |
+| [Tag browse](screens/TagBrowse.html) | `taxonomy` | FR-008 |
+| [Submission form](screens/SubmissionForm.html) (new / edit — shared) | `contribute` | FR-010, 011, 023, 024 |
+| [Submission status lookup](screens/SubmissionStatus.html) | `contribute` | FR-012, 019 |
+| [Moderation queue](screens/ModerationQueue.html) ([empty](screens/ModerationQueueEmpty.html)) | `moderate` | FR-014 |
+| [Submission review/decision](screens/SubmissionReview.html) | `moderate` | FR-015, 017, 018, 019, 020 |
+| [Moderator report inbox](screens/ReportInbox.html) | `report` | FR-021, 022 |
 
 The Stage 3 claim table in
 [01-requirements-design.md](../roadmap/01-requirements-design.md) still works for *ownership* —

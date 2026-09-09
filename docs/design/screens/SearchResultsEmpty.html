@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Search results — no matches — Exchange Student Guide (draft screen)</title>
+<!-- Rough Stage-3 sketch, generated from canvas-src/flow/SearchResultsEmpty.dc.html — not the deliverable,
+     a thinking tool. See docs/design/README.md for how this fits the design process. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --gold-dark:#BDA345; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    a:hover { color: var(--maroon-dark); text-decoration: underline; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; gap: 24px; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-logo { height: 30px; width: auto; }
+    .search-box { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 480px; background: var(--sand); border: 1px solid var(--line); border-radius: 8px; padding: 0 14px; height: 40px; }
+    .search-box input { border: none; outline: none; background: none; flex: 1; font-size: 14px; font-family: inherit; }
+    .icon { width: 16px; height: 16px; stroke: var(--ink-soft); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .body { padding: 40px; max-width: 760px; }
+    .results-meta { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+    .empty-state { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: 64px 20px; border: 1.5px dashed var(--line); border-radius: 8px; background: var(--paper); }
+    .empty-icon { width: 40px; height: 40px; stroke: var(--ink-soft); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .empty-title { font-size: 17px; font-weight: 700; margin: 0; }
+    .empty-hint { font-size: 14px; color: var(--ink-soft); margin: 0; max-width: 380px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header-bar">
+    <img src="../assets/oge-logo.svg" alt="OGE logo" class="header-logo">
+    <div class="search-box">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input value="skydiving club">
+    </div>
+  </div>
+  <div class="body">
+    <div class="results-meta">0 results for "skydiving club"</div>
+    <div class="empty-state">
+      <svg class="empty-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <h3 class="empty-title">No articles matched</h3>
+      <p class="empty-hint">Try a different word, or <a href="#">browse by tag</a> instead — a lot of what's here is easier to find that way than by guessing the exact title.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

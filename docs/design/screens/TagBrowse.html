@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tag browse — Exchange Student Guide (draft screen)</title>
+<!-- Rough Stage-3 sketch, generated from canvas-src/flow/TagBrowse.dc.html — not the deliverable,
+     a thinking tool. See docs/design/README.md for how this fits the design process. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    a:hover { color: var(--maroon-dark); text-decoration: underline; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; gap: 14px; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-logo { height: 30px; width: auto; }
+    .body { padding: 40px; max-width: 760px; }
+    .eyebrow { font-size: 13px; color: var(--ink-soft); margin: 0 0 4px 0; }
+    .tag-title { font-size: 28px; font-weight: 700; margin: 0 0 24px 0; }
+    .chip { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #FBF3E3; color: var(--maroon-dark); width: fit-content; }
+    .article-card { border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 8px; background: var(--paper); margin-bottom: 14px; }
+    .article-title { font-size: 17px; font-weight: 700; margin: 0; }
+    .article-title a { color: var(--ink); }
+    .article-excerpt { font-size: 14px; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+    .article-meta { font-size: 12px; color: var(--ink-soft); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header-bar"><img src="../assets/oge-logo.svg" alt="OGE logo" class="header-logo"></div>
+  <div class="body">
+    <p class="eyebrow">Browsing by tag</p>
+    <h1 class="tag-title"><span class="chip">visa</span></h1>
+    <div class="article-card">
+      <h3 class="article-title"><a href="#">Registering with FRRO</a></h3>
+      <p class="article-excerpt">What to bring, where to go, and what happens if you miss the 14-day window.</p>
+      <div class="article-meta">Updated 3 days ago</div>
+    </div>
+    <div class="article-card">
+      <h3 class="article-title"><a href="#">Extending a student visa</a></h3>
+      <p class="article-excerpt">When an extension is needed and how far in advance to apply.</p>
+      <div class="article-meta">Updated 3 weeks ago</div>
+    </div>
+    <div class="article-card">
+      <h3 class="article-title"><a href="#">Visa documents checklist</a></h3>
+      <p class="article-excerpt">A one-page summary of everything visa-related you'll need across your stay.</p>
+      <div class="article-meta">Updated 1 month ago</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
