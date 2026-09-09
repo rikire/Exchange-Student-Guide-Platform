@@ -17,5 +17,6 @@ Written in phase 1. The terms below are the ones already in use and will be defi
 | Red link | A wiki link pointing at an article that does not exist yet |
 | Backlink | The reverse direction: which articles link to this one |
 | Revision | An article's retained content from before an approved edit changed it |
+| Report | A flag on a published article, made by a reader, carrying a required message describing the problem; sits in the moderator's inbox until closed |
 | Media asset | An uploaded file attached to an article |
 | Seed | The starter content shipped with the application, in the export format |

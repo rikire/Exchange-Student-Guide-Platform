@@ -27,6 +27,7 @@
     .field-textarea { min-height: 70px; }
     .chip { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #FBF3E3; color: #5C1712; width: fit-content; }
     .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip-add { border: 1px dashed var(--line); background: none; color: var(--ink-soft); cursor: pointer; }
     .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; border-radius: 4px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; width: 100%; }
     .btn-approve { background: var(--olive); color: #fff; }
     .btn-reject { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
@@ -50,8 +51,8 @@
       </div>
       <div class="side-card">
         <div class="field">
-          <label class="field-label">Tags (suggested by contributor)</label>
-          <div class="chip-row"><span class="chip">sim card</span><span class="chip">telecom</span></div>
+          <label class="field-label">Tags (suggested by contributor — adjust before publishing)</label>
+          <div class="chip-row"><span class="chip">sim card</span><span class="chip">telecom</span><button class="chip chip-add">+ Add tag</button></div>
         </div>
       </div>
       <div class="side-card">

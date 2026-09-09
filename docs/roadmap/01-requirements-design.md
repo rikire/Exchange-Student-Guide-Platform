@@ -232,8 +232,8 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 | Providing a rejection reason | could | `moderate` | FR-019 | | UC-024 | | | Submission review (canvas) |
 | Version-history groundwork: retain each approved revision | should | `moderate` | FR-020 | | UC-018 | | | — not sketched (no UI of its own) |
 | Closing a report (was "Handle a reported article" — narrowed 7 Sep: correcting the article reuses the existing direct-edit capability, closing is the only new action) | could | `report` | FR-022 | | UC-019 (via UC-021 + UC-025), UC-025 | | | Report inbox (canvas) |
-| Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | Submission form (canvas) |
-| Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | Submission form (canvas) |
+| Write and publish a new article directly, bypassing the queue | could | `contribute` | FR-023 | | UC-020 | | | Submission form (canvas) — layout only; its copy ("goes to OGE for review") is the contributor path's, not yet a moderator variant |
+| Edit and publish an article directly, bypassing the queue | could | `contribute` | FR-024 | | UC-021 | | | Submission form (canvas) — same caveat as FR-023 |
 | Edit the homepage, including what's pinned | could | `home` | FR-025 | | UC-022 | | | — not sketched yet |
 | Remove a published article (added 9 Sep from the course's scoping feedback — see [scoping-feedback.md](../course/scoping-feedback.md)) | should | `moderate` | FR-026 | | UC-026 | | | — not sketched yet |
 

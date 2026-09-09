@@ -19,10 +19,12 @@
     .header-nav a { font-size: 14px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
     .body { padding: 40px; max-width: 700px; }
     .title { font-size: 24px; font-weight: 700; margin: 0 0 20px 0; }
-    .report-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px 20px; margin-bottom: 12px; }
+    .report-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px 20px; margin-bottom: 12px; }
     .report-title { font-size: 15px; font-weight: 700; margin: 0; }
     .report-title a { color: var(--ink); text-decoration: none; }
     .report-meta { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+    .report-message-label { font-size: 12px; font-weight: 600; color: var(--ink-soft); margin: 10px 0 2px 0; }
+    .report-message { font-size: 14px; margin: 0; line-height: 1.5; max-width: 480px; }
     .btn-row { display: flex; gap: 8px; flex-shrink: 0; }
     .btn { height: 34px; padding: 0 14px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; }
     .btn-edit { background: transparent; border: 1.5px solid var(--maroon); color: var(--maroon); }
@@ -41,6 +43,8 @@
       <div>
         <h3 class="report-title"><a href="#">Chennai monsoon survival guide</a></h3>
         <div class="report-meta">Reported 2 days ago</div>
+        <p class="report-message-label">Message from the reader</p>
+        <p class="report-message">The bus route numbers in here changed after the monsoon diversions started — 47B doesn't run this way anymore.</p>
       </div>
       <div class="btn-row"><button class="btn btn-edit">Edit article</button><button class="btn btn-close">Close report</button></div>
     </div>
@@ -48,6 +52,8 @@
       <div>
         <h3 class="report-title"><a href="#">Extending a student visa</a></h3>
         <div class="report-meta">Reported 5 days ago</div>
+        <p class="report-message-label">Message from the reader</p>
+        <p class="report-message">This says extensions take 2 weeks, but FRRO told me 6-8 weeks in person. Might be outdated.</p>
       </div>
       <div class="btn-row"><button class="btn btn-edit">Edit article</button><button class="btn btn-close">Close report</button></div>
     </div>

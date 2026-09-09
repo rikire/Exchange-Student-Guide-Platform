@@ -31,10 +31,12 @@ Sees that each approved revision of an article is retained (no diff view — alr
 
 ### UC-019 — Handle a reported article
 
-Sees a report in the inbox (`reader.md`, UC-009) and acts on it however they see fit — usually
-editing the article directly (UC-021) if it needs correcting — then closes the report (UC-025)
-whenever they consider it done. Revised 7 Sep: no separate accept/reject decision on the report
-itself; editing and closing are independent, existing actions.
+Sees a report in the inbox — the article together with the reader's message explaining the problem
+(`reader.md`, UC-009) — and acts on it however they see fit — usually editing the article directly
+(UC-021) if it needs correcting — then closes the report (UC-025) whenever they consider it done.
+Revised 7 Sep: no separate accept/reject decision on the report itself; editing and closing are
+independent, existing actions. Revised 10 Sep: the reader's message is now part of what the inbox
+shows, since FR-021 made it required rather than absent.
 
 ### UC-020 — Write and publish an article directly
 

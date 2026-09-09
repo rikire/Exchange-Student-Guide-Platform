@@ -43,9 +43,9 @@ Follows a link that has no target yet, and understands why.
 
 ### UC-009 — Report an article
 
-Flags an article as inaccurate, outdated or otherwise a problem. Routed to the moderator — see
-[moderator.md](moderator.md) once that journey names the matching step; not yet written as of this
-entry.
+Flags an article as inaccurate, outdated or otherwise a problem, with a required message explaining
+why. Routed to the moderator's inbox — see UC-019 in [moderator.md](moderator.md). Revised 10 Sep:
+the message became required, not optional — see FR-021.
 
 ### UC-023 — Follow a red link to a creation prompt
 

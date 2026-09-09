@@ -581,15 +581,21 @@ THEN the article's content prior to the change is retained as a revision
 **Status:** planned
 **Priority:** could
 
-When a reader flags a published article, the system shall add it to the moderator's inbox of
-reported articles.
+When a reader flags a published article with a message describing the problem, the system shall
+add the article and the message to the moderator's inbox of reported articles.
+
+IF a reader attempts to flag an article without a message, THEN the system shall reject the report.
 
 **Acceptance criteria:**
 
 ```
 GIVEN a published article
-WHEN a reader flags it
-THEN it is added to the moderator's inbox of reported articles
+WHEN a reader flags it with a message
+THEN the article and the message are added to the moderator's inbox of reported articles
+
+GIVEN a published article
+WHEN a reader attempts to flag it without a message
+THEN the report is rejected
 ```
 
 ### FR-022 — Closing a report
