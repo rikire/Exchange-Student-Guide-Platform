@@ -63,3 +63,20 @@ everything the stakeholder's content genuinely needs (photos of forms, scanned d
 instructional video or audio) — everything else, including executables and archives, is rejected
 outright. A narrow allowlist keeps the upload surface small and reduces the attack surface for a
 malicious file.
+
+### CON-008 — No machine-facing API, and so no OpenAPI specification
+
+**Rationale:** Every response the application produces is HTML for a person in a browser. There is
+no separate client to serve — revision 2 of the proposal withdrew revision 1's REST API for exactly
+that reason — and no requirement asks for machine access. The one integration-shaped requirement,
+NFR-004, exports the knowledge base as plain Markdown files rather than over HTTP.
+
+A generated specification would describe `text/html` responses carrying no schema: a document that
+looks like a contract while specifying nothing checkable, which is worse than not having one,
+because it invites trust it cannot repay. What is actually needed is in
+[docs/architecture/ui-routes.md](../architecture/ui-routes.md) — path, slice, template, form fields,
+response codes — and that contract additionally names the requirement each route serves, which an
+OpenAPI document has nowhere to put.
+
+Revisit if a real machine consumer appears, such as a mobile client or an OGE system pulling
+articles. That is an ADR and a dependency decision, not something to add quietly.

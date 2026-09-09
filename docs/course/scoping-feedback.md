@@ -46,7 +46,7 @@ states and only the first has changed.
 | Information can be **edited** by the community | [FR-011](../requirements/functional.md#fr-011--proposing-an-edit-to-an-existing-article) — anyone proposes an edit to an existing article                                                                                                                                                                                                        | must     |
 | Information can be **removed**                 | [FR-026](../requirements/functional.md#fr-026--removing-a-published-article) — added 9 September, in direct response to this email                                                                                                                                                                                                               | should   |
 | **Consent of the community**                   | [FR-014](../requirements/functional.md#fr-014--moderation-queue), [FR-015](../requirements/functional.md#fr-015--reviewing-a-submission), [FR-017](../requirements/functional.md#fr-017--approving-a-submission), [FR-018](../requirements/functional.md#fr-018--rejecting-a-submission) — every submission passes an OGE-owned moderation queue | must     |
-| More than "a few bits of information"          | 26 `FR`, 6 `NFR`, 7 `CON`, 25 use cases across three roles, ten vertical slices                                                                                                                                                                                                                                                                  | —        |
+| More than "a few bits of information"          | 26 `FR`, 5 `NFR`, 7 `CON`, 26 use cases across three roles, ten vertical slices                                                                                                                                                                                                                                                                  | —        |
 
 **Removal was the gap.** Until 9 September none of the 25 requirements covered removing a published
 article: the word appeared only for taking a rejected submission off the queue, closing a report and
@@ -95,6 +95,28 @@ text the course received, not a draft of it.
 > Best regards,
 > Mikhail Novikov (GE26Z858)
 > Abdirakhim Ismailov (GE26Z860)
+
+## Correction: three of the four figures in the sent reply are wrong
+
+Found 9 September, after the reply had gone. The reply and the proposal both say "26 functional
+requirements, 6 non-functional ones, 7 recorded constraints and 25 use cases". Counted properly, as
+the repository stood when the reply went out:
+
+| Stated | Actual | Why it was wrong |
+|---|---|---|
+| 26 `FR` | 26 | correct |
+| 6 `NFR` | **5** | `NFR-050` is the illustrative example in the format section, not a requirement |
+| 7 `CON` | **6** | `CON-040` is the illustrative example, likewise. CON-008 was added later the same day, so there are now genuinely 7 — the sent figure was wrong when it was written, and is not made right by that |
+| 25 use cases | **26** | `UC-026` was added the same day, before the reply went, and the figure was not recounted |
+
+The cause is worth naming because it recurred. The same trap in `functional.md` — `FR-050` in the
+format section — was caught and excluded; the identical pattern in the other two files was not
+checked, and the count was taken from a `grep -c` that included the example. One correct exclusion
+was mistaken for a correct method.
+
+Nothing about the scope is misstated: three counts of specification volume are out by one each, two
+low and one high. It is recorded rather than quietly fixed because the figures went to the course,
+and `proposal.tex` cannot be edited to match — it is the document they received.
 
 ## When an answer arrives
 
