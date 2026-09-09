@@ -25,6 +25,7 @@ final class HookCommand {
             case "stop" -> stop();
             case "note" -> note(String.join(" ", List.of(args).subList(1, args.length)));
             case "compact" -> compact();
+            case "docs-sync" -> docsSync();
             case "english" -> english(java.util.Arrays.copyOfRange(args, 1, args.length));
             case "author" -> author(java.util.Arrays.copyOfRange(args, 1, args.length));
             default -> throw new IllegalStateException("dispatch missing for " + args[0]);
@@ -136,7 +137,12 @@ final class HookCommand {
 
             Do not ask when the request is a direct command with a checkable result, when it already \
             states its acceptance condition, or when the answer is already written down in a \
-            requirement, an ADR or the roadmap - cite it instead. Details: docs/ai/prompting.md.\
+            requirement, an ADR or the roadmap - cite it instead. Details: docs/ai/prompting.md.
+
+            Do not state how long anything will take. A duration you have not measured is a guess \
+            wearing the clothes of an estimate, and it gets planned against. Size work in countable \
+            units instead - files, requirements, tests, sections - which can be checked before the \
+            work starts rather than after it overruns.\
             """;
 
     private static final java.util.regex.Pattern CYRILLIC = java.util.regex.Pattern.compile("\\p{IsCyrillic}");
@@ -299,10 +305,57 @@ final class HookCommand {
 
         // Last, and only for a file that does not exist yet: this asks about a decision, and the
         // decision has already been made by the time anyone edits the file a second time.
-        String question = NewFileRules.questionFor(relative, alreadyThere(event.filePath()));
+        boolean exists = alreadyThere(event.filePath());
+        String question = NewFileRules.questionFor(relative, exists);
+        if (question == null) {
+            // Same moment, different question: the one above is about what this file should be,
+            // this one is about the order it is being written in.
+            question =
+                    TestFirstRule.questionFor(relative, exists, alreadyThere(testFileFor(event.filePath(), relative)));
+        }
         if (question != null) {
             HookEvent.emitDecision("PreToolUse", "ask", question);
         }
+    }
+
+    /** The absolute path of the test a production file should have, or null when it is not one. */
+    private static String testFileFor(String absolutePath, String relative) {
+        String testRelative = TestFirstRule.testPathFor(relative);
+        if (testRelative == null || absolutePath == null) {
+            return null;
+        }
+        String suffix = relative.replace('/', java.io.File.separatorChar);
+        int cut = absolutePath.replace('/', java.io.File.separatorChar).lastIndexOf(suffix);
+        if (cut < 0) {
+            return null;
+        }
+        return absolutePath.substring(0, cut) + testRelative.replace('/', java.io.File.separatorChar);
+    }
+
+    /**
+     * Says what documentation a change has just put out of date.
+     *
+     * <p>docs/ai/docs-sync.md described this hook and it was never wired, so the mapping was
+     * followed by remembering to read a table. It reports once per tracked area per session,
+     * which is what that document asks for.
+     */
+    private static void docsSync() throws Exception {
+        HookEvent event = HookEvent.readFromStdin();
+        Repo repo = Repo.find(event.cwd());
+        String relative = repo.relativize(event.filePath());
+
+        String key = DocumentedCounterparts.keyFor(relative);
+        if (key == null) {
+            return;
+        }
+        Journal journal = Journal.open(repo, event.sessionId());
+        if (journal.alreadyReminded(key)) {
+            return;
+        }
+        journal.setReminded(key);
+        journal.save();
+
+        HookEvent.emitContext("PostToolUse", DocumentedCounterparts.reminderFor(relative));
     }
 
     private static boolean alreadyThere(String filePath) {

@@ -247,4 +247,19 @@ class JournalTest {
 
         assertTrue(journalContent().contains("- docs/tech-debt.md (modified)"));
     }
+
+    @Test
+    void a_documentation_reminder_is_remembered_for_the_session() throws IOException {
+        // docs-sync.md asks for once per rule per session: the same reminder repeated for every
+        // file in a batch is how a reminder becomes something to scroll past.
+        Journal journal = Journal.open(repo, "session-r");
+        assertFalse(journal.alreadyReminded("migration"));
+
+        journal.setReminded("migration");
+        journal.save();
+
+        Journal reopened = Journal.open(repo, "session-r");
+        assertTrue(reopened.alreadyReminded("migration"));
+        assertFalse(reopened.alreadyReminded("routes"), "a different area still earns its own reminder");
+    }
 }

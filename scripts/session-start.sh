@@ -43,6 +43,38 @@ if [ -f docs/roadmap/README.md ]; then
 	}' docs/roadmap/README.md
 fi
 
+# The deadline rule in docs/ai/roadmap.md says to speak up when a deadline is at risk. It had never
+# fired once, because a rule held by memory competes with everything that arrives after it. A date
+# cannot be argued with, so the rule becomes a number printed here instead.
+if [ -f docs/course/rubric.md ]; then
+	today_s=$(date -d "$(date +%Y-%m-%d)" +%s)
+	awk -F'|' '/^\| [0-9] \| [A-Za-z]+ [0-9]/ {
+		when = $3; what = $4
+		gsub(/^[ \t]+|[ \t]+$/, "", when)
+		gsub(/^[ \t]+|[ \t]+$/, "", what)
+		sub(/^[A-Za-z]+ /, "", when)
+		print when "\t" what
+	}' docs/course/rubric.md | while IFS="$(printf '\t')" read -r when what; do
+		when_s=$(date -d "$when" +%s 2>/dev/null || echo 0)
+		[ "$when_s" -eq 0 ] && continue
+		days=$(((when_s - today_s) / 86400))
+		if [ "$days" -ge 0 ]; then
+			echo "Next deadline: $what, $when — $days day(s) away."
+			break
+		fi
+	done
+fi
+
+# Open items in the phase that is running. The count is the honest half of the line above: a
+# deadline with no work left against it is not the same situation as one with eleven.
+phase_file=$(ls docs/roadmap/0*.md 2>/dev/null | while read -r f; do
+	grep -q '^\*\*Status: in progress' "$f" && echo "$f" && break
+done)
+if [ -n "${phase_file:-}" ]; then
+	open=$(grep -c '^- \[[ ~]] ' "$phase_file" 2>/dev/null || echo 0)
+	echo "Open items in $(basename "$phase_file"): ${open:-0}."
+fi
+
 # Commented-out lines are stripped first: the register carries a template whose Status is "open",
 # and a counter that reports debt nobody owes is one people stop reading.
 if [ -f docs/tech-debt.md ]; then

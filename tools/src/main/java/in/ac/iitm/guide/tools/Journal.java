@@ -135,6 +135,23 @@ public final class Journal {
         }
     }
 
+    /**
+     * Whether the documentation reminder for a tracked area has already been given this session.
+     *
+     * <p>docs/ai/docs-sync.md asks for once per rule per session. Repeating it for every file in a
+     * batch is how a reminder turns into something people scroll past, and then the one that
+     * mattered goes past with the rest.
+     */
+    public boolean alreadyReminded(String key) {
+        return state.path("remindedAbout").path(key).asBoolean(false);
+    }
+
+    public void setReminded(String key) {
+        ObjectNode reminded =
+                state.has("remindedAbout") ? (ObjectNode) state.get("remindedAbout") : state.putObject("remindedAbout");
+        reminded.put(key, true);
+    }
+
     /** When the open entry's prompt arrived, ISO-8601, or empty when no entry is open. */
     public String promptedAt() {
         return state.path("promptAt").asText("");
