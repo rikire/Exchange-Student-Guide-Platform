@@ -2,6 +2,14 @@
 
 **Status: in progress.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
 
+**As of 10 September: 11 of 17 steps done, 6 open.** Closed on 10 Sep — the glossary audit, the CJM
+scenario trace, C4 levels 1–3 with the ERD, and the ADRs (ten now, against the eight topics
+planned). Still open: the route contract, the test plan, the revised milestone plan, the design
+document itself, the ten article drafts, and the four screen gaps the diagram review found. Two of
+those four wait on open schema decisions in
+[data-model.md](../architecture/data-model.md), which are the human's to take — so five of the six
+are unblocked.
+
 ## Goal
 
 Decide what the system does and how it is shaped, before code is written under those decisions. The
@@ -11,19 +19,66 @@ design document is the deliverable; the repository documents are the source it i
 
 - [x] `FR` / `NFR` / `CON` in `docs/requirements/` for the product as agreed
       — check: every `FR` has a status and every `CON` a rationale. Done 7 Sep: 25 `FR` (FR-001–025,
-      every Feature coverage tracker row has an id), 4 `NFR` (NFR-001–004), 5 `CON` (CON-001–005);
-      every `FR` carries Status/Priority, every `CON` a Rationale.
-- [ ] Glossary — one vocabulary for article, submission, revision, tag, media asset
+      every Feature coverage tracker row has an id), 5 `NFR` (NFR-001–005), 7 `CON`; every `FR`
+      carries Status/Priority, every `CON` a Rationale.
+      **Corrected 10 Sep.** This line read "4 `NFR` (NFR-001–004), 5 `CON` (CON-001–005)". It was
+      wrong on the day it was written, not merely out of date: NFR-005 and CON-006 landed in that
+      same 7 September commit and were counted by eye afterwards. `ai-tools count` is the number
+      now — 26 `FR`, 5 `NFR`, 7 `CON`, 26 `UC` as of 10 Sep, the `FR` having grown by FR-026 on
+      9 Sep. Counting by hand is what `Requirements.java` exists to stop.
+- [x] Glossary — one vocabulary for article, submission, revision, tag, media asset
       — check: every term the requirements use is defined once, and no concept appears under two
-      names across `functional.md` and the journeys
-- [ ] CJM for three roles: reader, contributor, OGE moderator
-      — check: the mid-demo scenario traces through the reader and contributor journeys end to end
-- [ ] C4 levels 1–3 and the ERD in PlantUML — check: the diagram script renders them
-- [ ] ADRs: slices and Modulith; moderation and the version-history groundwork; search and
+      names across `functional.md` and the journeys. Done 10 Sep: audited against every `FR`, `NFR`
+      and `CON`, the three journeys and all thirteen screens. Seven terms the requirements already
+      relied on were undefined — submission number, submission type, submission status, rejection
+      reason, pinned article, and the two timestamps — and two concepts were running under two names
+      each. Both settled rather than left to whichever name a document used: **media asset** over
+      *attachment* (which survives as the on-screen label only), and **submission** over *proposal*,
+      which FR-011 used throughout while FR-017 and FR-020 did not. The reverse pass found no dead
+      term: all thirteen original entries are used somewhere. `Moderator` was reworded against
+      CON-001 — it read like a stored identity and is a role, reached through the shared password of
+      [ADR-0009](../architecture/adr/ADR-0009-admin-authentication.md).
+- [x] CJM for three roles: reader, contributor, OGE moderator
+      — check: the mid-demo scenario traces through the reader and contributor journeys end to end.
+      Done 10 Sep: [cjm/scenario-trace.md](../cjm/scenario-trace.md) traces all eight steps, each
+      naming a journey, a use case, a requirement and a screen, and is linked from all three journey
+      files. The 26 use cases already existed; what did not was any check that the scenario actually
+      crossed them. **What this did not close:** the trace found that step 5 does not chain — nothing
+      on the article screen reaches "propose an edit", though FR-011, UC-011 and the shared form all
+      exist. That is gap 2 in the screens step below, not a hole in the journeys.
+- [x] C4 levels 1–3 and the ERD in PlantUML — check: the diagram script renders them. Done 10 Sep:
+      four sources in [docs/diagrams/src/](../diagrams/src/), rendered by `scripts/diagrams.sh` into
+      `docs/diagrams/out/`, which is committed so the architecture documents can embed it.
+      [overview.md](../architecture/overview.md) and [data-model.md](../architecture/data-model.md)
+      replace their placeholders. PlantUML is fetched into a gitignored cache against a pinned
+      checksum rather than added to a pom — its artifact is GPL and this repository is MIT. Reviewed
+      against every `FR`, `NFR`, `CON` and all thirteen screens before committing; five errors found
+      and fixed, including a level-3 diagram that showed no slice touching the database (inverting
+      [ADR-0002](../architecture/adr/ADR-0002-vertical-slices-on-spring-modulith.md)) and a
+      cardinality that allowed only one pending edit per article.
+      **What this did not close:** three schema decisions are recorded as open in `data-model.md`
+      rather than taken, since entity fields and cardinality are the human's call — FR-026 removal
+      has no representation, `pinned` cannot order two pinned articles, and where the rate limit is
+      counted. Two of the three block gaps 3 and 4 of the screens step below.
+- [x] ADRs: slices and Modulith; moderation and the version-history groundwork; search and
       multilingual content; taxonomy; media storage and upload security; export format;
       abuse handling without accounts; article content format and injection safety (added 5 Sep,
       while writing FR-001 — [ADR-0001](../architecture/adr/ADR-0001-article-body-format.md), decided)
-      — check: each has at least two genuinely considered options
+      — check: each has at least two genuinely considered options. Done 10 Sep: all eight topics
+      covered, ADR-0002 to ADR-0008 written plus ADR-0001, each with two or three options costed and
+      a named deciding factor. Two more came out of auditing where decisions had been filed —
+      ADR-0009 (the admin area's single shared password) and ADR-0010 (bounded reads) — both of
+      which had been sitting in `docs/ai/security.md`, the assistant's instruction directory, since
+      3 and 5 September. The security architecture moved to
+      [docs/architecture/security.md](../architecture/security.md), and `constraints.md`'s routing
+      rule, which had pointed architecture into `docs/ai/`, was corrected.
+      **Recorded honestly rather than quietly:** ADR-0002 to ADR-0008 were written after the fact,
+      in one sitting, from a list of decisions someone remembered to look for — which cannot reveal
+      a decision nobody listed. Each header carries `Decided` and `Recorded` separately, and
+      [adr/README.md](../architecture/adr/README.md) holds both the objection and the audit of what
+      still lives outside that directory. Two entries in that audit remain open: Modulith's event
+      registry, and the tenth slice. The wider pass this argues for is
+      [IB-004](../ai/instruction-backlog.md).
 - [ ] `docs/architecture/ui-routes.md` — the route contract
       — check: every row names the requirement it serves, and the `Route` column of the feature
       coverage tracker is filled from it for every `must` feature
