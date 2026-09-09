@@ -22,12 +22,33 @@ the details live here so that a session does not have to load everything into co
 | [audit-planning-2026-09-07.md](audit-planning-2026-09-07.md) | Whether the planning process is working, what it has produced, and five proposals awaiting a decision |
 | [PLAN-PROMPT.md](PLAN-PROMPT.md) | The original plan this repository was built from |
 
-**Five of these documents also exist as path-scoped rules** in `.claude/rules/`, carrying only their
-load-bearing lines: `java-style`, `testing` and `architecture` on Java files, `security` on the
-slices that touch uploads and templates, `schema` on migrations and the data model. Claude Code loads a rule when a
-matching file is opened, so the subset is in context at the moment it applies rather than available
-to be looked up afterwards. That is the whole point: rule 4 and the style rules were held by good
-faith, and good faith fails by forgetting rather than by deciding.
+## How each document reaches the agent
+
+A rule is worth what its delivery is worth. Both audits found rules believed to hold because they
+were written down, and the inventory of 9 September found why: every failure came from a document
+with no mechanism at all. So each document below has one, and the ones still held by memory say so
+rather than being counted as enforcement.
+
+| Mechanism | When it delivers | Documents |
+|---|---|---|
+| **Gate** — the hook asks or refuses | at the action | `collaboration` (protected paths), `stop-and-ask`, `workflow` (the test-first order) |
+| **Reminder** — `additionalContext` | at the action | `prompting` (every prompt), `docs-sync` (a tracked area changed), `roadmap` (the deadline, each session start) |
+| **Path rule** — `.claude/rules/` | when a matching file is **read** | `code-style`, `testing`, `architecture-rules`, `collaboration` (its decision table, on the schema) |
+| **Subagent** — its own context | when invoked | `definition-of-done` (`dod-reviewer`), `testing` (`test-reviewer`) |
+| **Memory** — nothing delivers it | never | what is left of `collaboration` and `workflow` |
+
+A gate is guaranteed: it stops the action. A reminder is not — it can be read and ignored. The
+distinction is the point of the table, because writing a rule as prose is weaker than either.
+
+**Verified on 9 September rather than assumed.** Reading a `.java` file does load `java-style` and
+`architecture`. The frontmatter this repository uses — `paths:` with a quoted YAML list — works,
+against a closed bug report saying that form fails silently. It was checked by observation because
+a silent failure is indistinguishable from compliance, which is the failure this repository keeps
+finding.
+
+**`security` is pre-positioned, not active.** All five of its globs name slice packages and
+templates that do not exist yet, so it cannot fire until the first slice lands. Counted as dormant,
+not as delivery.
 
 **The documents here stay canonical.** A rule file is a pointer with an excerpt, never a second
 source of truth, and one that contradicts its document is a defect no check can catch — `docs-check`
@@ -52,8 +73,8 @@ these documents, read the matching rule file in the same turn.
 | 1. The human decides | A hook asks before an edit lands in a protected file |
 | 2. Sharpen a vague prompt | Delivered with every prompt by a hook — reinforced, not gated: no mechanism can judge whether a request was vague |
 | 3. Stop and ask when unsure | Good faith. Nothing can measure confidence |
-| 4. Test before code | Good faith. After the fact, a test written first is indistinguishable from one written second |
-| 5. Documentation in the same turn | Partly: the turn cannot end while a document describes something the repository does not contain |
+| 4. Test before code | A question at the one moment it can still be true: creating a production class with no matching test asks first, naming the file it expected. After the fact the order remains unprovable, which is why it is asked at creation and not checked later |
+| 5. Documentation in the same turn | Partly: a `PostToolUse` hook names the document a change has just put out of date, once per tracked area per session, and the turn cannot end while a document describes something the repository does not contain |
 | 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half arrives in phase 2 |
 | The journal is in English | The turn cannot end while it owes a rendering, and the entry is committed when it is written |
 | Do not reinvent what a library does | Partly: creating a file whose name suggests a wheel asks first. Whether the answer is honest is not mechanisable |

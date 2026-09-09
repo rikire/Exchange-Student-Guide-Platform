@@ -55,6 +55,11 @@ a readiness criterion, is the human's: those decisions change what gets delivere
 When a deadline is at risk, say so in the phase file **and** in the answer, with what would have to
 be dropped. A roadmap that stays green while the work slips is worse than no roadmap.
 
+This rule went thirteen days without firing once, so it no longer depends on being remembered:
+`scripts/session-start.sh` prints the next course deadline, the days remaining and the open item
+count of the running phase at the start of every session. A date is harder to argue with than a
+recollection.
+
 ## Session notes between working days
 
 A long piece of work inside a phase may leave a note beside the phase file, named

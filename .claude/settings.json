@@ -12,7 +12,10 @@
           {
             "type": "command",
             "command": "sh",
-            "args": ["${CLAUDE_PROJECT_DIR}/scripts/session-start.sh", "${CLAUDE_PROJECT_DIR}"],
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/scripts/session-start.sh",
+              "${CLAUDE_PROJECT_DIR}"
+            ],
             "timeout": 15,
             "statusMessage": "Checking that the guard layer is actually running"
           }
@@ -75,6 +78,27 @@
             ],
             "timeout": 30,
             "statusMessage": "Checking the command does not skip or hide a check"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
+              "hook",
+              "docs-sync"
+            ],
+            "timeout": 30,
+            "statusMessage": "Checking what documentation this change puts out of date"
           }
         ]
       }

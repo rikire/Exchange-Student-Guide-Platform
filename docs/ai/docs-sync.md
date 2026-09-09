@@ -39,9 +39,12 @@ Manual run:
 java -jar tools/target/ai-tools.jar trace --docs-sync HEAD   # phase 2
 ```
 
-The generator lands in phase 2. Until then this rule is followed by reading the table above, and
-the `Stop` gate that would enforce it does not run — which is stated here rather than left to be
-discovered.
+**Step 1 is real since 9 September.** `ai-tools hook docs-sync` runs on `PostToolUse` and names the
+document that has just gone out of date, once per tracked area per session. It reads this table
+through `DocumentedCounterparts`, so the table and the mechanism cannot drift apart.
+
+Steps 2 and 3 are still phase 2. Until they land, the reminder is a reminder and nothing refuses a
+turn that ignores it — stated here rather than left to be discovered.
 
 ## What "update the document" means
 

@@ -73,6 +73,11 @@ Dependency direction: [architecture-rules.md](architecture-rules.md).
 
 ### 7. The TDD loop
 
+Since 9 September this order has a mechanism rather than only a rule: creating a production class
+under `app/src/main/java/**` with no matching test asks first, naming the test file it expected
+(`TestFirstRule`, via the `PreToolUse` guard). It asks rather than refuses — a class split out of
+one already covered is a real exception, and a gate with no way to answer it gets switched off.
+
 Repeated for each acceptance criterion:
 
 1. **Red test.** One criterion, one test; the test name repeats the wording of the criterion. Run
