@@ -69,13 +69,25 @@ These files are written **only by the generator**:
 - `docs/diagrams/out/**` — refreshed by `scripts/diagrams.sh`, and **committed**, unlike the four
   above: the architecture documents embed these as images and the forge previews them.
 
-Each carries a `GENERATED` marker in its header naming what wrote it, so that a file opened on its
-own says whether editing it is pointless. A generated file edited by hand creates false confidence
-that the state is current, which is worse than no file at all.
+Each file says in its own opening lines what writes it and when that generator arrives. There is no
+`GENERATED` marker convention any more.
 
-**Corrected 10 September.** This section previously claimed "a hand edit is detected and breaks the
-build". No such detection exists — nothing in `tools/` reads the marker, for any of these files.
-The marker is a convention held by whoever is reading, which is exactly the class of rule
-[instruction-backlog.md](instruction-backlog.md) IB-003 identifies as the one that fails. The check
-belongs with `ai-tools trace` in phase 2, which is when the first two files acquire a generator at
-all; until then this section says what is true rather than what was intended.
+**Dropped 10 September**, having been corrected earlier the same day rather than removed. The
+sequence is worth keeping, because the marker failed twice in the way its own rules predict.
+
+It claimed "a hand edit is detected and breaks the build". No such detection ever existed: nothing in
+`tools/` read the marker, and the only code that touched it was `scripts/diagrams.sh` checking it had
+not already prepended one. The audit on
+[7 September](audit-planning-2026-09-07.md) said so explicitly. The claim was corrected here on
+10 September and left standing in five other files, which is the second failure: a convention with no
+mechanism cannot even correct itself in one pass.
+
+The deciding argument was that on four of those files the marker was not merely unenforced but wrong.
+`docs/traceability.md` and its three siblings have no generator until phase 2, so a hand edit is
+currently the only way any of them has content, and `DO NOT EDIT` was advice pointing the wrong way.
+Adding a PNG exception to the rule on the same day made the cost visible: four comment lines to
+explain why one generated format is exempt from a marker nothing reads.
+
+This is [instruction-backlog.md](instruction-backlog.md) IB-003's diagnosis in miniature. A rule with
+no moment at which it arrives does not get followed, and it is cheaper to delete than to keep paying
+for. If a real check ever wants a marker, it can add one when there is something to check.
