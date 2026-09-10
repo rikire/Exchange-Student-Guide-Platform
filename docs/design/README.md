@@ -51,9 +51,9 @@ _(Filled in as each is published — feature, artifact URL, export file.)_
 |---|---|---|
 | Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [exports/Main.pdf](exports/Main.pdf) |
 | Landing page | [claude.ai/code/artifact/91ba6eef](https://claude.ai/code/artifact/91ba6eef-67d4-415d-92cc-bdf59cc3f6c5) | _superseded by the flow overview below_ |
-| Flow overview — all fourteen screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Create-from-red-link invite, Submission form, Submission status, Submission confirmation, Moderation queue + its empty state, Submission review, Report inbox, Homepage & article administration), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
+| Flow overview — all fifteen screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Create-from-red-link invite, Submission form, Submission status, Submission confirmation, Admin login, Moderation queue + its empty state, Submission review, Report inbox, Homepage & article administration), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
 
-The fourteen screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
+The fifteen screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
 for which FRs each one covers. Every `FR` that names a reader- or moderator-facing state now has a
 screen, except FR-020 (revision retention), which by its own text names no such state — see the
 Feature coverage tracker's note on that row.
@@ -64,6 +64,16 @@ closes the gap `ui-routes.md` found while formalizing `GET /submissions/{number}
 submission form to `SubmissionStatus` was itself pointing at the wrong screen — `SubmissionStatus` is
 FR-012's *lookup* form, reached independently and later, not the confirmation shown the moment a
 submission succeeds. The arrow and a note now say so; see `canvas-src/flow/canvas.json`.
+
+**Added 10 Sep, reviewing `ui-routes.md` the same day:** [Admin login](screens/AdminLogin.html) —
+the route contract named `shared/security/AdminLogin.html` as a template while no such screen
+existed, which is the *same* gap as the one above, two rows below it in the same table, in the row
+that had been added last. Worth recording rather than quietly sketching: finding a gap and closing
+it is not the same as re-reading the table afterwards, and the second miss is the evidence. Drawn in
+its `401` state — the error strip is a condition on one template, not a second screen, per the
+empty-state convention this directory already follows. The moderator row of the flow canvas shifted
+right to seat it at the head of that row, since every other moderator screen redirects here without
+a session.
 
 **On the "does not resolve" report (9 Sep):** checked from the publishing account and each of these
 canvases still resolves, still owned by that account, still readable with full content — not
@@ -76,7 +86,7 @@ time: before recording a canvas as gone, re-check from the account it was actual
 
 **On "interactive"**: this canvas preview does not support a click on one artboard jumping to
 another — artboards share no runtime state (see "Known limits" in the `design` skill). The flow
-overview lays all thirteen out together with sticky notes naming the intended transition at each
+overview lays all fifteen out together with sticky notes naming the intended transition at each
 boundary, so the relationships are visible even though nothing is actually clickable between them.
 Real navigation is `ui-routes.md`'s job, once Stage 4 formalizes it from what these sketches found.
 
@@ -116,6 +126,7 @@ The screen list is built by grouping the written `FR`s by *what page a person is
 | [Submission form](screens/SubmissionForm.html) (new / edit — shared) | `contribute` | FR-010, 011, 023, 024 |
 | [Submission confirmation](screens/SubmissionConfirmation.html) | `contribute` | FR-010, 011 |
 | [Submission status lookup](screens/SubmissionStatus.html) | `contribute` | FR-012, 019 |
+| [Admin login](screens/AdminLogin.html) | `shared/security` | _none — [ADR-0009](../architecture/adr/ADR-0009-admin-authentication.md)'s session gate, not a requirement_ |
 | [Moderation queue](screens/ModerationQueue.html) ([empty](screens/ModerationQueueEmpty.html)) | `moderate` | FR-014 |
 | [Submission review/decision](screens/SubmissionReview.html) | `moderate` | FR-015, 017, 018, 019, 020 |
 | [Moderator report inbox](screens/ReportInbox.html) | `report` | FR-021, 022 |

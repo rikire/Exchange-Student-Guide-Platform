@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; --red:#D9261C; --red-soft:#FBEAE8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--maroon); text-decoration: none; }
+    a:hover { color: var(--maroon-dark); text-decoration: underline; }
+    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .header-bar { display: flex; align-items: center; gap: 14px; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .header-logo { height: 30px; width: auto; }
+    .admin-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--maroon); border: 1px solid var(--maroon); border-radius: 4px; padding: 2px 8px; }
+    .body { padding: 40px; max-width: 460px; }
+    .title { font-size: 24px; font-weight: 700; margin: 0 0 6px 0; }
+    .subtitle { font-size: 14px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 20px 0; }
+    .card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 14px; font-weight: 600; }
+    .field-input { height: 44px; border: 1.5px solid var(--line); border-radius: 4px; padding: 10px 14px; font-size: 15px; font-family: inherit; color: var(--ink); background: var(--paper); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 20px; border-radius: 4px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-primary { background: var(--maroon); color: #fff; }
+    .error { display: flex; gap: 10px; align-items: flex-start; background: var(--red-soft); border: 1px solid var(--red); border-radius: 4px; padding: 12px 14px; }
+    .error-mark { color: var(--red); font-weight: 700; line-height: 1.4; }
+    .error-text { font-size: 14px; line-height: 1.5; color: var(--ink); margin: 0; }
+    .state-note { font-size: 12px; line-height: 1.6; color: var(--ink-soft); margin: 14px 0 0 0; padding-left: 12px; border-left: 2px solid var(--line); }
+    .state-note code { font-family: ui-monospace, monospace; font-size: 11px; }
+  </style>
+</helmet>
+<div class="page">
+  <div class="header-bar">
+    <img src="oge-logo.svg" alt="OGE logo" class="header-logo">
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="body">
+    <h1 class="title">OGE moderation</h1>
+    <p class="subtitle">One shared password for the office. There is no account and no username — see ADR-0009.</p>
+    <div class="card">
+      <div class="error">
+        <span class="error-mark">!</span>
+        <p class="error-text">That password is not right. Try again.</p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="password">Password</label>
+        <input class="field-input" id="password" type="password" value="............">
+      </div>
+      <button class="btn btn-primary">Sign in</button>
+    </div>
+    <p class="state-note">Drawn in its <code>401</code> state — the error strip is absent on a first visit
+      (<code>200</code>) and present after a wrong password. Both are the same template; the strip is a
+      condition, not a second screen. A correct password redirects to the queue.</p>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -65,36 +65,43 @@
       "h": 460
     },
     {
-      "file": "ModerationQueue.dc.html",
+      "file": "AdminLogin.dc.html",
       "x": 0,
+      "y": 2200,
+      "w": 600,
+      "h": 470
+    },
+    {
+      "file": "ModerationQueue.dc.html",
+      "x": 700,
       "y": 2200,
       "w": 1000,
       "h": 500
     },
     {
       "file": "ModerationQueueEmpty.dc.html",
-      "x": 0,
+      "x": 700,
       "y": 2820,
       "w": 1000,
       "h": 450
     },
     {
       "file": "SubmissionReview.dc.html",
-      "x": 1130,
+      "x": 1830,
       "y": 2200,
       "w": 1050,
       "h": 650
     },
     {
       "file": "ReportInbox.dc.html",
-      "x": 2310,
+      "x": 3010,
       "y": 2200,
       "w": 750,
       "h": 500
     },
     {
       "file": "HomeAdmin.dc.html",
-      "x": 3140,
+      "x": 3840,
       "y": 2200,
       "w": 900,
       "h": 550
@@ -155,7 +162,7 @@
     },
     {
       "id": "flow-home-admin",
-      "x": 3060,
+      "x": 3760,
       "y": 2450,
       "w": 90,
       "text": "'Homepage' in moderator nav ->"
@@ -169,7 +176,7 @@
     },
     {
       "id": "note-empty-queue",
-      "x": 0,
+      "x": 700,
       "y": 2750,
       "w": 500,
       "text": "Empty state - same reason as the empty search-results note above."
@@ -197,14 +204,14 @@
     },
     {
       "id": "flow-report-edit",
-      "x": 3070,
+      "x": 3770,
       "y": 2360,
       "w": 220,
       "text": "'Edit article' reuses the submission form (edit mode). 'Report this article' on the Article page lands a new report here."
     },
     {
       "id": "flow-queue-review",
-      "x": 1030,
+      "x": 1730,
       "y": 2450,
       "w": 90,
       "text": "'Review ->' opens this"
@@ -215,6 +222,20 @@
       "y": -420,
       "w": 560,
       "text": "Rough prototype for phase 1, Stage 3 - a thinking tool, not the deliverable. This preview canvas cannot make a click on one artboard jump to another; the arrows above describe the INTENDED flow, to be matched against real routes in ui-routes.md at Stage 4."
+    },
+    {
+      "id": "flow-login-queue",
+      "x": 610,
+      "y": 2400,
+      "w": 80,
+      "text": "Correct password ->"
+    },
+    {
+      "id": "note-admin-login",
+      "x": 0,
+      "y": 2720,
+      "w": 560,
+      "text": "Added 10 Sep at Stage 4. The route contract named a template (shared/security/AdminLogin.html) that no sketch backed - the same gap this canvas had already closed for the submission confirmation, in the row added last. Every other moderator screen redirects here without a session; this one is the single carve-out in that rule, or it would redirect to itself. Drawn in its 401 state; see ADR-0009 and docs/architecture/ui-routes.md."
     }
   ],
   "launch": {
