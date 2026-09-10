@@ -59,14 +59,32 @@ fi
 # -failfast2 turns a diagram-level error into a non-zero exit. Without it PlantUML writes an image
 # of the error message and reports success, which is the failure mode this script exists to avoid:
 # a green run and a picture of a stack trace committed as architecture.
+#
+# Two formats. SVG is what the architecture documents embed, because a forge previews it and it stays
+# sharp. PNG exists for LaTeX: pdflatex cannot embed SVG, and converting one needs inkscape or
+# rsvg-convert, neither of which is installed here. PlantUML already has the diagram in memory, so
+# asking it for both costs one flag instead of a second tool in the chain. Every diagram renders both
+# ways rather than only the one the design document happens to embed today; a per-diagram exception
+# is the kind of rule that stops being true without anyone noticing.
 echo "==> rendering"
 mkdir -p "$OUT"
 java -jar "$JAR" -failfast2 -tsvg -o "$(cd "$OUT" && pwd)" "$SRC"/*.puml
+java -jar "$JAR" -failfast2 -tpng -o "$(cd "$OUT" && pwd)" "$SRC"/*.puml
+
+# PlantUML writes a .cmapx beside any PNG whose diagram carries a link or a tooltip: an HTML
+# client-side image map. Nothing here serves HTML, and LaTeX cannot use one, so it would be a
+# generated file committed for no reader. Removed rather than left to accumulate.
+rm -f "$OUT"/*.cmapx
 
 # Every generated document in this repository carries a GENERATED marker naming what wrote it, so
 # that a file opened on its own says whether editing it is pointless. PlantUML does not add one.
 # PlantUML's SVG is a single line beginning at the root element, so the marker goes on its own line
 # in front of it — a comment before the root element is valid XML and renders nowhere.
+#
+# The PNGs deliberately get no marker. PNG has no comment syntax a text prepend could use, and
+# prepending anything to the bytes produces a file that no longer decodes. The loop below globs
+# *.svg, so this is already true; it is written down because "add the marker to every generated
+# file" is the rule, and this is the exception to it.
 echo "==> marking output as generated"
 for svg in "$OUT"/*.svg; do
 	[ -f "$svg" ] || continue
