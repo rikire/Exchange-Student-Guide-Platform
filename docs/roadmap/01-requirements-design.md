@@ -95,6 +95,28 @@ design document is the deliverable; the repository documents are the source it i
       was sketched and added to the flow canvas the same day — see `ui-routes.md` and
       `design/README.md`. The 14 `should`/`could` features are still listed unrouted in
       `ui-routes.md`, added when phase 4 picks each one up.
+      **Reviewed the same day it was written, and it did not survive the reading.** Ten findings
+      against `functional.md`, `glossary.md`, `data-model.md`, `erd.puml`, `architecture/security.md`,
+      ADR-0001/0006/0009 and the screens. Coverage held — all 12 `must` FRs routed, slice names
+      matching the package map. Two findings were decisions nobody had taken: the submission number
+      had no format, so five sketched screens had settled it as a counter, which turns the
+      confirmation route into an enumeration of every submission ever received
+      ([ADR-0011](../architecture/adr/ADR-0011-submission-number-format.md),
+      [NFR-006](../requirements/non-functional.md)); and media had no route at all, though FR-001 and
+      FR-015 both need one (`GET /media/{id}`, and a dated amendment to
+      [ADR-0006](../architecture/adr/ADR-0006-media-storage-and-upload-security.md)). Routing media
+      exposed an eleventh thing neither document could show alone — FR-016 says an asset on an
+      unapproved submission is "not returned" while `security.md` said it was "reachable only by an
+      unguessable id", which are different systems; resolved in favour of the requirement.
+      The other eight were corrections to the contract: `/moderate/login` caught by its own gating
+      rule, no CSRF token on any row, `401` used but never declared, the edit POST covering only the
+      race rather than FR-011's unconditional rule, no code for a blank `q`, a login template naming
+      a screen that did not exist, an unstated path-shape exception, and this tracker's own `Route`
+      column missing the confirmation route. All ten are recorded in `ui-routes.md` under "What the
+      review of 10 September found" rather than silently fixed.
+      **Worth keeping:** the login-template gap is the same class as the confirmation gap the file
+      had already found and closed — two rows below it, in the row added last. Finding one gap is not
+      the same as re-reading the table.
 - [x] **Decided here, not earlier:** ~~what the landing page contains beyond pinned items and
       search~~ — resolved 6 Sep, FR-009: recently added articles + a tag list, pinned articles shown
       first when any exist; ~~media quotas per file, per submission and for the volume~~ — resolved
@@ -366,21 +388,21 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 |---|---|---|---|---|---|---|---|---|
 | Full-text search across articles | must | `search` | FR-007 | | UC-001 | | `GET /search?q={query}` | Search results (canvas) |
 | Browse/filter articles by tag | should | `taxonomy` | FR-008 | | UC-002 | | | Tag browse (canvas) |
-| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | `GET /articles/{title}` | Article (canvas) |
-| Download a media attachment | should | `media` | FR-016 | | UC-004 | | | Article (canvas) |
+| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | `GET /articles/{title}`, `GET /media/{id}` | Article (canvas) |
+| Download a media attachment | should | `media` | FR-016 | | UC-004 | | _the bytes are routed as `GET /media/{id}` for FR-001/FR-015; the reader-facing download (`Content-Disposition: attachment`) is not_ | Article (canvas) |
 | Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | `GET /articles/{title}` (inline rendering, no route of its own) | Article (canvas) |
 | Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | Article (canvas) |
 | Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | `GET /` | Landing (canvas) |
 | Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | `GET /articles/{title}` (inline rendering, no route of its own) | Article (canvas) |
 | Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | Create-from-red-link invite (canvas) |
 | Report an article | could | `report` | FR-021 | | UC-009 | | | Article (canvas) |
-| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | `GET /submit`, `POST /submissions` | Submission form (canvas) |
-| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | `GET /articles/{title}/edit`, `POST /articles/{title}/edits` | Submission form (canvas) |
+| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | `GET /submit`, `POST /submissions`, `GET /submissions/{number}/confirmation` | Submission form (canvas) |
+| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | `GET /articles/{title}/edit`, `POST /articles/{title}/edits`, `GET /submissions/{number}/confirmation` | Submission form (canvas) |
 | Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | `POST /submissions`, `POST /articles/{title}/edits` (the `body` field) | Submission form (canvas) |
 | Look up a submission's status by its number | could | `contribute` | FR-012 | | UC-013 | | | Submission status (canvas) |
 | Abuse handling without accounts (rate limiting + CAPTCHA) | should | `shared/security` | FR-013 | | _(none — not a use case)_ | | | Submission form (canvas) |
 | Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | `GET /moderate/queue` | Moderation queue (canvas) |
-| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | `GET /moderate/submissions/{number}` | Submission review (canvas) |
+| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | `GET /moderate/submissions/{number}`, `GET /media/{id}` | Submission review (canvas) |
 | Approve a submission (adjust/finalize tags, publish) | must | `moderate` | FR-017 | | UC-016 | | `POST /moderate/submissions/{number}/approve` | Submission review (canvas) |
 | Reject a submission | must | `moderate` | FR-018 | | UC-017 | | `POST /moderate/submissions/{number}/reject` | Submission review (canvas) |
 | Providing a rejection reason | could | `moderate` | FR-019 | | UC-024 | | | Submission review (canvas) |
