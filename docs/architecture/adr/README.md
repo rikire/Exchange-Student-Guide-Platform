@@ -54,3 +54,17 @@ Phase 1 has not finished deciding. The route contract, the test plan and the see
 are all still open, and every one of them will produce decisions. Those get their ADR **when the
 decision is taken**, in the same sitting, with a single `**Date:**` — which is the only version of
 this that actually works.
+
+**First one through, 10 September.** Reviewing [ui-routes.md](../ui-routes.md) the day it was written
+produced two decisions, and both were recorded the same day rather than added to a list for later:
+
+- [ADR-0011](ADR-0011-submission-number-format.md) — the submission number is an unguessable token,
+  not a sequence. Single `**Date:**`, as this section requires.
+- [ADR-0006](ADR-0006-media-storage-and-upload-security.md) gained a dated **amendment** rather than
+  a second record, because media delivery is the topic it already owns. The amendment also resolves a
+  contradiction between FR-016 and `security.md` that neither document could have revealed on its
+  own — it only appeared when something tried to route both.
+
+Worth noting against the objection at the top of this file: these two were found by *checking one
+document against the others*, not by remembering to look for them. That is the mechanism the
+after-the-fact ADRs lacked, and it is the argument for doing the review before the record is cold.

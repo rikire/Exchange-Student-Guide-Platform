@@ -51,6 +51,20 @@ NULL`, the same filter that already excludes unapproved content.
 `type` distinguishes a new-article submission from an edit; `target_article_id` is set only for
 edits. `status` is the three values FR-012 shows and nothing else.
 
+**`submission_number` is a generated token, not a sequence.** Decided 10 Sep,
+[ADR-0011](adr/ADR-0011-submission-number-format.md): 60 bits from a cryptographically secure source,
+rendered as `SUB-K7M2-QX9P-4TVB`. The column type does not change — it was already `text`, unique —
+because this is a decision about how the value is produced, not about what the schema holds. It is
+recorded here anyway, because a reader looking only at the ERD would see `text <<unique>>` and
+reasonably assume a counter, which is exactly what the stage-3 screens assumed. The property is
+measurable as [NFR-006](../requirements/non-functional.md).
+
+Why it matters at the schema level rather than only at the controller: with no account to
+authenticate against ([CON-001](../requirements/constraints.md)), holding the number *is* the
+authorisation — so the column is a credential, and a sequential value in it would make every
+unapproved and rejected submission enumerable through
+[the confirmation route](ui-routes.md).
+
 An earlier draft of this diagram carried a `submitter_ip_hash` column for
 [NFR-005](../requirements/non-functional.md)'s rate limit. It was removed on review:
 [ADR-0008](adr/ADR-0008-abuse-handling-without-accounts.md) deliberately leaves *where the rate
@@ -96,8 +110,11 @@ its own ADR before either is built; recording it here is not the same as decidin
 ## Open decisions found while reviewing this model
 
 Found while checking every `FR` and every screen against the diagram on 10 September. Entity fields,
-cardinality and enum values are the human's call (`.claude/rules/schema.md`); two of the three below
-were made that day, one is still open.
+cardinality and enum values are the human's call (`.claude/rules/schema.md`); three of the four below
+were made that day, one is still open. Entry 4 was found later the same day, by a different method —
+reviewing [ui-routes.md](ui-routes.md) against this model rather than this model against the screens.
+Worth noting that the first sweep did not catch it: a column whose *type* is right can still have a
+decision hiding in it.
 
 **1. ~~A removed article has no representation.~~** Resolved 10 Sep: `removed_at`, a nullable
 timestamp on `article` — a soft delete. See the `pinned_at`/`removed_at` paragraph above for what
@@ -111,6 +128,12 @@ reordering control needed. See the paragraph above.
 [ADR-0008](adr/ADR-0008-abuse-handling-without-accounts.md) left it to the implementation, and that
 is still where it sits; it is listed here so the absence is visible in the schema rather than only
 in the ADR. Still open — not part of this pass.
+
+**4. ~~`submission_number` has a type but no format, and the screens had filled the gap with a
+counter.~~** Resolved 10 Sep: a generated 60-bit token —
+[ADR-0011](adr/ADR-0011-submission-number-format.md), with
+[NFR-006](../requirements/non-functional.md) as the measurable half. See the `submission_number`
+paragraph above. No column changes; five sketched screens did.
 
 ## Not in this model
 

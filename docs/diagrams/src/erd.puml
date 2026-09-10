@@ -25,7 +25,7 @@ entity "article" as article {
 entity "submission" as submission {
   * id : uuid
   --
-  * submission_number : text <<unique>>
+  * submission_number : text <<unique, unguessable token — ADR-0011>>
   * type : enum <<NEW_ARTICLE | EDIT>>
   target_article_id : uuid <<FK, edits only>>
   * title : text

@@ -46,7 +46,7 @@ states and only the first has changed.
 | Information can be **edited** by the community | [FR-011](../requirements/functional.md#fr-011--proposing-an-edit-to-an-existing-article) — anyone proposes an edit to an existing article                                                                                                                                                                                                        | must     |
 | Information can be **removed**                 | [FR-026](../requirements/functional.md#fr-026--removing-a-published-article) — added 9 September, in direct response to this email                                                                                                                                                                                                               | should   |
 | **Consent of the community**                   | [FR-014](../requirements/functional.md#fr-014--moderation-queue), [FR-015](../requirements/functional.md#fr-015--reviewing-a-submission), [FR-017](../requirements/functional.md#fr-017--approving-a-submission), [FR-018](../requirements/functional.md#fr-018--rejecting-a-submission) — every submission passes an OGE-owned moderation queue | must     |
-| More than "a few bits of information"          | 26 `FR`, 5 `NFR`, 7 `CON`, 26 use cases across three roles, ten vertical slices                                                                                                                                                                                                                                                                  | —        |
+| More than "a few bits of information"          | 26 `FR`, 6 `NFR`, 7 `CON`, 26 use cases across three roles, ten vertical slices                                                                                                                                                                                                                                                                  | —        |
 
 **Removal was the gap.** Until 9 September none of the 25 requirements covered removing a published
 article: the word appeared only for taking a rejected submission off the queue, closing a report and
@@ -105,7 +105,7 @@ the repository stood when the reply went out:
 | Stated | Actual | Why it was wrong |
 |---|---|---|
 | functional — 26 | 26 | correct |
-| non-functional — 6 | **5** | `NFR-050` is the illustrative example in the format section, not a requirement |
+| non-functional — 6 | **5** | `NFR-050` is the illustrative example in the format section, not a requirement. [NFR-006](../requirements/non-functional.md) was added 10 Sep with ADR-0011, so there are now genuinely 6 — the sent figure was wrong when it was written, and is not made right by that, exactly as with `CON-008` below |
 | constraints — 7 | **6** | `CON-040` is the illustrative example, likewise. CON-008 was added later the same day, so there are now genuinely 7 — the sent figure was wrong when it was written, and is not made right by that |
 | use cases — 25 | **26** | `UC-026` was added the same day, before the reply went, and the figure was not recounted |
 

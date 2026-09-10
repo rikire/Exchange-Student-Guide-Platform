@@ -1,14 +1,14 @@
 # ADR-0006 — Media on the filesystem, metadata in the database, delivery through a controller
 
 **Status:** accepted
-**Decided:** the upload rules predate this and live in `docs/ai/security.md`, undated; the storage location 10 September
+**Decided:** the upload rules predate this and lived in `docs/ai/security.md`, undated, until they moved to [docs/architecture/security.md](../security.md) on 10 September; the storage location 10 September
 **Recorded:** 10 September, after the fact — see [README.md](README.md)
 
 ## Context
 
 Anonymous visitors upload files that other visitors then download (FR-010, FR-011, FR-016). That is
 the largest attack surface in a project that otherwise has almost none, and
-[security.md](../../ai/security.md) already states the rules that follow from it — type decided from
+[security.md](../security.md) already states the rules that follow from it — type decided from
 content rather than the client, an allowlist, a system-generated stored filename, delivery through a
 controller, `nosniff`, images re-encoded, media unreachable until its submission is approved.
 
@@ -93,3 +93,45 @@ broken downloads on published articles, which is the most visible failure this d
 the storage call sits behind it — and would be the natural move if this were ever hosted for more
 than one office. Moving to option A is not expected; it would mean giving up the video limit that
 made this decision.
+
+## Amendment, 10 September — delivery is routed, and FR-016 outranks the note that contradicted it
+
+Added while reviewing [ui-routes.md](../ui-routes.md). This ADR decided *where the bytes live* and
+[security.md](../security.md) decided *how they are delivered*, and between them nobody wrote the
+route. The route contract's first pass had none: the `media` slice owned no row, and the deferred
+table listed only FR-016.
+
+**Delivery is routed in the `must` pass, as `GET /media/{id}`.** Two `must` requirements need it, and
+neither is FR-016:
+
+- FR-001 shows an article's content "composed as defined for Article" in the glossary, and that
+  definition ends "…and zero or more attached media assets".
+- FR-015 says a moderator reviewing a submission is shown "its full text **and any media assets**".
+
+Nothing here is a new decision about behaviour — `nosniff`, `Range` streaming, and an id resolved
+from the database rather than a path taken from the URL are all already above or in security.md. What
+was missing was a row saying the controller exists and what it answers. FR-016 stays deferred to
+phase 4, because *download* is a narrower thing than *delivery*: it is the reader-facing action and
+the `Content-Disposition: attachment` half of it, on top of a route that by then exists.
+
+### The conflict this exposed
+
+Two documents disagreed, and the disagreement had been sitting there unread:
+
+- **FR-016's acceptance criterion:** "GIVEN a media asset attached to a submission not yet approved
+  by moderation, WHEN a reader requests it directly, THEN it is **not returned**."
+- **[security.md](../security.md):** "Media stays unpublished until its submission is approved,
+  **reachable only by an unguessable id**."
+
+Unguessable is not the same as not returned. An unguessable id is a bearer capability — anyone
+holding it gets the bytes — and FR-016 says a reader does not get the bytes at all. Both cannot be
+built.
+
+**Resolved in favour of the requirement.** An asset attached to a pending or rejected submission is
+served only when a moderator session is present; the unguessable id remains true of the URL but is
+no longer the *control*, exactly as [ADR-0009](ADR-0009-admin-authentication.md) already found for
+the admin path ("Not a control"). security.md's line is corrected to say so, dated, rather than
+quietly reworded.
+
+This is the same mistake in the same shape twice — a hard-to-guess address recorded as though it
+were a gate — which is worth naming here so the third instance is recognised faster.

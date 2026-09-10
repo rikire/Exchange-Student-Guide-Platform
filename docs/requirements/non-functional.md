@@ -84,3 +84,17 @@ campus network without blocking distinct contributors behind the same address.
 
 **Fit criterion:** by default, 5 submissions per IP per hour, configurable as an application
 setting.
+
+### NFR-006 — Submission number unguessability
+
+**Status:** planned
+
+A submission number cannot be arrived at by guessing, incrementing, or working backwards from
+another one. It is the only thing standing between a stranger and a contributor's unapproved
+submission, because [CON-001](constraints.md) leaves no account to check the holder against —
+[ADR-0011](../architecture/adr/ADR-0011-submission-number-format.md).
+
+**Fit criterion:** at least 60 bits of entropy per number, drawn from a cryptographically secure
+source. Verified by a test asserting that numbers generated for consecutive submissions share no
+ordering — sorting a batch by issue time does not sort it by value — and that the generator is seeded
+from `SecureRandom` rather than a counter, a timestamp, or a content hash.

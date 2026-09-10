@@ -44,8 +44,18 @@ storage safe. Every point is a requirement, not advice.
   `Content-Disposition: attachment` for everything that is not an image the browser should render
   inline.
 - **Video is streamed** with `Range` support, never loaded into memory.
-- **Media stays unpublished until its submission is approved**, reachable only by an unguessable id
-  and excluded from search (FR-016).
+- **Media stays unpublished until its submission is approved.** An asset attached to a pending or
+  rejected submission is served **only to a moderator session** and is excluded from search (FR-016).
+  Its id is unguessable as well, but that is defence in depth, not the control.
+
+  **Corrected 10 September.** This line previously read "reachable only by an unguessable id", which
+  contradicts FR-016's own acceptance criterion — "WHEN a reader requests it directly, THEN it is
+  **not returned**". An unguessable id is a bearer capability: whoever holds it gets the bytes. The
+  requirement says a reader does not get them at all, so the requirement wins and the gate is the
+  session. Found while routing `GET /media/{id}` — see the amendment in
+  [ADR-0006](adr/ADR-0006-media-storage-and-upload-security.md). This is the same confusion
+  [ADR-0009](adr/ADR-0009-admin-authentication.md) already named for the admin path, where a
+  hard-to-guess URL was recorded as though it were a control: "Not a control."
 
 ## Article content
 
@@ -75,6 +85,24 @@ Decided in [ADR-0008](adr/ADR-0008-abuse-handling-without-accounts.md).
   [NFR-005](../requirements/non-functional.md)'s configured rate.
 - A request body size limit at the container level, so an oversized upload is rejected before the
   application allocates for it.
+
+## Capabilities held by contributors
+
+[CON-001](../requirements/constraints.md) leaves no account to authenticate a contributor against, so
+the few things they hold have to carry their own authorisation. There is currently one.
+
+- **The submission number is a credential.** Holding it is the whole of the authorisation — the
+  glossary calls it "the only handle they have" — so it is a generated token of at least 60 bits from
+  a cryptographically secure source, never a sequence, a timestamp or a content hash.
+  [ADR-0011](adr/ADR-0011-submission-number-format.md), measured by
+  [NFR-006](../requirements/non-functional.md).
+- Because the token is unguessable, `GET /submissions/{number}/confirmation` and FR-012's later
+  lookup need no gate in front of them. That is a property of the token, not of the routes: weaken
+  the generator and both become an enumeration of every submission ever received.
+- **A capability is not a control when it can be derived.** The two places this document previously
+  got that wrong are recorded above (media) and in
+  [ADR-0009](adr/ADR-0009-admin-authentication.md) (the admin path). Sequential submission numbers
+  would have been the third.
 
 ## Reads
 
