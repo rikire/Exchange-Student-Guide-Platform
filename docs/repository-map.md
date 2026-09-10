@@ -43,8 +43,14 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `docs/gap-list.md` | `ai-tools gaps` _(phase 3)_ | `java -jar tools/target/ai-tools.jar gaps` |
 | `docs/diagrams/out/**` | PlantUML | `scripts/diagrams.sh`. Committed, unlike the other rows here — the architecture documents embed these as images (see `docs/diagrams/src/README.md`) |
 
-Each carries a `GENERATED` marker in its header. A hand edit is detected and breaks the build —
-deliberately: a generated file edited by hand creates false confidence that the state is current.
+Each says in its own opening lines what writes it, and when that generator arrives. Nothing detects a
+hand edit. This paragraph claimed the opposite until 10 September, when the `GENERATED` marker
+convention was dropped for never having been read by anything — the reasoning is in
+[docs/ai/docs-sync.md](ai/docs-sync.md).
+
+Four of the five rows above have no generator yet, so editing them by hand is presently the only way
+they hold anything at all. The row that is real today is `docs/diagrams/out/**`: rerun
+`scripts/diagrams.sh` and your edit is gone.
 
 ## Traceability
 
