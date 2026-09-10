@@ -2,11 +2,11 @@
 
 **Status: in progress.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
 
-**As of 10 September: 15 of 17 steps done, 2 open.** Closed on 10 Sep — the glossary audit, the CJM
-scenario trace, C4 levels 1–3 with the ERD, the ADRs (ten now, against the eight topics planned), the
-four screen gaps the diagram review found, the test plan, the revised milestone plan, and the route
-contract. Still open: assembling the design document itself and the ten article drafts — both listed
-in full below.
+**As of 10 September: 16 of 17 steps done, 1 open.** Closed on 10 Sep — the glossary audit, the CJM
+scenario trace, C4 levels 1–3 with the ERD, the ADRs (eleven now, against the eight topics planned),
+the four screen gaps the diagram review found, the test plan, the revised milestone plan, the route
+contract and its same-day review, and the design document itself. Still open: the ten article
+drafts, listed in full below.
 
 **Correction, same edit:** this line previously read "11 of 17 steps done, 6 open" and named the test
 plan, the revised milestone plan and the screen gaps as still open — they were already checked off
@@ -226,9 +226,24 @@ design document is the deliverable; the repository documents are the source it i
       alongside the six already moved. No further slice is cut without returning to the human —
       removing a slice entirely changes the mid-demo scenario itself, which is a joint call, not a
       mechanical extension of this one.
-- [ ] Assemble `docs/course/design-doc.md` and produce the PDF (2–4 pages)
+- [x] Assemble `docs/course/design-doc.md` and produce the PDF (2–4 pages)
       — check: every rubric row for this stage points at a section that exists and says what the
-      criterion asks for; a section that exists but is a heading counts as missing
+      criterion asks for; a section that exists but is a heading counts as missing. Done 10 Sep:
+      [design-doc.tex](../course/design-doc.tex) → `design-doc.pdf`, 4 pages, with `design-doc.md`
+      as a pointer rather than a second prose copy — the convention
+      [proposal.md](../course/proposal.md) already set. Five sections: the slice boundary and what
+      enforces it, the test plan's ten named tests, the milestone plan, risks with a signal each,
+      and one unscored section on how the decisions were arrived at.
+      **Two variants were built and compared** rather than choosing on description: one spending all
+      four pages on the four scored rubric rows, one trading compression in those sections for the
+      process section. The second was chosen; what it gave up is listed in its commit.
+      **The `must` figure needed a build change:** `pdflatex` cannot embed SVG and no converter is
+      installed, so `scripts/diagrams.sh` now emits PNG beside SVG from the same pinned PlantUML.
+      **Not claimed:** the architecture rubric row is `[~]`, not `[x]`. The modules are declared and
+      `ModularityTest` verifies them, but the packages are empty, so no interface between two slices
+      exists yet and the C4 figure is drawn from `diagrams/src/` rather than generated from code by
+      Modulith. The reasoning is in [rubric.md](../course/rubric.md) rather than left to be inferred
+      from a tick.
 - [ ] Content: 10 or more articles drafted — absorbs the article-format-and-drafts item moved from
       phase 0 (4 Sep, see [00-init.md](00-init.md)); the seed front-matter shape is decided here,
       together with the glossary and ERD, not ahead of them

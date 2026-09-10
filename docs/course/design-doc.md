@@ -1,12 +1,41 @@
 # Design document
 
-**Due Friday 11 September 2026 — 5 marks**
+**Due Friday 11 September 2026 — 5 marks.** Source: [design-doc.tex](design-doc.tex) · Built:
+[design-doc.pdf](design-doc.pdf) (4 pages, 11 September 2026).
 
-Architecture note and the slice map, test plan with at least one test per slice, the revised milestone plan, and risks with a plan B tied to seams that exist in the code. Assembled from docs/architecture/, docs/requirements/ and docs/roadmap/, then produced as a 2-4 page PDF.
+The `.tex` is the source of record and this `.md` is a pointer, not a copy — the same convention
+[proposal.md](proposal.md) follows, and for the same reason: a second prose copy would drift from the
+submitted PDF within a day, and the submitted PDF is the artefact.
 
-**Not written yet.** It is assembled in the phase that ends at this deadline —
-see [../roadmap/](../roadmap/). The rubric rows it has to satisfy, and the artefact that serves as
-evidence for each, are in [rubric.md](rubric.md).
+## What it contains, against the rubric
 
-This placeholder exists so the rubric links resolve. A file that exists but is still a template
-counts as missing: `/course-check` treats it that way, and so will the evaluator.
+| Rubric row | Marks | Section | Backed by |
+|---|---|---|---|
+| Architecture note identifies modules and interfaces | 2 | §1 | [architecture/](../architecture/), `ModularityTest`, the C4 level-3 figure |
+| Test plan lists at least one test per module | 1 | §2 | the ten-row table in [01-requirements-design.md](../roadmap/01-requirements-design.md) |
+| Milestone plan revised in light of scoping feedback | 1 | §3 | [scoping-feedback.md](scoping-feedback.md), [proposal.tex](proposal.tex) §8 |
+| Risks and plan B are honest, not boilerplate | 1 | §4 | [roadmap/](../roadmap/) |
+
+§5 is unscored and included anyway: how the decisions were arrived at, which is the part of this
+work no other team could have written the same way.
+
+## Two things it says that are easy to miss
+
+**The architecture section describes a boundary the build enforces, and an implementation that has
+not started.** Those are separate claims and the document keeps them separate. The eleven slice
+packages are declared and empty; phase 2 writes the first working slice.
+
+**§3 covers two milestone revisions with different causes.** Only the first answers the course's
+scoping feedback of 28 August. The second came from a capacity review on 10 September and moved six
+`should`/`could` items out of phase 3. The rubric row asks about the first; conflating them would
+have overstated what the feedback produced.
+
+## Building it
+
+```bash
+scripts/diagrams.sh                                   # the figure comes from docs/diagrams/out/
+cd docs/course && pdflatex design-doc.tex && pdflatex design-doc.tex
+```
+
+Twice, because `hyperref` needs a second pass to resolve references. `.aux`, `.log` and `.out` are
+git-ignored; the `.pdf` is committed, because it is what the course receives.

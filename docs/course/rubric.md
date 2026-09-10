@@ -36,14 +36,24 @@ Legend: `[ ]` no evidence · `[~]` partial · `[x]` defensible
 
 | Criterion | Marks | Evidence | State |
 |---|---|---|---|
-| Architecture note identifies modules and interfaces | 2 | [../architecture/overview.md](../architecture/overview.md), [../ai/architecture-rules.md](../ai/architecture-rules.md), generated Modulith diagrams | [ ] |
-| Test plan lists at least one test per module | 1 | [design-doc.md](design-doc.md), test plan section | [ ] |
-| Milestone plan revised in light of scoping feedback | 1 | [scoping-feedback.md](scoping-feedback.md) — the feedback itself; [proposal.md](proposal.md) §8 — the revision; [../roadmap/](../roadmap/) | [ ] |
-| Risks and plan B are honest, not boilerplate | 1 | [design-doc.md](design-doc.md), risks section | [ ] |
+| Architecture note identifies modules and interfaces | 2 | [design-doc.pdf](design-doc.pdf) §1; [../architecture/overview.md](../architecture/overview.md), [../ai/architecture-rules.md](../ai/architecture-rules.md), `ModularityTest` | [~] |
+| Test plan lists at least one test per module | 1 | [design-doc.pdf](design-doc.pdf) §2 — ten slices, one named test each | [x] |
+| Milestone plan revised in light of scoping feedback | 1 | [design-doc.pdf](design-doc.pdf) §3; [scoping-feedback.md](scoping-feedback.md) — the feedback itself; [proposal.tex](proposal.tex) §8 — the revision | [x] |
+| Risks and plan B are honest, not boilerplate | 1 | [design-doc.pdf](design-doc.pdf) §4 — five risks, each with the signal that would fire | [x] |
 
 **What earns the two architecture marks here:** slices are real packages with a boundary a test
 enforces, not boxes in a diagram. Spring Modulith generates the module diagram and canvas from the
 code, so what the document shows is what the code is.
+
+**Why that row is `[~]` and not `[x]`, as of 11 September.** Half of it now holds and half does not,
+and splitting the difference is more useful than claiming either. What holds: the eleven modules are
+declared as packages, `ModularityTest` verifies them, and a second assertion added on 10 September
+stops that test passing on an application with no modules at all — which is what it had been doing
+since the skeleton was created. What does not: the packages are empty, so no *interface between* two
+slices exists yet to be described or enforced. The C4 level-3 figure is generated from
+`docs/diagrams/src/`, not from the code by Modulith's `Documenter`, because Modulith would currently
+draw eleven boxes and no arrows. The row goes to `[x]` when the first two slices talk to each other
+through a published type, in phase 2 or 3, and the diagram can be regenerated from the code.
 
 ## Mid-demo — 5 marks (due 9 Oct 2026)
 
