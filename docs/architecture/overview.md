@@ -55,6 +55,21 @@ Ten vertical slices plus `shared`. The list is owned by
 way, and the two alternatives weighed against it, are in
 [ADR-0002](adr/ADR-0002-vertical-slices-on-spring-modulith.md).
 
+**Declared in code since 10 September, and verified by the build.** Each of the eleven is a package
+under `in.ac.iitm.guide` carrying a `package-info.java`, which is all Spring Modulith needs to treat
+it as an application module — so the diagram above and the module list the build sees are the same
+list, and a slice added to one without the other fails a test. The packages are otherwise **empty**:
+this declares the boundary, it does not implement a slice. The first working slice is phase 2's
+first step ([02-skeleton.md](../roadmap/02-skeleton.md)).
+
+Worth stating because the alternative is the usual one: before this, `ModularityTest` called
+`ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —
+there was no boundary to violate — and had passed since the skeleton was created, proving nothing.
+`every_slice_in_the_architecture_map_is_a_module` now asserts the eleven names against the list
+above, so an empty pass and a real pass are distinguishable. One consequence is open and recorded:
+`shared` is a *closed* module and has to become an open one before the first entity lands
+(DEBT-003).
+
 Every arrow on the diagram is one of exactly two channels — a type published directly in a slice
 package, or a Spring `ApplicationEvent`. A direct call into another slice's service or repository is
 not a channel, and `ModularityTest` fails the build if one appears. The event registry is switched
@@ -71,6 +86,7 @@ Two things on the diagram are worth reading twice:
 
 ## What this overview does not decide
 
-- **Routes.** [ui-routes.md](ui-routes.md) is the contract, and it is not written yet.
+- **Routes.** [ui-routes.md](ui-routes.md) is the contract. Written and reviewed 10 September;
+  twelve `must`-priority features routed, the `should`/`could` ones listed there unrouted.
 - **Where backlinks come from.** The ERD carries an `article_link` table as a candidate, and no ADR
   decided it — see [data-model.md](data-model.md).

@@ -20,6 +20,37 @@ constraint hides it.
 
 ## Register
 
+### DEBT-003 — `shared` is a closed Modulith module and has to be an open one
+
+**Status:** open
+**Created:** 2026-09-10
+**Marker:** `app/src/main/java/in/ac/iitm/guide/shared/package-info.java` — the javadoc, not a `TODO`:
+there is no code yet to hang one on
+
+**Cause:** the ten slices and `shared` were declared as Modulith modules on 10 September so the
+design document could show a boundary the build enforces rather than a diagram someone drew. Modulith
+detects a module from a `package-info.java` alone, with no annotation — which is why no dependency
+was added. But without `@ApplicationModule(type = Type.OPEN)`, `shared` is **closed**, and a closed
+module keeps its nested packages internal to itself.
+
+**Consequence:** none today, because every one of these packages is empty. It bites in phase 2, at
+the first real code: architecture-rules.md has each slice declaring its own Spring Data repository
+over the JPA entities in `shared.persistence`, and a slice importing those types from a closed
+`shared` is exactly what `ModularityTest` refuses. The failure will look like a boundary violation in
+the slice being written, when the actual cause is a missing declaration on `shared` — which is the
+kind of misdirection that costs an afternoon.
+
+**How to fix:** add `spring-modulith-api` at compile scope (it is already managed by the Modulith BOM
+in `app/pom.xml` and already present transitively at test scope, so this is a scope change rather
+than a new artefact — but it is still a dependency decision and needs asking), then annotate
+`shared` with `@ApplicationModule(type = ApplicationModule.Type.OPEN)`. The alternative is
+`@NamedInterface` on `shared.persistence` and each slice naming it in `allowedDependencies`, which is
+stricter and more work; that choice wants a paragraph in architecture-rules.md, not a silent pick.
+
+**Trigger:** the first entity in `shared.persistence`, or the first slice repository — whichever
+comes first in phase 2. Not before: annotating an empty package to prevent a failure that cannot
+happen yet would mean adding a dependency for nothing.
+
 ### DEBT-002 — The process layer cannot be packaged for a second repository
 
 **Status:** open
