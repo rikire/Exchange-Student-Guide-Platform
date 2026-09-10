@@ -2,13 +2,16 @@
 
 **Status: in progress.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
 
-**As of 10 September: 11 of 17 steps done, 6 open.** Closed on 10 Sep — the glossary audit, the CJM
-scenario trace, C4 levels 1–3 with the ERD, and the ADRs (ten now, against the eight topics
-planned). Still open: the route contract, the test plan, the revised milestone plan, the design
-document itself, the ten article drafts, and the four screen gaps the diagram review found. Two of
-those four wait on open schema decisions in
-[data-model.md](../architecture/data-model.md), which are the human's to take — so five of the six
-are unblocked.
+**As of 10 September: 15 of 17 steps done, 2 open.** Closed on 10 Sep — the glossary audit, the CJM
+scenario trace, C4 levels 1–3 with the ERD, the ADRs (ten now, against the eight topics planned), the
+four screen gaps the diagram review found, the test plan, the revised milestone plan, and the route
+contract. Still open: assembling the design document itself and the ten article drafts — both listed
+in full below.
+
+**Correction, same edit:** this line previously read "11 of 17 steps done, 6 open" and named the test
+plan, the revised milestone plan and the screen gaps as still open — they were already checked off
+below when that count was written. Recounted from the checkboxes themselves rather than carried
+forward.
 
 ## Goal
 
@@ -79,9 +82,19 @@ design document is the deliverable; the repository documents are the source it i
       still lives outside that directory. Two entries in that audit remain open: Modulith's event
       registry, and the tenth slice. The wider pass this argues for is
       [IB-004](../ai/instruction-backlog.md).
-- [ ] `docs/architecture/ui-routes.md` — the route contract
+- [x] `docs/architecture/ui-routes.md` — the route contract
       — check: every row names the requirement it serves, and the `Route` column of the feature
-      coverage tracker is filled from it for every `must` feature
+      coverage tracker is filled from it for every `must` feature. Done 10 Sep: twelve routes
+      written, covering all 12 `must` features (some rows serve more than one FR — FR-002/FR-004
+      render inline on `GET /articles/{title}` rather than owning a route, and FR-003 is the `body`
+      field on the two submission POSTs); the tracker's `Route` column above is filled from it.
+      **Gap found the same day, closed the same day:** `GET /submissions/{number}/confirmation` —
+      needed for FR-010 and FR-011's "shown a submission number" — had no sketched screen;
+      `ui-routes.md` had recorded this rather than pointing it at FR-012's lookup screen, which is a
+      different (and `could`-priority) thing. [Submission confirmation](../design/screens/SubmissionConfirmation.html)
+      was sketched and added to the flow canvas the same day — see `ui-routes.md` and
+      `design/README.md`. The 14 `should`/`could` features are still listed unrouted in
+      `ui-routes.md`, added when phase 4 picks each one up.
 - [x] **Decided here, not earlier:** ~~what the landing page contains beyond pinned items and
       search~~ — resolved 6 Sep, FR-009: recently added articles + a tag list, pinned articles shown
       first when any exist; ~~media quotas per file, per submission and for the volume~~ — resolved
@@ -351,25 +364,25 @@ advance — and grows or gets re-tagged as the standing rule above kicks in.
 
 | Feature | Priority | Slice | FR id | ADR | CJM step | ERD entity | Route | Screen |
 |---|---|---|---|---|---|---|---|---|
-| Full-text search across articles | must | `search` | FR-007 | | UC-001 | | | Search results (canvas) |
+| Full-text search across articles | must | `search` | FR-007 | | UC-001 | | `GET /search?q={query}` | Search results (canvas) |
 | Browse/filter articles by tag | should | `taxonomy` | FR-008 | | UC-002 | | | Tag browse (canvas) |
-| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | | Article (canvas) |
+| Read a published article (body, tags, media, wiki links) | must | `articleview` | FR-001 | | UC-003 | | `GET /articles/{title}` | Article (canvas) |
 | Download a media attachment | should | `media` | FR-016 | | UC-004 | | | Article (canvas) |
-| Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | | Article (canvas) |
+| Parse and render `[[wiki links]]` | must | `wikilink` | FR-002 | | UC-005 | | `GET /articles/{title}` (inline rendering, no route of its own) | Article (canvas) |
 | Backlinks on an article | could | `wikilink` | FR-006 | | UC-006 | | | Article (canvas) |
-| Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | | Landing (canvas) |
-| Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | | Article (canvas) |
+| Landing page: pinned items + search | must | `home` | FR-009 | | UC-007 | | `GET /` | Landing (canvas) |
+| Red-link rendering | must | `wikilink` | FR-004 | | UC-008 | | `GET /articles/{title}` (inline rendering, no route of its own) | Article (canvas) |
 | Creating an article from a red link | could | `wikilink` | FR-005 | | UC-023 | | | Create-from-red-link invite (canvas) |
 | Report an article | could | `report` | FR-021 | | UC-009 | | | Article (canvas) |
-| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | | Submission form (canvas) |
-| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | | Submission form (canvas) |
-| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | | Submission form (canvas) |
+| Submit a new article (with optional media attachment and suggested tags) | must | `contribute` | FR-010 | | UC-010 | | `GET /submit`, `POST /submissions` | Submission form (canvas) |
+| Propose an edit to an existing article (with optional media attachment and suggested tags) | must | `contribute` | FR-011 | | UC-011 | | `GET /articles/{title}/edit`, `POST /articles/{title}/edits` | Submission form (canvas) |
+| Write `[[wiki links]]` inline while composing a submission | must | `wikilink` | FR-003 | | UC-012 | | `POST /submissions`, `POST /articles/{title}/edits` (the `body` field) | Submission form (canvas) |
 | Look up a submission's status by its number | could | `contribute` | FR-012 | | UC-013 | | | Submission status (canvas) |
 | Abuse handling without accounts (rate limiting + CAPTCHA) | should | `shared/security` | FR-013 | | _(none — not a use case)_ | | | Submission form (canvas) |
-| Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | | Moderation queue (canvas) |
-| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | | Submission review (canvas) |
-| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | FR-017 | | UC-016 | | | Submission review (canvas) |
-| Reject a submission | must | `moderate` | FR-018 | | UC-017 | | | Submission review (canvas) |
+| Moderation queue: list pending submissions | must | `moderate` | FR-014 | | UC-014 | | `GET /moderate/queue` | Moderation queue (canvas) |
+| Review a submission's full text and attachments | must | `moderate` | FR-015 | | UC-015 | | `GET /moderate/submissions/{number}` | Submission review (canvas) |
+| Approve a submission (adjust/finalize tags, publish) | must | `moderate` | FR-017 | | UC-016 | | `POST /moderate/submissions/{number}/approve` | Submission review (canvas) |
+| Reject a submission | must | `moderate` | FR-018 | | UC-017 | | `POST /moderate/submissions/{number}/reject` | Submission review (canvas) |
 | Providing a rejection reason | could | `moderate` | FR-019 | | UC-024 | | | Submission review (canvas) |
 | Version-history groundwork: retain each approved revision | should | `moderate` | FR-020 | | UC-018 | | | — not sketched (no UI of its own) |
 | Closing a report (was "Handle a reported article" — narrowed 7 Sep: correcting the article reuses the existing direct-edit capability, closing is the only new action) | could | `report` | FR-022 | | UC-019 (via UC-021 + UC-025), UC-025 | | | Report inbox (canvas) |

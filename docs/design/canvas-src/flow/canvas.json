@@ -1,35 +1,223 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "title": "Landing", "x": 0, "y": 0, "w": 980, "h": 900 },
-    { "file": "Article.dc.html", "x": 1100, "y": 0, "w": 980, "h": 900 },
-    { "file": "SearchResults.dc.html", "x": 2200, "y": 0, "w": 900, "h": 700 },
-    { "file": "SearchResultsEmpty.dc.html", "x": 2200, "y": 830, "w": 900, "h": 500 },
-    { "file": "TagBrowse.dc.html", "x": 3220, "y": 0, "w": 800, "h": 700 },
-    { "file": "RedlinkInvite.dc.html", "x": 4100, "y": 0, "w": 600, "h": 500 },
-    { "file": "SubmissionForm.dc.html", "x": 0, "y": 1050, "w": 700, "h": 1000 },
-    { "file": "SubmissionStatus.dc.html", "x": 830, "y": 1050, "w": 600, "h": 500 },
-    { "file": "ModerationQueue.dc.html", "x": 0, "y": 2200, "w": 1000, "h": 500 },
-    { "file": "ModerationQueueEmpty.dc.html", "x": 0, "y": 2820, "w": 1000, "h": 450 },
-    { "file": "SubmissionReview.dc.html", "x": 1130, "y": 2200, "w": 1050, "h": 650 },
-    { "file": "ReportInbox.dc.html", "x": 2310, "y": 2200, "w": 750, "h": 500 },
-    { "file": "HomeAdmin.dc.html", "x": 3140, "y": 2200, "w": 900, "h": 550 }
+    {
+      "file": "Main.dc.html",
+      "title": "Landing",
+      "x": 0,
+      "y": 0,
+      "w": 980,
+      "h": 900
+    },
+    {
+      "file": "Article.dc.html",
+      "x": 1100,
+      "y": 0,
+      "w": 980,
+      "h": 900
+    },
+    {
+      "file": "SearchResults.dc.html",
+      "x": 2200,
+      "y": 0,
+      "w": 900,
+      "h": 700
+    },
+    {
+      "file": "SearchResultsEmpty.dc.html",
+      "x": 2200,
+      "y": 830,
+      "w": 900,
+      "h": 500
+    },
+    {
+      "file": "TagBrowse.dc.html",
+      "x": 3220,
+      "y": 0,
+      "w": 800,
+      "h": 700
+    },
+    {
+      "file": "RedlinkInvite.dc.html",
+      "x": 4100,
+      "y": 0,
+      "w": 600,
+      "h": 500
+    },
+    {
+      "file": "SubmissionForm.dc.html",
+      "x": 0,
+      "y": 1050,
+      "w": 700,
+      "h": 1000
+    },
+    {
+      "file": "SubmissionStatus.dc.html",
+      "x": 830,
+      "y": 1050,
+      "w": 600,
+      "h": 500
+    },
+    {
+      "file": "SubmissionConfirmation.dc.html",
+      "x": 1520,
+      "y": 1050,
+      "w": 600,
+      "h": 460
+    },
+    {
+      "file": "ModerationQueue.dc.html",
+      "x": 0,
+      "y": 2200,
+      "w": 1000,
+      "h": 500
+    },
+    {
+      "file": "ModerationQueueEmpty.dc.html",
+      "x": 0,
+      "y": 2820,
+      "w": 1000,
+      "h": 450
+    },
+    {
+      "file": "SubmissionReview.dc.html",
+      "x": 1130,
+      "y": 2200,
+      "w": 1050,
+      "h": 650
+    },
+    {
+      "file": "ReportInbox.dc.html",
+      "x": 2310,
+      "y": 2200,
+      "w": 750,
+      "h": 500
+    },
+    {
+      "file": "HomeAdmin.dc.html",
+      "x": 3140,
+      "y": 2200,
+      "w": 900,
+      "h": 550
+    }
   ],
   "annotations": [
-    { "id": "row-reader", "x": 0, "y": -60, "w": 320, "text": "READER FLOW", "bold": true },
-    { "id": "row-contribute", "x": 0, "y": 990, "w": 320, "text": "CONTRIBUTOR FLOW", "bold": true },
-    { "id": "row-moderate", "x": 0, "y": 2140, "w": 320, "text": "MODERATOR FLOW", "bold": true },
-    { "id": "flow-landing-article", "x": 1000, "y": 400, "w": 90, "text": "Click an article card ->" },
-    { "id": "flow-article-search", "x": 2100, "y": 400, "w": 90, "text": "Search icon ->" },
-    { "id": "flow-search-tag", "x": 3120, "y": 400, "w": 90, "text": "Tag chip ->" },
-    { "id": "flow-redlink", "x": 4020, "y": 400, "w": 90, "text": "Click a red link on Article ->" },
-    { "id": "flow-home-admin", "x": 3060, "y": 2450, "w": 90, "text": "'Homepage' in moderator nav ->" },
-    { "id": "note-empty-search", "x": 2200, "y": 760, "w": 500, "text": "Empty state - added 10 Sep so 'draft screens' covers more than the happy path." },
-    { "id": "note-empty-queue", "x": 0, "y": 2750, "w": 500, "text": "Empty state - same reason as the empty search-results note above." },
-    { "id": "flow-nav-submit", "x": 400, "y": -220, "w": 300, "text": "'Submit an article' in the header, from any reader screen, opens the submission form." },
-    { "id": "flow-submit-status", "x": 760, "y": 1300, "w": 60, "text": "Submitting shows a number ->" },
-    { "id": "flow-report-edit", "x": 3070, "y": 2360, "w": 220, "text": "'Edit article' reuses the submission form (edit mode). 'Report this article' on the Article page lands a new report here." },
-    { "id": "flow-queue-review", "x": 1030, "y": 2450, "w": 90, "text": "'Review ->' opens this" },
-    { "id": "note-limits", "x": 0, "y": -420, "w": 560, "text": "Rough prototype for phase 1, Stage 3 - a thinking tool, not the deliverable. This preview canvas cannot make a click on one artboard jump to another; the arrows above describe the INTENDED flow, to be matched against real routes in ui-routes.md at Stage 4." }
+    {
+      "id": "row-reader",
+      "x": 0,
+      "y": -60,
+      "w": 320,
+      "text": "READER FLOW",
+      "bold": true
+    },
+    {
+      "id": "row-contribute",
+      "x": 0,
+      "y": 990,
+      "w": 320,
+      "text": "CONTRIBUTOR FLOW",
+      "bold": true
+    },
+    {
+      "id": "row-moderate",
+      "x": 0,
+      "y": 2140,
+      "w": 320,
+      "text": "MODERATOR FLOW",
+      "bold": true
+    },
+    {
+      "id": "flow-landing-article",
+      "x": 1000,
+      "y": 400,
+      "w": 90,
+      "text": "Click an article card ->"
+    },
+    {
+      "id": "flow-article-search",
+      "x": 2100,
+      "y": 400,
+      "w": 90,
+      "text": "Search icon ->"
+    },
+    {
+      "id": "flow-search-tag",
+      "x": 3120,
+      "y": 400,
+      "w": 90,
+      "text": "Tag chip ->"
+    },
+    {
+      "id": "flow-redlink",
+      "x": 4020,
+      "y": 400,
+      "w": 90,
+      "text": "Click a red link on Article ->"
+    },
+    {
+      "id": "flow-home-admin",
+      "x": 3060,
+      "y": 2450,
+      "w": 90,
+      "text": "'Homepage' in moderator nav ->"
+    },
+    {
+      "id": "note-empty-search",
+      "x": 2200,
+      "y": 760,
+      "w": 500,
+      "text": "Empty state - added 10 Sep so 'draft screens' covers more than the happy path."
+    },
+    {
+      "id": "note-empty-queue",
+      "x": 0,
+      "y": 2750,
+      "w": 500,
+      "text": "Empty state - same reason as the empty search-results note above."
+    },
+    {
+      "id": "flow-nav-submit",
+      "x": 400,
+      "y": -220,
+      "w": 300,
+      "text": "'Submit an article' in the header, from any reader screen, opens the submission form."
+    },
+    {
+      "id": "flow-submit-status",
+      "x": 1440,
+      "y": 1300,
+      "w": 70,
+      "text": "Submitting shows a confirmation with the number ->"
+    },
+    {
+      "id": "note-status-independent",
+      "x": 830,
+      "y": 1570,
+      "w": 560,
+      "text": "Reached independently, later, by typing the number in — not a click from the form. FR-012 (could-priority, deferred past this phase's must-scope pass) is what puts a working link here; see the gap this canvas closes, in docs/architecture/ui-routes.md."
+    },
+    {
+      "id": "flow-report-edit",
+      "x": 3070,
+      "y": 2360,
+      "w": 220,
+      "text": "'Edit article' reuses the submission form (edit mode). 'Report this article' on the Article page lands a new report here."
+    },
+    {
+      "id": "flow-queue-review",
+      "x": 1030,
+      "y": 2450,
+      "w": 90,
+      "text": "'Review ->' opens this"
+    },
+    {
+      "id": "note-limits",
+      "x": 0,
+      "y": -420,
+      "w": 560,
+      "text": "Rough prototype for phase 1, Stage 3 - a thinking tool, not the deliverable. This preview canvas cannot make a click on one artboard jump to another; the arrows above describe the INTENDED flow, to be matched against real routes in ui-routes.md at Stage 4."
+    }
   ],
-  "launch": { "view": "canvas" }
+  "launch": {
+    "view": "canvas"
+  }
 }

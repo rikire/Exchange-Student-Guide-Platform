@@ -51,12 +51,19 @@ _(Filled in as each is published — feature, artifact URL, export file.)_
 |---|---|---|
 | Design system | [claude.ai/code/artifact/f471d758](https://claude.ai/code/artifact/f471d758-83b2-47d8-9b5e-727860589366) | [exports/Main.pdf](exports/Main.pdf) |
 | Landing page | [claude.ai/code/artifact/91ba6eef](https://claude.ai/code/artifact/91ba6eef-67d4-415d-92cc-bdf59cc3f6c5) | _superseded by the flow overview below_ |
-| Flow overview — all thirteen screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Create-from-red-link invite, Submission form, Submission status, Moderation queue + its empty state, Submission review, Report inbox, Homepage & article administration), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
+| Flow overview — all fourteen screens on one canvas (Landing, Article, Search results + its empty state, Tag browse, Create-from-red-link invite, Submission form, Submission status, Submission confirmation, Moderation queue + its empty state, Submission review, Report inbox, Homepage & article administration), with sticky notes describing the intended navigation between them | [claude.ai/code/artifact/d0e9bee3](https://claude.ai/code/artifact/d0e9bee3-c22e-46c3-9b2c-460e51444032) | _deferred to the `docs/course/design-doc.md` assembly step, if that document needs a pasted image_ |
 
-The thirteen screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
+The fourteen screens themselves, as plain HTML, are under [screens/](screens/) — see the table below
 for which FRs each one covers. Every `FR` that names a reader- or moderator-facing state now has a
 screen, except FR-020 (revision retention), which by its own text names no such state — see the
 Feature coverage tracker's note on that row.
+
+**Added 10 Sep, phase 1 stage 4:** [Submission confirmation](screens/SubmissionConfirmation.html) —
+closes the gap `ui-routes.md` found while formalizing `GET /submissions/{number}/confirmation`
+(FR-010/FR-011's "shown a submission number"). The flow canvas's own sticky note pointing from the
+submission form to `SubmissionStatus` was itself pointing at the wrong screen — `SubmissionStatus` is
+FR-012's *lookup* form, reached independently and later, not the confirmation shown the moment a
+submission succeeds. The arrow and a note now say so; see `canvas-src/flow/canvas.json`.
 
 **On the "does not resolve" report (9 Sep):** checked from the publishing account and each of these
 canvases still resolves, still owned by that account, still readable with full content — not
@@ -107,6 +114,7 @@ The screen list is built by grouping the written `FR`s by *what page a person is
 | [Tag browse](screens/TagBrowse.html) | `taxonomy` | FR-008 |
 | [Create-from-red-link invite](screens/RedlinkInvite.html) | `wikilink` | FR-005 |
 | [Submission form](screens/SubmissionForm.html) (new / edit — shared) | `contribute` | FR-010, 011, 023, 024 |
+| [Submission confirmation](screens/SubmissionConfirmation.html) | `contribute` | FR-010, 011 |
 | [Submission status lookup](screens/SubmissionStatus.html) | `contribute` | FR-012, 019 |
 | [Moderation queue](screens/ModerationQueue.html) ([empty](screens/ModerationQueueEmpty.html)) | `moderate` | FR-014 |
 | [Submission review/decision](screens/SubmissionReview.html) | `moderate` | FR-015, 017, 018, 019, 020 |
@@ -138,8 +146,10 @@ roadmap carries the whole set as one step with a check that can fail.
 | 4 | ~~**Remove is drawn, and nothing behind it is decided.**~~ Resolved 10 Sep: `removed_at` (nullable timestamp, soft delete) added to `article` — see open decision 1 in [data-model.md](../architecture/data-model.md). No screen change needed: the Remove button already reads as "removes it from view," which is what a soft delete does | `moderate` | [Homepage & article administration](screens/HomeAdmin.html) | Open decision 1 in [data-model.md](../architecture/data-model.md) |
 
 Rows 1 and 2 were affordances only — `submission.summary` exists and the submission form is already
-shared between new articles and edits — resolved directly on the screen; each still needs its own
-row in [ui-routes.md](../architecture/ui-routes.md), which is not written yet.
+shared between new articles and edits — resolved directly on the screen. **Routed 10 Sep:** row 1's
+`summary` field is on `POST /submissions`, `POST /articles/{title}/edits` and
+`POST /moderate/submissions/{number}/approve`; row 2's "Propose an edit" link resolves to
+`GET /articles/{title}/edit` — see [ui-routes.md](../architecture/ui-routes.md).
 
 Rows 3 and 4 were schema questions, not screen fixes — entity fields and cardinality are the human's
 decision (`.claude/rules/schema.md`). Both were decided 10 Sep in
