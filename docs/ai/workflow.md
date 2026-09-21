@@ -1,7 +1,6 @@
 # The working cycle
 
-The order of the steps is not arbitrary: it is arranged so that expensive decisions are made before
-code is written under them.
+The order of the steps makes the expensive decisions before code is written under them.
 
 ## The feature cycle
 
@@ -16,10 +15,9 @@ The loop repeats once per acceptance criterion in the feature file.
 
 ### 0. Contract
 
-Before anything else, state the contract and wait for its confirmation: [prompting.md](prompting.md).
-It is cheap, and it is where the whole cycle either aims at the right target or does not. The
-confirmed sentences are reused below — they become the acceptance criteria in the feature file and
-the names of the tests.
+State the contract and wait for its confirmation: [prompting.md](prompting.md). The confirmed
+sentences are reused below: they become the acceptance criteria in the feature file and the names of
+the tests.
 
 ### 1. Open the feature — `/feature`
 
@@ -28,36 +26,34 @@ acceptance criteria and an explicitly drawn scope boundary. No code at this step
 
 ### 2. Clarify and agree
 
-Everything ambiguous is settled **here**, not while writing code. Stop triggers are in
+Everything ambiguous is settled **here**, not while writing code. Stop triggers:
 [stop-and-ask.md](stop-and-ask.md).
 
-The wording of requirements, the scope of the feature and the set of routes are the human's
-decision, not the agent's: [collaboration.md](collaboration.md). Agreement received — carry on;
-not received — work does not start.
+The wording of requirements, the scope of the feature and the set of routes are the human's decision
+([collaboration.md](collaboration.md)). Without agreement, work does not start.
 
 ### 3. ADR, if the decision is architectural — `/adr`
 
 The sign: the decision would be expensive to reverse, or it has a non-obvious alternative. The
-moderation state machine, the search engine, the media storage layout — those are ADRs. A package
-name is not.
+moderation state machine, the search engine, the media storage layout are ADRs; a package name is not.
 
 ### 4. The route contract
 
 Routes before controllers. `docs/architecture/ui-routes.md` is the source of truth: path, slice,
-template, form fields, response codes, and `trace: FR-XXX`. This is the server-rendered equivalent
-of an API specification, and the documentation gate treats it that way.
+template, form fields, response codes, and `trace: FR-XXX`. It is the server-rendered equivalent of an
+API specification, and the documentation gate treats it that way.
 
 ### 5. The schema
 
-A Flyway migration with `-- trace: FR-XXX` in its header. Checked **in both directions** where a
-down path exists. `data-model.md` and the ERD are updated together with the migration.
+A Flyway migration with `-- trace: FR-XXX` in its header, checked **in both directions** where a down
+path exists. `data-model.md` and the ERD change with the migration.
 
 The schema lives in `shared/persistence` and is common to every slice, so a migration is one of the
-few places where two people genuinely collide. After phase 2 it changes only by agreement.
+few places where two people collide. After phase 2 it changes only by agreement.
 
 ### 6. Slice interfaces
 
-Designed before the implementation exists — each layer has its own notion of "interface":
+Designed before the implementation exists. Each layer has its own notion of "interface":
 
 | Level | What counts as the interface here |
 |---|---|
@@ -70,74 +66,66 @@ Dependency direction: [architecture-rules.md](architecture-rules.md).
 
 ### 7. The TDD loop
 
-Since 9 September this order has a mechanism rather than only a rule: creating a production class
-under `app/src/main/java/**` with no matching test asks first, naming the test file it expected
-(`TestFirstRule`, via the `PreToolUse` guard). It asks rather than refuses — a class split out of
-one already covered is a real exception, and a gate with no way to answer it gets switched off.
+Creating a production class under `app/src/main/java/**` with no matching test asks first, naming the
+test file it expected (`TestFirstRule`, via the `PreToolUse` guard). It asks rather than refuses: a
+class split out of one already covered is a real exception, and a gate with no way to answer it gets
+switched off.
 
 Repeated for each acceptance criterion:
 
-1. **Red test.** One criterion, one test; the test name repeats the wording of the criterion. Run
-   it and see it **fail**: a test that is green before the implementation checks nothing, and this
-   is the only way to notice that.
-   When a test goes red later, first decide whether the code or the expectation is the wrong one —
-   an expectation rewritten to match the output is a deleted test
+1. **Red test.** One criterion, one test; the name repeats the wording of the criterion. Run it and
+   see it **fail**: a test that is green before the implementation checks nothing, and running it is
+   the only way to notice. When a test goes red later, decide first whether the code or the
+   expectation is wrong; an expectation rewritten to match the output is a deleted test
    ([definition-of-done.md](definition-of-done.md)).
-2. **Minimal implementation** — exactly enough to turn the test green. Nothing beyond the test:
-   code written "while we are here" is neither covered nor requested.
-3. **Refactor** with the tests green. Change the structure without changing behaviour.
+2. **Minimal implementation** — exactly enough to turn the test green. Code written "while we are
+   here" is neither covered nor requested.
+3. **Refactor** with the tests green: change the structure, not the behaviour.
 
-The production code is marked `//trace:FR-XXX`; so is the test.
+The production code is marked `//trace:FR-XXX`; so is the test. That chain — acceptance criterion,
+test, marker — is what makes the matrix mean coverage of criteria.
 
-**Layers that need infrastructure.** The rule holds there too, but it has to be cheap to follow:
+**Layers that need infrastructure.** The rule holds there too, and has to be cheap to follow:
 
 - Web layer — a red test through `MockMvc` against the controller, without a database.
-- Persistence — a red test against H2 by default; the PostgreSQL profile with Testcontainers runs
-  in CI and before a release, not on every loop. A container per test makes the cycle unbearably
-  slow, and then people start skipping the order.
-- If standing up the environment for a red test is genuinely impossible, that is a reason to stop
-  and ask ([stop-and-ask.md](stop-and-ask.md)), not to quietly swap the steps around.
+- Persistence — a red test against H2 by default; the PostgreSQL profile with Testcontainers runs in
+  CI and before a release, not on every loop, because a container per test makes the cycle slow
+  enough that people skip the order.
+- If standing up the environment for a red test is genuinely impossible, stop and ask
+  ([stop-and-ask.md](stop-and-ask.md)); do not quietly swap the steps around.
 
-**The link to traceability.** Acceptance criterion to test to `//trace:FR-XXX`. That is what makes
-the matrix mean coverage of criteria rather than the existence of a file with tests in it.
-
-How the tests themselves are written — what to assert, what to mock, and how to derive the corner
-cases: [testing.md](testing.md).
+How the tests are written — what to assert, what to mock, how to derive the corner cases:
+[testing.md](testing.md).
 
 ### 7a. Before writing it, find out whether it already exists
 
 Applies inside the loop, at the moment a helper is about to be written.
 
 **Name the library that already does this** — the JDK, Spring, Apache Commons, Guava, Tika — and say
-why it does not fit, or use it. The honest reasons to write your own are: nothing does it, the
-library is far larger than the need, or it is unmaintained.
+why it does not fit, or use it. The honest reasons to write your own are: nothing does it, the library
+is far larger than the need, or it is unmaintained.
 
 **"It is only a few lines" is not one of them.** A few lines is how every wheel starts, and the
-library carries the edge cases you have not thought of yet — walk the encoding dimension in
-[testing.md](testing.md) against any string helper that looks trivial, and it stops looking
-trivial.
+library carries the edge cases you have not thought of yet: walk the encoding dimension in
+[testing.md](testing.md) against any string helper that looks trivial.
 
-For a problem bigger than a helper, the question is not "which library" but **"what is this
-called"**. If the thing being built has a name, somebody has already made the mistakes: reviewed
-revisions, optimistic locking, diff algorithms, per-language analysers, token buckets. Find the name
-before designing. When to go and look, and when running something locally answers it faster:
-[collaboration.md](collaboration.md) §3.
+For a problem bigger than a helper, ask **"what is this called"**: if it has a name, somebody has
+already made the mistakes. Find the name before designing; when to look and when to run something
+instead is in [collaboration.md](collaboration.md) §3.
 
-**Why this needs saying at all.** Adding a dependency is the human's decision and writing a private
-helper is not, so asking costs a round trip and writing does not. Left alone, that arithmetic points
-away from the library every single time — which is why **replacing a library with our own code is
-the same decision as adding one**, and gets proposed the same way. Creating a file whose name
-suggests a wheel — `*Utils`, `*Helper`, `*Formatter` — asks about this before it lands.
+Replacing a library with our own code is the same decision as adding one and is proposed the same way
+([collaboration.md](collaboration.md) §1). Creating a file whose name suggests a wheel — `*Utils`,
+`*Helper`, `*Formatter` — asks about this before it lands.
 
 ### 8. Technical debt
 
 If a workaround appeared along the way, or something was done temporarily, the entry is created
-**now**, not at the end of the task. Details below.
+**now**, not at the end of the task. Rules below.
 
 ### 9. Documentation
 
-Rules: [docs-sync.md](docs-sync.md). In the feature file, `code`, `tests` and `status` are updated;
-a requirement moves to `done` only when both the code and the test exist.
+Rules: [docs-sync.md](docs-sync.md). In the feature file, `code`, `tests` and `status` are updated; a
+requirement moves to `done` only when both the code and the test exist.
 
 ### 10. Checks
 
@@ -157,35 +145,25 @@ The format is checked by the `commit-msg` hook. Bypassing checks with `--no-veri
 
 ## Technical debt
 
-The rule: **nothing temporary stays unrecorded.** The register is [docs/tech-debt.md](../tech-debt.md).
+**Nothing temporary stays unrecorded.** The register is [docs/tech-debt.md](../tech-debt.md), which
+also says what is debt and what is a deliberate narrowing of scope (`CON-XXX`).
 
-- **Debt is recorded the moment it appears.** Not "I will add it at the end": by the end of the task
-  the context is gone and the entry comes out useless.
-- **A workaround without a `DEBT` entry is unfinished work**, not finished work. This applies to
-  wording in answers too: if you said "for now" or "we will change this later", create the entry.
-- **The marker in the code is mandatory and must reference the register:** `// TODO(DEBT-007): ...`.
-- **Paying debt off is its own commit** — `refactor(DEBT-007): ...`. In that same commit the status
-  becomes `resolved` and the marker is removed from the code.
-- The agent may create register entries freely; this does not need the human's confirmation.
-
-What is debt and what is a deliberate narrowing of scope (`CON-XXX`) is explained in the register
-itself.
+- **Debt is recorded the moment it appears.** By the end of the task the context is gone and the entry
+  comes out useless.
+- **A workaround without a `DEBT` entry is unfinished work.** That includes wording in answers: if you
+  said "for now" or "we will change this later", create the entry.
+- **The marker in the code is mandatory and references the register:** `// TODO(DEBT-007): ...`.
+- **Paying debt off is its own commit** — `refactor(DEBT-007): ...`. In that commit the status
+  becomes `resolved` and the marker is removed.
+- The agent creates register entries freely; that needs no confirmation.
 
 ## Rules on top of the cycle
 
-**One turn, one meaningful change.** Do not mix refactoring with new functionality: in a combined
-diff neither one stays reviewable.
-
-**First what does not depend on the question.** If a question comes up, finish everything that is
-true under any answer, and only then stop.
+**One turn, one meaningful change.** Do not mix refactoring with new functionality: in a combined diff
+neither stays reviewable.
 
 **Unfinished is called unfinished.** Reporting "done" with a failed Definition of Done item is worse
-than an honest "this is done, that is left".
+than "this is done, that is left".
 
-**Test before code.** The order is not cosmetic: a test written after the implementation checks what
-was built, not what was required.
-
-**Debt is recorded immediately.** "I will document it later" never works.
-
-**The journal writes itself.** The prompt, the outcome and the human's edits are recorded by the
-hooks in `docs/ai/journal/`. To add your own words, use `/journal-note`.
+The prompt, the outcome and the human's edits are recorded by the hooks in `docs/ai/journal/`; to add
+your own words, use `/journal-note`.
