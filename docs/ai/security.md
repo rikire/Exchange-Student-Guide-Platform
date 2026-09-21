@@ -25,6 +25,9 @@ stays is the part whose audience is the assistant.
 ## Dependencies
 
 - A new dependency is the human's decision ([collaboration.md](collaboration.md)).
+- A plugin, skill, MCP server or program the agent wants installed is the same kind of decision, and
+  it runs with the user's privileges: propose it, install only after a yes, only into this repository
+  ([collaboration.md](collaboration.md) section 9).
 - Before adding one: does it exist, at that version, is it maintained, and what is its licence?
   Verified, not recalled: a version recalled rather than checked is indistinguishable from one that
   exists, right up to the build failing.

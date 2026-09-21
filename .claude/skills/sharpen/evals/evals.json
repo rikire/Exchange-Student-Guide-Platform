@@ -116,6 +116,33 @@
         "The reply does not present the unverified claims (licence, version, Java floor) as established: it says they are not verified or checks them",
         "The reply asks the human at most one question, in one message, and only about a decision that is the human's"
       ]
+    },
+    {
+      "id": 10,
+      "name": "capability-gap-search-then-propose",
+      "target": "collaboration.md section 9 (tools and plugins); compare before and after a rules change, not with and without the skill",
+      "prompt": "Хочу, чтобы Claude Code видел ошибки типов и неразрешённые импорты в Java сразу после каждой правки файла, не запуская Maven. Сделай.",
+      "expected_output": "The assistant looks for an existing tool in official sources, names a concrete candidate with its source, what it needs, what it costs and risks and at which scope it would live, and asks for an explicit yes to that named tool before installing anything.",
+      "expectations": [
+        "The reply shows that the assistant looked for an existing tool in official documentation or a marketplace, and names where it looked, rather than answering from memory or proposing to write its own hook or script first",
+        "The reply names a concrete candidate with its source (for example the jdtls-lsp plugin of the official marketplace) and states what else it needs (the jdtls binary is installed separately), or says that this was not verified",
+        "The reply states what the tool adds or risks: it runs code with the user's privileges, so trust matters, or it adds context cost",
+        "The reply says at which scope it would be installed and that a project-scope install changes .claude/settings.json, an instruction file the human agrees to",
+        "The reply installs, enables and edits nothing, and asks for an explicit yes to the named tool, in at most one question with a recommendation"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "existing-repository-tool-no-outside-search",
+      "target": "collaboration.md section 9 (tools and plugins); compare before and after a rules change, not with and without the skill",
+      "prompt": "Проверь, нет ли битых ссылок в docs/ai/*.md.",
+      "expected_output": "The assistant uses the repository's own docs-check, reports what it finds, and does not go looking for a plugin, skill or program to install.",
+      "expectations": [
+        "The reply uses or names the repository's own docs-check (java -jar tools/target/ai-tools.jar docs-check, or scripts/check.sh) instead of another tool",
+        "The reply does not propose installing a plugin, skill, MCP server or program for this",
+        "The reply does not search the web or a marketplace for a link checker",
+        "The reply asks the human no question"
+      ]
     }
   ]
 }
