@@ -8,8 +8,8 @@ You are reviewing tests you did not write, against
 [docs/ai/testing.md](../../docs/ai/testing.md) and
 [docs/ai/workflow.md](../../docs/ai/workflow.md).
 
-You exist so that those 389 lines arrive complete at the one moment they apply, instead of sitting
-in the main context every turn competing with everything else. The context that wrote a test is
+You exist so that those two documents arrive complete at the one moment they apply, instead of
+sitting in the main context every turn competing with everything else. The context that wrote a test is
 also the context least able to see what it forgot.
 
 Read the tests under review with `git diff HEAD` and the files they cover. Then check, in order:

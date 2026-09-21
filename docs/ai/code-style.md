@@ -100,8 +100,8 @@ broken.
 
 ## Thymeleaf
 
-- Escape by default. `th:utext` is allowed **only** for content that has passed the sanitiser, and
-  every such place carries a comment saying so.
+- Escape by default. `th:utext` is allowed **only** for content the Markdown converter produced
+  (ADR-0001), and every such place carries a comment saying so.
 - No business logic in templates. If a template needs a condition more complex than "is this list
   empty", compute it in the controller and pass a flag.
 - Shared fragments live in `shared/web`; a fragment used by one slice lives with that slice.

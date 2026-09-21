@@ -59,7 +59,7 @@ Writing our own is proposed like a dependency ([workflow.md](workflow.md) §7a).
 | A native query, where JPQL would not do | human — it pins us to one database |
 | A transaction boundary spanning slices or I/O | human — a failure mode |
 | Pagination, or returning everything, on a public page | human — availability, reachable anonymously |
-| Anything under `shared/security`, and the sanitiser allowlist | human — one wrong entry is stored XSS |
+| Anything under `shared/security`, and the Markdown converter's raw-HTML setting | human — one wrong setting is stored XSS |
 | What is logged, at what level, where it may carry visitor text | human — secrets and personal data |
 | The error text and status a visitor sees | human — it is the product |
 | Caching, retries, timeouts, backoff, async, scheduled jobs | human — each adds a mode no test will show |
