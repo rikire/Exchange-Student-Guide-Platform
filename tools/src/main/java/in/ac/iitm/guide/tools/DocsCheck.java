@@ -112,7 +112,106 @@ public final class DocsCheck {
             problems.addAll(check.roadmapItemsWithoutAResult(document));
             problems.addAll(check.statedCounts(document));
         }
+        problems.addAll(check.retiredWording(documents));
         return problems;
+    }
+
+    /** The line an ADR uses to name wording that its decision made obsolete. */
+    private static final Pattern RETIRES = Pattern.compile("^\\*\\*Retires:\\*\\*\\s*(.+)$");
+
+    private static final Pattern ADR_FILE = Pattern.compile("^docs/architecture/adr/(ADR-\\d{4})-.*\\.md$");
+
+    /** Where a new paragraph starts without a blank line: a list item, or a table row. */
+    private static final Pattern PARAGRAPH_START = Pattern.compile("^\\s*(?:[-*]\\s|\\d+\\.\\s|\\|)");
+
+    private record Retired(String adr, String phrase) {}
+
+    /**
+     * Wording an accepted ADR retired that a document still uses.
+     *
+     * <p>ADR-0001 chose Markdown so that no HTML sanitizer would exist, yet three documents kept
+     * telling the assistant to sanitise HTML on the way in. Every other check stayed green, because
+     * each compares names and links and none reads meaning. An ADR now lists the phrases it made
+     * obsolete on a {@code **Retires:**} line, so that a later document repeating one is found.
+     *
+     * <p>A paragraph that names the ADR is talking about the old wording rather than using it, so it
+     * is left alone; so are the ADR itself and the dated records. A table row is its own paragraph,
+     * so naming the ADR in one row does not excuse the row above it.
+     */
+    private List<Problem> retiredWording(List<Document> documents) {
+        List<Retired> retired = new ArrayList<>();
+        for (Document document : documents) {
+            Matcher adr = ADR_FILE.matcher(document.relative());
+            if (!adr.matches()) {
+                continue;
+            }
+            for (String line : document.lines()) {
+                Matcher retires = RETIRES.matcher(line);
+                if (retires.matches()) {
+                    for (String phrase : retires.group(1).split(";")) {
+                        if (!phrase.isBlank()) {
+                            retired.add(new Retired(adr.group(1), phrase.strip()));
+                        }
+                    }
+                }
+            }
+        }
+        if (retired.isEmpty()) {
+            return List.of();
+        }
+
+        List<Problem> problems = new ArrayList<>();
+        for (Document document : documents) {
+            if (document.relative().startsWith("docs/architecture/adr/") || isARecord(document.relative())) {
+                continue;
+            }
+            for (String paragraph : paragraphs(document.lines())) {
+                String text = squashed(paragraph);
+                for (Retired entry : retired) {
+                    if (text.contains(squashed(entry.adr())) || !text.contains(squashed(entry.phrase()))) {
+                        continue;
+                    }
+                    problems.add(new Problem(
+                            document.relative(),
+                            "uses wording that " + entry.adr() + " retired: \"" + entry.phrase()
+                                    + "\". Say it the way the ADR now decides, or name the ADR in the same"
+                                    + " paragraph if this is history."));
+                }
+            }
+        }
+        return problems;
+    }
+
+    /** Lower case with runs of whitespace collapsed, so a phrase wrapped across lines still matches. */
+    private static String squashed(String text) {
+        return text.toLowerCase(Locale.ROOT).replaceAll("\\s+", " ").strip();
+    }
+
+    /** Paragraphs of a document, skipping quotations, which are evidence rather than claims. */
+    private static List<String> paragraphs(List<String> lines) {
+        List<String> result = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        for (String line : lines) {
+            if (line.isBlank() || PARAGRAPH_START.matcher(line).find()) {
+                flush(current, result);
+            }
+            if (line.isBlank() || line.stripLeading().startsWith(">")) {
+                continue;
+            }
+            current.append(line).append(' ');
+            if (line.stripLeading().startsWith("|")) {
+                flush(current, result);
+            }
+        }
+        flush(current, result);
+        return result;
+    }
+
+    private static void flush(StringBuilder current, List<String> paragraphs) {
+        if (!current.isEmpty()) {
+            paragraphs.add(current.toString());
+            current.setLength(0);
+        }
     }
 
     /** A phase file of the roadmap. The index and the session notes beside it are not plans. */
