@@ -2,6 +2,7 @@
 
 **Status:** accepted
 **Date:** 2026-09-05
+**Retires:** sanitise HTML on the way in; passed the sanitiser; the sanitiser allowlist
 
 ## Context
 
