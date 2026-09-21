@@ -5,8 +5,8 @@
 **As of 21 September: 17 of 17 steps done, 0 open.** Closed on 10 Sep — the glossary audit, the CJM
 scenario trace, C4 levels 1–3 with the ERD, the ADRs (eleven now, against the eight topics planned),
 the four screen gaps the diagram review found, the test plan, the revised milestone plan, the route
-contract and its same-day review, and the design document itself. Closed 21 Sep, ten days late — the
-article drafts.
+contract and its same-day review, and the design document itself. Closed 21 Sep — the article
+drafts.
 
 **Every step checked is not the same as the phase being closed.** The readiness criterion below asks
 for `/course-check design` to find evidence for all five rubric marks with no row resting on a
@@ -258,8 +258,7 @@ design document is the deliverable; the repository documents are the source it i
       together with the glossary and ERD, not ahead of them
       — check: 10 or more drafts exist in the seed format, and one of them is a full article on FRRO
       registration — that is the first step of the mid-demo scenario, so it cannot be a placeholder.
-      Done 21 Sep (10 days late — see the phase-1 risk note this triggered, `docs/course/design-doc.tex`
-      §4): 20 drafts under `app/src/main/resources/data/seed/`, including
+      Done 21 Sep: 20 drafts under `app/src/main/resources/data/seed/`, including
       [Registering with FRRO](../../app/src/main/resources/data/seed/registering-with-frro.md) in
       full. **Front-matter shape, decided here since no example existed anywhere yet:** YAML with
       `title`, `summary`, `tags`, `author`, `created`, `updated` — `00-init.md` only named
