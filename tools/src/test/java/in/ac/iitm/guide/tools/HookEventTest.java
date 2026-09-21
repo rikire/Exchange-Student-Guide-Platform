@@ -13,18 +13,32 @@ class HookEventTest {
     void a_task_notification_is_not_something_a_person_typed() throws IOException {
         HookEvent event = HookEvent.parse("{\"prompt\":\"<task-notification>\\n<task-id>abc</task-id>\"}");
 
-        assertTrue(event.isTaskNotification());
+        assertTrue(event.isMachineMessage());
+    }
+
+    @Test
+    void a_message_relayed_from_another_agent_is_not_something_a_person_typed() throws IOException {
+        HookEvent event =
+                HookEvent.parse("{\"prompt\":\"<agent-message from=\\\"a1\\\">\\n[Subagent hand-back] text\"}");
+
+        assertTrue(event.isMachineMessage());
+    }
+
+    @Test
+    void a_message_relayed_from_another_session_is_not_something_a_person_typed() throws IOException {
+        assertTrue(HookEvent.parse("{\"prompt\":\"<cross-session-message from=\\\"w\\\">hi\"}")
+                .isMachineMessage());
     }
 
     @Test
     void leading_whitespace_does_not_hide_a_task_notification() throws IOException {
-        assertTrue(HookEvent.parse("{\"prompt\":\"\\n  <task-notification>x\"}").isTaskNotification());
+        assertTrue(HookEvent.parse("{\"prompt\":\"\\n  <task-notification>x\"}").isMachineMessage());
     }
 
     @Test
     void an_ordinary_prompt_is_not_a_task_notification() throws IOException {
         assertFalse(
-                HookEvent.parse("{\"prompt\":\"Add search to the articles\"}").isTaskNotification());
+                HookEvent.parse("{\"prompt\":\"Add search to the articles\"}").isMachineMessage());
     }
 
     @Test
@@ -32,12 +46,12 @@ class HookEventTest {
         // A person asking about the tag must still get a journal entry and the contract reminder.
         HookEvent event = HookEvent.parse("{\"prompt\":\"why does <task-notification> show up in my journal?\"}");
 
-        assertFalse(event.isTaskNotification());
+        assertFalse(event.isMachineMessage());
     }
 
     @Test
     void an_event_without_a_prompt_is_not_a_task_notification() throws IOException {
-        assertFalse(HookEvent.parse("{}").isTaskNotification());
+        assertFalse(HookEvent.parse("{}").isMachineMessage());
     }
 
     @Test

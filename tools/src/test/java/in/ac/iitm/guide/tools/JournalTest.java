@@ -317,6 +317,37 @@ class JournalTest {
     }
 
     @Test
+    void a_notification_inside_a_human_turn_leaves_that_turn_alone() throws IOException {
+        // The harness delivers a subagent's report in the middle of a turn. Treating it as the start
+        // of a machine turn would hand the agent's own edits to the human and leave this entry open.
+        Journal journal = Journal.open(repo, "session-m6");
+        journal.startEntry("a person's request");
+        Files.writeString(repo.resolve("by-agent.md"), "written during the turn");
+
+        journal.beginMachineTurn();
+
+        assertFalse(journal.isMachineTurn());
+        assertTrue(journal.hasOpenEntry());
+        journal.finishEntry("Done.", List.of(), List.of());
+        assertTrue(journalContent().contains("> a person's request"));
+        assertEquals(List.of(), journal.startEntry("next prompt"));
+    }
+
+    @Test
+    void a_second_notification_during_a_machine_turn_does_not_carry_the_agents_edits() throws IOException {
+        Journal journal = Journal.open(repo, "session-m7");
+        journal.startEntry("first prompt");
+        journal.finishEntry("done", List.of(), List.of());
+        journal.beginMachineTurn();
+        Files.writeString(repo.resolve("by-agent.md"), "written during the machine turn");
+
+        journal.beginMachineTurn();
+        journal.endMachineTurn();
+
+        assertEquals(List.of(), journal.startEntry("next prompt"));
+    }
+
+    @Test
     void a_carried_hand_edit_is_reported_once() throws IOException {
         Journal journal = Journal.open(repo, "session-m5");
         journal.startEntry("first prompt");

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,13 +40,25 @@ public record HookEvent(
     }
 
     /**
-     * True when the prompt is a background-task notification rather than something a person typed.
-     *
-     * <p>Recognised by the tag the harness puts first. A person's own message that merely mentions
-     * the tag does not start with it, so it still gets an entry and the reminder.
+     * The tags the harness puts first on a message it relays from a background task, a subagent or
+     * another session. Observed in this repository's journal and in a live hand-back; a wrapper not
+     * listed here is treated as a person's prompt until it is added.
      */
-    public boolean isTaskNotification() {
-        return prompt != null && prompt.stripLeading().startsWith("<task-notification>");
+    private static final List<String> MACHINE_TAGS =
+            List.of("<task-notification>", "<agent-message", "<cross-session-message");
+
+    /**
+     * True when the prompt is relayed by the harness rather than typed by a person.
+     *
+     * <p>Recognised by the tag it starts with. A person's own message that merely mentions a tag does
+     * not start with it, so it still gets an entry and the reminder.
+     */
+    public boolean isMachineMessage() {
+        if (prompt == null) {
+            return false;
+        }
+        String start = prompt.stripLeading();
+        return MACHINE_TAGS.stream().anyMatch(start::startsWith);
     }
 
     static HookEvent parse(String json) throws IOException {

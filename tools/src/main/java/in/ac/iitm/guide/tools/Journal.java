@@ -79,8 +79,15 @@ public final class Journal {
      * notification arrived are carried to the next prompt, and the agent's own edits during the
      * turn are excluded from it: the report is headed "files the human changed by hand" and the
      * agent is told not to argue with it.
+     *
+     * <p>Only between turns. The harness also delivers a subagent's report in the middle of a turn,
+     * and then it belongs to that turn: starting a machine turn there would hand the agent's own
+     * edits to the human and leave the person's entry open for ever.
      */
     public void beginMachineTurn() throws IOException {
+        if (hasOpenEntry() || isMachineTurn()) {
+            return;
+        }
         Map<String, String> previous = readSnapshot();
         Map<String, String> current = Snapshot.take(repo);
         if (!previous.isEmpty()) {

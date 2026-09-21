@@ -179,7 +179,7 @@ final class HookCommand {
 
         // A background notification is not a request: no contract reminder, no translation demand,
         // no entry of its own. Its subagent is noted by `hook subagent` instead.
-        if (event.isTaskNotification()) {
+        if (event.isMachineMessage()) {
             journal.beginMachineTurn();
             return;
         }
