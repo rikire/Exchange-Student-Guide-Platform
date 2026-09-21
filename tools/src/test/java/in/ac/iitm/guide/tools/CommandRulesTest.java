@@ -114,6 +114,21 @@ class CommandRulesTest {
     }
 
     @Test
+    void an_identifier_placeholder_is_not_a_marker() {
+        // Documents describe identifiers such as the feature id; the letters after a hyphen stand for
+        // a number and defer nothing. A whole-file write of repository-map.md was refused over one.
+        // Assembled, because the guard reads the text of this edit as it lands.
+        String placeholder = "FEAT-" + "X".repeat(3);
+        assertEquals(ALLOW, content("docs/repository-map.md", "| `" + placeholder + "` | Feature files |\n"));
+    }
+
+    @Test
+    void the_bare_word_is_still_a_marker() {
+        String marker = "X".repeat(3);
+        assertEquals(DENY, content("app/src/main/java/Thing.java", "// " + marker + " revisit this\n"));
+    }
+
+    @Test
     void a_word_that_merely_contains_the_letters_is_not_a_marker() {
         assertEquals(ALLOW, content("docs/notes.md", "The autodetect step runs first.\n"));
     }

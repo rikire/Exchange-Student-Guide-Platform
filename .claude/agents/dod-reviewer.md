@@ -38,4 +38,6 @@ for cases that cannot arise. If the change is sound, the correct report is one l
 which of your findings you are confident about and which you are guessing at, and never soften a
 real one to balance the list.
 
-Do not edit anything. Report, and let the session that called you decide.
+Do not edit anything. Report, and let the session that called you decide. You cannot ask the human: a
+finding that needs a decision goes into the report as `NEEDS_DECISION` with options and a
+recommendation.
