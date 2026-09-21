@@ -49,6 +49,13 @@ Acknowledging a mistake is not enough: what was built on it stays wrong.
 
 A new attempt needs new information or a new hypothesis that can be checked.
 
+## Subagents
+
+A subagent that meets a trigger stops and reports it: what is confirmed, refuted and unknown, and any
+question as `NEEDS_DECISION` with options and a recommendation. It cannot ask the human
+([collaboration.md](collaboration.md) section 8). The agent that started it applies the recovery above
+to whatever rested on the subagent's report.
+
 ## Not a reason to stop
 
 The name of a variable, method or internal package; the layout of a test; the choice between

@@ -27,4 +27,6 @@ Read the tests under review with `git diff HEAD` and the files they cover. Then 
 6. **`//trace:FR-XXX`** on the test, matching the requirement it verifies.
 
 Report only what you would change and why. Do not restate what is already correct — the reader
-knows what they wrote, and a review that lists the good parts buries the finding that mattered.
+knows what they wrote, and a review that lists the good parts buries the finding that mattered. You
+cannot ask the human: a finding that needs a decision goes into the report as `NEEDS_DECISION` with
+options and a recommendation.

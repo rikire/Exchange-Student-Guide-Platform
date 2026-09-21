@@ -5,7 +5,7 @@ load everything into context.
 
 | Document | About |
 |---|---|
-| [collaboration.md](collaboration.md) | Who decides what, how the agent disagrees, plans and takes feedback |
+| [collaboration.md](collaboration.md) | Who decides what, how the agent disagrees, plans, takes feedback and works with subagents |
 | [prompting.md](prompting.md) | From request to confirmed contract |
 | [workflow.md](workflow.md) | A feature from statement to commit, TDD, technical debt |
 | [testing.md](testing.md) | What to assert, what to mock, how to derive the corner cases |
@@ -33,7 +33,7 @@ enforcement.
 | **Gate** — the hook asks or refuses | at the action | `collaboration` (protected paths), `stop-and-ask`, `workflow` (the test-first order) |
 | **Reminder** — `additionalContext` | at the action | `prompting` (every prompt), `docs-sync` (a tracked area changed), `roadmap` (the deadline, each session start) |
 | **Path rule** — `.claude/rules/` | when a matching file is **read** | `code-style`, `testing`, `architecture-rules`, `collaboration` (its decision table, on the schema), `docs-sync` (how to write documentation, on any document) |
-| **Subagent** — its own context | when invoked | `definition-of-done` (`dod-reviewer`), `testing` (`test-reviewer`) |
+| **Subagent** — its own context | when invoked | `definition-of-done` (`dod-reviewer`), `testing` (`test-reviewer`), `collaboration` §8 (`researcher`, `grader`: read-only by their tool list) |
 | **Memory** — nothing delivers it | never | what is left of `collaboration` and `workflow` |
 
 A gate stops the action; a reminder can be read and ignored; prose is weaker than either.
