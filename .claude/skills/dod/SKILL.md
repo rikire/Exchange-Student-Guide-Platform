@@ -1,25 +1,31 @@
 ---
 name: dod
 description: Run the Definition of Done over the current changes. Use before calling work finished, before a commit that closes a feature, or whenever someone asks whether something is done, ready, or safe to merge.
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(./mvnw:*)
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git ls-files:*), Bash(./mvnw:*)
 ---
 
 ## What has actually changed
 
-Working tree:
+Committed, not yet on `origin/main`:
 
-!`git status --short || true`
+!`git diff origin/main...HEAD --stat || true`
 
-Against HEAD:
+Uncommitted, in files git already tracks:
 
 !`git diff HEAD --stat || true`
+
+New and untracked, which neither diff above shows:
+
+!`git ls-files --others --exclude-standard || true`
 
 ## The checklist
 
 Run the checklist in [docs/ai/definition-of-done.md](../../../docs/ai/definition-of-done.md).
 
-The diff above is the subject. It is injected rather than described because a checklist run from
-memory of what was changed is a checklist run against the wrong thing.
+The three lists above are the subject. They are injected rather than described because a checklist
+run from memory of what was changed is a checklist run against the wrong thing. Once a change is
+committed, `git diff HEAD` is empty; the first list is what still counts. Read every file in the
+third list in full, since no diff shows it.
 
 Go through the items **one at a time** and give an honest verdict for each: passed, failed, or not
 applicable. Run the checks for real, not from memory:
@@ -36,10 +42,11 @@ exists to prevent.
 
 ## The second reading
 
-Then **re-read your own diff in full** (`git diff HEAD`) and say separately: what looks doubtful,
-what was added "just in case", and what should be deleted.
+Then **re-read your own change in full** (`git diff origin/main...HEAD`, `git diff HEAD` and each
+untracked file) and say separately: what looks doubtful, what was added "just in case", and what
+should be deleted.
 
-Then hand the same diff to the `dod-reviewer` subagent and report what it found. You wrote this
+Then hand the same change to the `dod-reviewer` subagent and report what it found. You wrote this
 code, so your reading of it is the one reading that cannot be independent; the subagent sees the
 diff and the criteria without the reasoning that produced them. Where it disagrees with your own
 verdict, say so rather than picking the more comfortable of the two.

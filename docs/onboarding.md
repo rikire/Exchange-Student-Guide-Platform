@@ -83,12 +83,8 @@ It builds the process tooling and points git at the tracked hooks. Run it once p
 in the repository but git does not enable them by itself. **This is the step that gets skipped**, and
 skipping it is invisible: commits simply stop being checked, which is why "Done when" tests it.
 
-Two things on a fresh Linux machine look like failures and are not:
-
-- The build prints `Author identity unknown … fatal`. It is the output of a test that makes a commit
-  fail on purpose.
-- `git status` shows `.githooks/README.md` as modified: the script marks every file in `.githooks/`
-  executable. Undo it with `chmod 644 .githooks/README.md`.
+The build prints `Author identity unknown … fatal`. That looks like a failure and is not: it is the
+output of a test that makes a commit fail on purpose.
 
 ## 4. That everything works
 

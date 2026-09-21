@@ -101,7 +101,10 @@ For uploads: type detected from content, size limited, filename generated, deliv
 
 A separate step, **after** all the others.
 
-1. Re-read your own diff in full: `git diff HEAD`.
+1. Re-read your own change in full: `git diff origin/main...HEAD` (committed, not yet published),
+   `git diff HEAD` (uncommitted), and each untracked file from
+   `git ls-files --others --exclude-standard`. Once a change is committed `git diff HEAD` is empty
+   and shows nothing.
 2. For each file, answer:
    - **Is this needed?** Code added "for later" and unused now — delete it.
    - **Is any debugging left?** Console output, commented-out code, temporary files.
