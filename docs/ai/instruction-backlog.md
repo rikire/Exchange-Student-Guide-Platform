@@ -1,8 +1,8 @@
 # Proposed changes to the agent's instructions
 
-**All three entries below were carried out on 9 September.** They are kept rather than deleted: the
-problem each names is the reason its mechanism exists, and a list holding only open items stops
-being evidence of what was decided.
+**Status.** IB-001 was carried out on 9 September and IB-002 on 21 September. IB-003 and IB-004 are
+open. Carried-out entries are kept rather than deleted: the problem each names is the reason its
+mechanism exists, and a list holding only open items stops being evidence of what was decided.
 
 **Nothing arrives here in force.** An entry binds the agent only once the human moves it into
 [CLAUDE.md](../../CLAUDE.md) or the document that owns it — the agent may not change its own
