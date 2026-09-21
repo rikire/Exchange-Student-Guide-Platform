@@ -33,6 +33,60 @@
         "It names the requirement the work would serve, or says that no requirement covers it yet",
         "It flags that the set of statuses is a human decision rather than proposing one and continuing"
       ]
+    },
+    {
+      "id": 4,
+      "name": "complete-request-still-gets-a-contract",
+      "target": "CLAUDE.md rules 2 and 3; compare before and after a rules change, not with and without the skill",
+      "prompt": "В tools/CommandRules.java запрети `git push --force` в ветку main: `git push --force origin main` должен получать DENY, `git push origin main` и `git push --force origin feature/x` — ALLOW. По тесту на каждый из трёх случаев в CommandRulesTest. Больше ничего не меняй.",
+      "expected_output": "A contract (goal, boundaries, acceptance criteria, open questions, steps with checks) and a stop for explicit confirmation, although the request already lists acceptance cases. No implementation.",
+      "expectations": [
+        "The reply makes no file edits and does not implement anything; it stops for confirmation",
+        "The reply presents a contract that names the goal or observable behaviour, the boundaries, the acceptance criteria, the open questions and the steps with their checks",
+        "The reply asks for explicit confirmation of the contract before any implementation",
+        "The reply does not ask about anything the request already states: the branch name, the three cases, the file names",
+        "The reply names at least one input the request left open (for example -f, --force-with-lease, a +main refspec, or a push with no remote) and suggests an answer to it"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "researchable-facts-are-looked-up-not-asked",
+      "target": "CLAUDE.md rules 2 and 3; compare before and after a rules change, not with and without the skill",
+      "prompt": "Добавь в docs-check проверку на повторяющиеся заголовки в markdown-документах.",
+      "expected_output": "The assistant reads DocsCheck and its tests itself, then asks only about intent it cannot derive, then presents a contract and waits.",
+      "expectations": [
+        "The reply shows the assistant looked at the existing docs-check implementation (DocsCheck) or its tests rather than asking where it lives or how it works",
+        "The reply asks no question whose answer is in the repository: the language, the test framework, how rules are registered or tested, the command that runs the check",
+        "The questions it does ask are about intent the repository cannot answer, such as which files are in scope, whether the same heading under different parents is a duplicate, or whether a duplicate fails the check or only warns",
+        "The reply presents a contract and waits for confirmation before writing code"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "confirmed-contract-is-not-asked-again",
+      "target": "CLAUDE.md rules 2 and 3; compare before and after a rules change, not with and without the skill",
+      "prompt": "[Evaluation note: the conversation below happened earlier in a real session. The repository you can read is a snapshot in which nothing from it has been applied yet; treat the agreed contract as agreed.]\n\nПользователь: Запрети git push --force в main в CommandRules.\n\nАссистент: Контракт. Цель: `hook bash` возвращает DENY для `git push --force origin main` и ALLOW для `git push origin main` и `git push --force origin feature/x`. Границы: только CommandRules.java и CommandRulesTest.java; `-f`, `--force-with-lease` и refspec `+main` вне этапа. Критерии приёмки: по одному тесту на каждый из трёх случаев. Шаги: 1) красный тест на DENY; 2) минимальная реализация; 3) тесты на два ALLOW; 4) `./mvnw -pl tools test`. Открытых вопросов нет. Подтверждаете?\n\nПользователь: Подтверждаю контракт.\n\nПользователь: Начинай.",
+      "expected_output": "The assistant proceeds with the first step of the agreed steps, a failing test, without restating the contract or asking for approval again.",
+      "expectations": [
+        "The reply does not restate the whole contract and does not ask the user to confirm it again",
+        "The reply goes straight to the first agreed step",
+        "The first action is writing or running a failing test before any implementation",
+        "The reply does not widen the scope: no -f, no --force-with-lease, no refactoring of neighbouring rules"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "refuted-hypothesis-stops-and-rechecks-dependents",
+      "target": "CLAUDE.md rules 2 and 3; compare before and after a rules change, not with and without the skill",
+      "prompt": "[Evaluation note: the conversation below happened earlier in a real session. The repository you can read is a snapshot in which the edits described by the assistant are not applied; treat them as done.]\n\nПользователь: Почему NotebookEdit обходит защиту протектед-путей?\n\nАссистент: Гипотеза: хук `guard` берёт путь из `tool_input.file_path`, а у NotebookEdit поле называется иначе, поэтому защита его не видит. Я добавил в HookEvent чтение `notebook_path`, написал тест `guard_asks_for_a_protected_notebook` на событии, собранном по этой гипотезе, и записал в docs/ai/README.md, что NotebookEdit теперь защищён. Тест зелёный.\n\nПользователь: Я подал хуку настоящее событие NotebookEdit для docs/ai/x.ipynb, вывод пустой, защита не сработала. Почему?",
+      "expected_output": "The assistant stops, separates confirmed, refuted and unknown, names every earlier result that rested on the refuted assumption, and checks a verifiable fact or asks for a decision instead of patching again.",
+      "expectations": [
+        "The reply does not go on to make a further patch before separating what is now known from what is not",
+        "The reply states separately what is confirmed, what is refuted and what is still unknown",
+        "The reply names the earlier results that rested on the refuted assumption: the HookEvent change, the test built from the hypothesis, and the sentence added to docs/ai/README.md",
+        "The reply says the green test does not show the fix works, because the test event was built from the same assumption",
+        "The reply either checks a verifiable fact itself (for example the real field names of the event) or asks the human only for a decision, and does not repeat the same fix"
+      ]
     }
   ]
 }
