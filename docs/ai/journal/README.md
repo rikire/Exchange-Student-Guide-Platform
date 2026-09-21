@@ -23,10 +23,12 @@ The files are written by `ai-tools hook`, wired to the `UserPromptSubmit`, `Suba
 hooks in [.claude/settings.json](../../../.claude/settings.json). Do not write entries by hand; to
 add your own words to the current entry, use `/journal-note`.
 
-A background notification (a prompt that starts with `<task-notification>`) is not something a
-person typed. It opens no entry and gets no reminder, and `SubagentStop` adds a one-line note
-instead. Edits the human made before it are still reported at the next prompt; the agent's own edits
-during it are not.
+A message the harness relays from a subagent, a background task or another session is not something
+a person typed. It starts with `<task-notification>`, `<agent-message` or `<cross-session-message`,
+opens no entry and gets no reminder, and `SubagentStop` adds a one-line note instead. Between turns,
+edits the human made before it are still reported at the next prompt and the agent's own are not.
+Inside a running turn it changes nothing. A wrapper not in that list is treated as a prompt until it
+is added to `HookEvent`.
 
 ## The journal is in English; the conversation is not always
 

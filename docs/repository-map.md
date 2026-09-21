@@ -163,7 +163,7 @@ refactor(DEBT-007): replace the in-memory rate limiter
 |---|---|---|
 | `SessionStart` hook | A session opens | Says whether the guard jar is missing or older than `tools/src`, and reports the roadmap phase and the open debt count. Plain shell, not the jar — it has to be able to report the jar |
 | `permissions.deny` | A command is about to run | Refuses `--no-verify` on git and `-DskipTests` on the build. Not a hook and not our code: the client enforces it, so it is the one refusal that survives the jar being absent |
-| `UserPromptSubmit` hook | A prompt is submitted | Delivers the contract reminder, resolves the author, opens a journal entry, reports the human's own edits. A background notification (`<task-notification>`) is not a prompt: it opens no entry and gets no reminder |
+| `UserPromptSubmit` hook | A prompt is submitted | Delivers the contract reminder, resolves the author, opens a journal entry, reports the human's own edits. A message the harness relays from a subagent, a background task or another session (it starts with `<task-notification>`, `<agent-message` or `<cross-session-message`) is not a prompt: it opens no entry and gets no reminder |
 | `PreToolUse` hook (edits) | An edit is about to be written | Asks when the file is the human's; refuses a marker with no debt reference; refuses a disabled or sleeping test; asks about a test with no assertion, and about a **new** file under `shared/`, in the schema or security packages, or named like a wheel |
 | `PreToolUse` hook (shell) | A command is about to run | Refuses the flags that skip checks; asks when a build is piped somewhere that hides its exit code |
 | `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
