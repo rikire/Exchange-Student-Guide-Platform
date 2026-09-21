@@ -16,10 +16,10 @@
     {
       "id": 2,
       "prompt": "/sharpen rename the variable `n` to `articleCount` in ArticleSearch",
-      "expected_output": "One line saying the request is already precise. Manufacturing questions here is the failure.",
+      "expected_output": "A contract of one to three lines and a request to confirm. Manufacturing questions here is the failure.",
       "expectations": [
-        "The response is a single short statement that the request is already precise",
-        "It does not produce an Understood-as / Sharper version / Unclear breakdown",
+        "The response is a contract of one to three lines (goal, boundary, check) that ends by asking for confirmation",
+        "It does not produce a full open-questions breakdown",
         "It does not invent ambiguities about naming or scope"
       ]
     },

@@ -1,25 +1,24 @@
 ---
 name: sharpen
-description: Restate an underspecified request precisely and name what it leaves open. Use when a request would produce code, a document or a schema whose shape depends on something it did not state - a vague feature ask, "add X", "make it better", a task with no acceptance condition - and before building anything from it.
-argument-hint: <the request to sharpen>
+description: State the contract for a request without acting on it - goal, boundaries, acceptance criteria, open questions, steps. Use when a request would change files or state and no contract has been confirmed yet - a vague feature ask, "add X", "make it better", a task with no acceptance condition, or a complete-looking request before building anything from it.
+argument-hint: <the request to state a contract for>
 ---
 
 Apply [docs/ai/prompting.md](../../../docs/ai/prompting.md) to: **$ARGUMENTS**
 
-Do **not** act on the request. Produce only the questions it should have answered:
+Do **not** act on the request. First read what the repository can answer, and say where you looked.
+Then produce the contract in the format of `prompting.md`, section 2:
 
-1. **Understood as** — one sentence saying what you think is being asked.
-2. **Sharper version** — the request as it should have been written: the goal, the boundary, and the
-   condition that would make it done. Phrase the acceptance condition so it could become a test name.
-3. **Unclear** — only the ambiguities that would lead to *different code*. For each, say what you
-   would otherwise assume. "I could imagine another reading" is not an ambiguity; anything can be
-   misread.
-4. **Not mentioned but needed** — walk the table in `prompting.md` and name only the rows that
-   actually apply: the requirement it serves, the slice that owns it, the failure path, empty data,
-   migrations, the route contract, who is allowed to do it, the acceptance criterion, and whether it
-   changes what the stakeholder was promised.
+1. **Understood as** — one sentence.
+2. **Goal and observable behaviour, boundaries, acceptance criteria** — phrase each criterion so it
+   could become a test name.
+3. **Open questions** — only intentions and priorities the repository cannot answer, and only those
+   that would lead to *different code*. Each with a suggested answer. Walk the tables in
+   `prompting.md` and name only the rows that apply. "I could imagine another reading" is not an
+   open question; anything can be misread.
+4. **Steps**, each with its check.
 
-Then say which of the open points are the human's decision and which you would settle yourself.
+Then say which open points are the human's decision and which you would settle yourself.
 
-If the request is already precise, say so in one line instead of manufacturing questions. A
-restatement of an unambiguous instruction is noise.
+With nothing open, the contract is one to three lines ending in "Confirm?". Do not invent questions
+to look thorough, and do not skip the contract because the request is precise.

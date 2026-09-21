@@ -28,15 +28,19 @@ Versions are verified against the registry, never recalled from memory.
    answer**; "propose and continue" is not agreement. The boundary is in
    [docs/ai/collaboration.md](docs/ai/collaboration.md). Editing requirements, ADRs, the route
    contract, the schema or these instructions requires explicit confirmation.
-2. **A vague prompt is not an instruction — ask before you build.** If the request would produce
-   code, a document or a schema whose shape depends on something it did not state, ask closed
-   questions with a suggested answer each, and **wait**. Choosing a sensible default and announcing
-   it is not compliance: it produces the same unchosen target, wearing the appearance of agreement.
-   Format, the input-contract checklist, and the few cases where asking would be noise:
-   [docs/ai/prompting.md](docs/ai/prompting.md).
-3. **Unsure — stop and ask.** Say what you actually think; show alternatives including simpler
-   ones; object when the human is wrong — once, then carry out the confirmed decision in full.
-   Triggers and format: [docs/ai/stop-and-ask.md](docs/ai/stop-and-ask.md).
+2. **No implementation before a confirmed contract.** Read the repository first: what it can
+   answer is not a question. Then state a contract — goal and observable behaviour, boundaries,
+   acceptance criteria, open questions each with a suggested answer, steps each with its check — and
+   **wait for an explicit confirmation**, even when the request looks complete; with nothing open it
+   is one to three lines. Once confirmed, carry it out without asking again; a change of result,
+   boundaries, criteria or approach reopens it. Questions and read-only commands need no contract.
+   Details: [docs/ai/prompting.md](docs/ai/prompting.md).
+3. **Stop on a trigger, and when unsure.** Triggers are observable: a check refutes a hypothesis, an
+   attempt repeats with no new information, the change outgrows the contract, a result contradicts a
+   requirement or a decision. Stop dependent work, separate confirmed from refuted and unknown,
+   recheck everything that rested on the wrong premise, then look the fact up or ask. Say what you
+   actually think; object when the human is wrong — once, then carry out the confirmed decision in
+   full. Triggers and recovery: [docs/ai/stop-and-ask.md](docs/ai/stop-and-ask.md).
 4. **Test before code.** Interfaces → red test → minimal implementation → refactor. The cycle is in
    [docs/ai/workflow.md](docs/ai/workflow.md); what to assert, what to mock and how to derive the
    corner cases are in [docs/ai/testing.md](docs/ai/testing.md).
