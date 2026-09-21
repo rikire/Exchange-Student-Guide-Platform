@@ -58,6 +58,29 @@ indexes exist and which queries they serve, and how that is reflected in the ERD
 If it is unclear how the change alters the described behaviour, do not rewrite at random — stop and
 ask ([stop-and-ask.md](stop-and-ask.md)).
 
+## Writing documentation
+
+Every sentence carries a fact, a decision, or a consequence of one. Cut anything that:
+
+- restates the heading, or says why the document exists;
+- praises the document's own honesty or thoroughness;
+- repeats in prose what a table above it already says;
+- tells the story of an incident inside a rule.
+
+A rule keeps the decision, one sentence of reason and a link. The story lives once, in a dated
+record: an audit or the journal.
+
+- **Sufficient, not short.** Deleting a sentence that held a decision is a worse defect than leaving
+  a long one. Before cutting, ask what a reader would do wrongly without it.
+- **No hand-written figure a command can produce.** Hand-written counts drifted in the roadmap and
+  the README. Name the command (`ai-tools count`) or leave the number out.
+- **A dated record is never rewritten to read better.** Audits, the journal and `PLAN-PROMPT.md` are
+  evidence; add a dated note instead.
+
+**Check.** Point at any sentence and name which of the three it carries. If none, it goes. When a
+change cuts an existing document, the commit message lists each removed passage with its category
+and says where a moved incident now lives.
+
 ## Generated documents
 
 These files are written **only by the generator**:

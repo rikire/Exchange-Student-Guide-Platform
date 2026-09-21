@@ -90,6 +90,10 @@ repeats a table. One sentence of rationale per decision, not a paragraph.
 goes. Short is not the target — sufficient is; a deleted sentence that held a decision is a worse
 defect than a long one.
 
+**Adopted 21 September 2026** as the section "Writing documentation" in
+[docs-sync.md](docs-sync.md), with a path rule in `.claude/rules/docs.md` so that it arrives when a
+document is opened.
+
 ## IB-004 — The process and its files need a pass of their own
 
 **Requested:** 10 September 2026.

@@ -33,7 +33,7 @@ rather than being counted as enforcement.
 |---|---|---|
 | **Gate** — the hook asks or refuses | at the action | `collaboration` (protected paths), `stop-and-ask`, `workflow` (the test-first order) |
 | **Reminder** — `additionalContext` | at the action | `prompting` (every prompt), `docs-sync` (a tracked area changed), `roadmap` (the deadline, each session start) |
-| **Path rule** — `.claude/rules/` | when a matching file is **read** | `code-style`, `testing`, `architecture-rules`, `collaboration` (its decision table, on the schema) |
+| **Path rule** — `.claude/rules/` | when a matching file is **read** | `code-style`, `testing`, `architecture-rules`, `collaboration` (its decision table, on the schema), `docs-sync` (how to write documentation, on any document) |
 | **Subagent** — its own context | when invoked | `definition-of-done` (`dod-reviewer`), `testing` (`test-reviewer`) |
 | **Memory** — nothing delivers it | never | what is left of `collaboration` and `workflow` |
 

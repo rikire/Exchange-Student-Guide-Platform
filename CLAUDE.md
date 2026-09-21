@@ -44,8 +44,8 @@ Versions are verified against the registry, never recalled from memory.
 4. **Test before code.** Interfaces → red test → minimal implementation → refactor. The cycle is in
    [docs/ai/workflow.md](docs/ai/workflow.md); what to assert, what to mock and how to derive the
    corner cases are in [docs/ai/testing.md](docs/ai/testing.md).
-5. **Changed behaviour — update the documentation in the same turn.** Rules:
-   [docs/ai/docs-sync.md](docs/ai/docs-sync.md).
+5. **Changed behaviour — update the documentation in the same turn.** Rules, including how to write
+   it without filler: [docs/ai/docs-sync.md](docs/ai/docs-sync.md).
 6. **Nothing is lost.** A requirement is traceable to code and to a test (`//trace:FR-XXX`);
    anything temporary is recorded in [docs/tech-debt.md](docs/tech-debt.md) (`// TODO(DEBT-XXX)`).
 
