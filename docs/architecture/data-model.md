@@ -17,6 +17,7 @@ than smoothed over.
 | `article` | Published content only | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md) |
 | `revision` | An article's title, summary and body as they stood before an approved edit | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md), and [CON-004](../requirements/constraints.md) — full copies, because there is no diff view |
 | `tag`, `article_tag` | Free-form labels, normalised on the way in | [ADR-0005](adr/ADR-0005-taxonomy.md) |
+| `article_link` | FR-006's backlinks and FR-004's red links, one row per `[[link]]` found on publish | [ADR-0012](adr/ADR-0012-article-link-storage.md) |
 
 **`article` holds nothing unpublished.** That is the whole point of the split: FR-001, FR-007 and
 FR-008 each carry a negative criterion — an unapproved or rejected submission must not resolve,
@@ -91,21 +92,16 @@ rule that closes path traversal.
 UC-019 was narrowed on 7 September so that correcting an article reuses the existing direct-edit
 capability, and closing is the only new action.
 
-## The one table no ADR decided
+## `article_link`
 
-**`article_link`** carries FR-006's backlinks — which articles link to this one — and FR-004's red
-links. It is drawn in the diagram because backlinks need somewhere to come from, and it is named
-here because the decision behind it has not been made:
-
-- **Store the links**, extracted when an article is published, as the diagram shows. Backlinks are
-  an indexed lookup and red links are known without parsing anything. The table has to be kept in
-  step with the body on every publish, and a stale row means a wrong link colour.
-- **Derive them**, by scanning bodies at read time. Nothing to keep in step, and no possibility of
-  drift — but "what links here" becomes a scan of every article, which
-  [ADR-0010](adr/ADR-0010-bounded-reads.md) is precisely about not doing on a public page.
-
-FR-006 is `could` and FR-004 is `must`, so the two halves do not have the same urgency. This wants
-its own ADR before either is built; recording it here is not the same as deciding it.
+Decided 21 September, [ADR-0012](adr/ADR-0012-article-link-storage.md): the links are stored, extracted
+when an article is published or an edit is approved, keyed by the target's **title** rather than a
+required foreign key to `article.id` — a `must`-priority red link (FR-004) points at a title with no
+row yet. The alternative, deriving backlinks by scanning bodies at read time, was rejected because it
+is exactly the unbounded read [ADR-0010](adr/ADR-0010-bounded-reads.md) already closed off for a
+public page. The exact columns are not fixed by the ADR and are `.claude/rules/schema.md`'s call when
+the migration is written; open in that ADR is whether a removed article's outbound links are cleared
+or left stale.
 
 ## Open decisions found while reviewing this model
 
