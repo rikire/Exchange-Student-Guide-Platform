@@ -1,6 +1,7 @@
 package in.ac.iitm.guide.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,7 +53,13 @@ public final class Journal {
     public List<String> startEntry(String prompt) throws IOException {
         Map<String, String> previous = readSnapshot();
         Map<String, String> current = Snapshot.take(repo);
-        List<String> humanEdits = previous.isEmpty() ? List.of() : Snapshot.diff(previous, current);
+        List<String> humanEdits = new ArrayList<>();
+        state.path("carriedEdits").forEach(edit -> humanEdits.add(edit.asText()));
+        if (!previous.isEmpty()) {
+            humanEdits.addAll(Snapshot.diff(previous, current));
+        }
+        state.remove("carriedEdits");
+        state.remove("machineTurn");
 
         state.put("promptAt", ZonedDateTime.now(ZONE).toString());
         state.put("prompt", prompt == null ? "" : prompt);
@@ -63,6 +70,39 @@ public final class Journal {
         writeSnapshot(current);
         save();
         return humanEdits;
+    }
+
+    /**
+     * Starts a turn that answers a background notification, not a person.
+     *
+     * <p>No entry is opened, but the tree is still snapshotted. Edits the human made before the
+     * notification arrived are carried to the next prompt, and the agent's own edits during the
+     * turn are excluded from it: the report is headed "files the human changed by hand" and the
+     * agent is told not to argue with it.
+     */
+    public void beginMachineTurn() throws IOException {
+        Map<String, String> previous = readSnapshot();
+        Map<String, String> current = Snapshot.take(repo);
+        if (!previous.isEmpty()) {
+            ArrayNode carried =
+                    state.has("carriedEdits") ? (ArrayNode) state.get("carriedEdits") : state.putArray("carriedEdits");
+            Snapshot.diff(previous, current).forEach(carried::add);
+        }
+        state.put("machineTurn", true);
+        writeSnapshot(current);
+        save();
+    }
+
+    /** Ends a machine turn without writing an entry, moving the snapshot past the agent's own edits. */
+    public void endMachineTurn() throws IOException {
+        state.remove("machineTurn");
+        writeSnapshot(Snapshot.take(repo));
+        save();
+    }
+
+    /** True between {@link #beginMachineTurn} and {@link #endMachineTurn}. */
+    public boolean isMachineTurn() {
+        return state.path("machineTurn").asBoolean(false);
     }
 
     /**

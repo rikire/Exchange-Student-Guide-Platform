@@ -8,7 +8,9 @@ import java.util.List;
  * Entry point of the repository's AI process tooling.
  *
  * <pre>
- *   hook prompt            UserPromptSubmit — open a journal entry, report edits made by hand
+ *   hook prompt            UserPromptSubmit — open a journal entry, report edits made by hand;
+ *                          a background notification opens no entry
+ *   hook subagent          SubagentStop     — note in the journal that a subagent finished
  *   hook guard             PreToolUse       — ask before editing a file the human owns
  *   hook bash              PreToolUse       — refuse a command that skips or hides a check
  *   hook stop              Stop             — close the journal entry

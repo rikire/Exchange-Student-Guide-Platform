@@ -26,6 +26,7 @@ final class HookCommand {
             case "note" -> note(String.join(" ", List.of(args).subList(1, args.length)));
             case "compact" -> compact();
             case "docs-sync" -> docsSync();
+            case "subagent" -> subagent();
             case "english" -> english(java.util.Arrays.copyOfRange(args, 1, args.length));
             case "author" -> author(java.util.Arrays.copyOfRange(args, 1, args.length));
             default -> throw new IllegalStateException("dispatch missing for " + args[0]);
@@ -125,19 +126,18 @@ final class HookCommand {
      * A heuristic over imperative verbs in two languages would miss the cases that matter, and a
      * reminder that fires only sometimes teaches the reader to ignore it.
      */
-    private static final String SHARPEN_REMINDER =
+    static final String CONTRACT_REMINDER =
             """
-            Before writing code, a document or a schema: if this request leaves open anything that \
-            changes what you would build - the input contract, the boundary, the acceptance \
-            condition - ask closed questions with a suggested answer for each, and WAIT.
+            Before you change files or state: read the repository first - what it can answer is not a \
+            question. Then state a contract - goal and observable behaviour, boundaries, acceptance \
+            criteria, open questions each with a suggested answer, steps each with its check - and \
+            WAIT for an explicit confirmation, even when the request looks complete. With nothing open \
+            the contract is one to three lines.
 
-            Choosing a sensible default and announcing it is not compliance: the target is still one \
-            nobody picked. "The task is small" is not an exception; a five-line function has an input \
-            contract whether or not anyone wrote it down.
-
-            Do not ask when the request is a direct command with a checkable result, when it already \
-            states its acceptance condition, or when the answer is already written down in a \
-            requirement, an ADR or the roadmap - cite it instead. Details: docs/ai/prompting.md.
+            Once a contract is confirmed, carry it out without asking again; a change of result, \
+            boundaries, criteria or approach reopens it. A question and a read-only command need no \
+            contract. Choosing a default and announcing it is not compliance: the target is still one \
+            nobody picked. Details: docs/ai/prompting.md.
 
             Do not state how long anything will take. A duration you have not measured is a guess \
             wearing the clothes of an estimate, and it gets planned against. Size work in countable \
@@ -177,9 +177,16 @@ final class HookCommand {
         Repo repo = Repo.find(event.cwd());
         Journal journal = Journal.open(repo, event.sessionId());
 
+        // A background notification is not a request: no contract reminder, no translation demand,
+        // no entry of its own. Its subagent is noted by `hook subagent` instead.
+        if (event.isTaskNotification()) {
+            journal.beginMachineTurn();
+            return;
+        }
+
         List<String> humanEdits = journal.startEntry(event.prompt());
 
-        StringBuilder message = new StringBuilder(SHARPEN_REMINDER);
+        StringBuilder message = new StringBuilder(CONTRACT_REMINDER);
 
         if (event.prompt() != null && CYRILLIC.matcher(event.prompt()).find()) {
             message.append("\n\n").append(TRANSLATION_REMINDER);
@@ -436,7 +443,11 @@ final class HookCommand {
             checks.add("documentation gate: passed");
         }
 
-        journal.finishEntry(event.lastAssistantMessage(), checks, List.of());
+        if (journal.isMachineTurn()) {
+            journal.endMachineTurn();
+        } else {
+            journal.finishEntry(event.lastAssistantMessage(), checks, List.of());
+        }
 
         // After the entry is written, never before: this is the only moment at which the file the
         // commit is for actually exists.
@@ -486,6 +497,29 @@ final class HookCommand {
         }
         Repo repo = Repo.find(null);
         Journal.open(repo, latestSession(repo)).addNote(text);
+    }
+
+    /** Notes in the journal that a subagent finished, so that its work leaves a trace beside the turn. */
+    private static void subagent() throws Exception {
+        HookEvent event = HookEvent.readFromStdin();
+        Repo repo = Repo.find(event.cwd());
+        Journal.open(repo, event.sessionId()).addNote(subagentNote(event));
+    }
+
+    /**
+     * The line the journal gets when a subagent finishes.
+     *
+     * <p>The documentation confirms {@code agent_id} and {@code agent_type} as fields present inside
+     * a subagent and says nothing about the rest of this event's payload, so only those two are
+     * used, and an event that carries neither still gets a line saying so.
+     */
+    static String subagentNote(HookEvent event) {
+        if (event.agentType() == null && event.agentId() == null) {
+            return "Subagent finished (the event did not say which).";
+        }
+        String type = event.agentType() == null ? "unknown type" : event.agentType();
+        String id = event.agentId() == null ? "no id" : event.agentId();
+        return "Subagent finished: " + type + " (" + id + ").";
     }
 
     /** Picks the most recently touched session so that a note lands in the session in progress. */

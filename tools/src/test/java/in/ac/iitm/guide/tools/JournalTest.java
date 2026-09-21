@@ -23,6 +23,8 @@ class JournalTest {
     @BeforeEach
     void setUp() throws IOException {
         Files.createDirectories(repoRoot.resolve(".git"));
+        // A real repository is never empty, and an empty snapshot means "none taken yet".
+        Files.writeString(repoRoot.resolve("README.md"), "baseline");
         repo = Repo.find(repoRoot.toString());
     }
 
@@ -261,5 +263,70 @@ class JournalTest {
         Journal reopened = Journal.open(repo, "session-r");
         assertTrue(reopened.alreadyReminded("migration"));
         assertFalse(reopened.alreadyReminded("routes"), "a different area still earns its own reminder");
+    }
+
+    @Test
+    void a_machine_turn_writes_no_entry() throws IOException {
+        Journal journal = Journal.open(repo, "session-m");
+        journal.beginMachineTurn();
+        journal.endMachineTurn();
+
+        assertFalse(Files.exists(repo.resolve("docs/ai/journal")), "no entry and no journal file");
+    }
+
+    @Test
+    void a_machine_turn_is_marked_until_it_ends() throws IOException {
+        Journal journal = Journal.open(repo, "session-m2");
+
+        journal.beginMachineTurn();
+        assertTrue(journal.isMachineTurn());
+
+        journal.endMachineTurn();
+        assertFalse(journal.isMachineTurn());
+    }
+
+    @Test
+    void a_hand_edit_made_before_a_machine_turn_is_still_reported_at_the_next_prompt() throws IOException {
+        // Skipping the entry must not move the snapshot past the human's edit, or the agent is never
+        // told about it and may overwrite it.
+        Journal journal = Journal.open(repo, "session-m3");
+        journal.startEntry("first prompt");
+        journal.finishEntry("done", List.of(), List.of());
+        Files.writeString(repo.resolve("by-hand.md"), "the human wrote this");
+
+        journal.beginMachineTurn();
+        journal.endMachineTurn();
+
+        List<String> reported = journal.startEntry("next prompt");
+        assertTrue(reported.contains("by-hand.md (added)"), reported.toString());
+    }
+
+    @Test
+    void a_file_the_agent_wrote_during_a_machine_turn_is_not_reported_as_the_humans() throws IOException {
+        // The report is headed "files the human changed by hand" and tells the agent not to argue
+        // with it, so listing the agent's own edits there would make it obey itself.
+        Journal journal = Journal.open(repo, "session-m4");
+        journal.startEntry("first prompt");
+        journal.finishEntry("done", List.of(), List.of());
+
+        journal.beginMachineTurn();
+        Files.writeString(repo.resolve("by-agent.md"), "the agent wrote this");
+        journal.endMachineTurn();
+
+        assertEquals(List.of(), journal.startEntry("next prompt"));
+    }
+
+    @Test
+    void a_carried_hand_edit_is_reported_once() throws IOException {
+        Journal journal = Journal.open(repo, "session-m5");
+        journal.startEntry("first prompt");
+        journal.finishEntry("done", List.of(), List.of());
+        Files.writeString(repo.resolve("by-hand.md"), "the human wrote this");
+        journal.beginMachineTurn();
+        journal.endMachineTurn();
+        journal.startEntry("second prompt");
+        journal.finishEntry("done again", List.of(), List.of());
+
+        assertEquals(List.of(), journal.startEntry("third prompt"));
     }
 }

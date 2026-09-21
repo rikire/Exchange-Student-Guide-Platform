@@ -24,16 +24,32 @@ public record HookEvent(
         String filePath,
         String command,
         String content,
-        String trigger) {
+        String trigger,
+        String agentId,
+        String agentType) {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static HookEvent readFromStdin() throws IOException {
         byte[] raw = System.in.readAllBytes();
         if (raw.length == 0) {
-            return new HookEvent(null, null, null, null, null, null, null, null, null, null);
+            return new HookEvent(null, null, null, null, null, null, null, null, null, null, null, null);
         }
-        JsonNode node = MAPPER.readTree(new String(raw, StandardCharsets.UTF_8));
+        return parse(new String(raw, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * True when the prompt is a background-task notification rather than something a person typed.
+     *
+     * <p>Recognised by the tag the harness puts first. A person's own message that merely mentions
+     * the tag does not start with it, so it still gets an entry and the reminder.
+     */
+    public boolean isTaskNotification() {
+        return prompt != null && prompt.stripLeading().startsWith("<task-notification>");
+    }
+
+    static HookEvent parse(String json) throws IOException {
+        JsonNode node = MAPPER.readTree(json);
         JsonNode input = node.path("tool_input");
         return new HookEvent(
                 text(node, "session_id"),
@@ -51,7 +67,9 @@ public record HookEvent(
                 // PreCompact says whether a person asked for the compaction or the context filled
                 // up. Which one it was is the difference between a decision and an accident, and
                 // the journal should not have to guess.
-                text(node, "trigger"));
+                text(node, "trigger"),
+                text(node, "agent_id"),
+                text(node, "agent_type"));
     }
 
     private static String text(JsonNode node, String field) {
