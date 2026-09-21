@@ -54,7 +54,7 @@ Rules 1 to 6 are stated in [CLAUDE.md](../../CLAUDE.md).
 
 | Rule | How it holds |
 |---|---|
-| 1. The human decides | A hook asks before an edit lands in a protected file |
+| 1. The human decides | A hook asks before an `Edit`, `Write` or `NotebookEdit` lands in a protected file. A write through Bash is not covered ([audit](audit-2026-09-21.md), P7) |
 | 2. Confirmed contract before implementation | Reminder with every prompt, by a hook — reinforced, not gated: no mechanism can judge whether a request was complete |
 | 3. Stop on a trigger, and when unsure | Good faith. Nothing detects a refuted hypothesis or a repeated attempt |
 | 4. Test before code | Creating a production class with no matching test asks first and names the expected file. The order cannot be proved afterwards, so it is asked at creation |
