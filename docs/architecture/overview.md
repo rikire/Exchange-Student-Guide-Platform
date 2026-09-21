@@ -46,6 +46,10 @@ H2 in development and PostgreSQL in production is a standing constraint on every
 level — it is what ruled out PostgreSQL full-text search, because the tests would then run against
 an engine the product does not ship on.
 
+**Declared in `app/pom.xml` since 21 September, ahead of the code that uses them.** Both database
+drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now;
+none is exercised by a test yet — phase 2 step 1 is the first (DEBT-004).
+
 ## Level 3 — slices
 
 ![Slices](../diagrams/out/c4-component.svg)

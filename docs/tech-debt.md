@@ -20,6 +20,29 @@ constraint hides it.
 
 ## Register
 
+### DEBT-004 — Four `app/pom.xml` dependencies are declared with no code or test using them yet
+
+**Status:** open
+**Created:** 2026-09-21
+**Marker:** `app/pom.xml` — `h2`, `postgresql`, `hibernate-search-mapper-orm`,
+`hibernate-search-backend-lucene`
+
+**Cause:** phase 2 step 0 ([02-skeleton.md](roadmap/02-skeleton.md)) names only Flyway, the Spring
+Modulith JPA starter, ArchUnit and db-util. The human asked, after the trade-off was stated, to add
+these four ahead of that — H2 and the PostgreSQL driver before step 1's persistence test exists,
+Hibernate Search before the search slice is built — against the project's own convention of adding a
+dependency when a red test needs it (DEBT-003's own reasoning: "adding a dependency for nothing").
+
+**Consequence:** none today; none of the four is exercised by any test, so a version mismatch or a
+missing transitive dependency would surface late, at the first code that actually uses them, rather
+than now.
+
+**How to fix:** nothing to fix — remove this entry once each dependency has a test exercising it: H2
+at phase 2 step 1 (the persistence migration test), the PostgreSQL driver whenever a profile runs
+tests against it, Hibernate Search at the search slice's first test.
+
+**Trigger:** already past — recorded at creation, not deferred.
+
 ### DEBT-003 — `shared` is a closed Modulith module and has to be an open one
 
 **Status:** open
