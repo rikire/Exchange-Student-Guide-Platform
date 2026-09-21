@@ -163,11 +163,12 @@ refactor(DEBT-007): replace the in-memory rate limiter
 |---|---|---|
 | `SessionStart` hook | A session opens | Says whether the guard jar is missing or older than `tools/src`, and reports the roadmap phase and the open debt count. Plain shell, not the jar — it has to be able to report the jar |
 | `permissions.deny` | A command is about to run | Refuses `--no-verify` on git and `-DskipTests` on the build. Not a hook and not our code: the client enforces it, so it is the one refusal that survives the jar being absent |
-| `UserPromptSubmit` hook | A prompt is submitted | Delivers the sharpening rule, resolves the author, opens a journal entry, reports the human's own edits |
+| `UserPromptSubmit` hook | A prompt is submitted | Delivers the contract reminder, resolves the author, opens a journal entry, reports the human's own edits. A background notification (`<task-notification>`) is not a prompt: it opens no entry and gets no reminder |
 | `PreToolUse` hook (edits) | An edit is about to be written | Asks when the file is the human's; refuses a marker with no debt reference; refuses a disabled or sleeping test; asks about a test with no assertion, and about a **new** file under `shared/`, in the schema or security packages, or named like a wheel |
 | `PreToolUse` hook (shell) | A command is about to run | Refuses the flags that skip checks; asks when a build is piped somewhere that hides its exit code |
 | `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
 | `PreCompact` hook | The conversation is about to be shortened | Writes into the journal that it happened, and whether a person asked for it. Compaction is the one event that removes evidence and leaves no trace of having done so |
+| `SubagentStop` hook | A subagent finishes | Notes in the journal that it finished, with its type and id when the event carries them |
 | `Stop` hook | The assistant ends a turn | Refuses while the turn owes the journal an English rendering, or while the documentation check is red — once per cause either way, so a session cannot deadlock; then closes the journal entry and commits it |
 | `statusLine` | Continuously | Model, branch, context used, open debt count. Context pressure is the constraint the other rules follow from, so it is shown rather than left to a command someone remembers to run |
 | `commit-msg` | `git commit` | Checks the message convention |

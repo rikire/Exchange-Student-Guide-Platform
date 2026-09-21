@@ -123,6 +123,26 @@
         ]
       }
     ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "java",
+            "args": [
+              "-XX:TieredStopAtLevel=1",
+              "-XX:+UseSerialGC",
+              "-jar",
+              "${CLAUDE_PROJECT_DIR}/tools/target/ai-tools.jar",
+              "hook",
+              "subagent"
+            ],
+            "timeout": 30,
+            "statusMessage": "Noting in the journal that a subagent finished"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [

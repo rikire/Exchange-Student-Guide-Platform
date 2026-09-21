@@ -19,9 +19,14 @@ contradict what git says, or the record stops being evidence and becomes a claim
 holding the keyboard. For two people at one machine that is false precision, and it is said here so
 that nobody presents the journal at the viva as more than it is.
 
-The files are written by `ai-tools hook`, wired to the `UserPromptSubmit` and `Stop` hooks in
-[.claude/settings.json](../../../.claude/settings.json). Do not write entries by hand; to add your
-own words to the current entry, use `/journal-note`.
+The files are written by `ai-tools hook`, wired to the `UserPromptSubmit`, `SubagentStop` and `Stop`
+hooks in [.claude/settings.json](../../../.claude/settings.json). Do not write entries by hand; to
+add your own words to the current entry, use `/journal-note`.
+
+A background notification (a prompt that starts with `<task-notification>`) is not something a
+person typed. It opens no entry and gets no reminder, and `SubagentStop` adds a one-line note
+instead. Edits the human made before it are still reported at the next prompt; the agent's own edits
+during it are not.
 
 ## The journal is in English; the conversation is not always
 
