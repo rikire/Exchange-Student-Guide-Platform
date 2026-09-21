@@ -1,10 +1,10 @@
 # Keeping documentation in step with code
 
-Documentation in this repository is part of the delivery, not text that accompanies it. Documentation
-that disagrees with the code is a defect of the same weight as a failing test.
+Documentation is part of the delivery. Documentation that disagrees with the code is a defect of the
+same weight as a failing test.
 
-There is one rule: **a change in behaviour and a change in its description happen in the same turn.**
-Not "later", not "in a tidy-up commit at the end".
+One rule: **a change in behaviour and a change in its description happen in the same turn.** Not
+"later", not "in a tidy-up commit at the end".
 
 ## The mapping
 
@@ -17,34 +17,30 @@ Not "later", not "in a tidy-up commit at the end".
 | A slice's internals | The feature file — the `code`, `tests` and `status` fields | warns |
 | `pom.xml` | An ADR or `docs/architecture/overview.md` | warns |
 
-The rules look only at files with substance: editing a README next to a migration changes neither
-the schema nor the contract and does not raise the gate.
+The rules look only at files with substance: editing a README next to a migration changes neither the
+schema nor the contract and does not raise the gate.
 
-There are deliberately few rules. A gate that fires on every refactor gets worked around with
-`--no-verify`, and then it protects nothing at all. Only the contract, the schema and the boundary
-between slices block — the three things whose divergence is most expensive.
+Only the contract, the schema and the boundary between slices block: the three things whose
+divergence is most expensive. A gate that fires on every refactor gets worked around with
+`--no-verify`, and then protects nothing.
 
 ## How it works
 
-1. **At edit time.** The `PostToolUse` hook notices a change in a tracked area and says what must now
-   be updated. Once per rule per session.
+1. **At edit time.** The `PostToolUse` hook (`ai-tools hook docs-sync`, since 9 September) names the
+   document that has just gone out of date, once per tracked area per session. It reads this table
+   through `DocumentedCounterparts`, so the table and the mechanism cannot drift apart.
 2. **At the end of the turn.** The `Stop` hook runs the check and does not let the turn finish while
-   the divergence stands. It does not block twice on the same cause — otherwise the session loops
-   with no way for a person to intervene.
-3. **In CI.** The same check on every pull request, as insurance against hooks disabled locally.
-
-Manual run:
+   the divergence stands. It does not block twice on the same cause, so the session cannot loop with
+   no way for a person to intervene.
+3. **In CI.** The same check on every pull request, in case hooks are disabled locally.
 
 ```bash
 java -jar tools/target/ai-tools.jar trace --docs-sync HEAD   # phase 2
 ```
 
-**Step 1 is real since 9 September.** `ai-tools hook docs-sync` runs on `PostToolUse` and names the
-document that has just gone out of date, once per tracked area per session. It reads this table
-through `DocumentedCounterparts`, so the table and the mechanism cannot drift apart.
-
-Steps 2 and 3 are still phase 2. Until they land, the reminder is a reminder and nothing refuses a
-turn that ignores it — stated here rather than left to be discovered.
+Steps 2 and 3 are phase 2 for this table. Until they land the reminder is only a reminder: nothing
+refuses a turn that ignores it. What the `Stop` hook and CI run today is `docs-check`, which finds
+documents claiming something the repository lacks, not this mapping.
 
 ## What "update the document" means
 
@@ -83,34 +79,19 @@ and says where a moved incident now lives.
 
 ## Generated documents
 
-These files are written **only by the generator**:
+These files are written **only by the generator**. No generator exists yet, so until phase 2 (phase 3
+for the gap list) a hand edit is the only way any of them has content; once one exists, it owns the
+file and a hand edit is lost on the next run.
 
 - `docs/traceability.md`
 - `docs/features/README.md`
 - `docs/team/ownership.md`
 - `docs/gap-list.md`
-- `docs/diagrams/out/**` — refreshed by `scripts/diagrams.sh`, and **committed**, unlike the four
+- `docs/diagrams/out/**` — refreshed by `scripts/diagrams.sh` and **committed**, unlike the four
   above: the architecture documents embed these as images and the forge previews them.
 
-Each file says in its own opening lines what writes it and when that generator arrives. There is no
-`GENERATED` marker convention any more.
-
-**Dropped 10 September**, having been corrected earlier the same day rather than removed. The
-sequence is worth keeping, because the marker failed twice in the way its own rules predict.
-
-It claimed "a hand edit is detected and breaks the build". No such detection ever existed: nothing in
-`tools/` read the marker, and the only code that touched it was `scripts/diagrams.sh` checking it had
-not already prepended one. The audit on
-[7 September](audit-planning-2026-09-07.md) said so explicitly. The claim was corrected here on
-10 September and left standing in five other files, which is the second failure: a convention with no
-mechanism cannot even correct itself in one pass.
-
-The deciding argument was that on four of those files the marker was not merely unenforced but wrong.
-`docs/traceability.md` and its three siblings have no generator until phase 2, so a hand edit is
-currently the only way any of them has content, and `DO NOT EDIT` was advice pointing the wrong way.
-Adding a PNG exception to the rule on the same day made the cost visible: four comment lines to
-explain why one generated format is exempt from a marker nothing reads.
-
-This is [instruction-backlog.md](instruction-backlog.md) IB-003's diagnosis in miniature. A rule with
-no moment at which it arrives does not get followed, and it is cheaper to delete than to keep paying
-for. If a real check ever wants a marker, it can add one when there is something to check.
+Each file says in its opening lines what writes it and when that generator arrives. There is no
+`GENERATED` marker: it was dropped on 10 September because nothing ever read it, and the claim it
+carried — that a hand edit is detected and breaks the build — described a check that did not exist
+([audit-planning-2026-09-07.md](audit-planning-2026-09-07.md)). A rule with no moment at which it
+arrives is cheaper to delete than to keep ([instruction-backlog.md](instruction-backlog.md) IB-003).
