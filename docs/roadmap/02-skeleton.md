@@ -14,9 +14,10 @@ honest actually switched on.
 - [ ] `shared/persistence`: entities and Flyway migrations carrying trace anchors
       — check: the migration runs against an empty database and one with data; the ERD matches
 - [ ] **The schema freezes at the end of this phase.** After that it changes by agreement only
-      — check: every migration added after the closing date recorded in this file carries a header
-      line naming who agreed to it and when; a migration without one is the freeze being broken
-      quietly rather than deliberately
+      — check: every migration added after the closing date recorded in this file has a matching ADR
+      under `docs/architecture/adr/` that motivated it, and the migration's own header comment names
+      that ADR by number; a migration with no matching ADR is the freeze being broken quietly rather
+      than deliberately. Mechanism decided 21 Sep — see open question 2 below.
 - [ ] `backup`: export and import of the archive format; seeding runs through the importer
       — check: export, wipe, import produces an identical database
 - [ ] `ai-tools`: `trace` in full, the blocking `stop` gate, the edit reminder, `weekly`,
@@ -54,11 +55,27 @@ writing them by hand.
 Raised on 7 September while giving every step a checkable result. Each one is a decision the check
 could not be written without, and none is the agent's to settle.
 
-1. **Which two rules does ArchUnit cover that Modulith does not?** The step names "the two rules"
-   and neither is written down. Until they are, the step cannot be finished, only declared finished.
-2. **What does "changes by agreement only" mean mechanically for the frozen schema?** A header line
-   in the migration naming who agreed is what the check above assumes; if the intended mechanism is
-   an ADR per change instead, the check is wrong.
+1. ~~**Which two rules does ArchUnit cover that Modulith does not?**~~ Resolved — already answered
+   in [architecture-rules.md](../ai/architecture-rules.md)'s "Enforced rules" section (added 10 Sep,
+   after this question was raised 7 Sep, and never cross-checked back against it): `shared.persistence`
+   imports nothing from a slice, and `wikilink` imports neither `org.springframework` nor
+   `jakarta.persistence`. The decision already existed; only the stale note here needed closing.
+   The tests themselves are still this phase's work — `ModularityTest.java` currently has only the
+   two Modulith checks, not these two.
+2. ~~**What does "changes by agreement only" mean mechanically for the frozen schema?**~~ Decided
+   21 Sep, by the human, after three options were laid out (a self-certifying header line; an ADR per
+   change; a hybrid of the two): **an ADR per post-freeze schema change.** Every migration dated after
+   this phase's closing date must point at a `docs/architecture/adr/` entry that argued for it, the
+   same weight already given to `moderate`'s storage model (ADR-0003) or the admin login (ADR-0009) —
+   not a lighter-weight convention invented just for this. The step's check above now asks for that
+   ADR to exist and be named in the migration header, not for a header line alone.
+
+   **What this costs, so it isn't a surprise later:** every schema change after the freeze — even a
+   one-column fix — needs its own ADR file, not a quick migration. That was the explicit trade-off
+   against the cheaper header-line option, made because a schema change is exactly the kind of
+   two-person collision this project's whole slice structure exists to prevent, and this project
+   already treats the schema as the human's decision, not something a commit message alone should
+   carry ([.claude/rules/schema.md](../../.claude/rules/schema.md)).
 3. ~~**What is `links`?** The step was its only mention anywhere in the repository — nothing said
    what it would generate or check.~~ Resolved 7 Sep: it meant checking links, and `ai-tools
    docs-check` already refuses a broken markdown link to a missing `.md` file. Dropped from the step
