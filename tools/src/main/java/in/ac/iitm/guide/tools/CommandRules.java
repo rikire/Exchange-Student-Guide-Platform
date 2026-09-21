@@ -53,8 +53,13 @@ public final class CommandRules {
 
     private static final Pattern EXIT_CODE_PRESERVED = Pattern.compile("PIPESTATUS|pipefail");
 
-    /** A deferred-work marker with no reference to an entry in the debt register. */
-    private static final Pattern LOOSE_MARKER = Pattern.compile("(?<![A-Za-z])(TODO|FIXME|HACK|XXX)(?!\\()");
+    /**
+     * A deferred-work marker with no reference to an entry in the debt register.
+     *
+     * <p>Not after a hyphen: documents write a feature id as a prefix, a hyphen and three letters
+     * standing for a number, and that defers no work.
+     */
+    private static final Pattern LOOSE_MARKER = Pattern.compile("(?<![A-Za-z-])(TODO|FIXME|HACK|XXX)(?!\\()");
 
     private static final Pattern DEBT_REFERENCE = Pattern.compile("DEBT-\\d{3}");
 
