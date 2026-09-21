@@ -10,7 +10,7 @@ echo "Building ai-tools.jar ..."
 
 echo "Pointing git at .githooks ..."
 git config core.hooksPath .githooks
-chmod +x .githooks/* 2>/dev/null || true
+chmod +x .githooks/commit-msg .githooks/pre-commit .githooks/pre-push 2>/dev/null || true
 
 echo
 echo "Done. The Claude Code hooks and the git hooks are both live."

@@ -1,7 +1,7 @@
 # Repository map
 
-How the repository is laid out: what lives where, who keeps it, and by what rules it changes. This
-document answers "where do I put the thing I am writing right now".
+How the repository is laid out: what lives where, who keeps it, and by what rules it changes. It
+answers "where do I put the thing I am writing right now".
 
 Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md](../CLAUDE.md).
 
@@ -13,7 +13,7 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `app/src/main/resources/templates/` | Thymeleaf templates | human + AI |
 | `app/src/main/resources/db/migration/` | Flyway migrations | human + AI |
 | `app/src/main/resources/data/seed/` | Starter articles, in the export format | human |
-| `tools/` | `ai-tools.jar`: traceability, journal, hooks, weekly log | human + AI |
+| `tools/` | `ai-tools.jar`: the journal, the hooks, `docs-check`, the commit-message gate; the traceability and ownership generators arrive in phase 2 | human + AI |
 | `docs/requirements/` | Requirements and constraints — `FR`, `NFR`, `CON` | human |
 | `docs/architecture/` | C4, data model, route contract, security architecture, ADRs | human |
 | `docs/features/` | Feature files `FEAT-XXX` | human + AI |
@@ -43,14 +43,10 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `docs/gap-list.md` | `ai-tools gaps` _(phase 3)_ | `java -jar tools/target/ai-tools.jar gaps` |
 | `docs/diagrams/out/**` | PlantUML | `scripts/diagrams.sh`. Committed, unlike the other rows here — the architecture documents embed these as images (see `docs/diagrams/src/README.md`) |
 
-Each says in its own opening lines what writes it, and when that generator arrives. Nothing detects a
-hand edit. This paragraph claimed the opposite until 10 September, when the `GENERATED` marker
-convention was dropped for never having been read by anything — the reasoning is in
-[docs/ai/docs-sync.md](ai/docs-sync.md).
-
-Four of the five rows above have no generator yet, so editing them by hand is presently the only way
-they hold anything at all. The row that is real today is `docs/diagrams/out/**`: rerun
-`scripts/diagrams.sh` and your edit is gone.
+Each says in its own opening lines what writes it and when that generator arrives. Nothing detects a
+hand edit ([docs-sync.md](ai/docs-sync.md)). Four of the five have no generator yet, so editing them
+by hand is presently the only way they hold anything. The one that is real today is
+`docs/diagrams/out/**`: rerun `scripts/diagrams.sh` and your edit is gone.
 
 ## Traceability
 
@@ -116,8 +112,8 @@ tests: [app/src/test/java/in/ac/iitm/guide/contribute/ContributeControllerTest.j
 
 ### Status rules
 
-What is checked depends on the status. Without this, an empty scaffold would be red everywhere and
-the validator would be switched off on day one.
+What is checked depends on the status; otherwise an empty scaffold would be red everywhere and the
+validator would be switched off on day one.
 
 | Status | What must exist |
 |---|---|
@@ -153,6 +149,7 @@ refactor(DEBT-007): replace the in-memory rate limiter
   commits that change behaviour, and the git history has to show which commit delivered which
   requirement. For the other types it would be ceremony.
 - A commit paying off debt uses the scope `DEBT-XXX`.
+- Changes to the process tooling (`tools/`, `scripts/`, hooks) use `build`, not `feat` or `fix`.
 - The header is at most 100 characters and does not end with a period.
 - Checked by the `commit-msg` hook; run it by hand with
   `java -jar tools/target/ai-tools.jar commit-msg <file>`.
@@ -166,8 +163,8 @@ refactor(DEBT-007): replace the in-memory rate limiter
 | `UserPromptSubmit` hook | A prompt is submitted | Delivers the contract reminder, resolves the author, opens a journal entry, reports the human's own edits. A message the harness relays from a subagent, a background task or another session (it starts with `<task-notification>`, `<agent-message` or `<cross-session-message`) is not a prompt: it opens no entry and gets no reminder |
 | `PreToolUse` hook (edits) | An edit is about to be written | Asks when the file is the human's; refuses a marker with no debt reference; refuses a disabled or sleeping test; asks about a test with no assertion, and about a **new** file under `shared/`, in the schema or security packages, or named like a wheel |
 | `PreToolUse` hook (shell) | A command is about to run | Refuses the flags that skip checks; asks when a build is piped somewhere that hides its exit code |
-| `PostToolUse` hook | _Not wired yet (phase 2)_ | Will say which document an edit obliges you to update |
-| `PreCompact` hook | The conversation is about to be shortened | Writes into the journal that it happened, and whether a person asked for it. Compaction is the one event that removes evidence and leaves no trace of having done so |
+| `PostToolUse` hook | An edit was written | Names the document the edit puts out of date, once per tracked area per session ([docs-sync.md](ai/docs-sync.md)) |
+| `PreCompact` hook | The conversation is about to be shortened | Writes into the journal that it happened, and whether a person asked for it. Compaction removes evidence and leaves no trace of having done so |
 | `SubagentStop` hook | A subagent finishes | Notes in the journal that it finished, with its type and id when the event carries them |
 | `Stop` hook | The assistant ends a turn | Refuses while the turn owes the journal an English rendering, or while the documentation check is red — once per cause either way, so a session cannot deadlock; then closes the journal entry and commits it |
 | `statusLine` | Continuously | Model, branch, context used, open debt count. Context pressure is the constraint the other rules follow from, so it is shown rather than left to a command someone remembers to run |
@@ -179,18 +176,14 @@ refactor(DEBT-007): replace the in-memory rate limiter
 Claude Code hooks are configured in [.claude/settings.json](../.claude/settings.json); git hooks are
 installed with `scripts/hooks.sh`.
 
-**"Once per cause" is our rule, not the platform's.** Claude Code stops honouring a `Stop` hook
-after eight consecutive blocks, so a deadlock was never possible for longer than eight turns. Ours
-refuses once, which is stricter and still what we want — a gate that keeps refusing teaches people
-to work around it, and eight refusals is seven more than anyone reads. The reasoning that produced
-this rule assumed no platform limit; it is kept because it is right, not because it is necessary.
+**"Once per cause" is our rule, not the platform's.** Claude Code stops honouring a `Stop` hook after
+eight consecutive blocks, so a deadlock was never possible for longer than eight turns. Ours refuses
+once, which is stricter and still wanted: a gate that keeps refusing teaches people to work around it.
 
 Once application code exists, "the build is green" wants a gate too, and the ladder is prompt →
-`/goal` condition → `Stop` hook, in that order of cost. None of the three is in use yet, which is
-correct while there is nothing to build.
+`/goal` condition → `Stop` hook, in that order of cost. None of the three is in use yet.
 
 **The `Stop` hook makes a commit, and it is the only automation that writes to history.** A journal
 entry is appended after the turn's last action, so the turn it describes can never be the turn that
-commits it — which is how an entry sat outside the history until a person opened the file. The
-commit always names the pathspec `docs/ai/journal`, so work staged elsewhere is left exactly where
-it was, and it does nothing during a merge, a rebase or on a detached HEAD.
+commits it. The commit always names the pathspec `docs/ai/journal`, so work staged elsewhere is left
+where it was, and it does nothing during a merge, a rebase or on a detached HEAD.

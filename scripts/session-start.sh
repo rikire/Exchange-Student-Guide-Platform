@@ -23,6 +23,7 @@ if [ ! -f "$jar" ]; then
 	echo "ENFORCEMENT IS OFF. $jar does not exist, so the prompt journal, the"
 	echo "protected-path guard, the bash-bypass refusal and the documentation gate are all inactive."
 	echo "Nothing else will say so. Build it before trusting any of them:  ./mvnw -pl tools package"
+	echo "On a machine that has not been set up (no JDK, hooks not installed), start with docs/onboarding.md."
 elif [ -n "$(find tools/src -type f -newer "$jar" -print 2>/dev/null | head -1)" ]; then
 	echo "The guard jar is older than tools/src, so the rules running now are an earlier"
 	echo "generation than the ones the documentation describes.  Rebuild:  ./mvnw -pl tools package"

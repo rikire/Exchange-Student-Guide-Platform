@@ -3,6 +3,10 @@
 One file per decision, on [_TEMPLATE.md](_TEMPLATE.md). An ADR records a decision that is expensive
 to reverse, together with the options that were genuinely weighed against it.
 
+A decision that makes older wording wrong lists it on a `**Retires:**` line, phrases separated by
+semicolons. `ai-tools docs-check` then fails any document that still uses one, unless the paragraph
+names the ADR: a document written before the decision is otherwise found by nobody.
+
 ## ADR-0002 to ADR-0008 were written after the fact, on 10 September
 
 They were written in one sitting, from the roadmap's list of decisions that needed recording — not

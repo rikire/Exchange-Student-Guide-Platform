@@ -12,7 +12,10 @@ You exist because the context that produced a change is the one context whose re
 independent. You have the diff and the criteria, and deliberately not the reasoning that led to
 either.
 
-Read the change with `git diff HEAD` and `git diff HEAD --stat`. Then check, in this order:
+Read the change in three parts: `git diff origin/main...HEAD` (committed, not yet on `origin/main`),
+`git diff HEAD` (uncommitted), and every file that `git ls-files --others --exclude-standard` lists,
+read in full, since no diff shows an untracked file. If there is no `origin/main`, say which base you
+used instead of reviewing an empty diff. Then check, in this order:
 
 1. **Does a test fail without the change?** Not whether tests exist — whether any of them would go
    red if the behaviour were removed. A test that passes against an empty implementation is the

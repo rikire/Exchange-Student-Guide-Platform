@@ -26,10 +26,10 @@
     {
       "id": 3,
       "prompt": "/dod",
-      "expected_output": "The injected diff is the subject, so a run on a clean tree says there is nothing to check rather than reviewing remembered work.",
+      "expected_output": "The three injected lists are the subject, so a run with nothing committed beyond origin/main, nothing uncommitted and nothing untracked says there is nothing to check rather than reviewing remembered work.",
       "expectations": [
-        "On an empty diff it says there is nothing to review rather than assessing earlier changes",
-        "It does not claim to have re-read a diff that the injected git output shows to be empty"
+        "When all three injected lists are empty it says there is nothing to review rather than assessing earlier changes",
+        "It does not claim to have re-read a change that the injected git output shows to be empty"
       ]
     }
   ]

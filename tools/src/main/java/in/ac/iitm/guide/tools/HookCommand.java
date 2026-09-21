@@ -184,7 +184,15 @@ final class HookCommand {
             return;
         }
 
-        List<String> humanEdits = journal.startEntry(event.prompt());
+        // A person's message in the middle of a turn belongs to that turn: opening an entry for it
+        // would overwrite the prompt that began the turn.
+        List<String> humanEdits = List.of();
+        if (journal.hasOpenEntry()) {
+            journal.addFollowUp(event.prompt());
+            journal.save();
+        } else {
+            humanEdits = journal.startEntry(event.prompt());
+        }
 
         StringBuilder message = new StringBuilder(CONTRACT_REMINDER);
 

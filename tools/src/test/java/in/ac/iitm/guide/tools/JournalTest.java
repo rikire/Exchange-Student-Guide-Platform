@@ -360,4 +360,51 @@ class JournalTest {
 
         assertEquals(List.of(), journal.startEntry("third prompt"));
     }
+
+    @Test
+    void a_prompt_that_arrives_during_a_turn_is_recorded_beside_the_first() throws IOException {
+        Journal journal = Journal.open(repo, "session-u1");
+        journal.startEntry("the first request");
+        journal.addFollowUp("a correction sent mid-turn");
+        journal.finishEntry("Done.", List.of(), List.of());
+
+        String content = journalContent();
+        assertTrue(content.contains("> the first request"), content);
+        assertTrue(content.contains("> a correction sent mid-turn"), content);
+    }
+
+    @Test
+    void a_follow_up_is_labelled_so_it_cannot_pass_for_the_original_prompt() throws IOException {
+        Journal journal = Journal.open(repo, "session-u2");
+        journal.startEntry("the first request");
+        journal.addFollowUp("a correction sent mid-turn");
+        journal.finishEntry("Done.", List.of(), List.of());
+
+        String content = journalContent();
+        assertTrue(content.indexOf("> the first request") < content.indexOf("**Follow-up during the turn**"));
+        assertTrue(content.indexOf("**Follow-up during the turn**") < content.indexOf("> a correction sent mid-turn"));
+    }
+
+    @Test
+    void a_follow_up_does_not_replace_the_prompt_or_close_the_entry() throws IOException {
+        Journal journal = Journal.open(repo, "session-u3");
+        journal.startEntry("the first request");
+
+        journal.addFollowUp("a correction sent mid-turn");
+
+        assertTrue(journal.hasOpenEntry());
+    }
+
+    @Test
+    void a_follow_up_is_not_carried_into_the_next_entry() throws IOException {
+        Journal journal = Journal.open(repo, "session-u4");
+        journal.startEntry("the first request");
+        journal.addFollowUp("a correction sent mid-turn");
+        journal.finishEntry("Done.", List.of(), List.of());
+        journal.startEntry("the second request");
+        journal.finishEntry("Done again.", List.of(), List.of());
+
+        String content = journalContent();
+        assertEquals(1, content.split("a correction sent mid-turn", -1).length - 1, content);
+    }
 }

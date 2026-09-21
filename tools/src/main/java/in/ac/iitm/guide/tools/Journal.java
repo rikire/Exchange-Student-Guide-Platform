@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.tools;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -70,6 +71,20 @@ public final class Journal {
         writeSnapshot(current);
         save();
         return humanEdits;
+    }
+
+    /**
+     * Records a prompt that arrives while a turn is still open, beside the one that opened it.
+     *
+     * <p>Starting a new entry there would overwrite the open prompt and report the agent's own edits
+     * of this turn as the human's, since the snapshot dates from the turn's start. The follow-up is
+     * written under its own label so it cannot pass for the prompt that began the turn. Edits the
+     * human makes in the middle of a turn are not reported: the tree cannot tell them from the
+     * agent's.
+     */
+    public void addFollowUp(String prompt) {
+        ArrayNode followUps = state.has("followUps") ? (ArrayNode) state.get("followUps") : state.putArray("followUps");
+        followUps.add(prompt == null ? "" : prompt);
     }
 
     /**
@@ -265,6 +280,12 @@ public final class Journal {
             entry.append("**Prompt (English)**\n\n").append(quote(promptEn)).append("\n\n");
         }
 
+        for (JsonNode followUp : state.path("followUps")) {
+            entry.append("**Follow-up during the turn**\n\n")
+                    .append(quote(followUp.asText()))
+                    .append("\n\n");
+        }
+
         String outcome = outcomeEn.isBlank() ? assistantMessage : outcomeEn;
         entry.append("**Outcome**\n\n").append(quote(outcome)).append("\n\n");
 
@@ -280,6 +301,7 @@ public final class Journal {
         }
 
         appendToTodaysFile(entry.toString());
+        state.remove("followUps");
         state.remove("prompt");
         state.remove("promptEn");
         state.remove("outcomeEn");

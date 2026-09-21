@@ -43,6 +43,8 @@ a_bypass_flag_in_a_neighbouring_segment_does_not_condemn_the_whole_line()
 The name repeats the wording of the acceptance criterion it came from, so the traceability matrix
 means coverage of criteria and not the existence of a file with tests in it.
 
+Arrange, act and assert are separated by blank lines, with no comments marking the sections.
+
 **Write down why a test exists when the reason is not obvious.** Several tests in `tools/` carry two
 lines naming the real failure they came from; that comment stops the next person deleting the test as
 redundant.

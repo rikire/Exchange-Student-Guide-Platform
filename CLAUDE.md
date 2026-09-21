@@ -54,7 +54,8 @@ Versions are verified against the registry, never recalled from memory.
 | Topic | Document |
 |---|---|
 | Who decides what, how to disagree and plan | [docs/ai/collaboration.md](docs/ai/collaboration.md) |
-| Sharpening a vague request before acting on it | [docs/ai/prompting.md](docs/ai/prompting.md) |
+| From request to confirmed contract | [docs/ai/prompting.md](docs/ai/prompting.md) |
+| Setting up a machine (JDK, hooks, first check) | [docs/onboarding.md](docs/onboarding.md) |
 | Working on a feature, TDD, technical debt | [docs/ai/workflow.md](docs/ai/workflow.md) |
 | Writing the tests, and deriving corner cases | [docs/ai/testing.md](docs/ai/testing.md) |
 | When to stop and ask | [docs/ai/stop-and-ask.md](docs/ai/stop-and-ask.md) |
@@ -117,13 +118,15 @@ is absent, because it is tried.
   record, the course documents or these instructions asks the human first.
 - **A report at the start of the session** — whether the guard jar is missing or stale, the roadmap
   phase, and the open debt count. Nearly everything above runs from that jar, and a missing jar
-  turns all of it off without failing anything, so read the report rather than assuming.
+  turns all of it off without failing anything, so read the report rather than assuming. If it says
+  `ENFORCEMENT IS OFF` or `java` is missing, work through [docs/onboarding.md](docs/onboarding.md).
 
 ## What you must not do
 
 - Bypass checks: `--no-verify`, `-DskipTests`, a suppression without an explanation.
-- Edit generated files: `docs/traceability.md`, `docs/features/README.md`, `docs/team/ownership.md`,
-  `docs/gap-list.md`, `docs/diagrams/out/`.
+- Edit generated files once their generator exists: `docs/traceability.md`, `docs/features/README.md`,
+  `docs/team/ownership.md`, `docs/gap-list.md`, `docs/diagrams/out/`. Until then a hand edit is the
+  only way the first four hold anything, and they say so in their opening lines.
 - Change your own instructions (`CLAUDE.md`, `docs/ai/`, `.claude/`) without agreement, or in a
   commit that also carries code.
 - Add a dependency without asking, or without checking that the artefact and version exist.

@@ -2,6 +2,8 @@
 
 **Status:** proposed | accepted | superseded by ADR-YYYY
 **Date:** YYYY-MM-DD
+<!-- Optional line: **Retires:** phrase; phrase — wording this decision makes obsolete. docs-check fails a document that still uses one, unless its paragraph names this ADR. -->
+
 
 ## Context
 

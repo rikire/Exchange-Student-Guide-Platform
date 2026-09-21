@@ -286,4 +286,99 @@ class DocsCheckTest {
                 List.of(),
                 check().stream().filter(p -> p.detail().contains("count")).toList());
     }
+
+    private void anAdrThatRetires(String phrases) throws IOException {
+        write(
+                "docs/architecture/adr/ADR-0001-body.md",
+                "# ADR-0001 — Body\n\n**Status:** accepted\n**Retires:** " + phrases
+                        + "\n\nMarkdown, so no sanitiser.\n");
+    }
+
+    @Test
+    void wording_an_adr_retired_is_a_problem_in_a_document_that_still_uses_it() throws IOException {
+        // The security rule kept saying "sanitise HTML on the way in" after ADR-0001 chose Markdown so
+        // that no sanitizer would exist; every check stayed green because none reads meaning.
+        anAdrThatRetires("sanitise HTML on the way in; the sanitiser allowlist");
+        write("docs/rules.md", "Sanitise HTML on the way in and store the result.\n");
+
+        String problems = details(check());
+
+        assertTrue(problems.contains("sanitise HTML on the way in"), problems);
+        assertTrue(problems.contains("ADR-0001"), problems);
+    }
+
+    @Test
+    void case_and_line_wrapping_do_not_hide_retired_wording() throws IOException {
+        anAdrThatRetires("sanitise HTML on the way in");
+        write("docs/rules.md", "We must SANITISE html on\nthe way in, always.\n");
+
+        assertTrue(details(check()).contains("ADR-0001"));
+    }
+
+    @Test
+    void a_table_row_is_judged_on_its_own() throws IOException {
+        anAdrThatRetires("the sanitiser allowlist");
+        write("docs/rules.md", "| Decision | Whose |\n|---|---|\n| The sanitiser allowlist | human |\n");
+
+        assertTrue(details(check()).contains("ADR-0001"));
+    }
+
+    @Test
+    void a_paragraph_that_names_the_retiring_adr_is_history_and_not_use() throws IOException {
+        anAdrThatRetires("sanitise HTML on the way in");
+        write("docs/rules.md", "It said to sanitise HTML on the way in, before ADR-0001 chose Markdown.\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void naming_the_adr_in_a_neighbouring_row_does_not_excuse_a_row_that_uses_the_wording() throws IOException {
+        anAdrThatRetires("the sanitiser allowlist");
+        write("docs/rules.md", "| The sanitiser allowlist | human |\n| Body format (ADR-0001) | human |\n");
+
+        assertTrue(details(check()).contains("ADR-0001"));
+    }
+
+    @Test
+    void naming_the_adr_in_a_neighbouring_list_item_does_not_excuse_an_item_that_uses_the_wording() throws IOException {
+        anAdrThatRetires("the sanitiser allowlist");
+        write("docs/rules.md", "- Keep the sanitiser allowlist short.\n- The body is Markdown (ADR-0001).\n");
+
+        assertTrue(details(check()).contains("ADR-0001"));
+    }
+
+    @Test
+    void a_sentence_naming_the_adr_directly_above_a_table_does_not_excuse_its_rows() throws IOException {
+        anAdrThatRetires("the sanitiser allowlist");
+        write("docs/rules.md", "The body format is settled in ADR-0001.\n| The sanitiser allowlist | human |\n");
+
+        assertTrue(details(check()).contains("ADR-0001"));
+    }
+
+    @Test
+    void the_adr_itself_may_quote_what_it_retires() throws IOException {
+        anAdrThatRetires("sanitise HTML on the way in");
+        write(
+                "docs/architecture/adr/ADR-0001-body.md",
+                "# ADR-0001 — Body\n\n**Status:** accepted\n**Retires:** sanitise HTML on the way in\n\n"
+                        + "The earlier rule was to sanitise HTML on the way in.\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void a_dated_record_may_keep_retired_wording() throws IOException {
+        anAdrThatRetires("sanitise HTML on the way in");
+        write("docs/ai/audit-2026-09-21.md", "It said to sanitise HTML on the way in.\n");
+
+        assertEquals(List.of(), check());
+    }
+
+    @Test
+    void an_adr_without_a_retires_line_retires_nothing() throws IOException {
+        write("docs/architecture/adr/ADR-0002-other.md", "# ADR-0002 — Other\n\n**Status:** accepted\n");
+        write("docs/rules.md", "Sanitise HTML on the way in.\n");
+
+        assertEquals(List.of(), check());
+    }
 }
