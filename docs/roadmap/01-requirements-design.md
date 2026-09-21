@@ -2,11 +2,20 @@
 
 **Status: in progress.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
 
-**As of 10 September: 16 of 17 steps done, 1 open.** Closed on 10 Sep — the glossary audit, the CJM
+**As of 21 September: 17 of 17 steps done, 0 open.** Closed on 10 Sep — the glossary audit, the CJM
 scenario trace, C4 levels 1–3 with the ERD, the ADRs (eleven now, against the eight topics planned),
 the four screen gaps the diagram review found, the test plan, the revised milestone plan, the route
-contract and its same-day review, and the design document itself. Still open: the ten article
-drafts, listed in full below.
+contract and its same-day review, and the design document itself. Closed 21 Sep, ten days late — the
+article drafts.
+
+**Every step checked is not the same as the phase being closed.** The readiness criterion below asks
+for `/course-check design` to find evidence for all five rubric marks with no row resting on a
+template; run on 21 Sep it found four of five fully defensible and the architecture-note row only
+about half so — real cross-slice interfaces don't exist in code yet, which is legitimately phase 2's
+first step, not something a phase 1 document can manufacture. Recorded rather than the phase marked
+closed on a technicality: this file's own status line stays "in progress" until that row clears, per
+[docs/roadmap/README.md](README.md)'s "a phase closes when its readiness criterion is met, not when
+every box is ticked."
 
 **Correction, same edit:** this line previously read "11 of 17 steps done, 6 open" and named the test
 plan, the revised milestone plan and the screen gaps as still open — they were already checked off
@@ -244,11 +253,24 @@ design document is the deliverable; the repository documents are the source it i
       exists yet and the C4 figure is drawn from `diagrams/src/` rather than generated from code by
       Modulith. The reasoning is in [rubric.md](../course/rubric.md) rather than left to be inferred
       from a tick.
-- [ ] Content: 10 or more articles drafted — absorbs the article-format-and-drafts item moved from
+- [x] Content: 10 or more articles drafted — absorbs the article-format-and-drafts item moved from
       phase 0 (4 Sep, see [00-init.md](00-init.md)); the seed front-matter shape is decided here,
       together with the glossary and ERD, not ahead of them
       — check: 10 or more drafts exist in the seed format, and one of them is a full article on FRRO
-      registration — that is the first step of the mid-demo scenario, so it cannot be a placeholder
+      registration — that is the first step of the mid-demo scenario, so it cannot be a placeholder.
+      Done 21 Sep (10 days late — see the phase-1 risk note this triggered, `docs/course/design-doc.tex`
+      §4): 20 drafts under `app/src/main/resources/data/seed/`, including
+      [Registering with FRRO](../../app/src/main/resources/data/seed/registering-with-frro.md) in
+      full. **Front-matter shape, decided here since no example existed anywhere yet:** YAML with
+      `title`, `summary`, `tags`, `author`, `created`, `updated` — `00-init.md` only named
+      "title, tags, author, dates" loosely; `summary` was added because the glossary's own Article
+      definition requires one. Sourced from the OGE semester-exchange brochure and the Study in India
+      dashboard deck the human provided, cross-linked with `[[wiki links]]` by title (FR-002), and
+      every fact the source material doesn't state (fee amounts, processing times, the hostel request
+      process) is flagged "Needs checking with OGE" in the article rather than invented.
+      **What this did not close:** phase 2's own "20 or more articles" step checks the count from the
+      database through the importer, not the directory — that importer does not exist yet
+      (`02-skeleton.md`), so this is 20 files ready to seed, not yet a passing phase-2 check.
 - [x] **Added 9 Sep.** The course's scoping feedback of 28 August recorded, and the proposal revised
       in answer to it — [scoping-feedback.md](../course/scoping-feedback.md),
       [proposal.tex](../course/proposal.tex) → `proposal.pdf`, 5 pages
