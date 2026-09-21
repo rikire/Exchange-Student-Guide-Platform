@@ -61,4 +61,32 @@ class HookEventTest {
         assertEquals("a1", event.agentId());
         assertEquals("researcher", event.agentType());
     }
+
+    @Test
+    void a_notebook_edit_names_its_target_in_notebook_path() throws IOException {
+        // The field names are those of the NotebookEdit tool definition (notebook_path, new_source),
+        // not a guess: the guard read file_path only, and this tool has no such field.
+        HookEvent event = HookEvent.parse(
+                "{\"tool_name\":\"NotebookEdit\",\"tool_input\":"
+                        + "{\"notebook_path\":\"/repo/docs/ai/x.ipynb\",\"new_source\":\"print(1)\",\"edit_mode\":\"replace\"}}");
+
+        assertEquals("/repo/docs/ai/x.ipynb", event.filePath());
+    }
+
+    @Test
+    void a_notebook_edit_carries_the_text_about_to_land_in_new_source() throws IOException {
+        HookEvent event = HookEvent.parse("{\"tool_name\":\"NotebookEdit\",\"tool_input\":"
+                + "{\"notebook_path\":\"/repo/x.ipynb\",\"new_source\":\"print(1)\"}}");
+
+        assertEquals("print(1)", event.content());
+    }
+
+    @Test
+    void an_ordinary_edit_still_reads_file_path_and_new_string() throws IOException {
+        HookEvent event = HookEvent.parse("{\"tool_name\":\"Edit\",\"tool_input\":"
+                + "{\"file_path\":\"/repo/A.java\",\"old_string\":\"a\",\"new_string\":\"b\"}}");
+
+        assertEquals("/repo/A.java", event.filePath());
+        assertEquals("b", event.content());
+    }
 }

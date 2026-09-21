@@ -71,12 +71,16 @@ public record HookEvent(
                 text(node, "prompt"),
                 text(node, "last_assistant_message"),
                 text(node, "tool_name"),
-                input.path("file_path").asText(null),
+                // NotebookEdit has no file_path: its target is notebook_path. Reading only the one
+                // name let a notebook under docs/ai/ through with no path to judge.
+                input.path("file_path").asText(input.path("notebook_path").asText(null)),
                 input.path("command").asText(null),
-                // Write carries `content`; Edit carries the replacement text. Either is the text
-                // about to land, which is what makes a check possible before it does rather than
-                // a complaint afterwards.
-                input.path("content").asText(input.path("new_string").asText(null)),
+                // Write carries `content`; Edit carries the replacement text; NotebookEdit carries
+                // new_source. Any of them is the text about to land, which is what makes a check
+                // possible before it does rather than a complaint afterwards.
+                input.path("content")
+                        .asText(input.path("new_string")
+                                .asText(input.path("new_source").asText(null))),
                 // PreCompact says whether a person asked for the compaction or the context filled
                 // up. Which one it was is the difference between a decision and an accident, and
                 // the journal should not have to guess.
