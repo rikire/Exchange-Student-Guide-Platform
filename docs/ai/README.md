@@ -58,9 +58,10 @@ these documents, read the matching rule file in the same turn.
 ## The six rules that outrank the rest
 
 1. **Requirements and architecture are decided by the human.** Propose options and wait.
-2. **A vague prompt is not an instruction.** Ask closed questions, suggest an answer to each, and
-   wait. A default chosen quietly is still a target nobody picked.
-3. **Unsure — stop and ask.** Say what you think; show alternatives, including simpler ones.
+2. **No implementation before a confirmed contract.** Read the repository, state the contract, wait
+   for an explicit confirmation, then carry it out without asking again.
+3. **Stop on a trigger, and when unsure.** Say what you think; show alternatives, including simpler
+   ones.
 4. **Test before code.** A test that is green before the implementation checks nothing.
 5. **Changed behaviour — update the documentation in the same turn.** Not "later".
 6. **Nothing is lost:** a requirement traces to code and to a test; anything temporary is recorded
@@ -71,8 +72,8 @@ these documents, read the matching rule file in the same turn.
 | Rule | How it holds |
 |---|---|
 | 1. The human decides | A hook asks before an edit lands in a protected file |
-| 2. Sharpen a vague prompt | Delivered with every prompt by a hook — reinforced, not gated: no mechanism can judge whether a request was vague |
-| 3. Stop and ask when unsure | Good faith. Nothing can measure confidence |
+| 2. Confirmed contract before implementation | Delivered with every prompt by a hook — reinforced, not gated: no mechanism can judge whether a request was complete |
+| 3. Stop on a trigger, and when unsure | Good faith. Nothing detects a refuted hypothesis or a repeated attempt |
 | 4. Test before code | A question at the one moment it can still be true: creating a production class with no matching test asks first, naming the file it expected. After the fact the order remains unprovable, which is why it is asked at creation and not checked later |
 | 5. Documentation in the same turn | Partly: a `PostToolUse` hook names the document a change has just put out of date, once per tracked area per session, and the turn cannot end while a document describes something the repository does not contain |
 | 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half arrives in phase 2 |

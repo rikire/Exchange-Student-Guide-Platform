@@ -6,7 +6,7 @@ code is written under them.
 ## The feature cycle
 
 ```
-sharpen the request -> /feature -> clarify and agree -> ADR (if needed)
+confirmed contract -> /feature -> clarify and agree -> ADR (if needed)
    -> routes -> migration -> slice interfaces
    -> loop( red test -> minimal implementation -> refactor )
    -> documentation -> trace check -> /dod -> commit
@@ -14,15 +14,12 @@ sharpen the request -> /feature -> clarify and agree -> ADR (if needed)
 
 The loop repeats once per acceptance criterion in the feature file.
 
-### 0. Sharpen the request
+### 0. Contract
 
-Before anything else, if the request is underspecified in a way that changes the work: restate it
-precisely, name what is unclear, and name the requirements it implies but does not state. Rules and
-the cases where this would just be noise: [prompting.md](prompting.md).
-
-This step is cheap and it is where the whole cycle either aims at the right target or does not. The
-sharpened wording is reused below — it becomes the acceptance criteria in the feature file and the
-names of the tests.
+Before anything else, state the contract and wait for its confirmation: [prompting.md](prompting.md).
+It is cheap, and it is where the whole cycle either aims at the right target or does not. The
+confirmed sentences are reused below — they become the acceptance criteria in the feature file and
+the names of the tests.
 
 ### 1. Open the feature — `/feature`
 
