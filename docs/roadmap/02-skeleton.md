@@ -53,16 +53,20 @@ step names what it depends on among the others.
       **Not done here:** slice repositories (phase 2 step 3), and DB-level case-insensitive
       uniqueness on `article.title` (H2 has no expression indexes — see the note in `data-model.md`
       next to `title`; enforced by the owning slice instead, in phase 3).
-- [ ] **2. Design tokens pushed into Figma** via Code to Canvas, from the values already in
-      [docs/design/reference.md](../design/reference.md). Depends on: nothing, but must land before
-      step 3's templates are written
-      — check: the first slice's template carries no literal colour or spacing value, only token
-      names, and every token name matches the Figma variable it came from
+- [x] **2. ~~Design tokens pushed into Figma~~ — dropped 22 Sep.** No consumer needs the Figma
+      layers: [docs/course/rubric.md](../course/rubric.md) doesn't ask for one, the stakeholder isn't
+      a designer, and the durable design evidence already lives in the repository
+      ([reference.md](../design/reference.md), `canvas-src/`, `screens/` — see
+      [docs/design/README.md](../design/README.md)). The one thing this step actually guarded — no
+      literal colour or spacing value in the first slice's template — doesn't need a Figma
+      cross-reference to check; folded into step 3 below. Rationale recorded in
+      [docs/design/README.md](../design/README.md)'s "Moving a design into Figma" section.
 - [ ] **3. First vertical slice by TDD**: `home` and `articleview` — the landing page leads to an
       article — including a minimal `wikilink` resolver (`[[Title]]` → link or red link), since the
       seed articles already use the syntax and `wikilink`'s ArchUnit rule (step 7) is already scoped
-      for this phase. Depends on: 0, 1, 2
-      — check: a red MockMvc test existed before the controller
+      for this phase. Depends on: 0, 1
+      — check: a red MockMvc test existed before the controller; the template carries no literal
+      colour or spacing value, only token names from [docs/design/reference.md](../design/reference.md)
 - [ ] **4. Query-count gate for the N+1 rule** in [security.md](../ai/security.md) — a counter
       around slice 3's tests, using `db-util`'s `SQLStatementCountValidator`. Depends on: 0, 3
       — check: seed one row, then ten; the test fails if the number of queries moves

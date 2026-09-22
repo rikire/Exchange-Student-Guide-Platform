@@ -194,6 +194,13 @@ above.
 
 ## Moving a design into Figma
 
+**Dropped 22 Sep** as a phase-2 step ([docs/roadmap/02-skeleton.md](../roadmap/02-skeleton.md) step
+2). No consumer needs the Figma layers: the rubric doesn't ask for one, the stakeholder isn't a
+designer, and the durable design evidence — tokens, canvas sources, per-screen HTML — already lives
+in this repository (see above). The technique below is kept as a record in case a real consumer
+appears later, the same way [CON-008](../requirements/constraints.md) keeps its API decision
+revisitable rather than closed for good.
+
 Not through Figma's MCP server — its rate limits are tight enough to make an iteration loop
 impractical (a Starter-plan seat gets 6 tool calls a month; a paid Dev/Full seat is 200/day,
 10/minute).

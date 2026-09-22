@@ -43,7 +43,7 @@ an open one:
 | A tenth slice, `report`, added when three features fit none of the original nine | [01-requirements-design.md](../../roadmap/01-requirements-design.md) | 5 Sep |
 | ~~A CAPTCHA challenge rather than a honeypot~~ | **moved** — [ADR-0008](ADR-0008-abuse-handling-without-accounts.md) | decided 6 Sep, moved 10 Sep |
 | ~~Upload handling: type from content via Tika, allowlist, generated stored filename, images re-encoded~~ | **moved** — [security architecture](../security.md), under [ADR-0006](ADR-0006-media-storage-and-upload-security.md) | decided 3 Sep, moved 10 Sep |
-| Design work: plain per-screen HTML committed, Code to Canvas rather than Figma's MCP server | [docs/design/README.md](../../design/README.md) | 7 Sep, revised 9–10 Sep |
+| Design work: plain per-screen HTML committed, Code to Canvas rather than Figma's MCP server | [docs/design/README.md](../../design/README.md) | 7 Sep, revised 9–10 Sep, 22 Sep (Figma push itself dropped) |
 
 **Resolved 10 September**, after the objection that `docs/ai/security.md` was the wrong home for architecture: everything security-shaped left that file for [docs/architecture/security.md](../security.md), and two decisions large enough for their own record became [ADR-0009](ADR-0009-admin-authentication.md) (the admin area's single password) and [ADR-0010](ADR-0010-bounded-reads.md) (bounded reads). The routing rule in [constraints.md](../../requirements/constraints.md) that had sent architecture into `docs/ai/` was corrected in the same pass. Two rows above are struck through accordingly; the first two remain open.
 
