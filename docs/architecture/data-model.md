@@ -64,6 +64,11 @@ NULL`, the same filter that already excludes unapproved content.
 `type` distinguishes a new-article submission from an edit; `target_article_id` is set only for
 edits. `status` is the three values FR-012 shows and nothing else.
 
+**`submission` is indexed on `(status, submitted_at)`** (`submission_status_submitted_at_idx`, added
+22 Sep), the same reasoning as `pinned_at` above: FR-014's queue reads `WHERE status = 'PENDING'
+ORDER BY submitted_at`, on the table the moderator's workflow hits hardest, so it finds the pending
+rows directly rather than scanning every submission ever made.
+
 **`submission_number` is a generated token, not a sequence.** Decided 10 Sep,
 [ADR-0011](adr/ADR-0011-submission-number-format.md): 60 bits from a cryptographically secure source,
 rendered as `SUB-K7M2-QX9P-4TVB`. The column type does not change — it was already `text`, unique —
@@ -103,6 +108,10 @@ rule that closes path traversal.
 `report` is closed by setting `closed_at`. There is no accept/reject decision on a report itself:
 UC-019 was narrowed on 7 September so that correcting an article reuses the existing direct-edit
 capability, and closing is the only new action.
+
+**`report` is indexed on `closed_at`** (`report_closed_at_idx`, added 22 Sep), the same reasoning as
+`pinned_at`: the moderator's inbox (FR-021, FR-022) reads `WHERE closed_at IS NULL`, so it finds the
+open reports directly rather than scanning every report ever filed.
 
 ## `article_link`
 
