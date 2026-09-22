@@ -50,6 +50,15 @@ case-insensitive check stays where open question 3 of
 pinned articles directly rather than scanning every row — a plain index, not one filtered on
 `IS NOT NULL`, because H2 has no expression/filtered indexes (checked directly against H2 2.3.232).
 
+**Reconsidered 23 Sep, kept as designed.** A separate `pinned_article(article_id, pinned_at)` table
+and a `boolean` column with a partial index (`WHERE pinned`) were weighed against the column-plus-
+index design above. Both lose: pinning is a 1:1 attribute of `article`, not a many-to-many relation
+like `article_tag`, so a separate table buys no referential-integrity benefit and still needs its
+own B-tree index to order by `pinned_at` — the same access pattern, over a smaller row set, which
+only matters at an article count this project does not have. The partial index additionally is not
+portable to dev: H2 has no partial/expression indexes (previous paragraph), while PostgreSQL (prod,
+phase 4) does — worth revisiting only if that dev/prod gap becomes real, not before.
+
 **`pinned_at` and `removed_at` are nullable timestamps, not booleans or a status column.** Decided
 10 Sep, resolving the two open decisions below. `pinned_at` is set when a moderator pins an article
 (FR-025) and cleared when they unpin it; the landing page's pinned section (FR-009) orders by it, so
