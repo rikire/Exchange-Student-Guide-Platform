@@ -1,9 +1,11 @@
 @startuml erd
-' Entity-relationship diagram. Every table here is decided by an ADR, named in its note:
+' Entity-relationship diagram. Most tables here are decided by an ADR, named in its note; two are
+' not, and that is flagged in their note instead:
 '   article / submission / revision  — ADR-0003 (a submission is its own row)
 '   tag / article_tag / submission_tag — ADR-0005 (tags are rows, normalised on the way in)
 '   media_asset                      — ADR-0006 (bytes on disk, metadata here)
-'   article_link                     — FR-006, and the one entity no ADR decided; see data-model.md
+'   article_link                     — ADR-0012 (stored, keyed by title, not a required FK)
+'   report                           — no ADR; FR-021, FR-022, see its note
 !pragma layout smetana
 hide circle
 skinparam linetype ortho
@@ -95,12 +97,12 @@ tag ||--o{ article_tag
 submission ||--o{ submission_tag
 tag ||--o{ submission_tag
 article ||--o{ revision
-article ||--o{ submission : "edits target"
-article ||--o{ media_asset
-submission ||--o{ media_asset
+article |o--o{ submission : "edits target"
+article |o--o{ media_asset
+submission |o--o{ media_asset
 article ||--o{ report
 article ||--o{ article_link : "links from"
-article ||--o{ article_link : "linked to"
+article |o--o{ article_link : "linked to"
 
 note bottom of submission
   Separate from **article** so that a query
@@ -121,7 +123,13 @@ note bottom of media_asset
 end note
 
 note bottom of article_link
-  Decided while drawing this diagram, not
-  by an ADR. See data-model.md.
+  Keyed by the target's title, not a
+  required FK, so a red link (no target
+  row yet) can exist. ADR-0012.
+end note
+
+note bottom of report
+  No ADR: closing is the only action
+  (UC-019, narrowed 7 Sep). FR-021, FR-022.
 end note
 @enduml
