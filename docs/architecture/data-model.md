@@ -34,6 +34,18 @@ adjustable by the moderator (FR-017), and it appears wherever articles are liste
 The ellipsed extract in search results is a different thing — computed around the match at query
 time and stored nowhere.
 
+**`title`'s case-insensitive uniqueness is not a database constraint.** The migration
+([V1__create_content_and_moderation_schema.sql](../../app/src/main/resources/db/migration/V1__create_content_and_moderation_schema.sql))
+carries a plain, case-sensitive `UNIQUE (title)` as a backstop; H2 has no expression indexes to build
+a case-insensitive one from (confirmed against H2 2.3.232, phase 2 step 1), so the actual
+case-insensitive check stays where open question 3 of
+[01-requirements-design.md](../roadmap/01-requirements-design.md) already put it — the `contribute`/
+`moderate` slice, at the point of publishing, not the schema.
+
+**`pinned_at` is indexed** (`article_pinned_at_idx`, added 22 Sep) so FR-009's landing page finds the
+pinned articles directly rather than scanning every row — a plain index, not one filtered on
+`IS NOT NULL`, because H2 has no expression/filtered indexes (checked directly against H2 2.3.232).
+
 **`pinned_at` and `removed_at` are nullable timestamps, not booleans or a status column.** Decided
 10 Sep, resolving the two open decisions below. `pinned_at` is set when a moderator pins an article
 (FR-025) and cleared when they unpin it; the landing page's pinned section (FR-009) orders by it, so

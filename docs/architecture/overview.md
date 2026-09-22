@@ -70,9 +70,12 @@ Worth stating because the alternative is the usual one: before this, `Modularity
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —
 there was no boundary to violate — and had passed since the skeleton was created, proving nothing.
 `every_slice_in_the_architecture_map_is_a_module` now asserts the eleven names against the list
-above, so an empty pass and a real pass are distinguishable. One consequence is open and recorded:
-`shared` is a *closed* module and has to become an open one before the first entity lands
-(DEBT-003).
+above, so an empty pass and a real pass are distinguishable. **Resolved 22 September, ahead of its own
+trigger:** `shared` carried `@ApplicationModule(type = ApplicationModule.Type.OPEN)` the moment its
+first entities landed in `shared.persistence` (phase 2 step 1), rather than waiting for the first
+slice repository to actually import one and fail. `spring-modulith-api` moved to compile scope in
+`app/pom.xml` for it — previously only reachable transitively, at test scope, through
+`spring-modulith-starter-test` (DEBT-003, now resolved).
 
 Every arrow on the diagram is one of exactly two channels — a type published directly in a slice
 package, or a Spring `ApplicationEvent`. A direct call into another slice's service or repository is

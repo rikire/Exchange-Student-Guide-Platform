@@ -45,7 +45,7 @@ tests against it, Hibernate Search at the search slice's first test.
 
 ### DEBT-003 — `shared` is a closed Modulith module and has to be an open one
 
-**Status:** open
+**Status:** resolved 2026-09-22
 **Created:** 2026-09-10
 **Marker:** `app/src/main/java/in/ac/iitm/guide/shared/package-info.java` — the javadoc, not a `TODO`:
 there is no code yet to hang one on
@@ -73,6 +73,18 @@ stricter and more work; that choice wants a paragraph in architecture-rules.md, 
 **Trigger:** the first entity in `shared.persistence`, or the first slice repository — whichever
 comes first in phase 2. Not before: annotating an empty package to prevent a failure that cannot
 happen yet would mean adding a dependency for nothing.
+
+**Resolved 2026-09-22.** Fixed at the first half of the trigger — the first entities landed in
+`shared.persistence` (phase 2 step 1, the eight tables in `data-model.md`) — rather than waiting for
+the second half, the first slice repository, which is phase 3's work. The two documents actually
+disagreed on when the failure would happen: this entry's own trigger says either half fires it, but
+the javadoc it pointed at said "the moment the first entity **and** the first slice repository
+exist" — read literally, that meant phase 3, since Modulith only objects to an actual cross-module
+import, and step 1 adds no importer yet. Fixed early anyway, on the human's confirmation, rather than
+leaving a known-inconsistent pair of documents until phase 3 forced the question. `spring-modulith-api`
+is now at compile scope in `app/pom.xml`; `shared` carries `@ApplicationModule(type =
+ApplicationModule.Type.OPEN)`. The `@NamedInterface` alternative was not taken up — no paragraph
+added to `architecture-rules.md` for it, since it was not the path chosen.
 
 ### DEBT-002 — The process layer cannot be packaged for a second repository
 

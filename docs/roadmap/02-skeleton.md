@@ -13,13 +13,46 @@ Ordered 21 Sep by dependency (was topic order until then; nothing in `app/src/ma
 beyond package stubs, so this is the actual build order, not a renumbering of finished work). Each
 step names what it depends on among the others.
 
-- [ ] **0. Build dependencies**: Flyway (runtime), a Spring Modulith core/JPA starter (today only
+- [x] **0. Build dependencies**: Flyway (runtime), a Spring Modulith core/JPA starter (today only
       `spring-modulith-starter-test` is declared in `app/pom.xml`), ArchUnit (test scope), and
       `db-util` (for step 4's `SQLStatementCountValidator`). Depends on: nothing
-      — check: `./mvnw -pl app dependency:tree` lists all four; nothing else changes
-- [ ] **1. `shared/persistence`**: entities and Flyway migrations carrying trace anchors. Depends on:
+      — check: `./mvnw -pl app dependency:tree` lists all four; nothing else changes. **Landed 21 Sep**
+      in commit `970a427` (`spring-boot-starter-data-jpa` stands in for the "core/JPA starter" item —
+      `spring-modulith-starter-jpa` was tried and dropped, see that commit's message — and H2, the
+      PostgreSQL driver and Hibernate Search were added early too, per DEBT-004), but the checklist and
+      the check were never run against it. **Verified 22 Sep:** `./mvnw -pl app dependency:tree` lists
+      `flyway-core:11.7.2:compile`, `spring-boot-starter-data-jpa:3.5.16:compile`,
+      `archunit-junit5:1.3.0:test`, `db-util:1.0.7:test`; `./mvnw -pl app test` — 3 tests green.
+- [x] **1. `shared/persistence`**: entities and Flyway migrations carrying trace anchors. Depends on:
       0
-      — check: the migration runs against an empty database and one with data; the ERD matches
+      — check: the migration runs against an empty database and one with data; the ERD matches.
+      **Done 22 Sep:** `V1__create_content_and_moderation_schema.sql` creates the eight tables in
+      `data-model.md` (`article`, `submission`, `revision`, `tag`, `article_tag`, `submission_tag`,
+      `media_asset`, `report`, `article_link` — nine names, `article_tag`/`submission_tag` mapped as
+      plain `@ManyToMany` join tables with no entity class of their own); eight JPA entities under
+      `shared/persistence`, each `//trace:FR-XXX`. `SchemaMigrationTest` (`@DataJpaTest`,
+      `AutoConfigureTestDatabase.Replace.NONE`, the real migration, no mocks) persists and reads back
+      every table, including the two join tables and `article_link`'s composite key, and checks the
+      `article.title`/`tag.name`/`submission.submission_number` uniqueness backstops — 10 tests, all
+      new, all green. `spring.jpa.hibernate.ddl-auto: validate` added so Hibernate checks its mapping
+      against the migration instead of generating its own schema next to it — the embedded-H2 default
+      would otherwise have let both exist silently. DEBT-003 fixed in the same step, ahead of its own
+      trigger (see tech-debt.md). `./mvnw verify` and `scripts/check.sh` both green.
+      **Added 22 Sep, from reviewing the ERD table by table with the human:** `article_pinned_at_idx`
+      on `article (pinned_at)`, so FR-009's landing page finds the pinned articles directly instead of
+      scanning every row — plain, not partial/filtered (H2 has no expression indexes, checked directly
+      against H2 2.3.232). `SchemaMigrationTest` gained an eleventh test asserting the index exists via
+      JDBC metadata, red before the migration line, green after. The same review found five more
+      places with the same shape of gap (`article.published_at`, `article.removed_at`,
+      `submission.status`, `article_tag.tag_id`/`submission_tag.tag_id`, `media_asset.article_id`/
+      `.submission_id`, `article_link.target_title`) — **not fixed, recorded here so they are not
+      lost**: each is a column a `must` `FR` queries by by that isn't indexed, the same class of issue
+      `docs/ai/security.md`'s N+1 rule already names. Left for a deliberate pass rather than fixed
+      piecemeal, since several are better answered together with the query that will actually use them
+      once the owning slice is written (phase 3), not guessed at from the schema alone.
+      **Not done here:** slice repositories (phase 2 step 3), and DB-level case-insensitive
+      uniqueness on `article.title` (H2 has no expression indexes — see the note in `data-model.md`
+      next to `title`; enforced by the owning slice instead, in phase 3).
 - [ ] **2. Design tokens pushed into Figma** via Code to Canvas, from the values already in
       [docs/design/reference.md](../design/reference.md). Depends on: nothing, but must land before
       step 3's templates are written

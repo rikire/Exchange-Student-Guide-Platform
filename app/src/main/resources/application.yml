@@ -3,6 +3,9 @@ spring:
     name: exchange-student-guide
   thymeleaf:
     cache: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 server:
   port: 8080
