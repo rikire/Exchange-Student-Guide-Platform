@@ -18,6 +18,7 @@ code:
 tests:
   - app/src/test/java/in/ac/iitm/guide/home/LandingControllerTest.java
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
+  - app/src/test/java/in/ac/iitm/guide/PageQueryCountTest.java
 ---
 
 # FEAT-003 — Landing page
@@ -60,7 +61,7 @@ The requirement fixes neither the numbers nor the overlap; these are ours, each 
 - **Tags come from live articles only**: a tag carried only by removed articles is not listed.
 - **Tags on the cards load in batches of 50** (`hibernate.default_batch_fetch_size`), not one query per
   card. A collection join fetch was rejected because Hibernate would then apply the page limit in
-  memory. The exact query count is asserted by phase 2 step 4, not here.
+  memory. The query count does not grow with the number of articles: `PageQueryCountTest`.
 - **The search box submits to `/search`, which does not exist until phase 3**, so submitting it gives
   a 404 for now. The box is the requirement ("a search entry point"); the route is FR-007.
 - **Tags are shown but do not link anywhere yet**: browsing by tag is FR-008, phase 3.
@@ -80,7 +81,7 @@ The requirement fixes neither the numbers nor the overlap; these are ours, each 
 - [x] Each list is bounded
 - [x] A card for a Devanagari title links to the percent-encoded address
 - [x] Titles and summaries are escaped
-- [ ] The number of queries does not grow with the number of articles: **phase 2 step 4**
+- [x] The number of queries does not grow with the number of articles: `PageQueryCountTest`
 
 ## Deliberately out of scope
 

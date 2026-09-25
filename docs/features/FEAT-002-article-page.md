@@ -19,6 +19,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/wikilink/ArticleAddressTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/persistence/SchemaMigrationTest.java
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
+  - app/src/test/java/in/ac/iitm/guide/PageQueryCountTest.java
 ---
 
 # FEAT-002 — Reading an article

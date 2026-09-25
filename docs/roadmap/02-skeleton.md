@@ -1,6 +1,6 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026; steps 0–3 done.
+**Status: in progress.** Runs 12–20 September 2026; steps 0–4 done.
 
 ## Goal
 
@@ -83,9 +83,23 @@ step names what it depends on among the others.
       on a Spring import; step 7 still owes rule 3. FR-002 now words the match by article address, as
       the human decided after comparing it with Wikipedia's rule (FEAT-002); V5 has been run on H2
       only.
-- [ ] **4. Query-count gate for the N+1 rule** in [security.md](../ai/security.md) — a counter
-      around slice 3's tests, using `db-util`'s `SQLStatementCountValidator`. Depends on: 0, 3
+- [x] **4. Query-count gate for the N+1 rule** ([ADR-0010](../architecture/adr/ADR-0010-bounded-reads.md),
+      [architecture/security.md](../architecture/security.md) — the rule is not in `docs/ai/security.md`,
+      which only links to them) — a counter around slice 3's pages, using `db-util`'s
+      `SQLStatementCountValidator`. Depends on: 0, 3
       — check: seed one row, then ten; the test fails if the number of queries moves
+      **Done 25 Sep:** `PageQueryCountTest`, two tests. It asserts equality with a measured baseline,
+      not a fixed number, and asserts the baseline is above zero so an unwired counter cannot pass
+      it. The landing page is measured with 1 pinned + 1 recent article (both lists non-empty),
+      then 2 + 8, then 15 + 15; the article page with one existing and one missing wiki link, then
+      ten of each. Measured: baselines of 1 + 0, 0 + 1 and 1 + 1 give the same count as 2 + 8, so
+      the choice of 1 + 1 is not load-bearing. The limits of 12 do not show in a `SELECT` count (an
+      unbounded list is still one query), so the bounds are held by `LandingControllerTest`, not
+      here. The count comes from `datasource-proxy` (`db-util`'s own dependency, so nothing was
+      added), wrapped around the data source by a `BeanPostProcessor` inside the test.
+      **Shown to fail, not assumed:** with `default_batch_fetch_size=1` the landing test failed with
+      5 expected against 13 recorded; with one `findLiveSlugs` call per link instead of one for the
+      page, the article test failed with 3 expected against 21. Both changes were reverted.
 - [ ] **5. `backup`**: export and import of the archive format; seeding runs through the importer.
       Depends on: 1
       — check: export, wipe, import produces an identical database
