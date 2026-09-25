@@ -1,6 +1,6 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026; steps 0–4 done.
+**Status: in progress.** Runs 12–20 September 2026; steps 0–6 done.
 
 ## Goal
 
@@ -100,13 +100,41 @@ step names what it depends on among the others.
       **Shown to fail, not assumed:** with `default_batch_fetch_size=1` the landing test failed with
       5 expected against 13 recorded; with one `findLiveSlugs` call per link instead of one for the
       page, the article test failed with 3 expected against 21. Both changes were reverted.
-- [ ] **5. `backup`**: export and import of the archive format; seeding runs through the importer.
+- [x] **5. `backup`**: export and import of the archive format; seeding runs through the importer.
       Depends on: 1
       — check: export, wipe, import produces an identical database
-- [ ] **6. Content: 20 or more articles** load through the importer built in step 5 — the 20 files
+      **Done 25 Sep:** [FEAT-004](../features/FEAT-004-article-archive.md).
+      `ArticleArchive` (import from a map of files or a directory, export to a directory) and a
+      `SeedRunner` behind the `seed` profile, tested by `ArticleArchiveTest`, `ExportQueryTest` and
+      `SeedRunnerTest`. The design document names this step's test
+      `BackupServiceTest.exportWipeImportProducesIdenticalDatabase`; it is
+      `ArticleArchiveTest.what_an_export_holds_imports_back_as_the_same_articles`. The round trip is
+      asserted on title, address, summary, body, both timestamps, the pinned time and tags. Decided
+      with the human on 25 Sep: `author` in the seed files is read and dropped (no column, no
+      requirement); an article already there is skipped and reported; `pinned` is an optional key; an
+      import does not bring back a removed article. The front matter field list ADR-0007 promised is
+      now in [data-model.md](../architecture/data-model.md).
+      **How the tests were shown to work.** Import behaviour written before its test — tag
+      normalisation and reuse, skipping, the address conflict, rollback, most refusals — was covered
+      afterwards: each of those protections was removed and a named test went red. The empty-body
+      refusal was test-first, and so was the duplicate-key refusal. The export protections (no
+      overwrite, every page, removed articles, readable output, tag order, the created directory, the
+      README and non-`.md` files, the sort) and the seed runner's README filter were removed the same
+      way. An independent review found three that stayed green — the sort, `Locale.ROOT` and the
+      regular-file check — and each now has a test that goes red without it. The `pinned` key, its date check, writing it only for a pinned article and carrying it both
+      ways were each removed and a named test went red. Not covered by a red test: the timestamp
+      precision below a millisecond, which the format loses, so "an identical database" holds to the
+      millisecond. A real run with
+      `seed` served `/` and the FRRO article. Tag normalisation is written twice until `taxonomy`
+      exists (DEBT-005); the importer writes no `article_link` rows until an extractor exists
+      (DEBT-006).
+- [x] **6. Content: 20 or more articles** load through the importer built in step 5 — the 20 files
       under `data/seed/` already exist. Depends on: 5
       — check: 20 or more files under `data/seed/` load through the importer without error, and the
       count is read from the database rather than from the directory
+      **Done 25 Sep:** `SeedRunnerTest` counts the rows in `article` after starting with the `seed`
+      profile (at least 20, the FRRO article among them) and shows a second run adds none. The mid-demo
+      step in phase 3 asks for 30 or more; that is more articles to write, not more code.
 - [ ] **7. Spring Modulith documenter in the build; ArchUnit for the two rules Modulith does not
       cover**. Depends on: 1, 3 — needs real slice code to check against. Rule 4 (`wikilink`) is
       already in `ArchitectureRulesTest`, added with step 3; rule 3 (`shared.persistence` imports no

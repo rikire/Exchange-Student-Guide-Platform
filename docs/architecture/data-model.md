@@ -85,6 +85,22 @@ and any `submission.target_article_id` keep resolving, and a wiki link to the re
 rendering, now as a red link (FR-004) because every read of `article` filters on `removed_at IS
 NULL`, the same filter that already excludes unapproved content.
 
+**An article as an archive file** ([ADR-0007](adr/ADR-0007-export-format.md), FEAT-004): one Markdown
+file, its metadata as YAML front matter, the body after it. Decided 25 Sep.
+
+| Key | Stored in | Required | Notes |
+|---|---|---|---|
+| `title` | `article.title` | yes | text; the address (`slug`) is computed from it, not written in the file |
+| `summary` | `article.summary` | yes | text |
+| `tags` | `article_tag` | no | a list; stored trimmed and lower-cased (ADR-0005) |
+| `created` | `published_at` | yes | a date or a timestamp |
+| `updated` | `updated_at` | yes | a date or a timestamp |
+| `pinned` | `pinned_at` | no | a date or a timestamp; a file without the key is not pinned |
+| `author` | nowhere | no | who wrote a seed draft; read and dropped, and never written by an export |
+
+Any other key refuses the file. A removed article (`removed_at`) is not exported, and an import does
+not bring one back. Timestamps survive to the millisecond.
+
 ## Moderation
 
 | Table | Holds | Decided by |

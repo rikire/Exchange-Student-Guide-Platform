@@ -20,6 +20,59 @@ constraint hides it.
 
 ## Register
 
+### DEBT-006 — The importer writes articles but no `article_link` rows
+
+**Status:** open
+**Created:** 2026-09-25
+**Marker:** none in code — an absence: `ArticleArchive.importFiles` saves the article and its tags and
+nothing else
+
+**Cause:** [ADR-0012](architecture/adr/ADR-0012-article-link-storage.md) stores the links of a body in
+`article_link`, and says every write path that changes a body must re-run the extraction. The
+extraction does not exist: `wikilink` has a renderer and an address rule, not an extractor, and the
+slices that publish (`contribute`, `moderate`) are phase 3. The importer is a write path added before
+the extractor it is meant to call.
+
+**Consequence:** none visible today — nothing reads `article_link`, and a page colours its links from
+the body at read time. It bites at FR-006 (backlinks, phase 4): every seed article carries `[[links]]`
+and has no rows, so "what links here" would be empty for all of them, and an export followed by an
+import would not restore rows that were never written. ADR-0012 names this failure: a silent drift
+between the body and the link table.
+
+**How to fix:** when the extractor exists, have the importer call it for each article it creates, and
+add a test that imports a linking article and finds its rows. Rows for articles imported before then
+need one re-extraction over every article, which is a query per article and belongs in a migration or
+a one-off command, not in a page.
+
+**Trigger:** the first code that writes `article_link` — the extractor in phase 3, or FR-006 in phase
+4, whichever comes first. If the importer has run before it, the re-extraction is part of that work.
+
+### DEBT-005 — The tag rule of ADR-0005 is written twice until `taxonomy` exists
+
+**Status:** open
+**Created:** 2026-09-25
+**Marker:** `app/src/main/java/in/ac/iitm/guide/backup/ArticleArchive.java` — `tagsNamed`, whose
+javadoc names this entry
+
+**Cause:** [ADR-0005](architecture/adr/ADR-0005-taxonomy.md) stores a tag trimmed and lower-cased,
+and says the `taxonomy` slice does that before a tag reaches the table (`Tag`'s own javadoc says the
+same). `taxonomy` is empty, and the importer has to write tags now: the seed files carry them.
+`backup` applies the rule itself with `strip().toLowerCase(Locale.ROOT)` rather than reach into a
+slice that has nothing to reach into.
+
+**Consequence:** two copies of one rule. If `taxonomy` later changes it (ADR-0005 itself calls the
+lower-casing "the part most likely to be revisited"; a display-label column is the amendment it
+names), the importer keeps the old rule and creates a tag that looks identical on screen and differs
+in the table — the duplicate ADR-0005 exists to prevent.
+
+**How to fix:** when `taxonomy` is written, publish the rule as a type directly in its package (for
+example a normalising tag name) and have `backup` call it; delete `tagsNamed`'s own normalisation in
+the same commit. The importer's test, `tags_are_stored_trimmed_and_lower_cased`, stays as it is and
+keeps guarding the behaviour through the swap.
+
+**Trigger:** the first line of code in the `taxonomy` slice. `contribute` (phase 3) will also write
+tags and must use the same published type, not a third copy.
+
 ### DEBT-004 — Four `app/pom.xml` dependencies are declared with no code or test using them yet
 
 **Status:** open
