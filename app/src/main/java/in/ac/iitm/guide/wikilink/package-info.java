@@ -1,12 +1,13 @@
 /**
- * Plain Java: the {@code [[link]]} parser, red-link resolution and backlinks. Imports neither Spring nor JPA, so its tests run without a context.
+ * Plain Java: the {@code [[link]]} markup, Markdown rendering and the article address. Imports neither
+ * Spring nor JPA (enforced by {@code ArchitectureRulesTest}), so its tests run without a context.
  *
- * <p>Serves FR-002 to FR-006.
+ * <p>Serves FR-001 (the address), FR-002, FR-004. Published types: {@link
+ * in.ac.iitm.guide.wikilink.WikiLinkRenderer} turns a body into HTML and asks a {@link
+ * in.ac.iitm.guide.wikilink.TitleResolver}, once per page, which titles are live articles; {@link
+ * in.ac.iitm.guide.wikilink.ArticleAddress} derives the slug and path of an article from its title.
  *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p><strong>Not built yet:</strong> extracting an article's links on publish (ADR-0012, FR-006) and
+ * backlinks, both phase 3.
  */
 package in.ac.iitm.guide.wikilink;

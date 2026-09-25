@@ -18,6 +18,9 @@
   <properties>
     <java.version>21</java.version>
     <maven.compiler.release>21</maven.compiler.release>
+    <!-- Spring reads @PathVariable and Spring Data query parameter names from the bytecode. Boot's own
+         parent POM switches this on; this project imports the BOM instead of inheriting the parent. -->
+    <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -30,6 +33,11 @@
 
     <!-- Verified against Maven Central on 2026-09-21. -->
     <db-util.version>1.0.7</db-util.version>
+
+    <!-- Verified against Maven Central on 2026-09-25 (0.30.0, released 2026-08-06); Spring Boot's BOM
+         does not manage it. Chosen over flexmark-java (no release since 2023-05); see
+         docs/architecture/security.md, "Article content". -->
+    <commonmark.version>0.30.0</commonmark.version>
 
     <spotless.version>2.44.0</spotless.version>
     <maven-shade.version>3.6.0</maven-shade.version>
