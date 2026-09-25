@@ -1,12 +1,12 @@
 /**
- * Export and import of the whole knowledge base, in the format the seed content also uses.
+ * Export and import of the whole knowledge base, in the format the seed content also uses: one
+ * Markdown file per article with YAML front matter (ADR-0007).
  *
- * <p>Serves NFR-004.
+ * <p>Serves NFR-004. Published: {@link in.ac.iitm.guide.backup.ArticleArchive}, with its
+ * {@link in.ac.iitm.guide.backup.ImportReport} and {@link in.ac.iitm.guide.backup.ArchiveFormatException}.
  *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p><strong>Not built yet:</strong> media travelling with the articles, and any way for the admin to
+ * start an export — that waits for the admin panel in phase 4. Today an export is called from code, and an import runs from the
+ * {@code seed} profile.
  */
 package in.ac.iitm.guide.backup;
