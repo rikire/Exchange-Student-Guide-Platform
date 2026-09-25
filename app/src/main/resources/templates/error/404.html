@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Not found — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">We could not find that page</h1>
+    <p>There is no published article at this address. <a th:href="@{/}">Back to the guide</a></p>
+  </main>
+</body>
+</html>

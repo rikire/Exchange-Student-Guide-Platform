@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title th:text="${article.title} + ' — Exchange Student Guide'">Article</title>
+</head>
+<body>
+  <main class="site-main">
+    <article>
+      <ul class="chip-row" th:if="${!article.tags.isEmpty()}">
+        <li class="chip" th:each="tag : ${article.tags}" th:text="${tag}">tag</li>
+      </ul>
+      <h1 class="article-title" th:text="${article.title}">Title</h1>
+      <!-- th:utext: bodyHtml is WikiLinkRenderer's output. The converter escapes raw HTML and
+           sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
+      <div class="article-body" th:utext="${article.bodyHtml}">Body</div>
+    </article>
+  </main>
+</body>
+</html>

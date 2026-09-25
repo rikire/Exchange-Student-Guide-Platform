@@ -1,0 +1,37 @@
+/*
+ * Design tokens. Colours are the OGE brand read from the logo's own SVG fills, and the derived
+ * neutrals, green and status tints chosen in the design system — see docs/design/reference.md, which
+ * separates what was observed on the IITM sites from what we chose. A template names these through
+ * classes in site.css and never carries a value itself (TemplateTokensTest).
+ */
+:root {
+  --maroon: #781F19;
+  --maroon-dark: #5C1712;
+  --gold: #D6A64F;
+  --gold-dark: #BDA345;
+  --red: #D9261C;
+  --ink: #1F1917;
+  --ink-soft: #5B534C;
+  --paper: #FFFFFF;
+  --sand: #F7F4EF;
+  --sand-raised: #FBF3E3;
+  --line: #E6DFD3;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+
+  --radius-card: 6px;
+  --radius-pill: 999px;
+
+  --text-small: 12px;
+  --text-body: 16px;
+  --text-lead: 18px;
+  --text-title: 32px;
+
+  --font-body: 'Public Sans', system-ui, -apple-system, sans-serif;
+  --page-width: 1100px;
+}

@@ -4,8 +4,16 @@ spring:
   thymeleaf:
     cache: false
   jpa:
+    # Off so a page cannot lazily load through the view: every association a page shows is fetched
+    # by the query that names it (ADR-0010), and a forgotten one fails a test instead of hiding.
+    open-in-view: false
     hibernate:
       ddl-auto: validate
+    properties:
+      # Lists that show tags (the landing page) load them for 50 articles per query rather than one
+      # query per article — ADR-0010's "batch size", without a collection join fetch, which would
+      # make Hibernate apply the page limit in memory.
+      hibernate.default_batch_fetch_size: 50
 
 server:
   port: 8080

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+  The frame every page sits in. A page passes its <title> and its <main>:
+  th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}"
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="page(title, content)">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:replace="${title}">Exchange Student Guide</title>
+  <link rel="stylesheet" th:href="@{/css/tokens.css}">
+  <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-brand" th:href="@{/}">
+      <img class="site-logo" th:src="@{/img/oge-logo.svg}" alt="OGE logo">
+      <span class="site-name">Exchange Student Guide</span>
+    </a>
+  </header>
+  <main class="site-main" th:replace="${content}">page content</main>
+  <footer class="site-footer">Office of Global Engagement, IIT Madras</footer>
+</body>
+</html>

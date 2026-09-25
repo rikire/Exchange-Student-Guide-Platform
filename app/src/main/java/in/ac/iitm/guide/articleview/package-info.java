@@ -1,12 +1,11 @@
 /**
- * Reading a published article: its content, navigation and rendering.
+ * Reading an article: {@code GET /articles/{title}}, its body rendered, wiki links resolved.
  *
- * <p>Serves FR-001, and where FR-002/FR-004 become visible.
+ * <p>Serves FR-001, and is where FR-002 and FR-004 become visible. Nothing in the package root is
+ * published yet: the controller and the read repository are internal ({@code web}, {@code
+ * persistence}), since no other slice needs to call this one.
  *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p><strong>Not built yet:</strong> the article's media assets (phase 3, {@code media}), backlinks,
+ * propose-an-edit and report links.
  */
 package in.ac.iitm.guide.articleview;
