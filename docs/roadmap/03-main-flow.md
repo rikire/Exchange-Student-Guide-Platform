@@ -17,13 +17,19 @@ the criteria do not reach it.
 
 - [ ] `contribute` — submitting a new article and proposing an edit to an existing one
       — check: a submission made through the form is in the queue and reachable from no public page;
-      each covering FR's criteria is a test
+      each covering FR's criteria is a test. **Added 25 Sep:** a title whose article address (slug,
+      `wikilink`'s `ArticleAddress`) is already taken is rejected like a case-insensitive title
+      collision, and the address is stored when the article is published — see
+      [data-model.md](../architecture/data-model.md), `slug`.
       **Narrowed 10 Sep:** FR-023, FR-024 (direct publish, bypassing the queue) move to phase 4 with
       the admin-panel step below — see the revised milestone plan in
       [01-requirements-design.md](01-requirements-design.md).
 - [ ] `moderate` — the queue, approval, rejection; the state machine with its invariants
       — check: every transition has a test, and one test asserts that **no path publishes a
-      submission that was not approved** — that is the invariant the whole slice exists for
+      submission that was not approved** — that is the invariant the whole slice exists for.
+      **Added 25 Sep:** publishing computes `article.slug`, and approving an edit that changes the
+      title recomputes it — which breaks the old address and links to it; see
+      [data-model.md](../architecture/data-model.md), `slug`, and [FEAT-002](../features/FEAT-002-article-page.md).
       **Narrowed 10 Sep:** FR-019 (a rejection reason) and FR-026 (removing a published article) move
       to phase 4 — see [01-requirements-design.md](01-requirements-design.md).
 - [ ] `wikilink` — the link parser, red links

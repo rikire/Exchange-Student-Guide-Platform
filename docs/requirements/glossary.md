@@ -40,7 +40,7 @@ each — both recorded under [One name per concept](#one-name-per-concept) below
 
 | Term | Meaning |
 |---|---|
-| Wiki link | A reference from one article to another, written in the article text as `[[Title]]` |
+| Wiki link | A reference from one article to another, written in the article text as `[[Title]]`, or as `[[Title\|text]]` to show other words in the sentence while still naming the article by `Title` (FR-002) |
 | Red link | A wiki link pointing at an article that does not exist yet, rendered differently so a reader can tell before following it |
 | Backlink | The reverse direction: which articles link to this one |
 

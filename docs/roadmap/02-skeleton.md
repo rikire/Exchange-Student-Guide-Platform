@@ -1,6 +1,6 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: not started.** Runs 12–20 September 2026.
+**Status: in progress.** Runs 12–20 September 2026; steps 0–3 done.
 
 ## Goal
 
@@ -61,12 +61,28 @@ step names what it depends on among the others.
       literal colour or spacing value in the first slice's template — doesn't need a Figma
       cross-reference to check; folded into step 3 below. Rationale recorded in
       [docs/design/README.md](../design/README.md)'s "Moving a design into Figma" section.
-- [ ] **3. First vertical slice by TDD**: `home` and `articleview` — the landing page leads to an
+- [x] **3. First vertical slice by TDD**: `home` and `articleview` — the landing page leads to an
       article — including a minimal `wikilink` resolver (`[[Title]]` → link or red link), since the
       seed articles already use the syntax and `wikilink`'s ArchUnit rule (step 7) is already scoped
       for this phase. Depends on: 0, 1
       — check: a red MockMvc test existed before the controller; the template carries no literal
       colour or spacing value, only token names from [docs/design/reference.md](../design/reference.md)
+      **Done 25 Sep**, as [FEAT-001](../features/FEAT-001-wiki-links-in-article-text.md) (the
+      renderer), [FEAT-002](../features/FEAT-002-article-page.md) (the article page) and
+      [FEAT-003](../features/FEAT-003-landing-page.md) (the landing page). Every test was red before
+      its code, and a red test that could pass on an empty result was checked by removing the
+      protection it guards (`escapeHtml`, `sanitizeUrls`, the removed-article filters, the list
+      bounds, the ordering) and watching it fail. `TemplateTokensTest` is the template check above:
+      no literal colour, length or inline style in any template. The design's palette lives in
+      `static/css/tokens.css`. What was decided on the way, and is now in the schema and the route
+      contract: `[[Title|words]]` (FR-002, glossary), commonmark-java 0.30.0 for Markdown, and the
+      stored article address (`article.slug`, V5, open question 9). Known and left: the landing
+      page's search box submits to `/search`, which is a 404 until phase 3; tags are not links yet;
+      the frame is `shared/web/Layout.html` and Bootstrap is not used (FEAT-003 says why).
+      `ArchitectureRulesTest` holds rule 4 (`wikilink` imports no Spring or JPA) and was shown to fail
+      on a Spring import; step 7 still owes rule 3. FR-002 now words the match by article address, as
+      the human decided after comparing it with Wikipedia's rule (FEAT-002); V5 has been run on H2
+      only.
 - [ ] **4. Query-count gate for the N+1 rule** in [security.md](../ai/security.md) — a counter
       around slice 3's tests, using `db-util`'s `SQLStatementCountValidator`. Depends on: 0, 3
       — check: seed one row, then ten; the test fails if the number of queries moves
@@ -78,7 +94,9 @@ step names what it depends on among the others.
       — check: 20 or more files under `data/seed/` load through the importer without error, and the
       count is read from the database rather than from the directory
 - [ ] **7. Spring Modulith documenter in the build; ArchUnit for the two rules Modulith does not
-      cover**. Depends on: 1, 3 — needs real slice code to check against
+      cover**. Depends on: 1, 3 — needs real slice code to check against. Rule 4 (`wikilink`) is
+      already in `ArchitectureRulesTest`, added with step 3; rule 3 (`shared.persistence` imports no
+      slice) remains
       — check: `./mvnw verify` writes the module canvas, and each ArchUnit rule is demonstrated by
       deleting it and watching a test go green that should not have
 - [ ] **8. `ai-tools`**: `trace` in full, the blocking `stop` gate, the edit reminder, `weekly`,
@@ -167,3 +185,19 @@ could not be written without, and none is the agent's to settle.
 8. ~~**Who builds the gap-list generator that the ownership/gap-list slash-command step
    presupposes?**~~ Resolved 21 Sep: this file was missing that build task entirely — added as part
    of step 8 (`ai-tools`) rather than left unstartable.
+9. ~~**How is an article found by its address?**~~ Decided 25 Sep, by the human, after three options
+   (**A** a stored, unique `slug` column; **B** compute over `(id, title)` in code; **C** the title
+   itself in the path, matched on `lower(title)`): **A.** Found on reading the route contract before
+   writing `articleview`: [ui-routes.md](../architecture/ui-routes.md) made `{title}` a slug and said
+   nothing new is stored, but a slug cannot be turned back into a title, so finding the article
+   meant computing the slug of every title — the unbounded read
+   [ADR-0010](../architecture/adr/ADR-0010-bounded-reads.md) forbids — and two different titles
+   ("Fees & Payments", "Fees Payments") give one slug, which FR-010's case-insensitive check does not
+   catch. Built as migration V5 (unique, `NOT NULL`, before the schema freezes at step 11, so no ADR)
+   and `wikilink`'s `ArticleAddress`.
+
+   **Consequences carried forward:** the importer (step 5) must compute the slug of every article it
+   loads, and `contribute`/`moderate` (phase 3) must do the same and reject a title whose slug is
+   taken; FR-010 names only the case-insensitive title check and needs a clause, which is the
+   human's to add. C was set aside also because Tomcat refuses a `%2F` in a path with `400` — seen in
+   the running application, so a title containing `/` could not have been an address.

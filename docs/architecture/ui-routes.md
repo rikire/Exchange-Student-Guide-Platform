@@ -29,14 +29,17 @@ code.
   It sits under the `moderate` prefix anyway so that the admin area is exactly one path prefix —
   which is what lets the gating rule below be a single pattern. A login form at `/security/login`
   would mean two prefixes to protect, one of which protects nothing.
-- **Article identity in a URL.** No `slug` column exists in
-  [data-model.md](data-model.md) and adding one is a schema decision, not this document's to make. A
-  title is already the closest thing to a natural key — FR-010/FR-011 reject a case-insensitive title
-  collision — so `{title}` in a path is that same title, lowercased, non-letter/digit runs collapsed
-  to a single `-`, percent-encoded for the URL, and matched case-insensitively against the same
-  comparison FR-002's wiki-link resolution already does. Nothing new to store; the comparison is
-  reused, not duplicated. Holds for non-Latin titles too (NFR-003) — the transform lower-cases only
-  where the script has case, and percent-encoding carries the rest.
+- **Article identity in a URL.** `{title}` in a path is the article's **slug**: the title
+  lower-cased, each run of characters that are not letters, marks or digits collapsed to a single `-`,
+  percent-encoded for the URL. It is a stored column, `article.slug`, unique and indexed (V5,
+  decided 25 Sep) — an earlier version of this paragraph derived it from the title and stored
+  nothing, which cannot be looked up, since a slug does not turn back into a title and scanning every
+  title is what ADR-0010 forbids. The address in the request goes through the same rule before the
+  lookup, so `/articles/HOSTEL-Life` reaches the article stored as `hostel-life`, and FR-002's
+  wiki-link resolution uses the same rule and the same column. Holds for non-Latin titles (NFR-003):
+  the vowel signs of Devanagari and Tamil are combining marks, which the rule keeps along with letters
+  and digits, and percent-encoding carries the rest. A title with no letters or digits has no slug and
+  cannot be published.
 - **Submission identity in a URL.** `{number}` is the submission number, which
   [ADR-0011](adr/ADR-0011-submission-number-format.md) makes a generated 60-bit token rather than a
   sequence. Matched case-insensitively and ignoring the hyphens, because a contributor retyping it
@@ -57,7 +60,9 @@ code.
     criterion names this: "the response is 200").
   - `404` — a GET whose target must not be revealed to exist: an unapproved, rejected, or removed
     article, a submission number that was never issued, or a media asset the caller is not entitled
-    to. This is what "the route does not resolve" (FR-001, FR-007, FR-008) means concretely.
+    to. This is what "the route does not resolve" (FR-001, FR-007, FR-008) means concretely. A
+    request that accepts HTML gets `error/404.html` in the shared page frame; any other gets Spring's
+    JSON error body.
   - `302` — redirect-after-POST on success (POST/redirect/GET), and the un-authenticated hit of a
     *gated* `/moderate/**` route, to the login form.
   - `400` — a GET whose required query parameter is missing or blank. Only `/search` has one.

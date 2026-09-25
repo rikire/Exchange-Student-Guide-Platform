@@ -50,6 +50,11 @@ an engine the product does not ship on.
 drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now;
 none is exercised by a test yet — phase 2 step 1 is the first (DEBT-004).
 
+**Markdown conversion: commonmark-java 0.30.0**, added 25 September for the article page. It has no
+dependencies of its own and is used only inside `wikilink/WikiLinkRenderer`, which is plain Java, so
+the choice does not touch the slice rules. Chosen over flexmark-java, whose last release is May 2023;
+the security settings it must run with are in [security.md](security.md), "Article content".
+
 ## Level 3 — slices
 
 ![Slices](../diagrams/out/c4-component.svg)

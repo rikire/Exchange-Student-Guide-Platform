@@ -49,7 +49,7 @@ other unestablished term.
 
 ### FR-001 — Reading a published article
 
-**Status:** planned
+**Status:** in-progress
 **Priority:** must
 
 When a reader requests a published article, the system shall show its content, composed as defined
@@ -77,13 +77,20 @@ THEN the route does not resolve
 
 ### FR-002 — Rendering wiki links
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When an article body containing `[[Title]]` is rendered, the system shall render it as a link to
 the published article whose title matches `Title`, case-insensitively.
 
+A title matches when it has the same article address as `Title`: the letters, marks and digits of the
+title in lower case, whatever the letter case and whatever punctuation or spacing lies between them.
+"Fees & Payments", "fees payments" and "Fees-Payments" therefore name one article.
+
 IF no published article matches `Title`, THEN the system shall render it as a red link.
+
+Where the markup is written `[[Title|text]]`, the system shall match the article by `Title` and show
+`text` as the words of the link; written `[[Title]]`, the words of the link are `Title` as written.
 
 **Acceptance criteria:**
 
@@ -95,6 +102,19 @@ THEN it renders as a link to that article
 GIVEN no published article matches "Title"
 WHEN [[Title]] appears in a rendered article body
 THEN it renders as a red link
+
+GIVEN a published article titled "Fees & Payments"
+WHEN [[fees   payments]] appears in a rendered article body
+THEN it renders as a link to that article
+
+GIVEN a published article titled "Title"
+WHEN [[Title|some words]] appears in a rendered article body
+THEN it renders as a link to that article showing "some words"
+  AND the words "Title" do not appear in the link
+
+GIVEN no published article matches "Title"
+WHEN [[Title|some words]] appears in a rendered article body
+THEN it renders as a red link showing "some words"
 ```
 
 ### FR-003 — Writing wiki links into a submission
@@ -114,7 +134,7 @@ THEN the markup is preserved unchanged
 
 ### FR-004 — Red-link rendering
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 IF a wiki link's title matches no published article, THEN the system shall render it in red,
@@ -240,7 +260,7 @@ THEN no result appears for it
 
 ### FR-009 — Landing page
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When a reader opens the landing page, the system shall show the most recently added articles, a

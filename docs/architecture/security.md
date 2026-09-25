@@ -65,6 +65,14 @@ chosen over raw HTML precisely so that there is no HTML allowlist to hand-mainta
 - **Raw HTML passthrough is disabled in the Markdown converter.** This is the rule that makes
   ADR-0001 true rather than aspirational — a converter left in its permissive default would let a
   `<script>` block through untouched and reintroduce the surface the ADR was written to avoid.
+  The converter is commonmark-java 0.30.0, configured once in `wikilink/WikiLinkRenderer` with
+  `escapeHtml(true)` and `sanitizeUrls(true)`: the first shows raw HTML as text, the second empties
+  a `javascript:` link. The library states that it does not restrict tags itself, so both settings
+  carry the whole guarantee, and `WikiLinkRendererTest` fails when either is switched off (checked by
+  switching each off). It was chosen over flexmark-java, which has had no release since May 2023.
+  With `sanitizeUrls` on, the library also puts `rel="nofollow"` on every link; `WikiLinkRenderer`
+  extends it to `rel="nofollow noopener noreferrer"` on links whose destination starts with
+  `http://`, `https://` or `//`, which is the external-URL rule below.
 - There is therefore **no HTML sanitizer** in this system. If one ever appears, it means raw HTML
   is being accepted somewhere, and ADR-0001 has been reversed without being amended.
 - Templates escape by default; `th:utext` is allowed only for content the converter produced, and
