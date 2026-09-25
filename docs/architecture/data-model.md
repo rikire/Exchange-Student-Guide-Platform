@@ -38,13 +38,30 @@ adjustable by the moderator (FR-017), and it appears wherever articles are liste
 The ellipsed extract in search results is a different thing — computed around the match at query
 time and stored nowhere.
 
+**`slug` is the article's address, stored, unique and indexed** ([V5](../../app/src/main/resources/db/migration/V5__add_article_slug.sql),
+25 Sep). It is the title lower-cased, in composed Unicode, with each run of characters that are not
+letters, marks or digits collapsed to one `-` (`wikilink`'s `ArticleAddress.slugOf`), and it is what
+`GET /articles/{title}` and every wiki link look up — one indexed equality instead of computing the
+slug of every title, which ADR-0010 rules out. A slug cannot be turned back into a title, which is why
+it is stored rather than derived. Its unique constraint also catches a collision the title check
+misses: "Fees & Payments" and "Fees Payments" are different titles with one slug, and the second
+article would be unreachable. **Whoever writes an article computes the slug** — the importer (phase 2
+step 5), and `contribute`/`moderate` when a submission is published (phase 3), which must reject a
+title whose slug is already taken, the same way it rejects a case-insensitive title collision
+(FR-010; the requirement names only the title today). **An edit that changes the title changes the
+slug** (FR-011), which turns the old address into a `404` and any `[[Old Title]]` into a red link;
+`moderate` recomputes it when an edit is approved, and keeping the old address answering is an open
+decision for phase 3.
+
 **`title`'s case-insensitive uniqueness is not a database constraint.** The migration
 ([V1__create_content_and_moderation_schema.sql](../../app/src/main/resources/db/migration/V1__create_content_and_moderation_schema.sql))
 carries a plain, case-sensitive `UNIQUE (title)` as a backstop; H2 has no expression indexes to build
 a case-insensitive one from (confirmed against H2 2.3.232, phase 2 step 1), so the actual
 case-insensitive check stays where open question 3 of
 [01-requirements-design.md](../roadmap/01-requirements-design.md) already put it — the `contribute`/
-`moderate` slice, at the point of publishing, not the schema.
+`moderate` slice, at the point of publishing, not the schema. `slug` gives that check a database
+backstop for the collisions that matter to the reader, since two titles that differ only in case
+have the same slug.
 
 **`pinned_at` is indexed** (`article_pinned_at_idx`, added 22 Sep) so FR-009's landing page finds the
 pinned articles directly rather than scanning every row — a plain index, not one filtered on

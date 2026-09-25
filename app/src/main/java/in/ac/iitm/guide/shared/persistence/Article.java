@@ -31,6 +31,14 @@ public class Article {
     @Column(nullable = false)
     private String title;
 
+    /**
+     * The address derived from {@link #title} (wikilink's {@code ArticleAddress}), stored so an
+     * article is found by one indexed lookup. Unique: two titles that differ only in punctuation
+     * would otherwise share one page address.
+     */
+    @Column(nullable = false)
+    private String slug;
+
     @Column(nullable = false)
     private String summary;
 
@@ -66,6 +74,14 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getSummary() {

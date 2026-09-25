@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Exercises the Flyway migration in {@code db/migration} and the eight JPA entity mappings in this
@@ -31,12 +32,16 @@ class SchemaMigrationTest {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private JdbcTemplate jdbc;
+
     @Test
     // trace:FR-001
     void article_round_trips_through_the_real_migration() {
         var now = OffsetDateTime.now();
         var article = new Article();
         article.setTitle("Registering with FRRO");
+        article.setSlug("registering-with-frro");
         article.setSummary("How to register with the Foreigners Regional Registration Office.");
         article.setBody("Full text.");
         article.setPublishedAt(now);
@@ -48,6 +53,7 @@ class SchemaMigrationTest {
         var found = entityManager.find(Article.class, article.getId());
         assertThat(found).isNotNull();
         assertThat(found.getTitle()).isEqualTo("Registering with FRRO");
+        assertThat(found.getSlug()).isEqualTo("registering-with-frro");
         assertThat(found.getPinnedAt()).isNull();
         assertThat(found.getRemovedAt()).isNull();
     }
@@ -72,6 +78,7 @@ class SchemaMigrationTest {
         var now = OffsetDateTime.now();
         var first = new Article();
         first.setTitle("Same title");
+        first.setSlug("same-title");
         first.setSummary("s");
         first.setBody("b");
         first.setPublishedAt(now);
@@ -80,12 +87,52 @@ class SchemaMigrationTest {
 
         var second = new Article();
         second.setTitle("Same title");
+        second.setSlug("same-title-other-address");
         second.setSummary("s");
         second.setBody("b");
         second.setPublishedAt(now);
         second.setUpdatedAt(now);
 
         assertThatThrownBy(() -> entityManager.persistAndFlush(second)).isNotNull();
+    }
+
+    @Test
+    // trace:FR-001
+    void article_slug_is_unique_so_two_titles_cannot_share_an_address() {
+        // The two titles differ, so the title constraint does not fire: this is the collision that
+        // only the slug constraint sees, and without it the second article would be unreachable.
+        var now = OffsetDateTime.now();
+        var first = new Article();
+        first.setTitle("Fees & Payments");
+        first.setSlug("fees-payments");
+        first.setSummary("s");
+        first.setBody("b");
+        first.setPublishedAt(now);
+        first.setUpdatedAt(now);
+        entityManager.persistAndFlush(first);
+
+        var second = new Article();
+        second.setTitle("Fees Payments");
+        second.setSlug("fees-payments");
+        second.setSummary("s");
+        second.setBody("b");
+        second.setPublishedAt(now);
+        second.setUpdatedAt(now);
+
+        assertThatThrownBy(() -> entityManager.persistAndFlush(second)).isNotNull();
+    }
+
+    @Test
+    // trace:FR-001
+    void article_slug_is_required_by_the_schema_itself() {
+        // Inserted with SQL, not through the entity: @Column(nullable = false) would make Hibernate
+        // refuse a null slug before any statement ran, and this test would stay green if V5 lost its
+        // NOT NULL.
+        assertThatThrownBy(() -> jdbc.update(
+                        "INSERT INTO article (id, title, summary, body, published_at, updated_at)"
+                                + " VALUES (?, 'No address', 's', 'b', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+                        UUID.randomUUID()))
+                .hasMessageContaining("SLUG");
     }
 
     @Test
@@ -231,7 +278,9 @@ class SchemaMigrationTest {
     private Article persistedArticle() {
         var now = OffsetDateTime.now();
         var article = new Article();
-        article.setTitle("Article " + UUID.randomUUID());
+        var unique = UUID.randomUUID();
+        article.setTitle("Article " + unique);
+        article.setSlug("article-" + unique);
         article.setSummary("s");
         article.setBody("b");
         article.setPublishedAt(now);

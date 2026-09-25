@@ -16,6 +16,7 @@ entity "article" as article {
   * id : uuid
   --
   * title : text <<unique, case-insensitive>>
+  * slug : text <<unique, the address>>
   * summary : text
   * body : text <<Markdown>>
   * published_at : timestamptz
