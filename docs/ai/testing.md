@@ -173,7 +173,7 @@ Four candidates. Each is a dependency, and therefore the human's decision
 
 | Technique | Tool | Where it earns its place |
 |---|---|---|
-| Assert the number of queries | `db-util` — `SQLStatementCountValidator` | the mechanism the N+1 rule needs; seed one row, then ten, and fail if the count moves |
+| Assert the number of queries | `db-util` — `SQLStatementCountValidator` | adopted 25 Sep (`PageQueryCountTest`): the mechanism the N+1 rule needs; measure a small page, then a larger one, and fail if the count moves |
 | Property-based tests | `jqwik`, a JUnit 5 engine | **`wikilink` only** — a parser is the shape properties suit: "parse then render returns the input" covers inputs nobody would list |
 | Mutation testing | PIT | by hand before a stage, never in CI: it answers what coverage cannot — whether the assertions catch anything — and is far too slow for a per-push gate |
 | PostgreSQL parity | Testcontainers | a separate profile before a stage submission, not per push: `pre-push` is already near the most people tolerate before skipping it |

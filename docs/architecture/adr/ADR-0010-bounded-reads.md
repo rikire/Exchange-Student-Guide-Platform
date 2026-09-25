@@ -62,6 +62,10 @@ counter around the slice tests, failing when the query count rises with the row 
 exists this is a rule review has to hold, which is the weakness worth naming rather than hiding —
 a rule with no check is a rule that is already being broken somewhere nobody has looked.
 
+*Built 25 Sep (phase 2 step 4):* `PageQueryCountTest` covers the landing page and the article page
+only. Each later slice's public page needs its own case in it when the slice is written; a page
+without one is still held by review alone.
+
 ## Consequences
 
 **Good:** the cost of a page is bounded by the page size rather than by how much content exists;

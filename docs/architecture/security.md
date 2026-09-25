@@ -121,8 +121,8 @@ an unbounded read is the cheapest way to lose it.
 - **The fetch strategy is chosen, not discovered** — a join fetch, an entity graph or a batch size,
   decided when the query is written.
 - **Every public list is paginated**, with a bound the client cannot raise.
-- The gate that checks this — a query counter around the slice tests — arrives in phase 2 with the
-  persistence layer.
+- The gate that checks this is `PageQueryCountTest` (25 Sep), a query counter that today covers the
+  landing page and the article page; every later public page adds its own case.
 
 ## The admin area
 
