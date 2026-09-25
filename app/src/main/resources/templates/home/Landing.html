@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Exchange Student Guide — IIT Madras</title>
+</head>
+<body>
+  <main class="site-main">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Everything you need to settle in at IIT Madras</h1>
+        <p>Written and kept up to date by exchange students, checked by the Office of Global Engagement.</p>
+        <form class="search-form" th:action="@{/search}" method="get" role="search">
+          <input class="search-input" type="search" name="q" required placeholder="Search for FRRO, hostel, bank account..." aria-label="Search the guide">
+          <button class="search-button" type="submit">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <section th:if="${!landing.pinned.isEmpty()}">
+      <h2 class="section-title">Pinned</h2>
+      <div class="card-grid">
+        <article class="article-card" th:each="card : ${landing.pinned}">
+          <span class="pinned-badge">Pinned</span>
+          <h3 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
+          <p class="article-card-summary" th:text="${card.summary}">Summary</p>
+          <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
+            <li class="chip" th:each="tag : ${card.tags}" th:text="${tag}">tag</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Recently added</h2>
+      <p class="empty-note" th:if="${landing.pinned.isEmpty() && landing.recent.isEmpty()}">No articles yet.</p>
+      <div class="card-grid" th:if="${!landing.recent.isEmpty()}">
+        <article class="article-card" th:each="card : ${landing.recent}">
+          <h3 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
+          <p class="article-card-summary" th:text="${card.summary}">Summary</p>
+          <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
+            <li class="chip" th:each="tag : ${card.tags}" th:text="${tag}">tag</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section th:if="${!landing.tags.isEmpty()}">
+      <h2 class="section-title">Tags</h2>
+      <ul class="tag-cloud">
+        <li class="chip" th:each="tag : ${landing.tags}" th:text="${tag}">tag</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

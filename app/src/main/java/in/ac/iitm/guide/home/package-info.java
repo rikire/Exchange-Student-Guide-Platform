@@ -1,12 +1,11 @@
 /**
- * The landing page: pinned articles, recently added ones, the tag list and the search entry point.
+ * The landing page, {@code GET /}: pinned articles, recently added ones, the tags in use and a
+ * search entry point.
  *
- * <p>Serves FR-009, FR-025.
+ * <p>Serves FR-009. Nothing in the package root is published: the controller, the service and the
+ * read repository are internal.
  *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p><strong>Not built yet:</strong> the moderator's pinning screen (FR-025); the search box points
+ * at {@code /search}, which the {@code search} slice adds in phase 3.
  */
 package in.ac.iitm.guide.home;
