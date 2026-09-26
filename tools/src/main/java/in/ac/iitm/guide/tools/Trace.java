@@ -82,6 +82,15 @@ public final class Trace {
 
     record Anchor(String id, String path, Where where) {
 
+        /**
+         * Code that does something, as opposed to the schema laid down ahead of it: an entity under
+         * shared/persistence and its migration exist before the slice that uses them, and neither
+         * says the requirement is being met.
+         */
+        boolean isBehaviour() {
+            return where == Where.CODE && !path.contains("/shared/persistence/");
+        }
+
         String name() {
             String file = path.substring(path.lastIndexOf('/') + 1);
             int dot = file.lastIndexOf('.');
@@ -382,7 +391,7 @@ public final class Trace {
             return;
         }
         boolean covered = features.stream().anyMatch(feature -> feature.covers().contains(id));
-        boolean hasCode = anchors.stream().anyMatch(a -> a.id().equals(id) && a.where() == Where.CODE);
+        boolean hasCode = anchors.stream().anyMatch(a -> a.id().equals(id) && a.isBehaviour());
         boolean hasTest = anchors.stream().anyMatch(a -> a.id().equals(id) && a.where() == Where.TEST);
 
         switch (status) {
@@ -410,9 +419,9 @@ public final class Trace {
                 }
             }
             default -> {
-                // planned: nothing is demanded, but anchors that already exist are worth a look.
-                if (hasCode || hasTest) {
-                    notes.add(id + " is planned but has anchors; its status may be stale");
+                // planned: nothing is demanded, but code that already does something is worth a look.
+                if (hasCode) {
+                    notes.add(id + " is planned but has anchors in code; its status may be stale");
                 }
             }
         }

@@ -371,6 +371,36 @@ class TraceTest {
         assertEquals(List.of(), report().notes());
     }
 
+    private static final String ENTITY = "app/src/main/java/in/ac/iitm/guide/shared/persistence/Tag.java";
+
+    @Test
+    void a_planned_requirement_anchored_only_on_an_entity_and_its_schema_test_is_no_note() throws IOException {
+        requirements("functional.md", "FR", block("FR-001", "planned"));
+        write(ENTITY, "//trace:FR-001\nclass Tag {}\n");
+        test("SchemaMigrationTest", "//trace:FR-001");
+
+        assertEquals(List.of(), report().notes());
+    }
+
+    @Test
+    void an_entity_anchor_does_not_stand_in_for_a_code_anchor_on_a_done_requirement() throws IOException {
+        requirements("functional.md", "FR", block("FR-001", "done"));
+        feature("FEAT-001", "done", "FR-001");
+        write(ENTITY, "//trace:FR-001\nclass Tag {}\n");
+        test("HomeControllerTest", "//trace:FR-001");
+
+        assertTrue(problems(report()).contains("FR-001 is done and no code carries its anchor"), problems(report()));
+    }
+
+    @Test
+    void behaviour_in_a_slice_still_makes_a_planned_requirement_a_note_beside_an_entity() throws IOException {
+        requirements("functional.md", "FR", block("FR-001", "planned"));
+        write(ENTITY, "//trace:FR-001\nclass Tag {}\n");
+        code("HomeController", "//trace:FR-001");
+
+        assertTrue(String.join(" | ", report().notes()).contains("FR-001 is planned but has anchors"));
+    }
+
     // --- the feature backlog ---
 
     @Test
