@@ -41,8 +41,15 @@ final class JournalCommit {
 
     private JournalCommit() {}
 
+    /** What every subject written by the hook starts with; measuring contribution must be able to tell them. */
+    static final String SUBJECT_PREFIX = "docs: record the journal entry for ";
+
+    static boolean isJournalSubject(String subject) {
+        return subject != null && subject.startsWith(SUBJECT_PREFIX);
+    }
+
     static String messageFor(ZonedDateTime when) {
-        return "docs: record the journal entry for " + STAMP.format(when);
+        return SUBJECT_PREFIX + STAMP.format(when);
     }
 
     /**

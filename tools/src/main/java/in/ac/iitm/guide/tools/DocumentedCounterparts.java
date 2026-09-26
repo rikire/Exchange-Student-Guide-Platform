@@ -1,5 +1,7 @@
 package in.ac.iitm.guide.tools;
 
+import java.util.function.Predicate;
+
 /**
  * The mapping in docs/ai/docs-sync.md, made to fire.
  *
@@ -22,8 +24,22 @@ public final class DocumentedCounterparts {
     private static final String ROUTES = "docs/architecture/ui-routes.md";
     private static final String OVERVIEW = "docs/architecture/overview.md";
 
-    /** One tracked area: a stable key to remember it by, and what has to change with it. */
-    public record Rule(String key, String update) {}
+    private static final String ERD = "docs/diagrams/src/erd.puml";
+    private static final String ADRS = "docs/architecture/adr/ADR-";
+    private static final String FEATURES = "docs/features/FEAT-";
+
+    private static final Predicate<String> SCHEMA_DOCS = path -> path.equals(DATA_MODEL) || path.equals(ERD);
+    private static final Predicate<String> ROUTE_DOCS = path -> path.equals(ROUTES);
+    private static final Predicate<String> FEATURE_DOCS = path -> path.startsWith(FEATURES) && path.endsWith(".md");
+    private static final Predicate<String> DECISION_DOCS =
+            path -> path.equals(OVERVIEW) || (path.startsWith(ADRS) && path.endsWith(".md"));
+
+    /**
+     * One tracked area: a stable key to remember it by, what has to change with it, whether leaving
+     * it unchanged refuses the turn ({@code blocks}, the "blocks" column of docs-sync.md) or only
+     * reports, and which changed file counts as having done that.
+     */
+    public record Rule(String key, String update, boolean blocks, Predicate<String> satisfiedBy) {}
 
     private DocumentedCounterparts() {}
 
@@ -34,15 +50,15 @@ public final class DocumentedCounterparts {
             return null;
         }
         if (relativePath.startsWith(MIGRATIONS)) {
-            return new Rule("migration", DATA_MODEL + " (or the ERD source)");
+            return new Rule("migration", DATA_MODEL + " (or the ERD source)", true, SCHEMA_DOCS);
         }
         if (relativePath.startsWith(TEMPLATES)) {
-            return new Rule("routes", ROUTES);
+            return new Rule("routes", ROUTES, true, ROUTE_DOCS);
         }
         if (relativePath.equals("pom.xml")
                 || relativePath.equals("app/pom.xml")
                 || relativePath.equals("tools/pom.xml")) {
-            return new Rule("build", "an ADR under docs/architecture/adr/, or " + OVERVIEW);
+            return new Rule("build", "an ADR under docs/architecture/adr/, or " + OVERVIEW, false, DECISION_DOCS);
         }
         if (!relativePath.startsWith(SLICES) || !relativePath.endsWith(".java")) {
             return null;
@@ -50,7 +66,7 @@ public final class DocumentedCounterparts {
 
         String withinBasePackage = relativePath.substring(SLICES.length());
         if (withinBasePackage.startsWith("shared/persistence/")) {
-            return new Rule("shared-persistence", DATA_MODEL + " (or the ERD source)");
+            return new Rule("shared-persistence", DATA_MODEL + " (or the ERD source)", true, SCHEMA_DOCS);
         }
         if (withinBasePackage.startsWith("shared/")) {
             // The rest of shared is layout and configuration: real, but not a contract another
@@ -58,14 +74,14 @@ public final class DocumentedCounterparts {
             return null;
         }
         if (relativePath.endsWith("Controller.java")) {
-            return new Rule("routes", ROUTES);
+            return new Rule("routes", ROUTES, true, ROUTE_DOCS);
         }
         // Directly in the slice package is what other slices are allowed to depend on, so it is the
         // boundary; anything nested is that slice's own business.
         boolean publishedType = withinBasePackage.indexOf('/') == withinBasePackage.lastIndexOf('/');
         return publishedType
-                ? new Rule("boundary", OVERVIEW + ", an ADR, or the feature file")
-                : new Rule("feature", "the feature file — its code, tests and status fields");
+                ? new Rule("boundary", OVERVIEW + ", an ADR, or the feature file", true, DECISION_DOCS.or(FEATURE_DOCS))
+                : new Rule("feature", "the feature file — its code, tests and status fields", false, FEATURE_DOCS);
     }
 
     /** A stable name for the tracked area, so a reminder can fire once per area per session. */

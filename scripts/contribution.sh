@@ -8,9 +8,9 @@
 # while authored work was roughly 8 to 35 the other. Every anti-freeloading mechanism the course
 # uses reads this history.
 #
-# So this reports the two numbers apart and never adds them up. It is not `ai-tools ownership`,
-# which arrives in phase 2 and measures per slice; the obligation to produce a weekly log arrives
-# before that, and this is what fills its "from git" half until then.
+# So this reports the two numbers apart and never adds them up. `ai-tools ownership` measures per
+# slice and `ai-tools weekly` writes the log's "from git" half; this stays as a second route to the
+# same authored and hook figures, in shell, that does not depend on the jar having been built.
 #
 # Usage: sh scripts/contribution.sh [<since>]     e.g. sh scripts/contribution.sh 2026-09-01
 set -u

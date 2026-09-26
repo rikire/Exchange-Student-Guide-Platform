@@ -42,8 +42,25 @@ java -jar tools/target/ai-tools.jar authors
 echo "==> build, tests and formatting"
 ./mvnw -B verify
 
-# The traceability gate is added here in phase 2, once `ai-tools trace` exists.
-# See docs/roadmap/02-skeleton.md.
+# The chain from requirement to code and test, and the two generated files that state it. A file
+# that is out of date fails here rather than being regenerated silently: the person who changed an
+# anchor should see the matrix move.
+echo "==> traceability: no gap in the chain, generated files current"
+java -jar tools/target/ai-tools.jar trace --check
+
+# A change to the schema, the routes or a slice boundary must come with the document that describes
+# it (docs/ai/docs-sync.md). CI passes the commit its run started from in DOCS_SYNC_BASE; locally the
+# base is what the remote already has, so that a change committed and about to be pushed is still
+# compared, not only what is uncommitted. Nothing to compare with means HEAD.
+# After the freeze a migration needs an ADR named in its header (roadmap phase 2, step 11). Silent
+# until a person writes the freeze date into docs/roadmap/02-skeleton.md.
+echo "==> a migration added after the schema froze names its ADR"
+java -jar tools/target/ai-tools.jar schema-freeze
+
+echo "==> a changed schema, route or boundary is described"
+base=${DOCS_SYNC_BASE:-}
+[ -n "$base" ] || base=$(git merge-base HEAD '@{upstream}' 2>/dev/null || echo HEAD)
+java -jar tools/target/ai-tools.jar trace --docs-sync "$base"
 
 echo
 echo "All checks passed."

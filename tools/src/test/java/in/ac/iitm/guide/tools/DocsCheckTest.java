@@ -112,16 +112,16 @@ class DocsCheckTest {
 
     @Test
     void work_that_is_still_ahead_is_excused_by_naming_its_phase_on_the_same_line() throws IOException {
-        write("docs/a.md", "java -jar tools/target/ai-tools.jar trace   # phase 2\n");
+        write("docs/a.md", "java -jar tools/target/ai-tools.jar frobnicate   # phase 2\n");
 
         assertEquals(List.of(), check());
     }
 
     @Test
     void the_phase_marker_only_excuses_its_own_line() throws IOException {
-        write("docs/a.md", "The generator arrives in phase 2.\n\nRun `ai-tools trace` now.\n");
+        write("docs/a.md", "The generator arrives in phase 2.\n\nRun `ai-tools frobnicate` now.\n");
 
-        assertTrue(details(check()).contains("cites `ai-tools trace`"));
+        assertTrue(details(check()).contains("cites `ai-tools frobnicate`"));
     }
 
     @Test

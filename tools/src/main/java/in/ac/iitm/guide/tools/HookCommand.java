@@ -417,11 +417,12 @@ final class HookCommand {
             return;
         }
 
-        List<String> problems = new ArrayList<>();
-        DocsCheck.run(repo).forEach(problem -> problems.add(problem.toString()));
+        Gate.Result gate = Gate.evaluate(repo);
+        List<String> problems = gate.problems();
 
         List<String> checks = new ArrayList<>();
-        checks.add("traceability gate: not enabled yet (phase 2)");
+        // A check that could not run is said so in the entry: silence would read as a pass.
+        checks.addAll(gate.notRun());
         checks.add(journal.hasEnglishRendering() ? "English rendering: supplied" : "English rendering: NOT supplied");
 
         if (!problems.isEmpty()) {
@@ -436,19 +437,21 @@ final class HookCommand {
                 HookEvent.emitDecision(
                         "Stop",
                         "deny",
-                        "The turn cannot end: documentation describes things the repository does not contain.\n\n"
+                        "The turn cannot end: the documentation and the repository disagree.\n\n"
                                 + String.join(
                                         "\n",
                                         problems.stream().map(p -> "  " + p).toList()) + "\n\n"
-                                + "Fix these, or say on the line itself which phase the work belongs to.\n"
-                                + "If it cannot be fixed, stop and ask (docs/ai/stop-and-ask.md).");
+                                + "A document describing what does not exist: build it, or say on the line itself which phase\n"
+                                + "it belongs to. A generated file that is out of date: run the command it names. A changed\n"
+                                + "schema, route or slice boundary: update the document that describes it, in substance\n"
+                                + "(docs/ai/docs-sync.md). If it cannot be fixed, stop and ask (docs/ai/stop-and-ask.md).");
                 return;
             }
-            checks.add("documentation gate: NOT PASSED (" + problems.size()
+            checks.add("gate (documentation, traceability, docs-sync): NOT PASSED (" + problems.size()
                     + " unresolved; allowed through because it had already blocked once)");
         } else {
             journal.setLastGateCause("");
-            checks.add("documentation gate: passed");
+            checks.add("gate (documentation, traceability, docs-sync): passed");
         }
 
         if (journal.isMachineTurn()) {

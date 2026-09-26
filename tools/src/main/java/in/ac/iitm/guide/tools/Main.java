@@ -21,6 +21,14 @@ import java.util.List;
  *   commit-msg &lt;file&gt;      check the commit message convention
  *   docs-check             find documentation that describes what the repository lacks
  *   authors                check every committer resolves to a member of the team registry
+ *   trace                  write docs/traceability.md and docs/features/README.md from the repository
+ *   trace --check          fail on a gap in the chain or on a generated file that is out of date
+ *   trace --docs-sync &lt;ref&gt;  fail when a change since ref touches the schema, the routes or a slice
+ *                          boundary and the document describing it did not change
+ *   gaps                   write docs/gap-list.md: what is not done, open debt, criteria with no test
+ *   ownership              write docs/team/ownership.md from git history, the hook's commits apart
+ *   schema-freeze          fail when a migration added after the freeze names no ADR in its header
+ *   weekly [--week W]      refresh the "From git" paragraphs of a week's log (default: this week)
  * </pre>
  *
  * <p>A failure inside a hook must not break the human's session: every error is reported on stderr
@@ -48,6 +56,17 @@ public final class Main {
                 case "docs-check" -> docsCheck();
                 case "authors" -> authors();
                 case "count" -> count();
+                case "trace" -> trace(Arrays.copyOfRange(args, 1, args.length));
+                case "gaps" -> {
+                    Gaps.write(Repo.find(null));
+                    System.out.println("wrote docs/gap-list.md");
+                }
+                case "ownership" -> {
+                    Ownership.write(Repo.find(null));
+                    System.out.println("wrote docs/team/ownership.md");
+                }
+                case "weekly" -> weekly(Arrays.copyOfRange(args, 1, args.length));
+                case "schema-freeze" -> schemaFreeze();
                 default -> throw new IllegalStateException("dispatch missing for " + args[0]);
             }
         } catch (Exception e) {
@@ -84,6 +103,78 @@ public final class Main {
         System.out.println("non-functional requirements: " + counts.nonFunctional());
         System.out.println("constraints:                 " + counts.constraints());
         System.out.println("use cases:                   " + counts.useCases());
+    }
+
+    private static void trace(String[] args) throws Exception {
+        Repo repo = Repo.find(null);
+        if (args.length == 1 && args[0].equals("--check")) {
+            List<String> found = Trace.check(repo);
+            if (found.isEmpty()) {
+                return;
+            }
+            System.err.println("The chain from requirement to code and test has gaps:");
+            found.forEach(problem -> System.err.println("  - " + problem));
+            System.exit(1);
+        }
+        if (args.length == 2 && args[0].equals("--docs-sync")) {
+            docsSync(repo, args[1]);
+            return;
+        }
+        if (args.length != 0) {
+            System.err.println("usage: ai-tools trace [--check | --docs-sync <ref>]");
+            System.exit(64);
+        }
+        Trace.write(repo);
+        Trace.Report report = Trace.build(repo);
+        System.out.println("wrote docs/traceability.md and docs/features/README.md");
+        report.problems().forEach(problem -> System.out.println("  gap: " + problem));
+        report.notes().forEach(note -> System.out.println("  note: " + note));
+    }
+
+    private static void schemaFreeze() throws Exception {
+        List<String> found = SchemaFreeze.check(Repo.find(null), java.time.Clock.systemDefaultZone());
+        if (found.isEmpty()) {
+            return;
+        }
+        System.err.println("The schema is frozen, and these migrations changed it without an agreement:");
+        found.forEach(problem -> System.err.println("  - " + problem));
+        System.exit(1);
+    }
+
+    private static void weekly(String[] args) throws Exception {
+        String week = Weekly.weekOf(java.time.LocalDate.now());
+        if (args.length == 2 && args[0].equals("--week")) {
+            week = args[1];
+        } else if (args.length != 0) {
+            System.err.println("usage: ai-tools weekly [--week 2026-W39]");
+            System.exit(64);
+        }
+        Weekly.write(Repo.find(null), week);
+        System.out.println("wrote docs/team/weekly-log/" + week + ".md");
+    }
+
+    private static void docsSync(Repo repo, String ref) {
+        List<DocsSync.Finding> findings;
+        try {
+            findings = DocsSync.check(repo, ref);
+        } catch (Exception e) {
+            // Not the fail-open of a hook: a gate that could not read the change must not say "fine".
+            System.err.println("ai-tools: " + e.getMessage());
+            System.exit(2);
+            return;
+        }
+        boolean refused = false;
+        for (DocsSync.Finding finding : findings) {
+            System.err.println((finding.blocks() ? "BLOCKS  " : "warns   ") + String.join(", ", finding.files())
+                    + " changed; update " + finding.update());
+            refused |= finding.blocks();
+        }
+        if (refused) {
+            System.err.println();
+            System.err.println(
+                    "The mapping is in docs/ai/docs-sync.md. Update the document in substance, in the same change.");
+            System.exit(1);
+        }
     }
 
     private static void authors() throws Exception {

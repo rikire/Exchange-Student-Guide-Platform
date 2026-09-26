@@ -26,7 +26,27 @@ jobs:
       # directly fails with "Permission denied", which says nothing about the cause.
       #
       # CI runs the same script we run locally, so "it passed on my machine" means the same
-      # thing here. The traceability gate is added inside it in phase 2.
+      # thing here, traceability gate included.
+      #
+      # The gate that compares a change with its documentation needs to know where the change
+      # began: the merge base for a pull request, the previous tip for a push. A new branch or a
+      # tip the runner cannot see falls back to the commit before this one, and failing that to
+      # HEAD, which compares nothing rather than something wrong.
+      - name: Work out where this change began
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base=$(git merge-base "origin/${{ github.base_ref }}" HEAD)
+          else
+            base="${{ github.event.before }}"
+            case "$base" in
+              ""|0000000000000000000000000000000000000000) base="" ;;
+            esac
+            if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+              base=$(git rev-parse --verify -q HEAD~1 || echo HEAD)
+            fi
+          fi
+          echo "DOCS_SYNC_BASE=$base" >> "$GITHUB_ENV"
+
       - name: Build, test and check formatting
         run: sh scripts/check.sh
 
