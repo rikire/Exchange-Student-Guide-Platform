@@ -104,12 +104,18 @@ keeps guarding the behaviour through the swap.
 **Trigger:** the first line of code in the `taxonomy` slice. `contribute` (phase 3) will also write
 tags and must use the same published type, not a third copy.
 
-### DEBT-004 — Four `app/pom.xml` dependencies are declared with no code or test using them yet
+### DEBT-004 — Hibernate Search's two `app/pom.xml` dependencies are declared with no code or test using them yet
 
 **Status:** open
 **Created:** 2026-09-21
-**Marker:** `app/pom.xml` — `h2`, `postgresql`, `hibernate-search-mapper-orm`,
-`hibernate-search-backend-lucene`
+**Narrowed:** 2026-09-26 — from four dependencies to two, see below
+**Marker:** `app/pom.xml` — `hibernate-search-mapper-orm`, `hibernate-search-backend-lucene`
+
+**Narrowed 26 Sep (phase 2 audit):** the entry was written for four dependencies. H2 is now
+exercised by every persistence and controller test, so its clause is met. The PostgreSQL driver was
+run once by hand against PostgreSQL 17.11; its automated test is DEBT-007. What remains here is
+Hibernate Search, which no class and no test uses (`grep` for `hibernate.search`, `@Indexed` and
+`SearchSession` under `app/src` finds nothing). The text below is the original, kept for the record.
 
 **Cause:** phase 2 step 0 ([02-skeleton.md](roadmap/02-skeleton.md)) names only Flyway, the Spring
 Modulith JPA starter, ArchUnit and db-util. The human asked, after the trade-off was stated, to add

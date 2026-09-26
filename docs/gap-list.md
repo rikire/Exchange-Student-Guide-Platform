@@ -54,7 +54,7 @@ None.
 | DEBT-007 | No automated test runs the migrations on PostgreSQL | the first migration added after the schema freeze (V6 or later), or the phase 4 |
 | DEBT-006 | The importer writes articles but no `article_link` rows | the first code that writes `article_link` — the extractor in phase 3, or FR-006 in phase |
 | DEBT-005 | The tag rule of ADR-0005 is written twice until `taxonomy` exists | the first line of code in the `taxonomy` slice. `contribute` (phase 3) will also write |
-| DEBT-004 | Four `app/pom.xml` dependencies are declared with no code or test using them yet | already past — recorded at creation, not deferred. |
+| DEBT-004 | Hibernate Search's two `app/pom.xml` dependencies are declared with no code or test using them yet | already past — recorded at creation, not deferred. |
 | DEBT-002 | The process layer cannot be packaged for a second repository | the first time a second repository needs this, or phase 5 handover — whichever comes |
 
 ## Gaps in the traceability chain

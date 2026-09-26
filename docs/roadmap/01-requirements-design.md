@@ -187,7 +187,7 @@ design document is the deliverable; the repository documents are the source it i
       | `moderate` | `ModerationServiceTest.noPathPublishesAnUnapprovedSubmission` | The invariant named in [03-main-flow.md](03-main-flow.md)'s `moderate` step, covering FR-017/FR-018 |
       | `media` | `MediaUploadTest.fileWhoseExtensionLiesAboutContentIsRejected` | Named in [03-main-flow.md](03-main-flow.md)'s `media` step |
       | `wikilink` | `WikiLinkRendererTest.linkToMissingArticleRendersRed` | FR-004 |
-      | `backup` | `BackupServiceTest.exportWipeImportProducesIdenticalDatabase` | Named in [02-skeleton.md](02-skeleton.md)'s `backup` step |
+      | `backup` | `BackupServiceTest.exportWipeImportProducesIdenticalDatabase` (built as `ArticleArchiveTest.what_an_export_holds_imports_back_as_the_same_articles`, 25 Sep) | Named in [02-skeleton.md](02-skeleton.md)'s `backup` step |
       | `report` | `ReportControllerTest.reportWithoutMessageIsRejected` | FR-021 |
 
       Ten slices, one test each, from the acceptance criteria phase 1 already agreed — not the full

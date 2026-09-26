@@ -47,8 +47,9 @@ level — it is what ruled out PostgreSQL full-text search, because the tests wo
 an engine the product does not ship on.
 
 **Declared in `app/pom.xml` since 21 September, ahead of the code that uses them.** Both database
-drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now;
-none is exercised by a test yet — phase 2 step 1 is the first (DEBT-004).
+drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now.
+H2 has been exercised by every persistence test since phase 2 step 1 and the PostgreSQL driver by
+one manual run (below, DEBT-007); no class or test uses Hibernate Search yet (DEBT-004).
 
 **Flyway needs a second artifact for PostgreSQL.** Since Flyway 10 each database is its own module:
 `flyway-core` alone runs on H2 but refuses PostgreSQL at start-up with `Unsupported Database`. Found

@@ -61,6 +61,10 @@ step names what it depends on among the others.
       `article.removed_at` (nearly every row is `NULL`, so an index narrows nothing),
       `submission_tag.tag_id` and `article_link.target_title` (no code or requirement reads by them;
       the backlinks read by `target_article_id`, which V4 indexed).
+      **Correction 26 Sep (audit A1):** "the eight tables" and "eight JPA entities" above are wrong.
+      V1 creates nine tables, seven of them mapped by an `@Entity` class (Article, ArticleLink,
+      MediaAsset, Report, Revision, Submission, Tag) and two, `article_tag` and `submission_tag`, by
+      `@ManyToMany` with no class of their own, as the sentence itself lists.
       **Not done here:** slice repositories (phase 2 step 3), and DB-level case-insensitive
       uniqueness on `article.title` (H2 has no expression indexes — see the note in `data-model.md`
       next to `title`; enforced by the owning slice instead, in phase 3).
@@ -294,6 +298,13 @@ that exists.
 | A4 | `CLAUDE.md` lists Bootstrap 5 in the stack and `static/README.md` says "Bootstrap overrides"; FEAT-003 says Bootstrap is not used, and no template or static file references it. | `grep -ril bootstrap` over templates and static gave only the README | open: `CLAUDE.md` is the human's; the static README is a one-line fix |
 | A5 | `ui-routes.md` writes the article route as `/articles/{title}`; the controller maps `/articles/{address}`. Line 32 defines `{title}` as the slug, so the meaning agrees and the name does not. The landing page's search box posts to `/search`, which does not exist yet (known, step 3). | the controllers' `@GetMapping`; `ui-routes.md` lines 32 and 89 | proposed: leave the name, it is the human's route contract |
 | A6 | Phase 1 is still "in progress" in [README.md](README.md) and in its own file, with 17 of 17 steps done. `scripts/session-start.sh` therefore reports phase 1 and a design-document deadline of 11 Sep that is past. | the SessionStart report of 26 Sep; `01-requirements-design.md` header | open: closing phase 1 needs its own readiness check, `/course-check design` |
+
+**Follow-up, 26 Sep.** The human decided to drop Bootstrap rather than add it: the pages run on the
+design tokens, the design screens use no framework, and adding one would put a second set of
+colours beside the tokens that `TemplateTokensTest` guards. A1 corrected in step 1; A2 noted in the
+test plan; A3 recorded by narrowing DEBT-004 and correcting overview.md; A4 fixed in
+`static/README.md` and in the stack line of `CLAUDE.md`. `PLAN-PROMPT.md` and `proposal.tex` still
+name Bootstrap, as dated records of what was planned and submitted. A5 and A6 stay open.
 
 **Not re-run.** The removals that steps 3–8 say were made to see a test fail were not repeated;
 the claims stand on what those steps recorded. The `weekly` and `ownership` figures of week 39 are
