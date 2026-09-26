@@ -71,6 +71,21 @@ mkdir -p "$OUT"
 java -jar "$JAR" -failfast2 -tsvg -o "$(cd "$OUT" && pwd)" "$SRC"/*.puml
 java -jar "$JAR" -failfast2 -tpng -o "$(cd "$OUT" && pwd)" "$SRC"/*.puml
 
+# The diagram the code draws of itself, next to the designed one above. ModularityTest writes it from
+# the imports between slices (Spring Modulith's Documenter), so it shows what exists now, not what
+# was planned; comparing the two is the point. It lives under target/, so it is only there after a
+# test run, and a missing file stops the script rather than leaving last week's picture in place.
+GENERATED="app/target/spring-modulith-docs/components.puml"
+if [ ! -f "$GENERATED" ]; then
+	echo "$GENERATED is missing: run ./mvnw test first, ModularityTest writes it" >&2
+	exit 1
+fi
+ACTUAL_DIR=$(mktemp -d)
+cp "$GENERATED" "$ACTUAL_DIR/c4-component-actual.puml"
+java -jar "$JAR" -failfast2 -tsvg -o "$(cd "$OUT" && pwd)" "$ACTUAL_DIR/c4-component-actual.puml"
+java -jar "$JAR" -failfast2 -tpng -o "$(cd "$OUT" && pwd)" "$ACTUAL_DIR/c4-component-actual.puml"
+rm -rf "$ACTUAL_DIR"
+
 # PlantUML writes a .cmapx beside any PNG whose diagram carries a link or a tooltip: an HTML
 # client-side image map. Nothing here serves HTML, and LaTeX cannot use one, so it would be a
 # generated file committed for no reader. Removed rather than left to accumulate.
