@@ -17,8 +17,8 @@ recorded as `CON-XXX` is worth more than an unconsidered feature.
 ## Stack
 
 Java 21 · Maven (multi-module) · Spring Boot 3.5.16 · Spring Modulith 1.4.13 · Thymeleaf ·
-Bootstrap 5 · Flyway · H2 (dev) / PostgreSQL (prod) · Hibernate Search 7.2.6 + Lucene ·
-JUnit 5 + MockMvc · Docker Compose.
+Flyway · H2 (dev) / PostgreSQL (prod) · Hibernate Search 7.2.6 + Lucene · JUnit 5 + MockMvc ·
+Docker Compose.
 
 Versions are verified against the registry, never recalled from memory.
 
