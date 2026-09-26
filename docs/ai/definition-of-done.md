@@ -62,7 +62,7 @@ is what a reviewer needs and the diff cannot show.
 Rules: [docs-sync.md](docs-sync.md).
 
 ```bash
-java -jar tools/target/ai-tools.jar trace --docs-sync HEAD   # phase 2; until then, check by reading
+java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
 ```
 
 Documentation is updated **in substance**: it describes the new behaviour, not the fact that an edit
@@ -71,10 +71,11 @@ happened.
 ## 7. Traceability
 
 ```bash
-java -jar tools/target/ai-tools.jar trace   # phase 2; until then, check by reading
+java -jar tools/target/ai-tools.jar trace           # rewrites the matrix and the feature backlog
+java -jar tools/target/ai-tools.jar trace --check   # fails on a gap in the chain or a stale file
 ```
 
-Until the generator exists, walk the list in [`/trace-check`](../../.claude/skills/trace-check/SKILL.md)
+If the jar is not built, walk the list in [`/trace-check`](../../.claude/skills/trace-check/SKILL.md)
 by hand and say so in the verdict. An item reported as passed because a missing command produced no
 output is not a passed item.
 

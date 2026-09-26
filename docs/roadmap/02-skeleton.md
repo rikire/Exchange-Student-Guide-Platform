@@ -1,7 +1,7 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026 and overran it; steps 0–9 done, step 11's check built,
-step 10 and the freeze date wait for a decision (below).
+**Status: in progress.** Runs 12–20 September 2026 and overran it; steps 0–10 done, step 11's check built,
+the freeze date waits for a decision (below).
 
 ## Goal
 
@@ -206,16 +206,16 @@ step names what it depends on among the others.
       the journal entry as not run and does not refuse. **Not run:** the CI workflow itself, which
       needs a push; its shell was only parsed, and the merge-base branch is untested.
 
-- [ ] **10. Slash commands for ownership and the gap list**, once their generators exist. Depends
+- [x] **10. Slash commands for ownership and the gap list**, once their generators exist. Depends
       on: 8
       — check: `ai-tools docs-check` passes with both advertised in `CLAUDE.md`; it already refuses
       a command named in the instructions with no skill behind it
-      **Waiting for agreement, 26 Sep.** Both generators exist, but the two skills, the line in
-      `CLAUDE.md` and the table in `docs/ai/README.md` are the agent's own instructions and are not
-      changed without the human's say. The same edit would also correct the lines that still say the
-      generators arrive later: `docs/ai/docs-sync.md`, `docs/ai/definition-of-done.md`,
-      `docs/ai/collaboration.md`, `docs/ai/README.md`, `.claude/skills/dod/SKILL.md` and
-      `.claude/skills/trace-check/SKILL.md`.
+      **Done 26 Sep**, once the human agreed to the edit to the agent's own instructions: `/ownership`
+      and `/gaps` (`.claude/skills/`), listed in `CLAUDE.md` and `docs/ai/README.md`. The same edit
+      removed the "phase 2" wording that no longer described anything, in `CLAUDE.md`,
+      `docs/ai/README.md`, `docs-sync.md`, `definition-of-done.md`, `collaboration.md` and the `/dod`
+      and `/trace-check` skills. **Check, as run:** `docs-check` passes with both advertised, and
+      fails naming `/gaps` when its skill is moved aside.
 
 - [ ] **11. The schema freezes.** After that it changes by agreement only. Depends on: 1, 5, 6 — a
       closing milestone, not a build task, placed last: freezing before the schema has settled would

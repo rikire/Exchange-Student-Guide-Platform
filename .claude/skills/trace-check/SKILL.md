@@ -11,10 +11,10 @@ This runs in its own context because it reads widely and returns a short answer.
 are of no use to the conversation afterwards, and leaving them there crowds out the work itself.
 
 ```
-java -jar tools/target/ai-tools.jar trace   # phase 2; until then use the reading check below
+java -jar tools/target/ai-tools.jar trace --check
 ```
 
-If the generator is not built yet, do the check by reading:
+It exits non-zero and lists every gap. If the jar is not built, do the check by reading:
 
 1. Every requirement with status `done` in `docs/requirements/` has a feature file that covers it,
    an anchor `//trace:FR-XXX` in production code, and one in a test.

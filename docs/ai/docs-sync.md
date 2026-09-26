@@ -35,12 +35,13 @@ divergence is most expensive. A gate that fires on every refactor gets worked ar
 3. **In CI.** The same check on every pull request, in case hooks are disabled locally.
 
 ```bash
-java -jar tools/target/ai-tools.jar trace --docs-sync HEAD   # phase 2
+java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
 ```
 
-Steps 2 and 3 are phase 2 for this table. Until they land the reminder is only a reminder: nothing
-refuses a turn that ignores it. What the `Stop` hook and CI run today is `docs-check`, which finds
-documents claiming something the repository lacks, not this mapping.
+Steps 2 and 3 are built. The `Stop` hook runs the check against `HEAD` and `scripts/check.sh` runs it
+in CI against where the change began (`DOCS_SYNC_BASE`, else what the remote already has). Only the
+rows marked "blocks" refuse; the others are printed. Against `HEAD` a change already committed in the
+same turn is invisible to the hook, and CI is what catches it.
 
 ## What "update the document" means
 
@@ -79,9 +80,9 @@ and says where a moved incident now lives.
 
 ## Generated documents
 
-These files are written **only by the generator**. No generator exists yet, so until phase 2 (phase 3
-for the gap list) a hand edit is the only way any of them has content; once one exists, it owns the
-file and a hand edit is lost on the next run.
+These files are written **only by the generator**, which owns the file: a hand edit is lost on the next
+run. `ai-tools trace --check` also compares the two files `trace` writes with what it would write now,
+and the `Stop` hook and CI refuse a difference.
 
 - `docs/traceability.md`
 - `docs/features/README.md`
@@ -90,7 +91,7 @@ file and a hand edit is lost on the next run.
 - `docs/diagrams/out/**` — refreshed by `scripts/diagrams.sh` and **committed**, unlike the four
   above: the architecture documents embed these as images and the forge previews them.
 
-Each file says in its opening lines what writes it and when that generator arrives. There is no
+Each file says in its opening lines what writes it. There is no
 `GENERATED` marker: it was dropped on 10 September because nothing ever read it, and the claim it
 carried — that a hand edit is detected and breaks the build — described a check that did not exist
 ([audit-planning-2026-09-07.md](audit-planning-2026-09-07.md)). A rule with no moment at which it

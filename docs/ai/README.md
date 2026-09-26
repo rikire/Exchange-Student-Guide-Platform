@@ -59,7 +59,7 @@ Rules 1 to 6 are stated in [CLAUDE.md](../../CLAUDE.md).
 | 3. Stop on a trigger, and when unsure | Good faith. Nothing detects a refuted hypothesis or a repeated attempt |
 | 4. Test before code | Creating a production class with no matching test asks first and names the expected file. The order cannot be proved afterwards, so it is asked at creation |
 | 5. Documentation in the same turn | Partly: a `PostToolUse` hook names the document a change has put out of date, once per tracked area per session, and the turn cannot end while a document describes something the repository does not contain |
-| 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half arrives in phase 2 |
+| 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half: `ai-tools trace --check` refuses a gap in the chain from requirement to test, or a matrix that no longer matches the anchors, at the end of the turn and in CI |
 | The journal is in English | The turn cannot end while it owes a rendering; the entry is committed when it is written |
 | Do not reinvent what a library does | Partly: creating a file whose name suggests a wheel asks first. Whether the answer is honest is not mechanisable |
 | The human takes part in domain, schema and security decisions | Partly: creating a file under `shared/`, in the schema or security packages, asks first |
@@ -108,9 +108,11 @@ files an ADR because it inferred one was wanted is worse than no command.
 | `/stakeholder-note <text>` | Records stakeholder feedback and proposes what it becomes | person only |
 | `/course-check [stage]` | Checks the rubric for the current stage | either, own context |
 | `/article <topic>` | Starts a seed article draft in the target format | person only |
+| `/ownership` | Refreshes and reads the slice ownership table | either |
+| `/gaps` | Refreshes and reads the gap list | either |
 
-Ownership, gap-list and viva-prep arrive with their generators in phases 2 and 3 and are listed once
-they work: a command that errors is worse than one that is absent, because it gets tried.
+Viva-prep arrives with its generator in phase 3 and is listed once it works: a command that errors is
+worse than one that is absent, because it gets tried.
 
 ## Do the instructions actually change anything?
 

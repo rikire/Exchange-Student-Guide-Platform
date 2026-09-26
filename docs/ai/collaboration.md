@@ -193,7 +193,7 @@ authorship. There are no assigned areas; both are responsible for the whole proj
 - **Slice boundaries matter more than usual.** An edit that reaches outside the slice under
   discussion is a merge conflict waiting to happen. Reaching into `shared/` is a stop-and-ask trigger.
 - **Ownership is measured, not declared.** `docs/team/ownership.md` is generated from git history
-  (the generator arrives in phase 2) and is not written by hand once it exists.
+  (`ai-tools ownership`) and is not written by hand.
 
 ## 7. A good closing summary
 
