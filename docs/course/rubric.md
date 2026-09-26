@@ -36,7 +36,7 @@ Legend: `[ ]` no evidence · `[~]` partial · `[x]` defensible
 
 | Criterion | Marks | Evidence | State |
 |---|---|---|---|
-| Architecture note identifies modules and interfaces | 2 | [design-doc.pdf](design-doc.pdf) §1; [../architecture/overview.md](../architecture/overview.md), [../ai/architecture-rules.md](../ai/architecture-rules.md), `ModularityTest` | [~] |
+| Architecture note identifies modules and interfaces | 2 | [design-doc.pdf](design-doc.pdf) §1; [../architecture/overview.md](../architecture/overview.md), [../ai/architecture-rules.md](../ai/architecture-rules.md), `ModularityTest` | [x] |
 | Test plan lists at least one test per module | 1 | [design-doc.pdf](design-doc.pdf) §2 — ten slices, one named test each | [x] |
 | Milestone plan revised in light of scoping feedback | 1 | [design-doc.pdf](design-doc.pdf) §3; [scoping-feedback.md](scoping-feedback.md) — the feedback itself; [proposal.tex](proposal.tex) §8 — the revision | [x] |
 | Risks and plan B are honest, not boilerplate | 1 | [design-doc.pdf](design-doc.pdf) §4 — five risks, each with the signal that would fire | [x] |
@@ -63,6 +63,9 @@ it; `scripts/diagrams.sh` renders it as `docs/diagrams/out/c4-component-actual`.
 What has not changed is the submitted [design-doc.pdf](design-doc.pdf): it was built on 10 September
 and still shows the earlier figure and the empty packages, so the checkbox above stays the human's
 to move, with the repository as the evidence and the PDF as the record of what was handed in.
+
+**Moved to `[x]` on 26 September by the human**, on that evidence. The submitted PDF was not
+rebuilt.
 
 ## Mid-demo — 5 marks (due 9 Oct 2026)
 

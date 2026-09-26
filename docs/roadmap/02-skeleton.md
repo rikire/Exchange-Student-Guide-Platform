@@ -327,7 +327,8 @@ design tokens, the design screens use no framework, and adding one would put a s
 colours beside the tokens that `TemplateTokensTest` guards. A1 corrected in step 1; A2 noted in the
 test plan; A3 recorded by narrowing DEBT-004 and correcting overview.md; A4 fixed in
 `static/README.md` and in the stack line of `CLAUDE.md`. `PLAN-PROMPT.md` and `proposal.tex` still
-name Bootstrap, as dated records of what was planned and submitted. A5 and A6 stay open.
+name Bootstrap, as dated records of what was planned and submitted. A5 stays open. A6 closed later
+the same day: phase 1 was audited and closed on 26 Sep ([01-requirements-design.md](01-requirements-design.md)).
 
 **Not re-run.** The removals that steps 3–8 say were made to see a test fail were not repeated;
 the claims stand on what those steps recorded. The `weekly` and `ownership` figures of week 39 are

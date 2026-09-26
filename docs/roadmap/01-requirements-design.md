@@ -1,6 +1,8 @@
 # Phase 1 — Requirements and design
 
-**Status: in progress.** Runs 5–11 September 2026. Ends at the **design document, due 11 September**.
+**Status: done, closed 26 September 2026.** Ran 5–11 September 2026 and ended at the **design
+document, due 11 September**; the phase stayed open for fifteen days after it, for the reason in
+"Closing" below.
 
 **As of 21 September: 17 of 17 steps done, 0 open.** Closed on 10 Sep — the glossary audit, the CJM
 scenario trace, C4 levels 1–3 with the ERD, the ADRs (eleven now, against the eight topics planned),
@@ -38,6 +40,9 @@ design document is the deliverable; the repository documents are the source it i
       same 7 September commit and were counted by eye afterwards. `ai-tools count` is the number
       now — 26 `FR`, 5 `NFR`, 7 `CON`, 26 `UC` as of 10 Sep, the `FR` having grown by FR-026 on
       9 Sep. Counting by hand is what `Requirements.java` exists to stop.
+      **Correction 26 Sep (audit B1):** the 10 Sep figure of 5 `NFR` was itself overtaken the same
+      day: NFR-006 came with [ADR-0011](../architecture/adr/ADR-0011-submission-number-format.md).
+      `ai-tools count` on 26 Sep: 26 `FR`, 6 `NFR`, 7 `CON`, 26 `UC`.
 - [x] Glossary — one vocabulary for article, submission, revision, tag, media asset
       — check: every term the requirements use is defined once, and no concept appears under two
       names across `functional.md` and the journeys. Done 10 Sep: audited against every `FR`, `NFR`
@@ -144,6 +149,10 @@ design document is the deliverable; the repository documents are the source it i
       state — see [docs/design/screens/](../design/README.md#canvases)); the rejected-submission
       state was already sketched in `SubmissionStatus.dc.html`. Plain per-screen HTML lives under
       `docs/design/screens/`, generated from the `.dc.html` sources.
+      **Correction 26 Sep (audit B3):** the "thirteen screens" below were fifteen by the end of
+      10 Sep: the route review added `SubmissionConfirmation` and `AdminLogin`. `docs/design/screens/`
+      holds fifteen files. The thirteen in
+      [docs/design/README.md](../design/README.md) describes the review of that day and is left.
       **Updated 10 Sep, second pass — every `FR` with a UI now has a `Screen`:** the tracker had three
       gaps (FR-005, FR-025, FR-026, all "not sketched yet"). Added two screens: a create-from-red-link
       invite page (FR-005), and a moderator "Homepage & article administration" screen combining
@@ -193,6 +202,19 @@ design document is the deliverable; the repository documents are the source it i
       Ten slices, one test each, from the acceptance criteria phase 1 already agreed — not the full
       suite each slice needs (phase 3's steps name the rest), the minimum this checklist item asks
       for: a named test, not just a module.
+
+      **Note 26 Sep (audit B4): the names above are the plan, not the tests.** Three slices have code
+      now, and each built its test under another name (the plan named methods in camelCase; the
+      suite uses sentences in snake_case):
+
+      | Slice | In the plan | In the code |
+      |---|---|---|
+      | `home` | `LandingPageTest.pinnedArticlesShownBeforeRecentWhenAnyExist` | `LandingControllerTest.pinned_articles_are_shown_before_the_recently_added_ones` |
+      | `articleview` | `ArticleControllerTest.unapprovedSubmissionRouteDoesNotResolve` | `ArticleControllerTest.a_removed_article_does_not_resolve` — a submission cannot be requested by its article address until `contribute` exists |
+      | `wikilink` | `WikiLinkRendererTest.linkToMissingArticleRendersRed` | `WikiLinkRendererTest.a_link_to_a_missing_article_renders_red` |
+
+      `backup` is noted in its own row. The other six names stay as planned until their slices land
+      in phase 3; the submitted `design-doc.pdf` keeps the plan's names, as the document handed in.
 - [x] Revised milestone plan, risks and plan B tied to seams that exist in the code
       — check: the revision says what moved or was cut and why — a plan reissued unchanged is not a
       revision; each risk names the signal that would tell us it is happening, and a plan B that
@@ -298,6 +320,49 @@ design document is the deliverable; the repository documents are the source it i
 
 The design document is submitted, and `/course-check design` finds evidence for all five marks with
 no row resting on a template.
+
+## Closing
+
+The design document was submitted on 11 September. The one row of `/course-check design` that rested
+on a promise, the architecture note, waited for two slices to talk through a published type; on
+26 September `home`, `articleview` and `backup` import published types of `wikilink`, `ModularityTest`
+passes with those imports and asserts the three arrows in the component diagram Modulith writes from
+the code. The human moved the row to `[x]` in [rubric.md](../course/rubric.md) the same day. **The
+phase closed on 26 September 2026.**
+
+Left open, none of it blocking: the submitted `design-doc.pdf` still shows the empty packages and the
+plan's test names, and stays as the record of what was handed in. The proposal row "Stakeholder
+acknowledgement" in rubric.md is still `[ ]` although
+[acknowledgement.md](../stakeholder/acknowledgement.md) holds the reply; it belongs to the proposal
+stage and is the human's to move.
+
+## Audit, 26 September
+
+Read: each step's "Done" claim above, against the repository or a command run that day
+(`ai-tools count`, `docs-check`, `trace --check`, `ls`, `grep`). The agent that did the work also did
+this audit, so it is a second reading by the same reader. The three checkups
+([roadmap.md](../ai/roadmap.md)) were run by the human on 26 September for phase 2's audit (see
+[02-skeleton.md](02-skeleton.md)); nothing under `.claude/`, `CLAUDE.md` or `docs/ai/` changed after
+them, so they were not repeated.
+
+**Confirmed, with what was checked.** Requirements: 26 `FR`, 26 `UC`, 7 `CON`. `cjm/scenario-trace.md`
+exists and is linked from all three journey files. Four diagram sources and their renders, the ERD
+among them. ADR-0001 to ADR-0012, the eight planned topics among them. Twelve routes in
+`ui-routes.md`. Twenty seed articles and the FRRO one. The reply to the scoping feedback is dated
+9 September. `#EDF2EA` and `#FBEAE8` are in `reference.md`. `removed_at` and `pinned_at` are in
+`data-model.md`. `docs-check` and `trace --check` exit 0.
+
+| # | Finding | Evidence | Status |
+|---|---|---|---|
+| B1 | Step 1 counts 5 `NFR`; there are 6 | `ai-tools count` | fixed 26 Sep: a dated correction in step 1 |
+| B2 | The header of 21 Sep says "eleven" ADRs; there are twelve (ADR-0012, 21 Sep) | `ls docs/architecture/adr` | left: the header is a dated line and is replaced by this status |
+| B3 | "Thirteen screens"; `docs/design/screens/` holds fifteen | `ls` | fixed 26 Sep: a correction in the screens step; `design/README.md` describes the review of 10 Sep and is left |
+| B4 | The test plan names three tests that do not exist under those names | `grep` in `app/src/test` | fixed 26 Sep: a note under the test plan |
+
+**Not checked.** The page count of `design-doc.pdf` ("4 pages"): no PDF tool is installed and reading
+the file by hand was unreliable. The glossary and the scenario trace were checked for existence and
+links, not re-read against the 26 `FR` and fifteen screens. No claim found false beyond B1–B4, which
+are stale names and counts, not wrong behaviour.
 
 ## Open questions
 
