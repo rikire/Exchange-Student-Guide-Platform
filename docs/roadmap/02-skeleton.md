@@ -1,6 +1,6 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026; steps 0–6 done.
+**Status: in progress.** Runs 12–20 September 2026; steps 0–7 done.
 
 ## Goal
 
@@ -135,12 +135,34 @@ step names what it depends on among the others.
       **Done 25 Sep:** `SeedRunnerTest` counts the rows in `article` after starting with the `seed`
       profile (at least 20, the FRRO article among them) and shows a second run adds none. The mid-demo
       step in phase 3 asks for 30 or more; that is more articles to write, not more code.
-- [ ] **7. Spring Modulith documenter in the build; ArchUnit for the two rules Modulith does not
-      cover**. Depends on: 1, 3 — needs real slice code to check against. Rule 4 (`wikilink`) is
+- [x] **7. Spring Modulith documenter in the build; ArchUnit for the two rules Modulith does not
+      cover**. Depends on: 1, 3 — needs real slice code to check against. Rule 4 (`wikilink`) was
       already in `ArchitectureRulesTest`, added with step 3; rule 3 (`shared.persistence` imports no
-      slice) remains
+      slice) was added here
       — check: `./mvnw verify` writes the module canvas, and each ArchUnit rule is demonstrated by
       deleting it and watching a test go green that should not have
+      **Done 26 Sep.** Rule 3 is `ArchitectureRulesTest.shared_persistence_imports_nothing_from_a_slice`,
+      phrased as "depends on nothing under `in.ac.iitm.guide` outside `shared`" rather than as a list
+      of slices, so an eleventh slice is covered without anyone editing the rule.
+      `ModularityTest.the_build_writes_a_canvas_for_every_slice` calls Spring Modulith's `Documenter`
+      (`spring-modulith-docs` was already in the tree through `spring-modulith-starter-test`, so no
+      dependency was added), writes to `app/target/spring-modulith-docs/` — gitignored, rebuilt by
+      every test run, so it cannot go stale — and reads the eleven `module-*.adoc` files back.
+      **How it was shown to work.** Rule 3 failed on a temporary class in `shared.persistence` that
+      referenced `wikilink`, and passed without it. The canvas test deletes the output folder before writing, and failed with the `Documenter` call
+      removed while the eleven files of a previous build were still on disk (a first version did not
+      delete the folder and stayed green in that case, found by the independent review). Then the step's own check: both rules deleted, one violation of
+      each added (`shared.persistence` referencing `wikilink`; `wikilink` referencing
+      `org.springframework`) — `ModularityTest` stayed green, so Modulith catches neither and the two
+      ArchUnit rules are the only guard; with the rules back, both violations fail. Temporary classes
+      removed afterwards.
+      **Known thin:** the canvases hold only the base package for every slice so far, because the
+      slices are almost empty; they become useful as published types and dependencies appear. The
+      `Documenter`'s PlantUML diagrams are not written: the C4 figures are drawn by hand from
+      `docs/diagrams/src/` and Modulith would currently draw eleven boxes and nearly no arrows (see
+      the architecture row in [rubric.md](../course/rubric.md)). **Deferred, not dropped:** generate
+      the component diagram from the code once two slices talk through a published type — the
+      condition that row already names.
 - [ ] **8. `ai-tools`**: `trace` in full, the blocking `stop` gate, the edit reminder, `weekly`,
       `ownership`, and the gap-list generator (added 21 Sep — step 10 needs it and no step
       previously built it). `weekly` and `ownership` **exclude the journal commits the `Stop` hook
@@ -180,8 +202,7 @@ could not be written without, and none is the agent's to settle.
    after this question was raised 7 Sep, and never cross-checked back against it): `shared.persistence`
    imports nothing from a slice, and `wikilink` imports neither `org.springframework` nor
    `jakarta.persistence`. The decision already existed; only the stale note here needed closing.
-   The tests themselves are still this phase's work — `ModularityTest.java` currently has only the
-   two Modulith checks, not these two.
+   Both are tests now, in `ArchitectureRulesTest` (step 7, 26 Sep).
 2. ~~**What does "changes by agreement only" mean mechanically for the frozen schema?**~~ Decided
    21 Sep, by the human, after three options were laid out (a self-certifying header line; an ADR per
    change; a hybrid of the two): **an ADR per post-freeze schema change.** Every migration dated after
