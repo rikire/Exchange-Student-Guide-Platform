@@ -12,7 +12,7 @@ How to mark progress and close a phase: [docs/ai/roadmap.md](../ai/roadmap.md).
 |---|---|---|---|---|
 | 0 | [00-init.md](00-init.md) | Build, gates, documentation skeleton, AI instructions | closed 4 Sep | done |
 | 1 | [01-requirements-design.md](01-requirements-design.md) | Requirements, CJM, C4, ERD, ADRs, routes, design reference | **Design doc, 11 Sep** | in progress |
-| 2 | [02-skeleton.md](02-skeleton.md) | Walking skeleton, schema, export/import, rest of the tooling | 20 Sep | in progress |
+| 2 | [02-skeleton.md](02-skeleton.md) | Walking skeleton, schema, export/import, rest of the tooling | 20 Sep | done, closed 26 Sep |
 | 3 | [03-main-flow.md](03-main-flow.md) | Contribute, moderate, search, media, tags, content | **Mid-demo, 9 Oct** | not started |
 | 4 | [04-hardening.md](04-hardening.md) | Edge cases, security, performance, deployment | 30 Oct | not started |
 | 5 | [05-handover.md](05-handover.md) | Handover, stakeholder-run demo, viva preparation | **Final, 6 Nov** | not started |

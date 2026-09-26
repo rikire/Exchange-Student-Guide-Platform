@@ -1,8 +1,8 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026 and overran it; steps 0–11 are done and the schema
-froze on 26 September. The phase is not closed: [roadmap.md](../ai/roadmap.md) asks for an audit of
-its claims against the repository first (see "Closing" below).
+**Status: done, closed 26 September 2026.** Planned for 12–20 September and overran it by six days;
+steps 0–11 are done, the schema froze on 26 September, and the audit and the three checkups that
+[roadmap.md](../ai/roadmap.md) requires are recorded under "Audit" below.
 
 **Schema frozen:** 2026-09-26
 
@@ -264,11 +264,14 @@ writing them by hand.
 All three parts of the criterion have evidence in the steps above: the gate refused a migration with no
 word in `data-model.md` (step 9), export, wipe and import gave the same articles (step 5), and
 `weekly` and `ownership` agree with `scripts/contribution.sh` (step 8). What keeps the phase open is
-the audit [roadmap.md](../ai/roadmap.md) requires before any phase closes. The claim audit was done
-on 26 September (below). Still missing are the outputs of `/doctor`, `/skill-doctor` and `/context`,
-which are built-in commands the human runs, and the human's decision on the findings marked
-"proposed". Until then this file does not say "closed" and the phase table in
-[README.md](README.md) still says "in progress".
+the audit [roadmap.md](../ai/roadmap.md) requires before any phase closes, and that was done on
+26 September: the claim audit, then `/doctor`, `/skill-doctor` and `/context` run by the human (all
+below). **The phase closed on 26 September 2026.**
+
+Left open, none of it blocking: A5 (the route parameter's name) and A6 (phase 1 still marked in
+progress) wait for the human; DEBT-007 (no automated test on PostgreSQL) and DEBT-004 (Hibernate
+Search unused) stay in [tech-debt.md](../tech-debt.md). The audit was made by the agent that did the
+work, so it is a second reading by the same reader; the checkups are the human's.
 
 ## Audit, 26 September
 
@@ -298,6 +301,26 @@ that exists.
 | A4 | `CLAUDE.md` lists Bootstrap 5 in the stack and `static/README.md` says "Bootstrap overrides"; FEAT-003 says Bootstrap is not used, and no template or static file references it. | `grep -ril bootstrap` over templates and static gave only the README | open: `CLAUDE.md` is the human's; the static README is a one-line fix |
 | A5 | `ui-routes.md` writes the article route as `/articles/{title}`; the controller maps `/articles/{address}`. Line 32 defines `{title}` as the slug, so the meaning agrees and the name does not. The landing page's search box posts to `/search`, which does not exist yet (known, step 3). | the controllers' `@GetMapping`; `ui-routes.md` lines 32 and 89 | proposed: leave the name, it is the human's route contract |
 | A6 | Phase 1 is still "in progress" in [README.md](README.md) and in its own file, with 17 of 17 steps done. `scripts/session-start.sh` therefore reports phase 1 and a design-document deadline of 11 Sep that is past. | the SessionStart report of 26 Sep; `01-requirements-design.md` header | open: closing phase 1 needs its own readiness check, `/course-check design` |
+| A7 | `weekly-log`'s `argument-hint` was invalid YAML, so its name, description and `disable-model-invocation: true` were all dropped, while `CLAUDE.md` says the command is started only by a person. Found by the `/doctor` frontmatter check, not by the claim audit. | `yaml.safe_load` failed at line 3, column 32 of the frontmatter | fixed 26 Sep: the value is quoted, and all 13 project skills parse |
+
+**Checkups, all three run by the human on 26 Sep.**
+- `/doctor`: the settings files parse; no MCP server is configured; hooks are fast (median about
+  160 ms, worst 462 ms, none timed out, over 26 sessions in 22 days); of 30 denied tool calls none was
+  a read-only command, so no permission rule was proposed. The `claude` command is not on the PATH of
+  this environment (the session runs in the VS Code extension), so the installed version could not be
+  read; the newest installed extension is 2.1.282 and 2.1.283 is published. Auto mode was not made
+  the default: whether a hook's `ask` still fires under it is not established (audit of 21 Sep), and
+  this repository's confirmation on protected files depends on it. The one defect is A7.
+- `/skill-doctor`: four project skills in the listing were never invoked (`gaps`, `ownership`,
+  `sharpen`, `trace-check`, about 370 tokens per turn); they stay, being project files, two of them
+  written the same day. Nine skills synced from claude.ai (`anthropic-skills:*`, about 1.9k tokens per
+  turn) were never invoked; they belong to the human's account, not the repository, and were left on.
+  The `/doctor` report first called them built-in, which was wrong.
+- `/context`: 217.8k of 1M tokens in use (22%); `CLAUDE.md` 3.4k (a disk estimate had said 2.2k),
+  skills 4.8k, custom agents 270, deferred MCP tools 2.2k (the claude.ai Docs connector, unused).
+  Path-scoped rules are absent from the list until a matching file is touched; in this session
+  `java-style.md`, `testing.md`, `schema.md` and `docs.md` reached the model when files they cover
+  were read or edited, so the scoping works.
 
 **Follow-up, 26 Sep.** The human decided to drop Bootstrap rather than add it: the pages run on the
 design tokens, the design screens use no framework, and adding one would put a second set of
