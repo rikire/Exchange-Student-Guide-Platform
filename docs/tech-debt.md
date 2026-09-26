@@ -20,6 +20,37 @@ constraint hides it.
 
 ## Register
 
+### DEBT-007 — No automated test runs the migrations on PostgreSQL
+
+**Status:** open
+**Created:** 2026-09-26
+**Marker:** none in code — an absence: every test that touches the database runs on H2
+
+**Cause:** production is PostgreSQL and every test is H2. On 26 September a manual run of the
+application against PostgreSQL 17.11 found that it did not start: Flyway 10+ needs
+`flyway-database-postgresql` next to `flyway-core`, and no H2 test could show it (see
+[overview.md](architecture/overview.md)). The dependency is fixed and V1–V5 were verified by that
+same manual run, but a manual run is a one-off. The way to make it repeatable is a test on a
+throwaway PostgreSQL container (Testcontainers, `org.testcontainers:postgresql` and `junit-jupiter`,
+test scope; 1.21.4 is the version the Spring Boot BOM manages, and the artifact exists on Maven
+Central). It needs a new dependency, so it was left for the human to decide, and the human chose to
+record it rather than build it before the schema freezes.
+
+**Consequence:** a migration or a mapping that works on H2 and fails on PostgreSQL — different SQL
+dialect, a type or a constraint the two treat differently — passes every test and check and
+surfaces at the first deployment, phase 4. V5 in particular was only ever applied to an empty
+`article` table, and its own comment says that is the only case it is safe for.
+
+**How to fix:** add the two Testcontainers dependencies, then a test that starts the context on a
+PostgreSQL container with the real migrations and `ddl-auto: validate`, checks all migrations
+succeeded and reads a row back from each table the way `SchemaMigrationTest` does. Show it red by
+removing `flyway-database-postgresql`. Decide, at that point, whether the test fails or is skipped
+when Docker is not running (failing is the safer default, since a skipped check passes silently).
+Also retire the PostgreSQL clause of DEBT-004.
+
+**Trigger:** the first migration added after the schema freeze (V6 or later), or the phase 4
+deployment work, whichever comes first.
+
 ### DEBT-006 — The importer writes articles but no `article_link` rows
 
 **Status:** open

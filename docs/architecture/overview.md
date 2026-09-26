@@ -50,6 +50,16 @@ an engine the product does not ship on.
 drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now;
 none is exercised by a test yet — phase 2 step 1 is the first (DEBT-004).
 
+**Flyway needs a second artifact for PostgreSQL.** Since Flyway 10 each database is its own module:
+`flyway-core` alone runs on H2 but refuses PostgreSQL at start-up with `Unsupported Database`. Found
+on 26 September by running the application against PostgreSQL 17.11 for the first time, before the
+schema freeze; every test runs on H2 and could not show it. `flyway-database-postgresql` (runtime,
+version from the Spring Boot BOM, 11.7.2 like `flyway-core`) was added to `app/pom.xml`. With it,
+migrations V1–V5 apply to an empty PostgreSQL database, Hibernate's `validate` accepts the mapping,
+and the `seed` profile imports the 20 articles; the landing page and an article page answer `200`.
+That was a manual run against a throwaway container, not a test — no automated test runs on
+PostgreSQL yet, which is recorded as DEBT-007.
+
 **Markdown conversion: commonmark-java 0.30.0**, added 25 September for the article page. It has no
 dependencies of its own and is used only inside `wikilink/WikiLinkRenderer`, which is plain Java, so
 the choice does not touch the slice rules. Chosen over flexmark-java, whose last release is May 2023;

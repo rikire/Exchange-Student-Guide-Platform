@@ -58,6 +58,13 @@
       <artifactId>flyway-core</artifactId>
     </dependency>
     <dependency>
+      <!-- Flyway 10+ ships each database as its own module; without this one the application
+           refuses to start on PostgreSQL ("Unsupported Database"). H2 is built into flyway-core. -->
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
