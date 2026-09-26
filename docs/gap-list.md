@@ -39,7 +39,7 @@ real figure can only be higher.
 | NFR-001 | planned |  | Upload size limit | 0 | 0 | 0 |
 | NFR-002 | planned |  | Search latency | 0 | 0 | 0 |
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
-| NFR-004 | planned |  | Exportability | 0 | 24 | 0 |
+| NFR-004 | in-progress |  | Exportability | 0 | 24 | 0 |
 | NFR-005 | planned |  | Submission rate limit | 0 | 0 | 0 |
 | NFR-006 | planned |  | Submission number unguessability | 0 | 0 | 0 |
 

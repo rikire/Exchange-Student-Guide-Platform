@@ -47,7 +47,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | NFR-001 | planned |  |  |  |  |  |  | Upload size limit |
 | NFR-002 | planned |  |  |  |  |  |  | Search latency |
 | NFR-003 | planned |  |  |  |  |  |  | Multilingual content survival |
-| NFR-004 | planned | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchiveTagRepository, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest |  |  | article, article_tag, tag | Exportability |
+| NFR-004 | in-progress | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchiveTagRepository, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest |  |  | article, article_tag, tag | Exportability |
 | NFR-005 | planned |  |  |  |  |  |  | Submission rate limit |
 | NFR-006 | planned |  |  |  |  |  |  | Submission number unguessability |
 
@@ -69,8 +69,4 @@ None.
 
 ## Notes
 
-- FR-008 is planned but has anchors; its status may be stale
-- FR-010 is planned but has anchors; its status may be stale
-- FR-020 is planned but has anchors; its status may be stale
-- FR-021 is planned but has anchors; its status may be stale
-- NFR-004 is planned but has anchors; its status may be stale
+None.

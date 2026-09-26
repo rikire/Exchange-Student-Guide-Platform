@@ -184,9 +184,12 @@ step names what it depends on among the others.
       **Check, as run:** the matrix has a row for every requirement; `ownership` and `weekly` agree
       with `sh scripts/contribution.sh` (W39: 23 authored and 167 by the hook for one member, 43 and
       31 for the other, on both); `gaps` runs and lists the open debt entries. Real findings, not
-      hidden: the matrix notes five requirements marked `planned` that already carry code or test
-      anchors (FR-008, FR-010, FR-020, FR-021, NFR-004), which is for the human to settle because
-      requirement statuses are theirs. **Known thin:** acceptance criteria carry no identifiers, so
+      hidden: the matrix first noted five `planned` requirements with anchors (FR-008, FR-010,
+      FR-020, FR-021, NFR-004). Four were the tool's mistake: their anchors sit on JPA entities and
+      migrations, the schema laid down ahead of the slice, so an anchor under `shared/persistence`
+      no longer counts as behaviour (`Anchor.isBehaviour`, three tests). The fifth was real: NFR-004
+      moved to `in-progress` on 26 Sep by the human's decision, since the archive is built and tested
+      but nobody can run an export before the admin panel of phase 4. **Known thin:** acceptance criteria carry no identifiers, so
       "criteria with no test" is criteria minus anchored tests, a lower bound, and says so; the
       ownership table decides "more work" by commits and shows lines beside them; `ownership`, `gaps`
       and `weekly` are not compared against the files (only `trace` is), because they change with

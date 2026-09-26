@@ -66,7 +66,7 @@ matches an article containing that script.
 
 ### NFR-004 — Exportability
 
-**Status:** planned
+**Status:** in-progress
 
 The knowledge base can be exported in full to a human-readable format, independent of the
 application, so OGE is never locked into this system.
