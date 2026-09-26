@@ -1,7 +1,10 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026 and overran it; steps 0–10 done, step 11's check built,
-the freeze date waits for a decision (below).
+**Status: in progress.** Runs 12–20 September 2026 and overran it; steps 0–11 are done and the schema
+froze on 26 September. The phase is not closed: [roadmap.md](../ai/roadmap.md) asks for an audit of
+its claims against the repository first (see "Closing" below).
+
+**Schema frozen:** 2026-09-26
 
 ## Goal
 
@@ -51,6 +54,13 @@ step names what it depends on among the others.
       `docs/ai/security.md`'s N+1 rule already names. Left for a deliberate pass rather than fixed
       piecemeal, since several are better answered together with the query that will actually use them
       once the owning slice is written (phase 3), not guessed at from the schema alone.
+      **Update 26 Sep, checked against the code before the freeze:** that list was partly overtaken.
+      `submission.status`, `media_asset.article_id`/`.submission_id` and `article_tag.tag_id` were
+      indexed on 22 Sep (V2, V4). `article.published_at` got `article_published_at_idx` in V6, since
+      the landing page's recent list sorts by it (FR-009). Left unindexed on purpose:
+      `article.removed_at` (nearly every row is `NULL`, so an index narrows nothing),
+      `submission_tag.tag_id` and `article_link.target_title` (no code or requirement reads by them;
+      the backlinks read by `target_article_id`, which V4 indexed).
       **Not done here:** slice repositories (phase 2 step 3), and DB-level case-insensitive
       uniqueness on `article.title` (H2 has no expression indexes — see the note in `data-model.md`
       next to `title`; enforced by the owning slice instead, in phase 3).
@@ -217,7 +227,7 @@ step names what it depends on among the others.
       and `/trace-check` skills. **Check, as run:** `docs-check` passes with both advertised, and
       fails naming `/gaps` when its skill is moved aside.
 
-- [ ] **11. The schema freezes.** After that it changes by agreement only. Depends on: 1, 5, 6 — a
+- [x] **11. The schema freezes.** After that it changes by agreement only. Depends on: 1, 5, 6 — a
       closing milestone, not a build task, placed last: freezing before the schema has settled would
       be vacuous, and freezing before the importer has exercised it risks finding a needed column
       only after the ADR cost already applies
@@ -231,12 +241,65 @@ step names what it depends on among the others.
       and it asks nothing, so writing the date is the human's act and closes the step. A migration
       added after it must carry `-- adr: ADR-NNNN` in its header comment naming an ADR that exists;
       whether that ADR really motivates the change is for a reader.
+      **Done 26 Sep:** the human declared the freeze on 2026-09-26, the line above. Before it, the
+      migrations were run on a real PostgreSQL 17.11 (Docker), which the H2 tests had never done: the
+      application did not start until `flyway-database-postgresql` was added, and V1–V6 then applied,
+      Hibernate's `validate` passed and the `seed` profile loaded 20 articles (a manual run; the
+      automated test is DEBT-007). V6 is the last migration without an ADR. The check compares a
+      migration's date with the freeze date strictly (`isAfter`), so a migration added on 26 Sep
+      itself is still not "after"; the first one that needs an ADR is dated 27 Sep or later.
 
 ## Readiness criterion
 
 The gate genuinely blocks — demonstrated by breaking something on purpose, not assumed. Export and
 import round-trip cleanly. The weekly log and the ownership summary are produced without anyone
 writing them by hand.
+
+## Closing
+
+All three parts of the criterion have evidence in the steps above: the gate refused a migration with no
+word in `data-model.md` (step 9), export, wipe and import gave the same articles (step 5), and
+`weekly` and `ownership` agree with `scripts/contribution.sh` (step 8). What keeps the phase open is
+the audit [roadmap.md](../ai/roadmap.md) requires before any phase closes. The claim audit was done
+on 26 September (below). Still missing are the outputs of `/doctor`, `/skill-doctor` and `/context`,
+which are built-in commands the human runs, and the human's decision on the findings marked
+"proposed". Until then this file does not say "closed" and the phase table in
+[README.md](README.md) still says "in progress".
+
+## Audit, 26 September
+
+Read: every step's "Done" claim in this file, the claims of `data-model.md`, `overview.md`,
+`architecture-rules.md` (enforced rules), `ui-routes.md` (routes), `tech-debt.md` and the four
+`FEAT` files, each against the code, the migrations, the build or a command run that day. The
+agent that did the work also did this audit, so it is a second reading by the same reader.
+
+**Confirmed, with what was checked.** Step 0: `dependency:tree` lists `flyway-core` 11.7.2,
+`spring-boot-starter-data-jpa` 3.5.16, `archunit-junit5` 1.3.0 and `db-util` 1.0.7. Step 1: V1
+creates nine tables, and every index `data-model.md` names exists in a migration. Step 3:
+`TemplateTokensTest`, `tokens.css`, `ArchitectureRulesTest` rule 4 and the three `FEAT` files
+exist. Step 4: `PageQueryCountTest` holds two tests. Step 5: `ArticleArchiveTest`,
+`ExportQueryTest` and `SeedRunnerTest` exist, and so does the renamed round-trip test. Step 6: 20
+articles sit under the seed folder. Step 7: the rule-3 test, the canvas test, and eleven
+`module-*.adoc` files after a build. Steps 8–10: all five generators and `Gate` are classes in
+`tools`, `scripts/check.sh` runs `trace --check` and `schema-freeze`, the `Stop` hook is wired in
+`settings.json`, CI passes `DOCS_SYNC_BASE`, and `/ownership` and `/gaps` exist as skills and are
+listed in `CLAUDE.md`. `docs-check` passes. The only code marker, `TODO(DEBT-005)`, names an entry
+that exists.
+
+| # | Finding | Evidence | Status |
+|---|---|---|---|
+| A1 | Step 1 says V1 creates "the eight tables" and that there are "eight JPA entities". V1 creates nine tables, and seven classes carry `@Entity` (Article, ArticleLink, MediaAsset, Report, Revision, Submission, Tag); `article_tag` and `submission_tag` have no entity. The same sentence lists nine names. | `grep -c "^CREATE TABLE"` on V1 gave 9; `grep -l "^@Entity"` gave 7 files | proposed: a dated correction to the step |
+| A2 | The test plan in [01-requirements-design.md](01-requirements-design.md) still names `BackupServiceTest.exportWipeImportProducesIdenticalDatabase`, a class that does not exist; the test is `ArticleArchiveTest.what_an_export_holds_imports_back_as_the_same_articles`. Step 5 records the rename, the test plan does not. `design-doc.tex` holds the old name too, as the document submitted on 11 Sep. | `grep` for the name; the test file | proposed: a note in the test plan; the submitted document stays |
+| A3 | [overview.md](../architecture/overview.md) and DEBT-004 say none of the four dependencies is exercised by a test. H2 is: `SchemaMigrationTest`, `ArticleControllerTest` and the others run on it. The PostgreSQL driver was exercised on 26 Sep by hand only (DEBT-007). Hibernate Search is used by no class and no test. DEBT-004's own fix says to drop H2's clause at step 1. | `grep` for `hibernate.search`, `@Indexed`, `SearchSession` in `app/src` found none | proposed: narrow DEBT-004 to Hibernate Search, correct the sentence in overview.md |
+| A4 | `CLAUDE.md` lists Bootstrap 5 in the stack and `static/README.md` says "Bootstrap overrides"; FEAT-003 says Bootstrap is not used, and no template or static file references it. | `grep -ril bootstrap` over templates and static gave only the README | open: `CLAUDE.md` is the human's; the static README is a one-line fix |
+| A5 | `ui-routes.md` writes the article route as `/articles/{title}`; the controller maps `/articles/{address}`. Line 32 defines `{title}` as the slug, so the meaning agrees and the name does not. The landing page's search box posts to `/search`, which does not exist yet (known, step 3). | the controllers' `@GetMapping`; `ui-routes.md` lines 32 and 89 | proposed: leave the name, it is the human's route contract |
+| A6 | Phase 1 is still "in progress" in [README.md](README.md) and in its own file, with 17 of 17 steps done. `scripts/session-start.sh` therefore reports phase 1 and a design-document deadline of 11 Sep that is past. | the SessionStart report of 26 Sep; `01-requirements-design.md` header | open: closing phase 1 needs its own readiness check, `/course-check design` |
+
+**Not re-run.** The removals that steps 3–8 say were made to see a test fail were not repeated;
+the claims stand on what those steps recorded. The `weekly` and `ownership` figures of week 39 are
+time-dependent and were not compared again. The CI workflow has not run on a remote. V5 has been
+applied only to an empty `article` table. No check found a claim in the steps that is false
+beyond A1 and A3; A2, A4 and A5 are stale names, not wrong behaviour.
 
 ## Open questions
 
