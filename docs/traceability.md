@@ -21,7 +21,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-006 | planned |  |  |  | V4__add_media_link_and_tag_lookup_indexes |  |  | Backlinks on an article |
 | FR-007 | planned |  |  |  |  |  |  | Full-text search across articles |
 | FR-008 | planned |  | Tag | SchemaMigrationTest | V1__create_content_and_moderation_schema, V4__add_media_link_and_tag_lookup_indexes |  |  | Browsing articles by tag |
-| FR-009 | done | FEAT-003, FEAT-004 | LandingController, LandingPage, LandingPageService, LandingReadRepository | ArticleArchiveTest, LandingControllerTest, PageQueryCountTest, SchemaMigrationTest | V1__create_content_and_moderation_schema | GET / | article, article_tag, tag | Landing page |
+| FR-009 | done | FEAT-003, FEAT-004 | LandingController, LandingPage, LandingPageService, LandingReadRepository | ArticleArchiveTest, LandingControllerTest, PageQueryCountTest, SchemaMigrationTest | V1__create_content_and_moderation_schema, V6__add_article_published_at_index | GET / | article, article_tag, tag | Landing page |
 | FR-010 | planned |  | Submission | SchemaMigrationTest | V1__create_content_and_moderation_schema |  |  | Submitting a new article |
 | FR-011 | planned |  |  |  |  |  |  | Proposing an edit to an existing article |
 | FR-012 | planned |  |  |  |  |  |  | Looking up a submission's status |

@@ -67,6 +67,12 @@ have the same slug.
 pinned articles directly rather than scanning every row — a plain index, not one filtered on
 `IS NOT NULL`, because H2 has no expression/filtered indexes (checked directly against H2 2.3.232).
 
+**`published_at` is indexed** (`article_published_at_idx`, [V6](../../app/src/main/resources/db/migration/V6__add_article_published_at_index.sql),
+26 Sep) for the other half of the landing page: the twelve most recently added articles are
+`ORDER BY published_at DESC`, and without the index the database sorts every article to return twelve.
+Plain, for the same reason as `pinned_at`. `removed_at` has no index on purpose: almost every row
+holds `NULL`, so an index on it would not narrow any read. It was added before the schema freezes.
+
 **Reconsidered 23 Sep, kept as designed.** A separate `pinned_article(article_id, pinned_at)` table
 and a `boolean` column with a partial index (`WHERE pinned`) were weighed against the column-plus-
 index design above. Both lose: pinning is a 1:1 attribute of `article`, not a many-to-many relation

@@ -73,6 +73,20 @@ class SchemaMigrationTest {
     }
 
     @Test
+    // trace:FR-009
+    void article_published_at_is_indexed_so_the_recent_list_does_not_sort_every_row() throws Exception {
+        try (var connection = dataSource.getConnection()) {
+            var indexedColumns = new HashSet<String>();
+            try (ResultSet indexInfo = connection.getMetaData().getIndexInfo(null, null, "ARTICLE", false, false)) {
+                while (indexInfo.next()) {
+                    indexedColumns.add(indexInfo.getString("COLUMN_NAME"));
+                }
+            }
+            assertThat(indexedColumns).contains("PUBLISHED_AT");
+        }
+    }
+
+    @Test
     // trace:FR-001
     void article_title_is_unique() {
         var now = OffsetDateTime.now();
