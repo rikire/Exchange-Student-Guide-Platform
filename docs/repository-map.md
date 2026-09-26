@@ -13,7 +13,7 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `app/src/main/resources/templates/` | Thymeleaf templates | human + AI |
 | `app/src/main/resources/db/migration/` | Flyway migrations | human + AI |
 | `app/src/main/resources/data/seed/` | Starter articles, in the export format | human |
-| `tools/` | `ai-tools.jar`: the journal, the hooks, `docs-check`, the commit-message gate; the traceability and ownership generators arrive in phase 2 | human + AI |
+| `tools/` | `ai-tools.jar`: the journal, the hooks, `docs-check`, the commit-message gate, the generators for traceability, ownership, the gap list and the weekly log, and the gate that runs them | human + AI |
 | `docs/requirements/` | Requirements and constraints — `FR`, `NFR`, `CON` | human |
 | `docs/architecture/` | C4, data model, route contract, security architecture, ADRs | human |
 | `docs/features/` | Feature files `FEAT-XXX` | human + AI |
@@ -37,16 +37,19 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 
 | File | Written by | How to refresh |
 |---|---|---|
-| `docs/traceability.md` | `ai-tools trace` _(phase 2)_ | `java -jar tools/target/ai-tools.jar trace` |
-| `docs/features/README.md` | `ai-tools trace` _(phase 2)_ | the same command |
-| `docs/team/ownership.md` | `ai-tools ownership` _(phase 2)_ | `java -jar tools/target/ai-tools.jar ownership` |
-| `docs/gap-list.md` | `ai-tools gaps` _(phase 3)_ | `java -jar tools/target/ai-tools.jar gaps` |
+| `docs/traceability.md` | `ai-tools trace` | `java -jar tools/target/ai-tools.jar trace` |
+| `docs/features/README.md` | `ai-tools trace` | the same command |
+| `docs/team/ownership.md` | `ai-tools ownership` | `java -jar tools/target/ai-tools.jar ownership` |
+| `docs/gap-list.md` | `ai-tools gaps` |
+| the `From git` paragraphs of `docs/team/weekly-log/*.md` | `ai-tools weekly [--week 2026-W39]` | the same command; the members' own words in the same files are never touched | `java -jar tools/target/ai-tools.jar gaps` |
 | `docs/diagrams/out/**` | PlantUML | `scripts/diagrams.sh`. Committed, unlike the other rows here — the architecture documents embed these as images (see `docs/diagrams/src/README.md`) |
 
-Each says in its own opening lines what writes it and when that generator arrives. Nothing detects a
-hand edit ([docs-sync.md](ai/docs-sync.md)). Four of the five have no generator yet, so editing them
-by hand is presently the only way they hold anything. The one that is real today is
-`docs/diagrams/out/**`: rerun `scripts/diagrams.sh` and your edit is gone.
+The generated files say in their opening lines what writes them, and a hand edit is lost on the next
+run. Of the five, `ai-tools trace --check` also compares the two files `trace` writes with what it would
+write now and fails on a difference, so a matrix that no longer matches the anchors is refused by the
+`Stop` hook and by CI (`scripts/check.sh`). `ownership`, `gaps` and `weekly` read git history or the
+whole repository at the moment they run and are not compared: they are refreshed when someone needs the
+figure, and at the latest for the handover.
 
 ## Traceability
 
@@ -86,6 +89,7 @@ shape must not change.
 | Java code and tests | `//trace:FR-012` above the method or class |
 | Deferred work | `// TODO(DEBT-007): ...` — `FIXME` and `HACK` are equivalent |
 | Migration | `-- trace: FR-012` in the file header |
+| Migration added after the schema froze | `-- adr: ADR-0013` in the file header, naming the ADR that argued for the change; `ai-tools schema-freeze` refuses one without it, once the freeze date is written in [the phase 2 roadmap](roadmap/02-skeleton.md) |
 | Route contract | `trace: FR-012` in the route's row |
 | Documentation | `<!-- trace: UC-003 -->` |
 | Commit | `feat(FEAT-003): add article submission form [FR-012]` |

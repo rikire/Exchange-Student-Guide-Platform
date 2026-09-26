@@ -1,6 +1,7 @@
 # Phase 2 — Walking skeleton and the rest of the tooling
 
-**Status: in progress.** Runs 12–20 September 2026; steps 0–7 done.
+**Status: in progress.** Runs 12–20 September 2026 and overran it; steps 0–9 done, step 11's check built,
+step 10 and the freeze date wait for a decision (below).
 
 ## Goal
 
@@ -163,7 +164,7 @@ step names what it depends on among the others.
       the architecture row in [rubric.md](../course/rubric.md)). **Deferred, not dropped:** generate
       the component diagram from the code once two slices talk through a published type — the
       condition that row already names.
-- [ ] **8. `ai-tools`**: `trace` in full, the blocking `stop` gate, the edit reminder, `weekly`,
+- [x] **8. `ai-tools`**: `trace` in full, the blocking `stop` gate, the edit reminder, `weekly`,
       `ownership`, and the gap-list generator (added 21 Sep — step 10 needs it and no step
       previously built it). `weekly` and `ownership` **exclude the journal commits the `Stop` hook
       writes** and report them in a separate column — see [docs/team/README.md](../team/README.md);
@@ -171,12 +172,48 @@ step names what it depends on among the others.
       backwards. Depends on: 1, 3 — trace anchors must exist before they can be traced
       — check: the traceability matrix generates and is non-empty; `ownership` agrees with
       `sh scripts/contribution.sh` on the authored/hook split; `gaps` runs without error
-- [ ] **9. Gate wired into the `Stop` hook and into CI**. Depends on: 8
+      **Done 26 Sep**, with all five generators in this phase (the human decided against moving any
+      to phase 3). `trace` (`Trace`) writes `docs/traceability.md` and `docs/features/README.md` and
+      `trace --check` fails on a gap or a stale file; `trace --docs-sync <ref>` (`DocsSync`) is the
+      blocking half of [docs-sync.md](../ai/docs-sync.md); `gaps` (`Gaps`), `ownership`
+      (`Ownership`) and `weekly` (`Weekly`) share one reading of `git log` (`History`) that leaves out
+      merges and reports the `Stop` hook's commits apart. Each has a test file that was red before its
+      code, and each protection was removed once to see a named test fail; three of those checks
+      found a test too weak (build output being read, a wrapped paragraph, an ADR named outside the
+      header) and each was sharpened.
+      **Check, as run:** the matrix has a row for every requirement; `ownership` and `weekly` agree
+      with `sh scripts/contribution.sh` (W39: 23 authored and 167 by the hook for one member, 43 and
+      31 for the other, on both); `gaps` runs and lists the open debt entries. Real findings, not
+      hidden: the matrix notes five requirements marked `planned` that already carry code or test
+      anchors (FR-008, FR-010, FR-020, FR-021, NFR-004), which is for the human to settle because
+      requirement statuses are theirs. **Known thin:** acceptance criteria carry no identifiers, so
+      "criteria with no test" is criteria minus anchored tests, a lower bound, and says so; the
+      ownership table decides "more work" by commits and shows lines beside them; `ownership`, `gaps`
+      and `weekly` are not compared against the files (only `trace` is), because they change with
+      every commit.
+
+- [x] **9. Gate wired into the `Stop` hook and into CI**. Depends on: 8
       — check: break a migration without touching the data model document; the turn must not close
+      **Done 26 Sep.** `Gate` (docs-check, `trace --check`, `schema-freeze`, the blocking rows of
+      docs-sync against `HEAD`) is what the `Stop` hook runs; `scripts/check.sh` runs the same
+      checks and CI passes it `DOCS_SYNC_BASE`, the merge base or the previous tip. **Check, as run:**
+      in a scratch repository a new migration with no word in `data-model.md` made `hook stop` answer
+      `deny` naming the file and the document, and the same event a second time was let through, as
+      the one-block-per-cause rule says. A check that cannot read git (no commit yet) is written into
+      the journal entry as not run and does not refuse. **Not run:** the CI workflow itself, which
+      needs a push; its shell was only parsed, and the merge-base branch is untested.
+
 - [ ] **10. Slash commands for ownership and the gap list**, once their generators exist. Depends
       on: 8
       — check: `ai-tools docs-check` passes with both advertised in `CLAUDE.md`; it already refuses
       a command named in the instructions with no skill behind it
+      **Waiting for agreement, 26 Sep.** Both generators exist, but the two skills, the line in
+      `CLAUDE.md` and the table in `docs/ai/README.md` are the agent's own instructions and are not
+      changed without the human's say. The same edit would also correct the lines that still say the
+      generators arrive later: `docs/ai/docs-sync.md`, `docs/ai/definition-of-done.md`,
+      `docs/ai/collaboration.md`, `docs/ai/README.md`, `.claude/skills/dod/SKILL.md` and
+      `.claude/skills/trace-check/SKILL.md`.
+
 - [ ] **11. The schema freezes.** After that it changes by agreement only. Depends on: 1, 5, 6 — a
       closing milestone, not a build task, placed last: freezing before the schema has settled would
       be vacuous, and freezing before the importer has exercised it risks finding a needed column
@@ -185,6 +222,12 @@ step names what it depends on among the others.
       under `docs/architecture/adr/` that motivated it, and the migration's own header comment names
       that ADR by number; a migration with no matching ADR is the freeze being broken quietly rather
       than deliberately. Mechanism decided 21 Sep — see open question 2 below.
+      **Check built 26 Sep, freeze not declared.** `SchemaFreeze` (`ai-tools schema-freeze`, also in
+      `Gate` and `check.sh`) reads the date from a line `**Schema frozen:** YYYY-MM-DD` in this file
+      and dates each migration by the commit that added it. Until that line exists nothing is frozen
+      and it asks nothing, so writing the date is the human's act and closes the step. A migration
+      added after it must carry `-- adr: ADR-NNNN` in its header comment naming an ADR that exists;
+      whether that ADR really motivates the change is for a reader.
 
 ## Readiness criterion
 

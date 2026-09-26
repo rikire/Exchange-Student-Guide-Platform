@@ -87,11 +87,13 @@ today, because a planned mechanism and one that fires are different things.
   a file that does not exist. *Runs today.* The narrower gates on the route contract, the schema and
   the slice boundary are a `PostToolUse` reminder now and become blocking in phase 2
   ([docs/ai/docs-sync.md](docs/ai/docs-sync.md)).
-- **Requirements trace to code and tests** through anchors in the code. *Phase 2* — the generator does
-  not exist yet, and [docs/traceability.md](docs/traceability.md) is a placeholder until it does.
+- **Requirements trace to code and tests** through anchors in the code. `ai-tools trace`
+  writes [docs/traceability.md](docs/traceability.md), and the `Stop` hook and CI refuse a gap in the
+  chain or a matrix that no longer matches the anchors.
 - **Contribution is measured, not declared.** `scripts/contribution.sh` reports authorship per ISO
   week with the journal hook's own commits separated out, because `git shortlog` on this repository
-  says the opposite of the truth. *Runs today.* The generated ownership table is phase 2.
+  says the opposite of the truth. `ai-tools ownership` writes
+  [docs/team/ownership.md](docs/team/ownership.md) from the same reading, per slice.
 
 The rules the assistant works under are in [CLAUDE.md](CLAUDE.md) and [docs/ai/](docs/ai/). That layer
 is itself under review: [docs/ai/instruction-backlog.md](docs/ai/instruction-backlog.md) IB-003 asks

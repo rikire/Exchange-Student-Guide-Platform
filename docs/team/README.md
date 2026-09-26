@@ -18,7 +18,7 @@ own authorship. There are no assigned areas; both of us are responsible for the 
 
 That creates one problem the rubric cares about: it asks for a named owner per module and a rough
 balance between us. So ownership is **measured rather than assigned**.
-`ai-tools ownership` (phase 2) reads
+`ai-tools ownership` reads
 the git history and reports who has actually done more in each slice.
 
 The point is not bookkeeping. It is that at the final viva each of us has to answer questions about
@@ -30,7 +30,7 @@ lighter side.
 
 ## The commits that must not be counted
 
-**`ai-tools ownership` and `ai-tools weekly` (both phase 2), and anything else that measures
+**`ai-tools ownership` and `ai-tools weekly`, and anything else that measures
 contribution, must exclude the journal commits the `Stop` hook writes**, and report them in their
 own column rather than dropping them silently. Their subject is `docs: record the journal entry for <date> <time>` and
 their path is always `docs/ai/journal/`.
@@ -41,5 +41,6 @@ while authored work was 35 to 8 the other — 49 of one member's 57 commits had 
 hook. Every mechanism in the table above reads this history, and all of them would have read it
 backwards.
 
-Until the generator exists, `sh scripts/contribution.sh` reports it correctly, and the weekly log's
-"from git" figures come from there.
+`ai-tools weekly` writes the weekly log's "from git" paragraphs, and `sh scripts/contribution.sh`
+reports the same authored and hook figures per week; the two agree, and the second is what to reach for
+when a figure needs checking by a different route.
