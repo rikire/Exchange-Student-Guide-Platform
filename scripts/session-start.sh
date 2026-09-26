@@ -37,7 +37,7 @@ if [ -f docs/roadmap/README.md ]; then
 		gsub(/^[ \t]+|[ \t]+$/, "", status)
 		gsub(/^[ \t]+|[ \t]+$/, "", ends);   gsub(/\*/, "", ends)
 		gsub(/^[ \t]+|[ \t]+$/, "", number)
-		if (status != "done") {
+		if (status !~ /^done/) {
 			print "Roadmap: phase " number " (" status "), ends at " ends "."
 			exit
 		}
