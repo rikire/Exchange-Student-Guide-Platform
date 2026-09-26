@@ -70,6 +70,15 @@ the security settings it must run with are in [security.md](security.md), "Artic
 
 ![Slices](../diagrams/out/c4-component.svg)
 
+Dashed boxes and arrows are designed and not built yet. What the code has today is drawn by the code
+itself, from the imports between slices, and rendered beside the designed one:
+
+![Slices as the code has them](../diagrams/out/c4-component-actual.svg)
+
+`home`, `articleview` and `backup` each use a published type of `wikilink` (`ArticleAddress`,
+`WikiLinkRenderer`), and `backup` also uses `shared`. `ModularityTest` writes that diagram and checks
+those three arrows are in it, so it cannot drift from the code without a test failing.
+
 Ten vertical slices plus `shared`. The list is owned by
 [architecture-rules.md](../ai/architecture-rules.md); the decision to structure the application this
 way, and the two alternatives weighed against it, are in
@@ -78,9 +87,10 @@ way, and the two alternatives weighed against it, are in
 **Declared in code since 10 September, and verified by the build.** Each of the eleven is a package
 under `in.ac.iitm.guide` carrying a `package-info.java`, which is all Spring Modulith needs to treat
 it as an application module — so the diagram above and the module list the build sees are the same
-list, and a slice added to one without the other fails a test. The packages are otherwise **empty**:
-this declares the boundary, it does not implement a slice. The first working slice is phase 2's
-first step ([02-skeleton.md](../roadmap/02-skeleton.md)).
+list, and a slice added to one without the other fails a test. On 10 September the packages were
+otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
+and the other six slices (`search`, `taxonomy`, `contribute`, `moderate`, `media`, `report`) stay
+empty until phase 3 ([02-skeleton.md](../roadmap/02-skeleton.md)).
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

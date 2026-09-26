@@ -12,3 +12,9 @@ discarded it, which is why the rule above matters more here than for output nobo
 `scripts/diagrams.sh` fetches a pinned, checksummed PlantUML into a gitignored cache and runs it as
 a separate process. Nothing is added to a pom — PlantUML's artifact is GPL and this repository is
 MIT.
+
+**`c4-component-actual` has no source here.** It is the diagram the code draws of itself:
+`ModularityTest` asks Spring Modulith's `Documenter` to write it under `app/target/`, and
+`scripts/diagrams.sh` renders it beside `c4-component`, which is the designed one. Run `./mvnw test`
+before the script, which stops with a message when the file is missing. The two are meant to be
+compared: a dashed box or arrow in `c4-component` is designed and not built yet.

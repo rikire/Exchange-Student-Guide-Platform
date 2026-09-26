@@ -55,6 +55,15 @@ slices exists yet to be described or enforced. The C4 level-3 figure is generate
 draw eleven boxes and no arrows. The row goes to `[x]` when the first two slices talk to each other
 through a published type, in phase 2 or 3, and the diagram can be regenerated from the code.
 
+**As of 26 September, both conditions hold in the repository.** `home`, `articleview` and `backup`
+import published types of `wikilink`, and `ModularityTest` passes with those imports. The same test
+now asks Modulith's `Documenter` for the component diagram and asserts that the three arrows are in
+it; `scripts/diagrams.sh` renders it as `docs/diagrams/out/c4-component-actual`. The designed
+`c4-component` figure marks what is not built yet as dashed and carries the two arrows it lacked.
+What has not changed is the submitted [design-doc.pdf](design-doc.pdf): it was built on 10 September
+and still shows the earlier figure and the empty packages, so the checkbox above stays the human's
+to move, with the repository as the evidence and the PDF as the record of what was handed in.
+
 ## Mid-demo — 5 marks (due 9 Oct 2026)
 
 | Criterion | Marks | Evidence | State |
