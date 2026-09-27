@@ -230,7 +230,7 @@ THEN no result appears for it
 
 ### FR-008 — Browsing articles by tag
 
-**Status:** in-progress
+**Status:** done
 **Priority:** should
 
 When a reader selects a tag, the system shall return the published articles that carry it.

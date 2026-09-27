@@ -16,7 +16,6 @@ real figure can only be higher.
 | FR-001 | in-progress | must | Reading a published article | 3 | 28 | 0 |
 | FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
 | FR-006 | planned | could | Backlinks on an article | 3 | 0 | 3 |
-| FR-008 | in-progress | should | Browsing articles by tag | 4 | 27 | 0 |
 | FR-010 | in-progress | must | Submitting a new article | 4 | 16 | 0 |
 | FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 5 | 0 |
 | FR-012 | planned | could | Looking up a submission's status | 3 | 0 | 3 |

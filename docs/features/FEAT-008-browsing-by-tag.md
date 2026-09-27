@@ -1,7 +1,7 @@
 ---
 id: FEAT-008
 title: Browsing by tag
-status: in-progress
+status: done
 covers: [FR-008]
 slice: taxonomy
 routes: ["GET /tags/{tag}"]
@@ -101,6 +101,10 @@ at four widths; without the phone rule a chip link measured 23 × 17 px and the 
 
 **Dates are formatted in English** whatever the reader's browser asks for; the guide is written in
 English (the human asked on 28 Sep that everything be in English).
+
+**Accepted by the human on 28 Sep** after using it in a browser (H2, `seed` profile): following tag
+chips from the landing page, an article and a search result, an address in capitals, and an unknown
+tag answering "not found". On that acceptance FR-008 is `done`.
 
 ## Deliberately out of scope
 
