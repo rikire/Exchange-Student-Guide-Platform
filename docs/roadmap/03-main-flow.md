@@ -64,9 +64,12 @@ the criteria do not reach it.
       **Moved to phase 4, 10 Sep** — it exists only to serve FR-023/FR-024 (direct publish), which
       moved with it. See [01-requirements-design.md](01-requirements-design.md) and
       [04-hardening.md](04-hardening.md).
-- [ ] Thymeleaf generated from Figma; the landing page brought up to the IITM reference
+- [ ] Templates brought up to the design screens; the landing page brought up to the IITM reference
       — check: no literal colour or spacing value in the templates, only tokens; the landing page
       compared against the IITM reference side by side and the differences listed
+      **Changed 27 Sep:** not generated from Figma. The human chose to draw layouts, phone ones
+      included, directly in the HTML screens of `docs/design/screens/`, and templates follow those
+      (ADR-0014).
 - [ ] Content: 30 or more articles in the database
       — check: the count comes from the database after import, and searching "FRRO registration"
       returns a relevant article — that is the first step of the demo scenario
@@ -97,9 +100,16 @@ Where the steps above and this queue compete for the same days, the human orders
    [ADR-0013](../architecture/adr/ADR-0013-markdown-editor-and-front-end-assets.md) — EasyMDE from its
    WebJar, server-rendered preview, a strict Content-Security-Policy, WebJars only. Building it is a
    separate contract, with a browser check under the policy and a Hindi and Tamil check on a phone.
-3. [ ] **Responsive layout** — a requirement for every screen from phone to desktop, and how to build
+3. [~] **Responsive layout** — a requirement for every screen from phone to desktop, and how to build
    it (own tokens and CSS, or a framework)
    — check: the requirement agreed; the approach recorded
+   **Decided 27 Sep:** NFR-008 (320–1920 px, no sideways scrolling, 16-px text and 44-px targets on a
+   phone) and [ADR-0014](../architecture/adr/ADR-0014-responsive-layout-and-browser-checks.md): our
+   own CSS on the tokens, mobile first; a `browser` Maven profile with Playwright and axe-core that
+   checks NFR-008 and NFR-007's AA at four widths on every built route; phone layouts drawn in the HTML
+   screens of `docs/design/screens/`, not in Figma. Left for this item: building it, under its own
+   contract.
+
 4. [ ] **Build the Markdown editor** — FR-027 and FR-028 on the `contribute` form, as ADR-0013
    decides: EasyMDE from its WebJar, a preview endpoint that renders with `WikiLinkRenderer` and caps
    the text's size, CDN downloads off, our own toolbar icons, the draft kept by EasyMDE's `autosave`
@@ -132,6 +142,15 @@ Where the steps above and this queue compete for the same days, the human orders
     GIGW and so by a WCAG level (NFR-007); what OGE agrees to store about contributors and which
     mail server may send from its name (item 7)
     — check: the answers recorded in `docs/stakeholder/` and turned into requirements or constraints
+
+11. [ ] **A route specification that code and tests can read** — raised by the human on 27 Sep.
+    `ui-routes.md` is the route contract, and CON-008 rules out OpenAPI because every response is
+    HTML, but it is a Markdown table: nothing checks that it matches the controllers, and a test that
+    needs the list of routes would have to parse prose. Options to weigh: a test that compares the
+    controllers' mappings with the table in both directions; or a machine-readable route file from
+    which the table is generated
+    — check: the option chosen by the human, and a route added to code without the contract (or the
+    other way round) fails the build
 
 ## Readiness criterion
 

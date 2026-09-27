@@ -112,3 +112,18 @@ stakeholder; if it is, it becomes a constraint rather than our choice.
 **Fit criterion:** WCAG 2.2 level AA on every screen. Verified by an automated accessibility check
 of each template in the build, and by a manual pass with the keyboard and a screen reader over the
 demo scenario before each stage submission.
+
+### NFR-008 — Usable at any screen width
+
+**Status:** planned
+
+Every screen works from a small phone to a wide desktop, because most contributors and readers are
+students on phones. Decided with the human on 27 Sep. WCAG 2.2 AA (NFR-007) already asks for reflow
+at 320 CSS pixels and 24-pixel targets; this goes further on targets, since a phone is the main
+device rather than an edge case.
+
+**Fit criterion:** at viewport widths of 320, 768, 1280 and 1920 CSS pixels, no page scrolls
+sideways; body text is at least 16 CSS pixels on a phone, so iOS does not zoom a form on focus; every
+button, form control and navigation link is at least 44 by 44 CSS pixels at 320 and 768, links
+inside running text excepted. Verified in a browser by the build's `browser` profile
+([ADR-0014](../architecture/adr/ADR-0014-responsive-layout-and-browser-checks.md)).

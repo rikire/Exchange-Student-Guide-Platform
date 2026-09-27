@@ -53,6 +53,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | NFR-005 | planned |  |  |  |  |  |  | Submission rate limit |
 | NFR-006 | done | FEAT-005 | SubmissionNumbers | SubmissionNumbersTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Submission number unguessability |
 | NFR-007 | planned |  |  |  |  |  |  | Accessibility |
+| NFR-008 | planned |  |  |  |  |  |  | Usable at any screen width |
 
 ## Constraints
 

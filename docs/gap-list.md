@@ -43,6 +43,7 @@ real figure can only be higher.
 | NFR-004 | in-progress |  | Exportability | 0 | 24 | 0 |
 | NFR-005 | planned |  | Submission rate limit | 0 | 0 | 0 |
 | NFR-007 | planned |  | Accessibility | 0 | 0 | 0 |
+| NFR-008 | planned |  | Usable at any screen width | 0 | 0 | 0 |
 
 ## Done, with criteria that no test is anchored to
 

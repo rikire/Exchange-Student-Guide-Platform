@@ -7,6 +7,12 @@ of conventions the two of us (and the agent) follow deliberately.
 
 ## Where things live
 
+**Changed 27 Sep:** the screens in [screens/](screens/) are now edited directly as HTML, and each
+one gains its phone layout beside the desktop one. Claude Design, Figma and their MCP servers are not
+used: the human judged the round trip through another tool heavier than it is worth for this many
+screens ([ADR-0014](../architecture/adr/ADR-0014-responsive-layout-and-browser-checks.md)). What
+follows about canvases is kept as the record of how the first screens were made.
+
 Claude Design's canvas (via `/design`) publishes to a **hosted Artifact** — a live, directly
 editable page, separate from this git repository. "Save" publishes a new version to that hosted
 artifact, not to a file here. That's a property of the tool, not a choice we made.
