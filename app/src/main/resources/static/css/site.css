@@ -108,3 +108,15 @@ a:hover { color: var(--maroon-dark); text-decoration: underline; }
 .submission-number { margin: var(--space-1) 0 var(--space-4); font-size: var(--text-title); font-weight: 700; font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
 .site-nav { display: flex; gap: var(--space-4); }
 .article-actions { margin: var(--space-5) 0 0; }
+
+/* Moderation (FEAT-006) */
+.queue-table { width: 100%; border-collapse: collapse; }
+.queue-table th, .queue-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.queue-number { font-family: ui-monospace, monospace; white-space: nowrap; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.review-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+.review-side { display: flex; flex-direction: column; gap: var(--space-4); }
+.button-reject { font: inherit; font-weight: 600; padding: var(--space-2) var(--space-4); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); color: var(--red); cursor: pointer; }
+@media (min-width: 60rem) {
+  .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+}

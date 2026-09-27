@@ -23,7 +23,7 @@ import org.yaml.snakeyaml.Yaml;
  * not name, since the contract says {@code {title}} where the code says {@code {address}}.
  */
 @SpringBootTest
-class RouteContractTest {
+public class RouteContractTest {
 
     private static final Path CONTRACT = Path.of("../docs/architecture/routes.yml");
 
@@ -63,7 +63,7 @@ class RouteContractTest {
 
     /** Every method and path of the routes whose status is {@code built}, in the compared shape. */
     @SuppressWarnings("unchecked")
-    static Set<String> builtRoutes() throws IOException {
+    public static Set<String> builtRoutes() throws IOException {
         Map<String, Object> contract = new Yaml().load(Files.readString(CONTRACT));
         var built = new TreeSet<String>();
         for (var route : (List<Map<String, Object>>) contract.get("routes")) {

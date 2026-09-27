@@ -20,6 +20,48 @@ constraint hides it.
 
 ## Register
 
+### DEBT-011 — Failed moderator logins are logged but not rate limited
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/java/in/ac/iitm/guide/shared/security/ModeratorLoginController.java`
+
+**Cause:** [ADR-0009](architecture/adr/ADR-0009-admin-authentication.md) rate limits failed attempts
+on the one shared password, at the rate [NFR-005](requirements/non-functional.md) configures, and
+NFR-005 is still planned. FEAT-006 built the login with the `WARN` log only (decided by the human on
+28 Sep).
+
+**Consequence:** the password can be guessed as fast as the server answers. BCrypt's cost slows each
+guess, but nothing stops them; the `WARN` lines are the only sign it is happening.
+
+**How to fix:** with NFR-005, a limit per client address on `POST /moderate/login` that answers
+`429` once exceeded, and a test that the attempt after the limit is refused even with the right
+password.
+
+**Trigger:** NFR-005, phase 4 ([04-hardening.md](roadmap/04-hardening.md)) — and in any case before
+the stand is reachable from outside the team.
+
+### DEBT-010 — An article's old address answers `404` after an edit changes its title
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java`
+
+**Cause:** the address is computed from the title ([data-model.md](architecture/data-model.md),
+`slug`), so approving an edit that changes the title moves the article. Keeping the old address
+answering needs somewhere to store it — a column or a table, that is, a migration. FEAT-006 left
+that out (decided by the human on 28 Sep).
+
+**Consequence:** a bookmark or a shared link to the old address gets "not found", and every
+`[[Old Title]]` in other articles turns red until someone edits it.
+
+**How to fix:** a table of former slugs pointing at the article, written when an approved edit
+changes the slug, and `GET /articles/{title}` answering `301` to the current address when only a
+former one matches. The wiki-link resolver consults it too, so an old link stays blue.
+
+**Trigger:** the first renamed article anyone complains about, or the phase 4 edge cases, whichever
+comes first.
+
 ### DEBT-009 — An edit whose article stopped being published answers `404`, not `409`
 
 **Status:** open

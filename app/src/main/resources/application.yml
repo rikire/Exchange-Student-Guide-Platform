@@ -22,6 +22,12 @@ spring:
 
 server:
   port: 8080
+  servlet:
+    session:
+      cookie:
+        # ADR-0009: the moderator's session cookie. HttpOnly is the container's default; Secure is
+        # the deployment's to set once it runs behind TLS (SERVER_SERVLET_SESSION_COOKIE_SECURE).
+        same-site: lax
   error:
     whitelabel:
       enabled: false
@@ -30,3 +36,9 @@ logging:
   level:
     root: INFO
     in.ac.iitm.guide: DEBUG
+
+guide:
+  admin:
+    # ADR-0009: the BCrypt hash of the office's one shared password, never the password and never in
+    # git. Empty means no password logs in (FEAT-006). How to make one: .env.example.
+    password-hash: ${GUIDE_ADMIN_PASSWORD_HASH:}

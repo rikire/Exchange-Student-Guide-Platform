@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Moderator login — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">OGE moderation</h1>
+    <p class="form-note">One shared password for the office. There is no account and no username.</p>
+
+    <div class="form-error" role="alert" th:if="${error}">
+      <p>That password is not right. Try again.</p>
+    </div>
+
+    <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
+    <form class="submission-form" method="post" th:action="@{/moderate/login}">
+      <label class="field">
+        <span class="field-label">Password</span>
+        <input class="field-input" type="password" name="password" required autocomplete="current-password" autofocus>
+      </label>
+      <div class="button-row">
+        <button class="button-primary" type="submit">Sign in</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

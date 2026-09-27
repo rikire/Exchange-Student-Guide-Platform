@@ -50,8 +50,10 @@ step 5), and `contribute`/`moderate` when a submission is published (phase 3), w
 title whose slug is already taken, the same way it rejects a case-insensitive title collision
 (FR-010; the requirement names only the title today). **An edit that changes the title changes the
 slug** (FR-011), which turns the old address into a `404` and any `[[Old Title]]` into a red link;
-`moderate` recomputes it when an edit is approved, and keeping the old address answering is an open
-decision for phase 3.
+`moderate` recomputes it when an edit is approved, and checks again at approval that no other
+article took the address while the submission waited (FEAT-006). Keeping the old address answering
+was decided against for now on 28 Sep: it answers `404`, and a redirect from it is
+[DEBT-010](../tech-debt.md).
 
 **`title`'s case-insensitive uniqueness is not a database constraint.** The migration
 ([V1__create_content_and_moderation_schema.sql](../../app/src/main/resources/db/migration/V1__create_content_and_moderation_schema.sql))

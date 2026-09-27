@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Moderation queue — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Moderation queue</h1>
+
+    <p class="empty-note" th:if="${#lists.isEmpty(entries)}">The queue is empty. Nothing is waiting for a decision.</p>
+
+    <table class="queue-table" th:unless="${#lists.isEmpty(entries)}">
+      <thead>
+        <tr><th scope="col">Submission</th><th scope="col">Type</th><th scope="col">Title</th><th scope="col">Submitted</th><th scope="col"><span class="visually-hidden">Review</span></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="entry : ${entries}">
+          <td class="queue-number" th:text="${entry.number}">SUB-7QM2-K9XP-4TVB</td>
+          <td><span class="chip" th:text="${entry.type.name() == 'EDIT'} ? 'Edit' : 'New article'">New article</span></td>
+          <td th:text="${entry.title}">Getting a local SIM card</td>
+          <td><time th:datetime="${entry.submittedAt}" th:text="${#temporals.format(entry.submittedAt, 'd MMM yyyy, HH:mm')}">28 Sep 2026, 10:00</time></td>
+          <td><a th:href="@{/moderate/submissions/{number}(number=${entry.number})}">Review →</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title th:text="'Review ' + ${review.number} + ' — Exchange Student Guide'">Review a submission</title>
+</head>
+<body>
+  <main class="site-main">
+    <p class="number-label">
+      Submission <span th:text="${review.number}">SUB-7QM2-K9XP-4TVB</span> —
+      <span th:text="${review.type.name() == 'EDIT'} ? 'edit' : 'new article'">new article</span>
+    </p>
+    <h1 class="article-title" th:text="${review.title}">Getting a local SIM card</h1>
+
+    <div class="form-error" role="alert" th:unless="${review.pending()}">
+      <p>This submission is no longer pending: it was <span th:text="${#strings.toLowerCase(review.status)}">approved</span>.</p>
+      <p><a th:href="@{/moderate/queue}">Back to the queue</a></p>
+    </div>
+    <div class="form-error" role="alert" th:if="${error}">
+      <p th:text="${error}">What went wrong.</p>
+    </div>
+
+    <div class="review-layout">
+      <!-- bodyHtml is the Markdown converter's output with raw HTML disabled (ADR-0001), the one unescaped part. -->
+      <div class="article-body" th:utext="${bodyHtml}">The submission's text.</div>
+
+      <div class="review-side" th:if="${review.pending()}">
+        <form class="result-card submission-form" method="post"
+              th:action="@{/moderate/submissions/{number}/approve(number=${review.number})}">
+          <label class="field">
+            <span class="field-label">Summary (adjust before publishing)</span>
+            <input class="field-input" type="text" name="summary" required th:value="${summary}">
+          </label>
+          <fieldset class="field">
+            <legend class="field-label">Tags (suggested by the contributor — adjust before publishing)</legend>
+            <div class="tag-fields">
+              <input class="field-input" type="text" name="tags" maxlength="64" th:each="tag : ${tagFields}" th:value="${tag}" aria-label="Tag">
+            </div>
+          </fieldset>
+          <button class="button-primary" type="submit">Approve &amp; publish</button>
+        </form>
+        <form class="result-card" method="post"
+              th:action="@{/moderate/submissions/{number}/reject(number=${review.number})}">
+          <button class="button-reject" type="submit">Reject</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

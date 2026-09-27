@@ -1,12 +1,8 @@
 /**
  * The queue, approval and rejection, plus the revision retained when an approved edit changes an article.
  *
- * <p>Serves FR-014 to FR-020, FR-026.
- *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p>Serves FR-014, FR-015, FR-017, FR-018 and FR-020 (FEAT-006); FR-019 and FR-026 are phase 4. The
+ * only slice that writes {@code article} from a submission (ADR-0003). Its routes sit behind the
+ * moderator login of {@code shared.security} (ADR-0009).
  */
 package in.ac.iitm.guide.moderate;

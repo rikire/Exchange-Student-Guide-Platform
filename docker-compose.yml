@@ -1,7 +1,7 @@
 # Demo and handover stand. The deliverable for the stakeholder is this file plus the instructions
 # in docs/handoff/, so it has to work on a clean machine with nothing but Docker installed.
 #
-#   cp .env.example .env    # then set POSTGRES_PASSWORD
+#   cp .env.example .env    # then set POSTGRES_PASSWORD, and GUIDE_ADMIN_PASSWORD_HASH to moderate
 #   docker compose up --build
 #
 # The application starts with the `seed` profile, which loads the starter articles on every start
@@ -35,6 +35,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-guide}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-guide}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      # Empty keeps the moderator login closed rather than failing the start: the stand serves
+      # readers without it.
+      GUIDE_ADMIN_PASSWORD_HASH: ${GUIDE_ADMIN_PASSWORD_HASH:-}
     ports:
       - "8080:8080"
 

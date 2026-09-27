@@ -143,7 +143,7 @@ routes:
   - methods: [GET]
     path: /moderate/queue
     slice: moderate
-    status: planned
+    status: built
     template: >-
       `moderate/ModerationQueue.html`
     fields: >-
@@ -156,7 +156,7 @@ routes:
   - methods: [GET]
     path: /moderate/submissions/{number}
     slice: moderate
-    status: planned
+    status: built
     template: >-
       `moderate/SubmissionReview.html` (also hosts the two POST forms below)
     fields: >-
@@ -171,27 +171,29 @@ routes:
   - methods: [POST]
     path: /moderate/submissions/{number}/approve
     slice: moderate
-    status: planned
+    status: built
     template: >-
       `moderate/SubmissionReview.html` on error
     fields: >-
       CSRF token (hidden, required); `summary` (text, editable, pre-filled from the submission);
       `tags` (repeatable text, editable, pre-filled from the submission's suggested tags)
     responses: >-
-      `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated
+      `302` to `/moderate/queue` on success; `409` if already decided, or if the title's address
+      was taken by another article while the submission waited (it stays pending, decided 28 Sep,
+      FEAT-006); `422` re-rendering the review for a blank summary or a tag too long to store;
+      `302` unauthenticated
     serves: >-
-      FR-017 (UC-016)
+      FR-017 (UC-016); FR-020's revision is written by the same POST when the submission is an edit
 
   - methods: [POST]
     path: /moderate/submissions/{number}/reject
     slice: moderate
-    status: planned
+    status: built
     template: >-
       `moderate/SubmissionReview.html` on error
     fields: >-
-      CSRF token (hidden, required); `reason` (text, optional — FR-019, `could`; the field is
-      already on the shared review screen, so it is recorded here rather than left off, even though
-      rejecting itself does not require it)
+      CSRF token (hidden, required); `reason` (text, optional — FR-019, `could`, phase 4: the
+      screen design has the field, and FEAT-006 leaves it off the form until FR-019 stores it)
     responses: >-
       `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated
     serves: >-
@@ -200,7 +202,7 @@ routes:
   - methods: [GET, POST]
     path: /moderate/login
     slice: shared/security
-    status: planned
+    status: built
     template: >-
       `shared/security/AdminLogin.html`
     fields: >-

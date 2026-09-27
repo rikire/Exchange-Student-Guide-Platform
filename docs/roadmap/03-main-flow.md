@@ -29,7 +29,7 @@ the criteria do not reach it.
       **Narrowed 10 Sep:** FR-023, FR-024 (direct publish, bypassing the queue) move to phase 4 with
       the admin-panel step below — see the revised milestone plan in
       [01-requirements-design.md](01-requirements-design.md).
-- [ ] `moderate` — the queue, approval, rejection; the state machine with its invariants
+- [x] `moderate` — the queue, approval, rejection; the state machine with its invariants
       — check: every transition has a test, and one test asserts that **no path publishes a
       submission that was not approved** — that is the invariant the whole slice exists for.
       **Added 25 Sep:** publishing computes `article.slug`, and approving an edit that changes the
@@ -37,6 +37,13 @@ the criteria do not reach it.
       [data-model.md](../architecture/data-model.md), `slug`, and [FEAT-002](../features/FEAT-002-article-page.md).
       **Narrowed 10 Sep:** FR-019 (a rejection reason) and FR-026 (removing a published article) move
       to phase 4 — see [01-requirements-design.md](01-requirements-design.md).
+      **Done 28 Sep:** [FEAT-006](../features/FEAT-006-moderating-a-submission.md) with the moderator
+      login of ADR-0009. Every transition is a test in `ModerationFlowTest`, and
+      `no_path_but_approval_changes_the_published_table` is the invariant; it goes red with the
+      "already decided" guard removed. Decided by the human: the old address answers `404` after a
+      rename (DEBT-010), the login is not yet rate limited (DEBT-011), an address taken while the
+      submission waited refuses the approval, and FR-020's revision is written now. Media on the
+      review page waits for `media`.
 - [ ] `wikilink` — the link parser, red links
       — check: a link to a missing article renders as a red link and one to an existing article
       resolves to its route; the parser's corner cases are derived the way
@@ -79,6 +86,10 @@ the criteria do not reach it.
 - [ ] Ownership balance check — if it has drifted, the next tasks come from the lighter side
       — check: both members have authored commits in **every** week of this phase, with the hook's
       journal commits excluded — `sh scripts/contribution.sh` reports the two apart
+- [ ] Weekly-log paragraphs in each member's own words for W37, W38 and W39 — the W37 and W38 files
+      were generated on 28 Sep with the git figures only, and W39 still lacks Abdirakhim's paragraph.
+      Each is marked as written after the week it covers
+      — check: no file in `docs/team/weekly-log/` up to W39 still says "Not written yet"
 
 ## Queue raised on 27 September
 

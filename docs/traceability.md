@@ -26,13 +26,13 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-011 | in-progress | FEAT-005 | ArticleNotPublishedException, ContributeArticleRepository, SubmissionController, SubmissionRejectedException, SubmissionService | SubmissionFlowTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Proposing an edit to an existing article |
 | FR-012 | planned |  |  |  |  |  |  | Looking up a submission's status |
 | FR-013 | planned |  |  |  |  |  |  | Abuse handling without accounts |
-| FR-014 | planned |  |  |  | V2__add_moderation_and_report_query_indexes |  |  | Moderation queue |
-| FR-015 | planned |  |  |  | V4__add_media_link_and_tag_lookup_indexes |  |  | Reviewing a submission |
+| FR-014 | planned | FEAT-006 | ModerateSubmissionRepository, ModerationController, ModerationService, ModeratorLoginController, WebSecurity | ModerationFlowTest, ModeratorLoginTest | V2__add_moderation_and_report_query_indexes | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Moderation queue |
+| FR-015 | planned | FEAT-006 | ModerateSubmissionRepository, ModerationController, ModerationService | ModerationFlowTest | V4__add_media_link_and_tag_lookup_indexes | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Reviewing a submission |
 | FR-016 | planned |  |  |  |  |  |  | Downloading a media asset |
-| FR-017 | planned |  |  |  |  |  |  | Approving a submission |
-| FR-018 | planned |  |  |  |  |  |  | Rejecting a submission |
+| FR-017 | planned | FEAT-006 | ModerateArticleRepository, ModerateSubmissionRepository, ModerationController, ModerationService | ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Approving a submission |
+| FR-018 | planned | FEAT-006 | ModerateSubmissionRepository, ModerationController, ModerationService | ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Rejecting a submission |
 | FR-019 | planned |  |  |  |  |  |  | Providing a rejection reason |
-| FR-020 | planned |  | Revision | SchemaMigrationTest | V1__create_content_and_moderation_schema |  |  | Retaining article revisions |
+| FR-020 | planned | FEAT-006 | ModerationService, Revision, RevisionRepository | ModerationFlowTest, SchemaMigrationTest | V1__create_content_and_moderation_schema | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Retaining article revisions |
 | FR-021 | planned |  | Report | SchemaMigrationTest | V1__create_content_and_moderation_schema, V2__add_moderation_and_report_query_indexes |  |  | Reporting an article |
 | FR-022 | planned |  |  |  |  |  |  | Closing a report |
 | FR-023 | planned |  |  |  |  |  |  | Publishing a new article directly |
@@ -73,4 +73,8 @@ None.
 
 ## Notes
 
-None.
+- FR-014 is planned but has anchors in code; its status may be stale
+- FR-015 is planned but has anchors in code; its status may be stale
+- FR-017 is planned but has anchors in code; its status may be stale
+- FR-018 is planned but has anchors in code; its status may be stale
+- FR-020 is planned but has anchors in code; its status may be stale
