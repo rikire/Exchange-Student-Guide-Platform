@@ -35,7 +35,7 @@ routes:
     path: /search
     query: "q={query}"
     slice: search
-    status: planned
+    status: built
     template: >-
       `search/SearchResults.html`
     fields: >-
@@ -43,7 +43,8 @@ routes:
     responses: >-
       `200` always, including zero matches; `400` if `q` is missing or blank — an empty query is the
       landing page's job, and redirecting there silently would hide a broken link from whoever built
-      it
+      it; `400` if `q` has more than 50 words as the index's analyzer splits them, which past Lucene's
+      clause limit answered `500` (decided 28 Sep)
     serves: >-
       FR-007 (UC-001)
 

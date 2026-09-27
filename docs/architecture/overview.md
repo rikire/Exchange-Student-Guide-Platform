@@ -35,7 +35,7 @@ visible:
 | Store | What it holds | Decided by |
 |---|---|---|
 | Relational database | Articles, submissions, revisions, tags, reports, media metadata | Flyway-migrated; shape in [data-model.md](data-model.md) |
-| Search index | A Lucene directory on disk | [ADR-0004](adr/ADR-0004-search-and-multilingual-content.md) |
+| Search index | A Lucene directory on disk on the stand (`guide-index` volume); in memory in development and tests (ADR-0004, amended 28 Sep) | [ADR-0004](adr/ADR-0004-search-and-multilingual-content.md) |
 | Media root | Uploaded bytes under system-generated names | [ADR-0006](adr/ADR-0006-media-storage-and-upload-security.md) |
 
 The consequence is operational and belongs in [docs/handoff/](../handoff/): a backup that captures
@@ -49,7 +49,8 @@ an engine the product does not ship on.
 **Declared in `app/pom.xml` since 21 September, ahead of the code that uses them.** Both database
 drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now.
 H2 has been exercised by every persistence test since phase 2 step 1 and the PostgreSQL driver by
-the `postgres` profile since 27 September (below); no class or test uses Hibernate Search yet (DEBT-004).
+the `postgres` profile since 27 September (below), and Hibernate Search by the `search` slice since
+28 September (FEAT-007; DEBT-004 resolved).
 
 **Flyway needs a second artifact for PostgreSQL.** Since Flyway 10 each database is its own module:
 `flyway-core` alone runs on H2 but refuses PostgreSQL at start-up with `Unsupported Database`. Found
@@ -115,8 +116,8 @@ it as an application module — so the diagram above and the module list the bui
 list, and a slice added to one without the other fails a test. On 10 September the packages were
 otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
 since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), since 28 September
-`moderate` (FEAT-006), and the other three slices (`search`, `media`, `report`) stay empty until
-their phase 3 steps ([03-main-flow.md](../roadmap/03-main-flow.md)).
+`moderate` (FEAT-006) and `search` (FEAT-007), and the other two slices (`media`, `report`) stay
+empty until their phase 3 steps ([03-main-flow.md](../roadmap/03-main-flow.md)).
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

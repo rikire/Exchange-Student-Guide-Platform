@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Search — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Search the guide</h1>
+
+    <form class="search-form search-form-page" th:action="@{/search}" method="get" role="search">
+      <input class="search-input" type="search" name="q" required th:value="${query}"
+             placeholder="Search for FRRO, hostel, bank account..." aria-label="Search the guide">
+      <button class="search-button" type="submit">Search</button>
+    </form>
+
+    <p class="empty-note" th:if="${results == null && tooLong == null}">Type a word to search for, such as FRRO or hostel.</p>
+    <p class="empty-note" th:if="${tooLong != null}">That is too many words to search for. Use up to 50, such as FRRO or hostel.</p>
+
+    <th:block th:if="${results != null}">
+      <p class="results-meta" th:text="${results.total} + (${results.total} == 1 ? ' result' : ' results') + ' for &quot;' + ${results.query} + '&quot;'">4 results for "frro registration"</p>
+
+      <div class="empty-note" th:if="${#lists.isEmpty(results.hits)}">
+        <h2 class="section-title">No articles matched</h2>
+        <p>Try a different word, or browse the tags on the <a th:href="@{/}">home page</a> instead.</p>
+      </div>
+
+      <div class="card-grid" th:unless="${#lists.isEmpty(results.hits)}">
+        <article class="article-card" th:each="hit : ${results.hits}">
+          <h2 class="article-card-title"><a th:href="@{${hit.path}}" th:text="${hit.title}">Registering with FRRO</a></h2>
+          <p class="article-card-summary" th:text="${hit.summary}">Summary</p>
+          <ul class="chip-row" th:if="${!hit.tags.isEmpty()}">
+            <li class="chip" th:each="tag : ${hit.tags}" th:text="${tag}">tag</li>
+          </ul>
+        </article>
+      </div>
+    </th:block>
+  </main>
+</body>
+</html>

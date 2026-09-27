@@ -96,3 +96,19 @@ the data is right and the answer is wrong. Single-instance only, in practice.
 **Reversal:** moving to option B later is contained — the `search` slice publishes one type and
 everything else goes through it — but it would reintroduce the H2/PostgreSQL split that decided
 this. Worth reconsidering only if the project ever drops H2 from development entirely.
+
+## Amended 28 September, when the slice was built (FEAT-007)
+
+Decided by the human while `search` was being built.
+
+- **The directory on disk is the stand's**, in the `guide-index` volume. In tests the index is in
+  memory: a test run starts several application contexts and Lucene locks a directory to one of
+  them. The engine, the mapping and the analyzer are the same everywhere; the storage is what
+  differs.
+- **Development keeps the index in memory too**, because its H2 database is emptied at every start
+  and an index on disk would outlive it.
+- **An empty index is filled from the `article` table at start-up**, and one that has documents is
+  left alone. That is the reindex step named above: after a restore or a change to the mapping, the
+  volume is removed and the application started again.
+- **The `search` slice publishes no type yet**, since no other slice calls search
+  ([architecture-rules.md](../../ai/architecture-rules.md)); "Reversal" above holds once one does.

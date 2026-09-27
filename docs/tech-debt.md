@@ -261,7 +261,9 @@ tags and must use the same published type, not a third copy.
 
 ### DEBT-004 — Hibernate Search's two `app/pom.xml` dependencies are declared with no code or test using them yet
 
-**Status:** open
+**Status:** resolved 2026-09-28 — the `search` slice (FEAT-007) maps `Article` and queries it through
+both dependencies, and `SearchFlowTest` exercises them against the real analyzer on H2; 7.2.6 was
+checked to be built against Hibernate ORM 6.6 (6.6.42), the line the application runs (6.6.53).
 **Created:** 2026-09-21
 **Narrowed:** 2026-09-26 — from four dependencies to two, see below
 **Marker:** `app/pom.xml` — `hibernate-search-mapper-orm`, `hibernate-search-backend-lucene`

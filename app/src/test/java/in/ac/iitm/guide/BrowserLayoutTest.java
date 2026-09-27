@@ -142,13 +142,16 @@ class BrowserLayoutTest {
     @SuppressWarnings("unchecked")
     private static List<String> pages() throws IOException {
         Map<String, Object> contract = new Yaml().load(Files.readString(RouteContractTest.CONTRACT));
-        var samples = Map.of("{title}", "registering-with-frro", "{number}", NUMBER);
+        var samples = Map.of("{title}", "registering-with-frro", "{number}", NUMBER, "{query}", "frro");
         var pages = new ArrayList<String>();
         for (var route : (List<Map<String, Object>>) contract.get("routes")) {
             if (!"built".equals(route.get("status")) || !((List<String>) route.get("methods")).contains("GET")) {
                 continue;
             }
             var path = (String) route.get("path");
+            if (route.get("query") != null) {
+                path += "?" + route.get("query");
+            }
             for (var sample : samples.entrySet()) {
                 path = path.replace(sample.getKey(), sample.getValue());
             }

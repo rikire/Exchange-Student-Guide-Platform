@@ -7,8 +7,12 @@
 # The application starts with the `seed` profile, which loads the starter articles on every start
 # and skips the ones already there, so a restart adds nothing.
 #
-# Not finished (phase 4, docs/roadmap/04-hardening.md): guide-media and guide-index are declared
-# but mounted nowhere, because no code writes media or a search index yet.
+# The search index is kept in the guide-index volume. An empty one is rebuilt from the database at
+# start-up, so removing the volume (docker volume rm, then up) is how the index is rebuilt after a
+# database restore or a change to how articles are indexed (FEAT-007).
+#
+# Not finished (phase 4, docs/roadmap/04-hardening.md): guide-media is declared but mounted nowhere,
+# because no code writes media yet.
 
 services:
   db:
@@ -38,7 +42,11 @@ services:
       # Empty keeps the moderator login closed rather than failing the start: the stand serves
       # readers without it.
       GUIDE_ADMIN_PASSWORD_HASH: ${GUIDE_ADMIN_PASSWORD_HASH:-}
+      GUIDE_INDEX_TYPE: local-filesystem
+      GUIDE_INDEX_DIR: /var/lib/guide/index
       # TODO(DEBT-014): SERVER_SERVLET_SESSION_COOKIE_SECURE: "true" once the stand is behind TLS.
+    volumes:
+      - guide-index:/var/lib/guide/index
     ports:
       - "8080:8080"
 

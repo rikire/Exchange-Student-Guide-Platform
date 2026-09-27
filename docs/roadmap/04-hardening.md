@@ -46,8 +46,9 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: media and the index survive `docker compose down` and come back on the next start
       **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the
       `seed` profile. Checked by hand: `/` and the FRRO article return 200, 20 articles are in the
-      database, and after `down` and `up` they are still 20. Left for this step: `guide-media` and
-      `guide-index` are declared but mounted nowhere, since no code writes media or an index yet.
+      database, and after `down` and `up` they are still 20. **28 Sep:** `guide-index` is mounted
+      (FEAT-007), and the index was checked by hand to survive `down` and `up` without a rebuild.
+      Left for this step: `guide-media`, mounted nowhere, since no code writes media yet.
 - [ ] Demo stand: compose plus the real content
       — check: the mid-demo scenario runs end to end on the stand, from a browser, in one sitting
 - [ ] **Meeting with OGE** — show Mr. Thukaram the working stand, record what he says in

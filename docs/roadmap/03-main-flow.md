@@ -53,9 +53,15 @@ the criteria do not reach it.
 - [ ] `taxonomy` — tags, navigation by tag
       — check: browsing a tag returns exactly the published articles carrying it — an unapproved
       submission with that tag must not appear
-- [ ] `search` — indexing and querying, both analyzers
+- [x] `search` — indexing and querying, the English analyzer (renamed 28 Sep by the human from
+      "both analyzers": the Hindi and Tamil one is NFR-003's)
       — check: FR-007's four criteria are four tests, including both negative ones (an unapproved
       submission and a rejected one must not appear in results)
+      **Done 28 Sep:** [FEAT-007](../features/FEAT-007-searching-the-guide.md), every FR-007
+      criterion a test in `SearchFlowTest`, the negative ones shown to fail with submissions indexed.
+      One analyzer, English stemming; the second, for Hindi and Tamil, is NFR-003's and not built.
+      The route contract's `400` for a blank query was kept over the contract's suggested answer.
+      Closes DEBT-004.
 - [ ] `media` — upload, type detection from content, safe delivery
       — check: a file whose extension lies about its content is rejected, and media attached to an
       unapproved submission is unreachable by anyone who has not been given its id

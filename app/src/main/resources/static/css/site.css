@@ -92,6 +92,12 @@ p a, .article-body a { text-decoration: underline; }
 .empty-note { color: var(--ink-soft); }
 .tag-cloud { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
 
+/* FEAT-007: the results page. Its search box sits on paper, not on the maroon hero, so it needs an
+   edge of its own (3:1 against the page, WCAG 1.4.11). */
+.search-form-page { margin: 0 0 var(--space-4); }
+.search-form-page .search-input { border: 1px solid var(--ink-soft); }
+.results-meta { color: var(--ink-soft); margin: 0 0 var(--space-4); }
+
 /* FEAT-005: the submission form and its confirmation. */
 .form-note { color: var(--ink-soft); margin: 0 0 var(--space-5); }
 .form-error { padding: var(--space-3) var(--space-4); margin: 0 0 var(--space-5); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); }

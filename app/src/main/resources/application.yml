@@ -19,6 +19,17 @@ spring:
       # query per article — ADR-0010's "batch size", without a collection join fetch, which would
       # make Hibernate apply the page limit in memory.
       hibernate.default_batch_fetch_size: 50
+      # FEAT-007 (ADR-0004): Hibernate Search over Lucene. The stand keeps the index on disk in the
+      # guide-index volume, beside a database that also survives a restart (docker-compose.yml sets
+      # both variables). Unset, the index is in memory, like the H2 database it would otherwise
+      # outlive, and like every test context, since Lucene locks a directory to one of them. An empty
+      # index is filled from the article table at start-up (search's SearchIndexBuilder). What is
+      # indexed and how it is analysed are written in the search slice, not on the shared entities.
+      hibernate.search.backend.directory.type: ${GUIDE_INDEX_TYPE:local-heap}
+      hibernate.search.backend.directory.root: ${GUIDE_INDEX_DIR:target/search-index}
+      hibernate.search.backend.lucene_version: LATEST
+      hibernate.search.backend.analysis.configurer: class:in.ac.iitm.guide.search.internal.EnglishAnalysis
+      hibernate.search.mapping.configurer: class:in.ac.iitm.guide.search.internal.ArticleSearchMapping
 
 server:
   port: 8080
