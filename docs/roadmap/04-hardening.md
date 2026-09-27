@@ -40,8 +40,12 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: run on the demo stand, not a developer machine, and the number recorded
 - [ ] PostgreSQL profile with Testcontainers
       — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
-- [ ] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
+- [~] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
       — check: media and the index survive `docker compose down` and come back on the next start
+      **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the
+      `seed` profile. Checked by hand: `/` and the FRRO article return 200, 20 articles are in the
+      database, and after `down` and `up` they are still 20. Left for this step: `guide-media` and
+      `guide-index` are declared but mounted nowhere, since no code writes media or an index yet.
 - [ ] Demo stand: compose plus the real content
       — check: the mid-demo scenario runs end to end on the stand, from a browser, in one sitting
 - [ ] **Meeting with OGE** — show Mr. Thukaram the working stand, record what he says in

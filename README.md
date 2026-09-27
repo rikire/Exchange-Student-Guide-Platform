@@ -48,6 +48,13 @@ scripts/diagrams.sh                 # re-render the C4 diagrams and the ERD
 scripts/contribution.sh             # who wrote what, per ISO week
 ```
 
+To see the application with its starter articles on PostgreSQL, with nothing but Docker:
+
+```sh
+cp .env.example .env                # then set POSTGRES_PASSWORD
+docker compose up --build           # http://localhost:8080
+```
+
 `scripts/hooks.sh` is not optional: most of what the section below describes runs from
 `tools/target/ai-tools.jar`, and a missing jar switches all of it off without failing anything.
 

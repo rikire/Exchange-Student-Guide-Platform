@@ -103,7 +103,8 @@ saved file does not fight Spotless. If the Java extension reports the wrong JDK,
 `java.configuration.runtimes` at your installation in your **user** settings, not in the shared
 workspace file: our JDKs live in different places.
 
-Docker is not needed yet. It arrives in phase 4, for the PostgreSQL profile and the demo stand.
+Docker is optional. `docker compose up --build` starts the application with its starter articles on
+PostgreSQL (see the README); the build and the tests do not need it.
 
 ---
 
