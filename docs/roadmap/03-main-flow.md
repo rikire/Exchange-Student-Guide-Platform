@@ -1,6 +1,6 @@
 # Phase 3 — The main flow
 
-**Status: not started.** Runs 21 September – 8 October 2026. Ends at the **mid-demo, 9 October**.
+**Status: in progress** (since 27 September, when `contribute` closed). Runs 21 September – 8 October 2026. Ends at the **mid-demo, 9 October**.
 
 ## Goal
 
