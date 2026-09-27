@@ -93,7 +93,7 @@ nothing in the repository can change it.
 ## Slash commands
 
 They live in `.claude/skills/<name>/SKILL.md`. **Person only** means the assistant cannot invoke the
-command: those five write into the record or into the human's decision space, and a command that
+command: those four write into the record or into the human's decision space, and a command that
 files an ADR because it inferred one was wanted is worse than no command.
 
 | Command | What it does | Who can start it |
@@ -105,7 +105,7 @@ files an ADR because it inferred one was wanted is worse than no command.
 | `/trace-check` | Shows gaps in requirement coverage | either, own context |
 | `/dod` | Runs the readiness checklist | either |
 | `/journal-note <text>` | Adds a note to the journal | person only |
-| `/weekly-log [--as member] <text>` | Adds a paragraph to this week's contribution log | person only |
+| `/weekly-log [--as member] <text>` | Adds a paragraph to this week's contribution log | either; the assistant only after the person explicitly allows that entry |
 | `/stakeholder-note <text>` | Records stakeholder feedback and proposes what it becomes | person only |
 | `/course-check [stage]` | Checks the rubric for the current stage | either, own context |
 | `/article <topic>` | Starts a seed article draft in the target format | person only |

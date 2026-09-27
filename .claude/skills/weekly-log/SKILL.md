@@ -1,8 +1,7 @@
 ---
 name: weekly-log
-description: Add a paragraph to this week's contribution log. Records attributed work for the course, so it is invoked by a person rather than inferred.
+description: Add a paragraph to this week's contribution log. Records attributed work for the course, so the assistant may start it only after the human explicitly allows that entry; a person may start it directly.
 argument-hint: "[--as <member>] <what you did>"
-disable-model-invocation: true
 ---
 
 Record work in this week's contribution log: **$ARGUMENTS**
@@ -10,6 +9,10 @@ Record work in this week's contribution log: **$ARGUMENTS**
 The course requires a brief weekly log from each student, submitted at every stage
 (course requirements, section 10.5).
 
+0. **If the assistant started this rather than the person**, show the member and the paragraph it
+   would write and wait for the human's explicit yes before writing. A general "go on", or an
+   approval of other work, is not that yes: the entry is attributed coursework (decided by the human
+   on 27 Sep).
 1. Determine the author:
    - By default, read `git config user.email` and match it against `docs/team/members.yml`.
    - If the arguments start with `--as <member>`, use that member instead and mark the entry as

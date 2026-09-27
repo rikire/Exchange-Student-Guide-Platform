@@ -88,8 +88,9 @@ scripts/hooks.sh                # build the jar and install the git hooks
 · `/weekly-log` · `/stakeholder-note` · `/course-check` · `/article` · `/ownership` · `/gaps`
 
 They are skills, in `.claude/skills/<name>/SKILL.md`. Use `/feature` and `/sync-docs` autonomously
-inside a confirmed contract; their protected decisions still require approval. Five record-writing
-skills remain person-only; the table in
+inside a confirmed contract; their protected decisions still require approval. `/weekly-log` you may
+start only after the human explicitly allows that entry. Four record-writing skills remain
+person-only; the table in
 [docs/ai/README.md](docs/ai/README.md) says which.
 
 One more, viva-prep, arrives with its generator in phase 3. It is not listed above until it works — a
