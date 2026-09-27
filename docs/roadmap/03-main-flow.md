@@ -91,9 +91,14 @@ the criteria do not reach it.
       **Changed 27 Sep:** not generated from Figma. The human chose to draw layouts, phone ones
       included, directly in the HTML screens of `docs/design/screens/`, and templates follow those
       (ADR-0014).
-- [ ] Content: 30 or more articles in the database
+- [x] Content: 30 or more articles in the database
       — check: the count comes from the database after import, and searching "FRRO registration"
       returns a relevant article — that is the first step of the demo scenario
+      **Done 28 Sep:** ten articles added from OGE's International Student Handbook 2026 (arrival,
+      onboarding, transport, Wi-Fi, banks, health, contacts, landmarks, food, safety), each citing
+      its pages and listing what needs checking with OGE. The `seed` profile on H2 logs "30 articles
+      imported", and "FRRO registration" returns `Registering with FRRO` first. Checked locally, not
+      on the compose stand, which needs `POSTGRES_PASSWORD` in `.env`.
 - [ ] `ai-tools`: the gap list and rubric generators; the first honest gap list
       — check: `ai-tools gaps` (phase 3) produces a non-empty list containing at least one item
       neither of us would have volunteered
