@@ -121,6 +121,8 @@ slice  ->  slice         only through published types or events (rules 1 and 2)
 
 An earlier plan wrapped search behind a port so that Lucene could be swapped for PostgreSQL full-text
 search on a host with an ephemeral filesystem. That reason went away when we decided to ship a Docker
-Compose stack with a volume. The `search` slice still hides its engine behind its own published type,
-now for testability — other slices and their tests must not need a Lucene index — and not for a
-portability promise. It is a testing seam, not an abandoned abstraction.
+Compose stack with a volume. The `search` slice publishes no type: no other slice calls search, and
+the engine stays inside the slice — the index mapping and the analyzer are in `search/internal`, not
+annotations on the shared entities. A published type is added when another slice first needs to
+search. The Hibernate Search configuration is global, so every `@SpringBootTest` starts the engine
+with an index; that is accepted, not a boundary breach (decided 28 Sep, FEAT-007).
