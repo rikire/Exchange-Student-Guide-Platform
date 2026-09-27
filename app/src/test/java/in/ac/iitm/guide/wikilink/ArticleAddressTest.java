@@ -2,6 +2,7 @@ package in.ac.iitm.guide.wikilink;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
 /** Plain Java, like {@link WikiLinkRendererTest}: the address rules are all string handling. */
@@ -23,6 +24,20 @@ class ArticleAddressTest {
     // trace:FR-001
     void hyphens_at_either_end_are_dropped() {
         assertThat(ArticleAddress.slugOf("  -Hostel Life- ")).contains("hostel-life");
+    }
+
+    @Test
+    // trace:FR-002
+    void the_address_does_not_depend_on_the_default_locale() {
+        // Under a Turkish default, "I".toLowerCase() is a dotless ı, and [[ISTANBUL]] would miss the
+        // article titled "Istanbul" (docs/ai/testing.md, "Platform reality").
+        var saved = Locale.getDefault();
+        Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+        try {
+            assertThat(ArticleAddress.slugOf("ISTANBUL")).contains("istanbul");
+        } finally {
+            Locale.setDefault(saved);
+        }
     }
 
     @Test

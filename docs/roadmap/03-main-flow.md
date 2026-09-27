@@ -44,12 +44,17 @@ the criteria do not reach it.
       rename (DEBT-010), the login is not yet rate limited (DEBT-011), an address taken while the
       submission waited refuses the approval, and FR-020's revision is written now. Media on the
       review page waits for `media`.
-- [ ] `wikilink` — the link parser, red links
+- [x] `wikilink` — the link parser, red links
       — check: a link to a missing article renders as a red link and one to an existing article
       resolves to its route; the parser's corner cases are derived the way
       [testing.md](../ai/testing.md) describes rather than guessed
       **Narrowed 10 Sep:** the "what links here" block (FR-006, backlinks) moves to phase 4 — see
       [01-requirements-design.md](01-requirements-design.md).
+      **Done 28 Sep:** the renderer and red links were built in
+      [FEAT-001](../features/FEAT-001-wiki-links-in-article-text.md) (25 Sep); the corner cases were
+      then derived by the dimensions of testing.md, each now a test, five of them answers
+      decided by the human, one of them an escape that stays a link (a code span shows the syntax).
+      The link extractor of DEBT-006 waits for FR-006 in phase 4, by the human's decision.
 - [ ] `taxonomy` — tags, navigation by tag
       — check: browsing a tag returns exactly the published articles carrying it — an unapproved
       submission with that tag must not appear

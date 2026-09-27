@@ -55,7 +55,7 @@ None.
 | DEBT-010 | An article's old address answers `404` after an edit changes its title | the first renamed article anyone complains about, or the phase 4 edge cases, whichever |
 | DEBT-009 | An edit whose article stopped being published answers `404`, not `409` | FR-026 (removing a published article), phase 4. |
 | DEBT-008 | The submission form takes no attachment | the `media` step of phase 3 ([03-main-flow.md](roadmap/03-main-flow.md)). |
-| DEBT-006 | The importer writes articles but no `article_link` rows | the first code that writes `article_link` — the extractor in phase 3, or FR-006 in phase |
+| DEBT-006 | The importer writes articles but no `article_link` rows | the first code that writes `article_link` — FR-006 in phase 4. The human decided on |
 | DEBT-002 | The process layer cannot be packaged for a second repository | the first time a second repository needs this, or phase 5 handover — whichever comes |
 
 ## Gaps in the traceability chain

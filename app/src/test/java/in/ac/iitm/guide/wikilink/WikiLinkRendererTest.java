@@ -91,6 +91,66 @@ class WikiLinkRendererTest {
 
     @Test
     // trace:FR-002
+    void two_links_with_nothing_between_them_both_render() {
+        var html = renderer.render("[[A]][[B]]", titles -> Map.of("A", "/articles/a"));
+
+        assertThat(html)
+                .contains(
+                        "<a href=\"/articles/a\" class=\"wikilink\">A</a><span class=\"wikilink wikilink-missing\">B</span>");
+    }
+
+    @Test
+    // trace:FR-002
+    void brackets_that_are_never_closed_are_left_as_written() {
+        var html = renderer.render("See [[Hostel Life and more.", titles -> Map.of("Hostel Life", "/x"));
+
+        assertThat(html).contains("See [[Hostel Life and more.").doesNotContain("wikilink");
+    }
+
+    @Test
+    // trace:FR-002
+    void escaped_brackets_still_make_a_link_and_a_code_span_shows_them_as_written() {
+        // Decided by the human, 28 Sep: commonmark drops the backslash before the renderer sees the
+        // text, so an escape cannot keep a link from forming; a code span is how an author shows it.
+        var html = renderer.render("\\[\\[Visa]] and `[[Visa]]`", titles -> Map.of("Visa", "/articles/visa"));
+
+        assertThat(html).contains("<a href=\"/articles/visa\" class=\"wikilink\">Visa</a> and <code>[[Visa]]</code>");
+    }
+
+    @Test
+    // trace:FR-002
+    void a_third_bracket_on_either_side_stays_as_text_around_the_link() {
+        var html = renderer.render("[[[Visa]]]", titles -> Map.of("Visa", "/articles/visa"));
+
+        assertThat(html).contains("[<a href=\"/articles/visa\" class=\"wikilink\">Visa</a>]");
+    }
+
+    @Test
+    // trace:FR-002
+    void in_a_link_inside_the_words_of_another_only_the_inner_one_is_a_link() {
+        var html = renderer.render("[[A|[[Visa]]]]", titles -> Map.of("Visa", "/articles/visa"));
+
+        assertThat(html).contains("[[A|<a href=\"/articles/visa\" class=\"wikilink\">Visa</a>]]");
+    }
+
+    @Test
+    // trace:FR-002
+    void the_words_are_everything_after_the_first_bar() {
+        var html = renderer.render("[[Visa|b|c]]", titles -> Map.of("Visa", "/articles/visa"));
+
+        assertThat(html).contains("<a href=\"/articles/visa\" class=\"wikilink\">b|c</a>");
+    }
+
+    @Test
+    // trace:FR-002
+    void letters_straight_after_the_brackets_are_not_part_of_the_link() {
+        var html = renderer.render("[[Visa]]s", titles -> Map.of("Visa", "/articles/visa"));
+
+        assertThat(html).contains("<a href=\"/articles/visa\" class=\"wikilink\">Visa</a>s");
+    }
+
+    @Test
+    // trace:FR-002
     void a_page_without_links_never_asks_the_resolver() {
         var calls = new ArrayList<Set<String>>();
 

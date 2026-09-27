@@ -228,8 +228,8 @@ add a test that imports a linking article and finds its rows. Rows for articles 
 need one re-extraction over every article, which is a query per article and belongs in a migration or
 a one-off command, not in a page.
 
-**Trigger:** the first code that writes `article_link` — the extractor in phase 3, or FR-006 in phase
-4, whichever comes first. If the importer has run before it, the re-extraction is part of that work.
+**Trigger:** the first code that writes `article_link` — FR-006 in phase 4. The human decided on
+28 Sep that the extractor waits for FR-006 rather than being built with the phase 3 `wikilink` step. If the importer has run before it, the re-extraction is part of that work.
 
 ### DEBT-005 — The tag rule of ADR-0005 is written twice until `taxonomy` exists
 

@@ -54,7 +54,21 @@ Decisions this feature fixed, each with a test:
   examples with commonmark-java 0.30.0 rather than assumed: it cuts the text at any inline markup.
 - **Not searched:** code spans and code blocks (so an author can show the syntax), and the text of an
   ordinary Markdown link or an image (a link inside a link is not valid HTML).
-- **`[[]]`, `[[   ]]` and `[[|words]]` are not links** and stay as typed.
+- **`[[]]`, `[[   ]]` and `[[|words]]` are not links** and stay as typed, and so are brackets that
+  are never closed.
+
+Decided by the human on 28 Sep, when the corner cases were derived by the method of
+[testing.md](../ai/testing.md) for the phase 3 `wikilink` step, each pinned by a test:
+
+- **An escaped `\[\[Title]]` is still a link.** commonmark-java drops the backslash before the
+  renderer sees the text and has no wiki-link extension; making the escape work means rewriting the
+  renderer on commonmark's link processor, which would also change the two recognition rules above.
+  An author shows the syntax as written in a code span: `` `[[Title]]` ``.
+- **`[[[Title]]]`** is the link with a bracket on each side; **`[[A|[[Title]]]]`** links only the
+  inner title; **`[[Title|b|c]]`** shows `b|c`, the words being everything after the first bar;
+  **`[[Title]]s`** is the link followed by the letter.
+- **Two links with nothing between them** both render, and the address does not depend on the
+  machine's locale (`[[ISTANBUL]]` under a Turkish default still names "Istanbul").
 - **A red link is a `<span class="wikilink wikilink-missing">`, not an anchor.** FR-005 (clicking a
   red link opens the create-an-article page) is `could` and has no route yet; an anchor with nowhere to
   point would be a dead link.
