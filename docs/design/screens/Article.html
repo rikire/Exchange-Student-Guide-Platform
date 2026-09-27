@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Article page — Exchange Student Guide (draft screen)</title>
 <!-- Rough Stage-3 sketch, generated from canvas-src/flow/Article.dc.html — not the deliverable,
      a thinking tool. See docs/design/README.md for how this fits the design process. -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
   <style>
     :root { --maroon:#781F19; --maroon-dark:#5C1712; --gold:#D6A64F; --gold-dark:#BDA345; --red:#D9261C; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
     * { box-sizing: border-box; }
@@ -14,7 +15,7 @@
     a:hover { color: var(--maroon-dark); text-decoration: underline; }
     a.redlink { color: var(--red); }
     a.redlink:hover { color: var(--red); }
-    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .page { font-family: 'Noto Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
     .header-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
     .header-left { display: flex; align-items: center; gap: 14px; }
     .header-logo { height: 30px; width: auto; }
@@ -40,6 +41,22 @@
     .backlink-item:last-child { border-bottom: none; }
     .report-btn { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-soft); background: none; border: none; cursor: pointer; padding: 0; }
     .report-btn:hover { color: var(--red); }
+  
+    /* Phone layout, added 27 Sep (NFR-008, ADR-0014): one column, 16-px gutters, 16-px body text,
+       44-px targets. Phones.html shows it beside the desktop one. */
+    @media (max-width: 600px) {
+      .header-bar { flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+      .header-nav { width: 100%; gap: 0; justify-content: space-between; }
+      .header-nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 16px; }
+      .body { display: block; padding: 24px 16px; max-width: none; }
+      .chip { height: 32px; }
+      .article-title { font-size: 26px; }
+      .media-block { flex-wrap: wrap; }
+      .btn { margin-left: 0; min-height: 44px; }
+      .sidebar { margin-top: 32px; }
+      .backlink-item { display: flex; align-items: center; min-height: 44px; font-size: 16px; }
+      .report-btn { min-height: 44px; font-size: 16px; }
+    }
   </style>
 </head>
 <body>

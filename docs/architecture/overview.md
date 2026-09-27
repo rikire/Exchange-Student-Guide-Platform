@@ -78,6 +78,14 @@ headers are sent, including `Cache-Control: no-store` on static files. Boot's de
 excluded (`application.yml`), so no account exists and no generated password reaches the log. The moderator login of [ADR-0009](adr/ADR-0009-admin-authentication.md) is the next
 thing built on it, with `moderate`.
 
+**Browser checks and the typeface**, added 27 September (ADR-0014): Playwright for Java 1.63.0 and
+axe-core's Playwright integration 4.13.0, test scope, run by `./mvnw -pl app -P browser verify`, which
+opens every built GET route of `routes.yml` in Chromium at 320, 768, 1280 and 1920 px and checks
+NFR-008 and WCAG 2.2 AA, and that the typeface loaded, since a font path left behind by a version
+bump would otherwise fall back to the system font silently. The default build leaves `Browser*Test` out by class name; surefire's tag
+filter was tried first and selected nothing, in either direction, for reasons not found. The typeface
+is Noto Sans 5.2.6 from its WebJar, served under `/webjars/`.
+
 ## Level 3 — slices
 
 ![Slices](../diagrams/out/c4-component.svg)

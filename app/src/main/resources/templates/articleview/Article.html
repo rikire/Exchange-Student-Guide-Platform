@@ -14,7 +14,7 @@
       <!-- th:utext: bodyHtml is WikiLinkRenderer's output. The converter escapes raw HTML and
            sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
       <div class="article-body" th:utext="${article.bodyHtml}">Body</div>
-      <p class="article-actions"><a th:href="@{${article.editPath}}">Propose an edit</a></p>
+      <p class="article-actions page-actions"><a th:href="@{${article.editPath}}">Propose an edit</a></p>
     </article>
   </main>
 </body>

@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Landing page — Exchange Student Guide (draft screen)</title>
 <!-- Rough Stage-3 sketch, generated from canvas-src/flow/Main.dc.html — not the deliverable,
      a thinking tool. See docs/design/README.md for how this fits the design process. -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
   <style>
     :root {
       --maroon: #781F19;
@@ -23,7 +24,7 @@
     a { color: var(--maroon); text-decoration: none; }
     a:hover { color: var(--maroon-dark); text-decoration: underline; }
     .page {
-      font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+      font-family: 'Noto Sans', system-ui, -apple-system, sans-serif;
       color: var(--ink);
       background: var(--sand);
       min-height: 100%;
@@ -128,6 +129,22 @@
     }
     .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
     .tag-cloud .chip { background: var(--sand); color: var(--ink); border: 1px solid var(--line); }
+  
+    /* Phone layout, added 27 Sep (NFR-008, ADR-0014): one column, 16-px gutters, 16-px body text,
+       44-px targets. Phones.html shows it beside the desktop one. */
+    @media (max-width: 600px) {
+      .header-bar { flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+      .header-nav { width: 100%; gap: 0; justify-content: space-between; }
+      .header-nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 16px; }
+      .body { display: block; padding: 24px 16px; max-width: none; }
+      .chip { height: 32px; }
+      .hero { padding: 32px 16px; }
+      .hero h1 { font-size: 24px; }
+      .hero p, .search-box input, .article-excerpt { font-size: 16px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .article-title { display: flex; align-items: center; min-height: 44px; }
+      .sidebar { margin-top: 32px; }
+    }
   </style>
 </head>
 <body>

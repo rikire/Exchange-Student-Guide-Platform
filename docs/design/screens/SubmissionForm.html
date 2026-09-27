@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Submission form — Exchange Student Guide (draft screen)</title>
 <!-- Rough Stage-3 sketch, generated from canvas-src/flow/SubmissionForm.dc.html — not the deliverable,
      a thinking tool. See docs/design/README.md for how this fits the design process. -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
   <style>
     :root { --maroon:#781F19; --maroon-dark:#5C1712; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; }
     * { box-sizing: border-box; }
     body { margin: 0; }
-    .page { font-family: 'Public Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
+    .page { font-family: 'Noto Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100%; display: flex; flex-direction: column; }
     .header-bar { display: flex; align-items: center; gap: 14px; padding: 14px 40px; background: var(--paper); border-bottom: 1px solid var(--line); }
     .header-logo { height: 30px; width: auto; }
     .body { padding: 40px; max-width: 640px; }
@@ -32,6 +33,21 @@
     .btn-primary { background: var(--maroon); color: #fff; }
     .btn-ghost { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--line); }
     .captcha-box { display: flex; align-items: center; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+  
+    /* Phone layout, added 27 Sep (NFR-008, ADR-0014): one column, 16-px gutters, 16-px body text,
+       44-px targets. Phones.html shows it beside the desktop one. */
+    @media (max-width: 600px) {
+      .header-bar { flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+      .header-nav { width: 100%; gap: 0; justify-content: space-between; }
+      .header-nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 16px; }
+      .body { display: block; padding: 24px 16px; max-width: none; }
+      .chip { height: 32px; }
+      .form-title { font-size: 24px; }
+      .form-sub, .field-label, .upload-box, .captcha-box { font-size: 16px; }
+      .field-input, .field-textarea { font-size: 16px; }
+      .btn-row { flex-direction: column; }
+      .btn { width: 100%; }
+    }
   </style>
 </head>
 <body>

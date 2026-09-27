@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phone and desktop layouts — Exchange Student Guide (draft screens)</title>
+<!-- Added 27 Sep (ADR-0014): each built screen at a phone width beside the same screen at desktop
+     width, scaled down. Open this file in a browser; the frames load the screens beside it. -->
+<style>
+  body { margin: 0; padding: 24px; font-family: 'Noto Sans', system-ui, sans-serif; background: #EDE8E0; color: #1F1917; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { margin: 0 0 24px; color: #5B534C; }
+  section { margin-bottom: 40px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .pair { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .phone { width: 360px; height: 780px; border: 1px solid #C9C0B3; border-radius: 16px; background: #fff; }
+  .desktop-frame { width: 640px; height: 450px; overflow: hidden; border: 1px solid #C9C0B3; border-radius: 6px; background: #fff; }
+  .desktop { width: 1280px; height: 900px; border: 0; transform: scale(0.5); transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<h1>Phone and desktop layouts</h1>
+<p>Left: 360 px, a common phone. Right: 1280 px, shown at half size. NFR-008 is checked in a real browser by the build's <code>browser</code> profile; these frames are for people.</p>
+<section><h2>Landing</h2><div class="pair"><iframe class="phone" src="Landing.html" title="Landing at 360 px"></iframe><div class="desktop-frame"><iframe class="desktop" src="Landing.html" title="Landing at 1280 px"></iframe></div></div></section>
+<section><h2>Article</h2><div class="pair"><iframe class="phone" src="Article.html" title="Article at 360 px"></iframe><div class="desktop-frame"><iframe class="desktop" src="Article.html" title="Article at 1280 px"></iframe></div></div></section>
+<section><h2>Submission form</h2><div class="pair"><iframe class="phone" src="SubmissionForm.html" title="Submission form at 360 px"></iframe><div class="desktop-frame"><iframe class="desktop" src="SubmissionForm.html" title="Submission form at 1280 px"></iframe></div></div></section>
+<section><h2>Submission confirmation</h2><div class="pair"><iframe class="phone" src="SubmissionConfirmation.html" title="Submission confirmation at 360 px"></iframe><div class="desktop-frame"><iframe class="desktop" src="SubmissionConfirmation.html" title="Submission confirmation at 1280 px"></iframe></div></div></section>
+</body>
+</html>

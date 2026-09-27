@@ -30,8 +30,14 @@
   --text-small: 12px;
   --text-body: 16px;
   --text-lead: 18px;
-  --text-title: 32px;
+  /* Fluid between a phone and a desktop (NFR-008): 24 px at 320, 32 px from about 640. */
+  --text-title: clamp(24px, 5vw, 32px);
 
-  --font-body: 'Public Sans', system-ui, -apple-system, sans-serif;
+  /* Noto Sans from its WebJar (Latin and Devanagari); Tamil falls back to the system font. */
+  --font-body: 'Noto Sans', system-ui, -apple-system, sans-serif;
   --page-width: 1100px;
+  /* Page edges: 16 px on a phone, growing to 40 px (NFR-008). */
+  --gutter: clamp(16px, 4vw, 40px);
+  /* The smallest button, control or navigation link on a phone or tablet (NFR-008). */
+  --target: 44px;
 }

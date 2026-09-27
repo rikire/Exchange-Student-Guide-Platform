@@ -13,24 +13,28 @@ body {
 
 a { color: var(--maroon); text-decoration: none; }
 a:hover { color: var(--maroon-dark); text-decoration: underline; }
+/* A link inside running text is underlined, not told apart by colour alone (WCAG 1.4.1, NFR-007). */
+p a, .article-body a { text-decoration: underline; }
 
 .site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--gutter);
   background: var(--paper);
   border-bottom: 1px solid var(--line);
 }
-.site-brand { display: flex; align-items: center; gap: var(--space-3); color: var(--ink); }
+.site-brand { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); color: var(--ink); }
 .site-brand:hover { text-decoration: none; color: var(--ink); }
 .site-logo { height: 30px; width: auto; }
 .site-name { font-weight: 700; }
 
-.site-main { flex: 1; width: 100%; max-width: var(--page-width); margin: 0 auto; padding: var(--space-6); }
+.site-main { flex: 1; width: 100%; max-width: var(--page-width); margin: 0 auto; padding: var(--space-5) var(--gutter); }
 
 .site-footer {
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-4) var(--gutter);
   color: var(--ink-soft);
   font-size: var(--text-small);
   border-top: 1px solid var(--line);
@@ -61,7 +65,7 @@ a:hover { color: var(--maroon-dark); text-decoration: underline; }
 /* FR-004: a wiki link to an article that does not exist is red, not a link. */
 .wikilink-missing { color: var(--red); }
 
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: var(--space-4); }
 .article-card {
   display: flex;
   flex-direction: column;
@@ -72,15 +76,16 @@ a:hover { color: var(--maroon-dark); text-decoration: underline; }
   border-radius: var(--radius-card);
 }
 .article-card-title { font-size: var(--text-lead); font-weight: 700; margin: 0; }
+.article-card-title a { display: flex; align-items: center; min-height: var(--target); }
 .article-card-summary { margin: 0; color: var(--ink-soft); }
 .pinned-badge { font-size: var(--text-small); font-weight: 700; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.04em; }
 
-.hero { padding: var(--space-6); background: var(--maroon); color: var(--paper); }
+.hero { padding: var(--space-6) var(--gutter); background: var(--maroon); color: var(--paper); }
 .hero-inner { max-width: var(--page-width); margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-3); }
 .hero h1 { margin: 0; font-size: var(--text-title); }
 .hero p { margin: 0; }
-.search-form { display: flex; gap: var(--space-2); max-width: 520px; }
-.search-input { flex: 1; height: 48px; padding: 0 var(--space-4); border: none; border-radius: var(--radius-card); font: inherit; }
+.search-form { display: flex; flex-wrap: wrap; gap: var(--space-2); max-width: 520px; }
+.search-input { flex: 1 1 12rem; min-width: 0; height: 48px; padding: 0 var(--space-4); border: none; border-radius: var(--radius-card); font: inherit; }
 .search-button { height: 48px; padding: 0 var(--space-4); border: none; border-radius: var(--radius-card); background: var(--gold); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
 
 .section-title { font-size: var(--text-lead); font-weight: 700; margin: var(--space-5) 0 var(--space-3); }
@@ -95,18 +100,20 @@ a:hover { color: var(--maroon-dark); text-decoration: underline; }
 .submission-form { display: flex; flex-direction: column; gap: var(--space-4); max-width: 46rem; }
 .field { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; border: none; }
 .field-label { font-weight: 600; }
-.field-input, .field-textarea { font: inherit; padding: var(--space-2) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
+.field-input, .field-textarea { font: inherit; min-height: var(--target); padding: var(--space-2) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
 .field-textarea { min-height: 16rem; resize: vertical; }
 .field-help { font-size: var(--text-small); color: var(--ink-soft); }
 .tag-fields { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .tag-fields .field-input { width: 10rem; }
-.button-row { display: flex; align-items: center; gap: var(--space-4); }
-.button-primary { font: inherit; font-weight: 600; padding: var(--space-2) var(--space-4); border: none; border-radius: var(--radius-card); background: var(--maroon); color: var(--paper); cursor: pointer; }
+.button-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+.button-row a { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-2); }
+.button-primary { font: inherit; min-height: var(--target); font-weight: 600; padding: var(--space-2) var(--space-4); border: none; border-radius: var(--radius-card); background: var(--maroon); color: var(--paper); cursor: pointer; }
 .button-primary:hover { background: var(--maroon-dark); }
 .result-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); max-width: 46rem; }
 .number-label { margin: 0; font-size: var(--text-small); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
-.submission-number { margin: var(--space-1) 0 var(--space-4); font-size: var(--text-title); font-weight: 700; font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
-.site-nav { display: flex; gap: var(--space-4); }
+.submission-number { margin: var(--space-1) 0 var(--space-4); overflow-wrap: anywhere; font-size: var(--text-title); font-weight: 700; font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
+.site-nav { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+.site-nav a { display: inline-flex; align-items: center; min-height: var(--target); }
 .article-actions { margin: var(--space-5) 0 0; }
 
 /* Moderation (FEAT-006) */
@@ -119,4 +126,12 @@ a:hover { color: var(--maroon-dark); text-decoration: underline; }
 .button-reject { font: inherit; font-weight: 600; padding: var(--space-2) var(--space-4); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); color: var(--red); cursor: pointer; }
 @media (min-width: 60rem) {
   .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+}
+
+/* A link that stands alone rather than in running text is a target, 44 px tall (NFR-008). */
+.page-actions a { display: inline-flex; align-items: center; min-height: var(--target); }
+
+/* Secondary text is small only on a wide screen; on a phone or tablet it is read at body size (NFR-008). */
+@media (max-width: 1023px) {
+  .field-help, .site-footer, .number-label { font-size: var(--text-body); }
 }

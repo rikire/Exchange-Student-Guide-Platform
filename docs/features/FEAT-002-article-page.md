@@ -20,6 +20,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/shared/persistence/SchemaMigrationTest.java
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
   - app/src/test/java/in/ac/iitm/guide/PageQueryCountTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
 ---
 
 # FEAT-002 — Reading an article
@@ -93,6 +94,8 @@ default is safe only while `article` is empty, as it is everywhere today.
 - [x] No template holds a literal colour, length or inline style (`TemplateTokensTest`)
 - [ ] The article's **media assets** are shown (FR-001, "…and zero or more attached media assets"):
       needs the `media` slice, phase 3
+- [x] Fits every width from 320 to 1920 px, with 16-px text, 44-px targets on a phone and no WCAG 2.2
+      AA violation found by axe (NFR-007, NFR-008; `BrowserLayoutTest`, added 27 Sep)
 
 ## Deliberately out of scope
 

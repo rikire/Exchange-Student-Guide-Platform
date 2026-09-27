@@ -12,6 +12,10 @@
   <name>Guide application</name>
   <description>Spring Boot application: the knowledge base itself</description>
 
+  <properties>
+    <browser.tests>**/Browser*Test.java</browser.tests>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -48,6 +52,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <!-- The typeface, served from the jar under /webjars/ (ADR-0013, docs/design/reference.md). -->
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>fontsource__noto-sans</artifactId>
+      <version>${noto-sans.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- CSRF on every form (security.md), from FEAT-005; the moderator login (ADR-0009) builds on it. -->
     <dependency>
@@ -129,6 +140,20 @@
       <artifactId>postgresql</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- The browser profile below: a real browser at four widths, and axe-core's WCAG checks in it
+         (ADR-0014, NFR-007, NFR-008). -->
+    <dependency>
+      <groupId>com.microsoft.playwright</groupId>
+      <artifactId>playwright</artifactId>
+      <version>${playwright.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.deque.html.axe-core</groupId>
+      <artifactId>playwright</artifactId>
+      <version>${axe-core-playwright.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -149,11 +174,28 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Browser*Test needs a browser download and runs only under -P browser (ADR-0014). -->
+          <excludes>
+            <exclude>${browser.tests}</exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 
   <profiles>
+    <!-- ./mvnw -pl app -P browser verify: the whole suite plus Browser*Test, in
+         Chromium through Playwright against the running application (ADR-0014). Playwright downloads
+         the browser on its first run; if it cannot start, the tests fail rather than skip. Surefire's
+         tag filter was tried first and selected nothing either way, so the exclusion is by class
+         name and the profile lifts it. -->
+    <profile>
+      <id>browser</id>
+      <properties>
+        <browser.tests>none</browser.tests>
+      </properties>
+    </profile>
     <!-- ./mvnw -P postgres verify: the same tests on PostgreSQL 17, the production database, instead
          of H2. A container per JVM via Testcontainers' JDBC URL; without a running Docker the context
          cannot start and the build fails, since a skipped check would pass silently. -->

@@ -25,7 +25,7 @@ import org.yaml.snakeyaml.Yaml;
 @SpringBootTest
 public class RouteContractTest {
 
-    private static final Path CONTRACT = Path.of("../docs/architecture/routes.yml");
+    static final Path CONTRACT = Path.of("../docs/architecture/routes.yml");
 
     /** Spring Boot's own error endpoint: it serves every route's error page and belongs to none. */
     private static final Set<String> FRAMEWORK = Set.of("/error");

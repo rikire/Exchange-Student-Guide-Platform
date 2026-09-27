@@ -19,6 +19,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/home/LandingControllerTest.java
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
   - app/src/test/java/in/ac/iitm/guide/PageQueryCountTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
 ---
 
 # FEAT-003 — Landing page
@@ -82,6 +83,8 @@ The requirement fixes neither the numbers nor the overlap; these are ours, each 
 - [x] A card for a Devanagari title links to the percent-encoded address
 - [x] Titles and summaries are escaped
 - [x] The number of queries does not grow with the number of articles: `PageQueryCountTest`
+- [x] Fits every width from 320 to 1920 px, with 16-px text, 44-px targets on a phone and no WCAG 2.2
+      AA violation found by axe (NFR-007, NFR-008; `BrowserLayoutTest`, added 27 Sep)
 
 ## Deliberately out of scope
 

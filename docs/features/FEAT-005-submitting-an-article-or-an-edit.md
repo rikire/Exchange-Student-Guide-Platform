@@ -25,6 +25,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/contribute/SubmissionFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/contribute/internal/SubmissionNumbersTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/WebSecurityTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
 ---
 
 # FEAT-005 — Submitting a new article or an edit
@@ -126,6 +127,8 @@ Each follows from something already decided; each has a test.
 - [x] A POST without a CSRF token is refused and stores nothing
 - [x] A form still submits after its session has expired
 - [x] Tags are stored trimmed and lower-cased, one row per tag however it was spelled (ADR-0005)
+- [x] Fits every width from 320 to 1920 px, with 16-px text, 44-px targets on a phone and no WCAG 2.2
+      AA violation found by axe (NFR-007, NFR-008; `BrowserLayoutTest`, added 27 Sep)
 
 ## Deliberately out of scope
 

@@ -46,9 +46,17 @@ in no document. Everything above this heading was read off a real site; everythi
 own decision, and the split matters — the sections above can be re-verified against a source, these
 cannot.
 
-- **Typeface: `Public Sans`**, with `system-ui, -apple-system, sans-serif` behind it. The sites above
-  gave only "clean sans-serif", which is not a font. Public Sans is an open licence, has the weights
-  the scale needs, and reads at small sizes; nothing about it came from IITM.
+- **Typeface: `Noto Sans`** since 27 Sep, with `system-ui, -apple-system, sans-serif` behind it. The
+  sites above gave only "clean sans-serif", which is not a font. It replaced `Public Sans`, our first
+  choice, for two reasons: Public Sans has no WebJar, and ADR-0013 allows assets only as WebJars; and
+  Noto Sans draws Devanagari in the same style as Latin, so Hindi does not fall back to another face.
+  Both are open licences with the weights the scale needs; Tamil still comes from the system font.
+  Nothing about either came from IITM.
+- **Text size on a phone or tablet** (NFR-008, 27 Sep): everything a reader reads is at least 16 px
+  below 1024 px wide, field help, the footer and small labels included; on a wide screen they keep
+  `--text-small`. Only tag chips and the pinned badge stay small everywhere: they are labels, not text
+  to read. `BrowserLayoutTest` holds this, and a link stands alone (a 44-px target) unless its
+  paragraph has words besides it.
 - **Derived neutrals**, warm rather than grey, so they sit with the OGE maroon and gold instead of
   fighting them: `#F7F4EF` page ground, `#FBF3E3` raised ground, `#E6DFD3` borders, `#5B534C`
   secondary text.

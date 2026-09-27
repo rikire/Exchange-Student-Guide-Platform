@@ -1,0 +1,213 @@
+package in.ac.iitm.guide;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.deque.html.axecore.playwright.AxeBuilder;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
+import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.wikilink.ArticleAddress;
+import jakarta.persistence.EntityManager;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.yaml.snakeyaml.Yaml;
+
+/**
+ * NFR-008 and NFR-007's automated half, in a real browser (ADR-0014): every built GET route of
+ * routes.yml, and the not-found page, at four widths. Runs only under {@code -P browser}.
+ *
+ * <p>The pages come from the route contract rather than a list here, so a route marked built is
+ * checked from that moment; a path variable it uses must have a sample below, or this fails.
+ */
+// trace:NFR-007
+// trace:NFR-008
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class BrowserLayoutTest {
+
+    private static final List<Integer> WIDTHS = List.of(320, 768, 1280, 1920);
+    private static final Set<Integer> PHONE_AND_TABLET = Set.of(320, 768);
+    private static final String NUMBER = "SUB-K7M2-QX9P-4TVB";
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
+    private TransactionTemplate transaction;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    private Playwright playwright;
+    private Browser browser;
+
+    @BeforeAll
+    void startTheBrowserAndWriteTheFixtures() {
+        playwright = Playwright.create();
+        browser = playwright.chromium().launch();
+        transaction.executeWithoutResult(status -> {
+            var now = OffsetDateTime.now();
+            var article = new Article();
+            article.setTitle("Registering with FRRO");
+            article.setSlug(ArticleAddress.slugOf(article.getTitle()).orElseThrow());
+            article.setSummary("Register within 14 days of arriving in India.");
+            article.setBody("## Before you go\n\nBring your passport, visa and [[Hostel Life]] papers.\n\n"
+                    + "- Photographs\n- Proof of address\n\nछात्रावास में पंजीकरण। விடுதி பதிவு.");
+            article.setPublishedAt(now);
+            article.setUpdatedAt(now);
+            entityManager.persist(article);
+        });
+        jdbc.update(
+                "INSERT INTO submission (id, submission_number, type, title, summary, body, status, submitted_at)"
+                        + " VALUES (?, ?, 'NEW_ARTICLE', 't', 's', 'b', 'PENDING', CURRENT_TIMESTAMP)",
+                UUID.randomUUID(),
+                NUMBER);
+    }
+
+    @AfterAll
+    void closeTheBrowserAndClearTheFixtures() {
+        if (browser != null) {
+            browser.close();
+        }
+        if (playwright != null) {
+            playwright.close();
+        }
+        jdbc.execute("DELETE FROM submission");
+        jdbc.execute("DELETE FROM article");
+    }
+
+    @TestFactory
+    Stream<DynamicTest> every_built_page_fits_every_width_and_passes_wcag_aa() throws IOException {
+        var tests = new ArrayList<DynamicTest>();
+        for (var path : pages()) {
+            for (var width : WIDTHS) {
+                tests.add(DynamicTest.dynamicTest(path + " at " + width + " px", () -> check(path, width)));
+            }
+        }
+        return tests.stream();
+    }
+
+    private void check(String path, int width) {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {
+            Page page = context.newPage();
+            page.navigate("http://localhost:" + port + path);
+
+            var problems = new ArrayList<String>();
+            var scrollWidth = ((Number) page.evaluate("document.documentElement.scrollWidth")).intValue();
+            if (scrollWidth > width) {
+                problems.add("scrolls sideways: the page is " + scrollWidth + " px wide");
+            }
+            if (PHONE_AND_TABLET.contains(width)) {
+                problems.addAll(stringList(page.evaluate(SMALL_TEXT)));
+                problems.addAll(stringList(page.evaluate(SMALL_TARGETS)));
+            }
+            if (width == 1280 && !Boolean.TRUE.equals(page.evaluate(FONT_LOADED))) {
+                problems.add("the Noto Sans typeface did not load");
+            }
+            if (width == 320 || width == 1280) {
+                var results = new AxeBuilder(page)
+                        .withTags(List.of("wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"))
+                        .analyze();
+                results.getViolations()
+                        .forEach(violation -> problems.add("axe " + violation.getId() + ": " + violation.getHelp()
+                                + " (" + violation.getNodes().size() + " elements)"));
+            }
+
+            assertThat(problems).as("%s at %d px", path, width).isEmpty();
+        }
+    }
+
+    /** The built GET routes of routes.yml with their variables filled in, and the not-found page. */
+    @SuppressWarnings("unchecked")
+    private static List<String> pages() throws IOException {
+        Map<String, Object> contract = new Yaml().load(Files.readString(RouteContractTest.CONTRACT));
+        var samples = Map.of("{title}", "registering-with-frro", "{number}", NUMBER);
+        var pages = new ArrayList<String>();
+        for (var route : (List<Map<String, Object>>) contract.get("routes")) {
+            if (!"built".equals(route.get("status")) || !((List<String>) route.get("methods")).contains("GET")) {
+                continue;
+            }
+            var path = (String) route.get("path");
+            for (var sample : samples.entrySet()) {
+                path = path.replace(sample.getKey(), sample.getValue());
+            }
+            assertThat(path)
+                    .as("a sample value for every variable of %s", route.get("path"))
+                    .doesNotContain("{");
+            pages.add(path);
+        }
+        pages.add("/articles/no-such-article");
+        return pages;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<String> stringList(Object value) {
+        return (List<String>) value;
+    }
+
+    /**
+     * Visible text under 16 CSS pixels, from the element that holds it. Chips and the pinned badge
+     * are labels rather than body text (docs/design/reference.md) and are the only exemptions.
+     */
+    private static final String SMALL_TEXT =
+            """
+            () => [...document.querySelectorAll('body *')]
+              .filter(e => e.offsetParent !== null)
+              .filter(e => [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim() !== '')
+                        || e.matches('input:not([type=hidden]), textarea'))
+              .filter(e => !e.closest('.chip, .pinned-badge'))
+              .filter(e => parseFloat(getComputedStyle(e).fontSize) < 16)
+              .map(e => 'text under 16 px: <' + e.tagName.toLowerCase() + ' class="' + e.className + '"> "'
+                        + (e.textContent || e.name || '').trim().slice(0, 30) + '"')
+            """;
+
+    /**
+     * Buttons, controls and navigation links smaller than 44 by 44. A link is exempt only inside
+     * running text: its paragraph holds words besides the link's own.
+     */
+    private static final String SMALL_TARGETS =
+            """
+            () => [...document.querySelectorAll('a, button, input:not([type=hidden]), textarea, select')]
+              .filter(e => e.offsetParent !== null)
+              .filter(e => {
+                if (e.tagName !== 'A') return true;
+                const block = e.closest('p, li, .article-body');
+                return !block || block.textContent.trim() === e.textContent.trim();
+              })
+              .map(e => [e, e.getBoundingClientRect()])
+              .filter(([e, r]) => r.width < 44 || r.height < 44)
+              .map(([e, r]) => 'target under 44 px: <' + e.tagName.toLowerCase() + '> "'
+                        + (e.textContent || e.name || '').trim().slice(0, 30) + '" is '
+                        + Math.round(r.width) + ' x ' + Math.round(r.height))
+            """;
+
+    /** Whether the typeface loaded: a page whose font CSS 404s falls back silently to system-ui. */
+    private static final String FONT_LOADED =
+            """
+            async () => {
+              await document.fonts.load('16px "Noto Sans"');
+              return [...document.fonts].some(f => f.family.replace(/"/g, '') === 'Noto Sans' && f.status === 'loaded');
+            }
+            """;
+}

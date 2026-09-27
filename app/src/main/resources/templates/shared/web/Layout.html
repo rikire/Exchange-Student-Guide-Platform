@@ -8,6 +8,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:replace="${title}">Exchange Student Guide</title>
+  <!-- Noto Sans from its WebJar (ADR-0013: assets only as WebJars); the version is the one in the
+       root pom's noto-sans.version and has to change with it. -->
+  <link rel="stylesheet" th:href="@{/webjars/fontsource__noto-sans/5.2.6/400.css}">
+  <link rel="stylesheet" th:href="@{/webjars/fontsource__noto-sans/5.2.6/600.css}">
+  <link rel="stylesheet" th:href="@{/webjars/fontsource__noto-sans/5.2.6/700.css}">
   <link rel="stylesheet" th:href="@{/css/tokens.css}">
   <link rel="stylesheet" th:href="@{/css/site.css}">
 </head>

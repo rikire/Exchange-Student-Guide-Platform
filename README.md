@@ -42,6 +42,8 @@ to build with a possibly different version.
 ```sh
 scripts/hooks.sh                    # build the tooling, install the git hooks — run this first
 ./mvnw verify                       # build, test, check formatting
+./mvnw -P postgres verify           # the same tests on PostgreSQL 17 (needs Docker)
+./mvnw -pl app -P browser verify    # plus every page in a real browser at four widths (downloads Chromium)
 ./mvnw -pl app spring-boot:run      # http://localhost:8080
 scripts/check.sh                    # everything CI runs, before you push
 scripts/diagrams.sh                 # re-render the C4 diagrams and the ERD

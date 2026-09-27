@@ -11,7 +11,7 @@
 
     <div class="form-error" role="alert" th:if="${form.error}">
       <p th:text="${form.error}">What to fix.</p>
-      <p th:if="${form.linkHref}"><a th:href="@{${form.linkHref}}" th:text="${form.linkLabel}">Link</a></p>
+      <p class="page-actions" th:if="${form.linkHref}"><a th:href="@{${form.linkHref}}" th:text="${form.linkLabel}">Link</a></p>
     </div>
 
     <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->

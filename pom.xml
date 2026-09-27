@@ -33,6 +33,11 @@
 
     <!-- Verified against Maven Central on 2026-09-21. -->
     <db-util.version>1.0.7</db-util.version>
+    <!-- The browser profile (ADR-0014); both checked on Maven Central on 27 Sep. -->
+    <playwright.version>1.63.0</playwright.version>
+    <axe-core-playwright.version>4.13.0</axe-core-playwright.version>
+    <!-- The typeface (docs/design/reference.md); Layout.html names this version in its paths. -->
+    <noto-sans.version>5.2.6</noto-sans.version>
 
     <!-- Verified against Maven Central on 2026-09-25 (0.30.0, released 2026-08-06); Spring Boot's BOM
          does not manage it. Chosen over flexmark-java (no release since 2023-05); see

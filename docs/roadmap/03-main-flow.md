@@ -111,7 +111,7 @@ Where the steps above and this queue compete for the same days, the human orders
    [ADR-0013](../architecture/adr/ADR-0013-markdown-editor-and-front-end-assets.md) — EasyMDE from its
    WebJar, server-rendered preview, a strict Content-Security-Policy, WebJars only. Building it is a
    separate contract, with a browser check under the policy and a Hindi and Tamil check on a phone.
-3. [~] **Responsive layout** — a requirement for every screen from phone to desktop, and how to build
+3. [x] **Responsive layout** — a requirement for every screen from phone to desktop, and how to build
    it (own tokens and CSS, or a framework)
    — check: the requirement agreed; the approach recorded
    **Decided 27 Sep:** NFR-008 (320–1920 px, no sideways scrolling, 16-px text and 44-px targets on a
@@ -120,6 +120,12 @@ Where the steps above and this queue compete for the same days, the human orders
    checks NFR-008 and NFR-007's AA at four widths on every built route; phone layouts drawn in the HTML
    screens of `docs/design/screens/`, not in Figma. Left for this item: building it, under its own
    contract.
+   **Built 27 Sep:** mobile-first CSS on the tokens, Noto Sans from its WebJar, phone layouts in four
+   HTML screens and `docs/design/screens/Phones.html` beside the desktop ones. `-P browser` runs
+   `BrowserLayoutTest` over every built GET route and the not-found page: first red (every page
+   scrolled sideways at 320 px, targets of 22–40 px, one axe failure), now green at all four widths.
+   **Agreed next, 27 Sep:** `moderate` (with item 8's diff if CON-004 is revised), then `search`, then
+   the content, then item 4; the questions for OGE (item 10) are worth asking now.
 
 4. [ ] **Build the Markdown editor** — FR-027 and FR-028 on the `contribute` form, as ADR-0013
    decides: EasyMDE from its WebJar, a preview endpoint that renders with `WikiLinkRenderer` and caps
