@@ -86,9 +86,10 @@ class ModularityTest {
 
     /**
      * The component diagram as the code draws it, not as someone designed it: the arrows are the
-     * imports between slices that exist now. {@code home}, {@code articleview}, {@code backup} and
-     * {@code contribute} each use a published type of {@code wikilink}, and {@code backup} and {@code contribute} one of
-     * {@code taxonomy}, so those six arrows have to be in it. The
+     * imports between slices that exist now. {@code home}, {@code articleview}, {@code backup},
+     * {@code contribute} and {@code moderate} each use a published type of {@code wikilink}, and
+     * {@code backup}, {@code contribute} and {@code moderate} one of {@code taxonomy}, so those eight
+     * arrows have to be in it. The
      * folder is emptied first for the same reason as in the canvas test.
      */
     @Test
@@ -101,13 +102,13 @@ class ModularityTest {
 
         assertThat(file).isRegularFile();
         var diagram = Files.readString(file);
-        for (var slice : new String[] {"Home", "Articleview", "Backup", "Contribute"}) {
+        for (var slice : new String[] {"Home", "Articleview", "Backup", "Contribute", "Moderate"}) {
             assertThat(diagram)
                     .as("arrow from %s to wikilink", slice)
                     .contains("Rel(" + NODE + slice + ", " + NODE + "Wikilink,");
         }
-        // Tags is the only way a tag reaches the table (ADR-0005): both slices that write tags ask it.
-        for (var slice : new String[] {"Backup", "Contribute"}) {
+        // Tags is the only way a tag reaches the table (ADR-0005): every slice that writes tags asks it.
+        for (var slice : new String[] {"Backup", "Contribute", "Moderate"}) {
             assertThat(diagram)
                     .as("arrow from %s to taxonomy", slice)
                     .contains("Rel(" + NODE + slice + ", " + NODE + "Taxonomy,");

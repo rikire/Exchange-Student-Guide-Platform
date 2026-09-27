@@ -70,13 +70,16 @@ the security settings it must run with are in [security.md](security.md), "Artic
 
 **Spring Security: `spring-boot-starter-security`**, added 27 September with FEAT-005 (version from
 the Spring Boot BOM, 3.5.16), for the CSRF token that [security.md](security.md) requires on every
-state-changing form. `shared/security/WebSecurity` leaves every route public and keeps the defaults:
-a POST without the token is refused with `403` before the controller runs. The token is kept in an
+state-changing form. `shared/security/WebSecurity` keeps the defaults — a POST without the token is
+refused with `403` before the controller runs — and, since 28 September, sends every `/moderate/**`
+request without a moderator session to `/moderate/login`; every other route is public. The token is kept in an
 `HttpOnly` cookie rather than the session, so a form still submits after the 30-minute session has
 expired (decided 27 Sep: writing an article can take longer, and the refusal lost the text); and the default response
 headers are sent, including `Cache-Control: no-store` on static files. Boot's default user store is
-excluded (`application.yml`), so no account exists and no generated password reaches the log. The moderator login of [ADR-0009](adr/ADR-0009-admin-authentication.md) is the next
-thing built on it, with `moderate`.
+excluded (`application.yml`), so no account exists and no generated password reaches the log. The
+moderator login of [ADR-0009](adr/ADR-0009-admin-authentication.md) (FEAT-006) declares no account
+either: `ModeratorLoginController` compares the one password with the hash in
+`GUIDE_ADMIN_PASSWORD_HASH` and stores the authenticated session itself.
 
 **Browser checks and the typeface**, added 27 September (ADR-0014): Playwright for Java 1.63.0 and
 axe-core's Playwright integration 4.13.0, test scope, run by `./mvnw -pl app -P browser verify`, which
@@ -95,11 +98,11 @@ itself, from the imports between slices, and rendered beside the designed one:
 
 ![Slices as the code has them](../diagrams/out/c4-component-actual.svg)
 
-`home`, `articleview`, `backup` and `contribute` each use a published type of `wikilink`
-(`ArticleAddress`, `WikiLinkRenderer`), and `backup` also uses `shared`. Since 27 September
-`backup` and `contribute` also use `taxonomy`'s `Tags`, the only way a tag reaches the table
+`home`, `articleview`, `backup`, `contribute` and `moderate` each use a published type of `wikilink`
+(`ArticleAddress`, `WikiLinkRenderer`), and `backup` also uses `shared`. `backup`, `contribute` and,
+since 28 September, `moderate` also use `taxonomy`'s `Tags`, the only way a tag reaches the table
 (ADR-0005). `ModularityTest` writes that diagram and checks
-those six arrows are in it, so it cannot drift from the code without a test failing.
+those eight arrows are in it, so it cannot drift from the code without a test failing.
 
 Ten vertical slices plus `shared`. The list is owned by
 [architecture-rules.md](../ai/architecture-rules.md); the decision to structure the application this
@@ -111,9 +114,9 @@ under `in.ac.iitm.guide` carrying a `package-info.java`, which is all Spring Mod
 it as an application module — so the diagram above and the module list the build sees are the same
 list, and a slice added to one without the other fails a test. On 10 September the packages were
 otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
-since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), and the other four
-slices (`search`, `moderate`, `media`, `report`) stay empty until their phase 3 steps
-([03-main-flow.md](../roadmap/03-main-flow.md)).
+since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), since 28 September
+`moderate` (FEAT-006), and the other three slices (`search`, `media`, `report`) stay empty until
+their phase 3 steps ([03-main-flow.md](../roadmap/03-main-flow.md)).
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

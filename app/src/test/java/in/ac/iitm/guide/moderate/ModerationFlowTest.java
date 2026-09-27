@@ -256,6 +256,56 @@ class ModerationFlowTest {
 
     @Test
     // trace:FR-017
+    void an_approval_with_a_blank_summary_is_refused_on_the_review_with_what_was_typed() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var result = approve(loggedIn(), submission, "   ", "telecom");
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+        assertThat(result.getResponse().getContentAsString())
+                .contains("Give the article a summary.")
+                .contains("value=\"telecom\"");
+        assertThat(articleCount()).isZero();
+        assertThat(statusOf(submission)).isEqualTo("PENDING");
+    }
+
+    @Test
+    // trace:FR-017
+    void an_approval_with_a_tag_too_long_to_store_is_refused_on_the_review() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var result = approve(loggedIn(), submission, "Summary.", "x".repeat(65));
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+        assertThat(result.getResponse().getContentAsString()).contains("longer than 64 characters");
+        assertThat(articleCount()).isZero();
+        assertThat(statusOf(submission)).isEqualTo("PENDING");
+    }
+
+    @Test
+    // trace:FR-017
+    // trace:FR-020
+    void a_refused_edit_approval_leaves_no_revision_and_no_new_tag_behind() throws Exception {
+        // The revision and a new tag are written before the address check refuses; both must go with
+        // the rolled-back approval, or a refused edit would leave history for a change never made.
+        var article = published("Hostel Life", "The original text.");
+        published("Mess Food", "Another article.");
+        var edit = pendingEdit(article, "Mess Food", "Renamed onto another article's address.");
+        var before = articleTable();
+
+        var result = approve(loggedIn(), edit, "Summary.", "a-brand-new-tag");
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(409);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM revision", Integer.class))
+                .isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM tag", Integer.class))
+                .isZero();
+        assertThat(articleTable()).isEqualTo(before);
+        assertThat(statusOf(edit)).isEqualTo("PENDING");
+    }
+
+    @Test
+    // trace:FR-017
     // trace:FR-018
     void no_path_but_approval_changes_the_published_table() throws Exception {
         // The invariant the slice exists for (roadmap phase 3, `moderate`). Each attempt below is one

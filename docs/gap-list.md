@@ -25,10 +25,10 @@ real figure can only be higher.
 | FR-014 | planned | must | Moderation queue | 2 | 5 | 0 |
 | FR-015 | planned | must | Reviewing a submission | 2 | 3 | 0 |
 | FR-016 | planned | should | Downloading a media asset | 3 | 0 | 3 |
-| FR-017 | planned | must | Approving a submission | 3 | 5 | 0 |
+| FR-017 | planned | must | Approving a submission | 3 | 8 | 0 |
 | FR-018 | planned | must | Rejecting a submission | 2 | 3 | 0 |
 | FR-019 | planned | could | Providing a rejection reason | 2 | 0 | 2 |
-| FR-020 | planned | should | Retaining article revisions | 1 | 2 | 0 |
+| FR-020 | planned | should | Retaining article revisions | 1 | 3 | 0 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
