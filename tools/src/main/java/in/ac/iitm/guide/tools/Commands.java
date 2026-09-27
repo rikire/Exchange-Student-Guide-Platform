@@ -22,7 +22,8 @@ public final class Commands {
             "gaps",
             "ownership",
             "weekly",
-            "schema-freeze");
+            "schema-freeze",
+            "review-scope");
 
     public static final Set<String> HOOK =
             Set.of("prompt", "guard", "bash", "stop", "note", "english", "author", "compact", "docs-sync", "subagent");

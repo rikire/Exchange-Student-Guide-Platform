@@ -67,6 +67,14 @@ public final class NewFileRules {
 
     private NewFileRules() {}
 
+    /** Path-based authority boundary; filename guesses are advisory only. */
+    public static boolean requiresApproval(String relativePath, boolean exists) {
+        return relativePath != null
+                && !exists
+                && relativePath.endsWith(".java")
+                && SENSITIVE_AREAS.keySet().stream().anyMatch(relativePath::contains);
+    }
+
     /**
      * Returns what to ask about a file that is about to be created, or {@code null} when there is
      * nothing to ask.
@@ -91,7 +99,8 @@ public final class NewFileRules {
         }
 
         if (SECURITY_SENSITIVE.matcher(relativePath).matches()) {
-            return "You are creating " + relativePath + ", whose name says it carries security.\n\n"
+            return "You are creating " + relativePath
+                    + ", whose name may indicate security behavior. This is an advisory signal, not proof.\n\n"
                     + "Security is decided with the human here, and the rules it has to satisfy are in "
                     + "docs/ai/security.md. Two questions before the file exists: which requirement in that "
                     + "document does this implement, and is there a Spring Security or framework mechanism "
@@ -100,7 +109,8 @@ public final class NewFileRules {
         }
 
         if (REINVENTION.matcher(relativePath).matches()) {
-            return "You are creating " + relativePath + ", and that name is where reinvention lands.\n\n"
+            return "You are creating " + relativePath
+                    + ", whose name may indicate reusable functionality. This is an advisory signal, not proof.\n\n"
                     + "Before writing it, name the library that already does this - the JDK, Spring, Apache "
                     + "Commons, Guava, Tika - and say why it does not fit, or use it.\n\n"
                     + "The honest reasons to write your own are: nothing does it, the library is far larger "

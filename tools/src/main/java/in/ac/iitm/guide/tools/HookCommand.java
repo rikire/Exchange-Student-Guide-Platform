@@ -329,8 +329,20 @@ final class HookCommand {
                     TestFirstRule.questionFor(relative, exists, alreadyThere(testFileFor(event.filePath(), relative)));
         }
         if (question != null) {
-            HookEvent.emitDecision("PreToolUse", "ask", question);
+            if (requiresNewFileApproval(relative, exists)) {
+                HookEvent.emitDecision("PreToolUse", "ask", question);
+            } else {
+                HookEvent.emitContext(
+                        "PreToolUse",
+                        question
+                                + "\nThis is a heuristic reminder, not a permission request or proof of a violation. "
+                                + "Continue within the approved contract; escalate only an actual unapproved decision.");
+            }
         }
+    }
+
+    static boolean requiresNewFileApproval(String relative, boolean exists) {
+        return NewFileRules.requiresApproval(relative, exists);
     }
 
     /** The absolute path of the test a production file should have, or null when it is not one. */

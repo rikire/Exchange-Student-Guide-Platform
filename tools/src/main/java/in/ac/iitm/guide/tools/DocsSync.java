@@ -52,18 +52,13 @@ public final class DocsSync {
      * empty answer: a gate that reads nothing and says "fine" is worse than no gate.
      */
     public static List<Finding> check(Repo repo, String ref) throws IOException {
-        Set<String> changed = new LinkedHashSet<>();
-        Git.Result diff = Git.run(repo, "diff", "--name-only", ref, "--");
-        if (!diff.ok()) {
-            throw new IOException("git could not compare with " + ref + " (exit " + diff.exitCode() + ")");
+        try {
+            return findings(new LinkedHashSet<>(ReviewScope.changedPaths(repo.root(), ref)));
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+            throw new IOException("Cannot establish documentation review scope", e);
         }
-        changed.addAll(diff.lines());
-        Git.Result untracked = Git.run(repo, "ls-files", "--others", "--exclude-standard");
-        if (!untracked.ok()) {
-            throw new IOException("git could not list new files (exit " + untracked.exitCode() + ")");
-        }
-        changed.addAll(untracked.lines());
-        changed.removeIf(String::isBlank);
-        return findings(changed);
     }
 }

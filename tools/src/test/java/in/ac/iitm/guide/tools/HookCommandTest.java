@@ -44,4 +44,18 @@ class HookCommandTest {
         assertEquals(
                 "Subagent finished (the event did not say which).", HookCommand.subagentNote(HookEvent.parse("{}")));
     }
+
+    @Test
+    void filename_and_missing_test_signals_do_not_request_permission() {
+        assertFalse(HookCommand.requiresNewFileApproval(
+                "app/src/main/java/in/ac/iitm/guide/search/TextHelper.java", false));
+        assertFalse(HookCommand.requiresNewFileApproval(
+                "app/src/main/java/in/ac/iitm/guide/search/PermissionCheck.java", false));
+    }
+
+    @Test
+    void shared_schema_still_requests_permission() {
+        assertTrue(HookCommand.requiresNewFileApproval(
+                "app/src/main/java/in/ac/iitm/guide/shared/persistence/Article.java", false));
+    }
 }

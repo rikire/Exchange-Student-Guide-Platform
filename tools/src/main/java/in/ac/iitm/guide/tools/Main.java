@@ -28,12 +28,13 @@ import java.util.List;
  *   gaps                   write docs/gap-list.md: what is not done, open debt, criteria with no test
  *   ownership              write docs/team/ownership.md from git history, the hook's commits apart
  *   schema-freeze          fail when a migration added after the freeze names no ADR in its header
+ *   review-scope <base>    print the shared review inventory and state fingerprint as JSON
  *   weekly [--week W]      refresh the "From git" paragraphs of a week's log (default: this week)
  * </pre>
  *
  * <p>A failure inside a hook must not break the human's session: every error is reported on stderr
- * and the process still exits with 0. The one exception is {@code commit-msg}, where a non-zero
- * exit is the whole point.
+ * and {@code hook} still exits with 0. Every other command is a check or a report that scripts and
+ * CI rely on, so an error there exits with 1: a check that crashed has not passed.
  */
 public final class Main {
 
@@ -53,6 +54,12 @@ public final class Main {
             switch (args[0]) {
                 case "hook" -> HookCommand.run(Arrays.copyOfRange(args, 1, args.length));
                 case "commit-msg" -> commitMsg(Arrays.copyOfRange(args, 1, args.length));
+                case "review-scope" -> {
+                    if (args.length != 2) throw new IllegalArgumentException("usage: ai-tools review-scope <base>");
+                    System.out.println(new com.fasterxml.jackson.databind.ObjectMapper()
+                            .writeValueAsString(
+                                    ReviewScope.capture(Repo.find(null).root(), args[1])));
+                }
                 case "docs-check" -> docsCheck();
                 case "authors" -> authors();
                 case "count" -> count();
@@ -71,7 +78,7 @@ public final class Main {
             }
         } catch (Exception e) {
             System.err.println("ai-tools: " + e.getMessage());
-            System.exit(0);
+            System.exit(args[0].equals("hook") ? 0 : 1);
         }
     }
 

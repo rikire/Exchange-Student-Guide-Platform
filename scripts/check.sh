@@ -27,7 +27,7 @@ fi
 # The tooling is built before the application so that the documentation check below can run even
 # when the application does not compile: a broken build should not also blind the other checks.
 echo "==> process tooling"
-./mvnw -q -B -pl tools package
+./mvnw -q -B -pl tools verify
 
 # The audit on 4 September found eight divergences on a green build. Seven were a document
 # describing something the repository did not contain, which no test could ever have failed on.
@@ -40,7 +40,8 @@ echo "==> every committer resolves to a member"
 java -jar tools/target/ai-tools.jar authors
 
 echo "==> build, tests and formatting"
-./mvnw -B verify
+./mvnw -B -N verify
+./mvnw -B -pl app verify
 
 # The chain from requirement to code and test, and the two generated files that state it. A file
 # that is out of date fails here rather than being regenerated silently: the person who changed an
@@ -59,7 +60,18 @@ java -jar tools/target/ai-tools.jar schema-freeze
 
 echo "==> a changed schema, route or boundary is described"
 base=${DOCS_SYNC_BASE:-}
-[ -n "$base" ] || base=$(git merge-base HEAD '@{upstream}' 2>/dev/null || echo HEAD)
+# A new branch has no upstream until its first push, so the remote default branch is the next
+# candidate. Comparing with HEAD would compare nothing and pass, so running out of candidates fails.
+if [ -z "$base" ]; then
+    for candidate in '@{upstream}' origin/HEAD origin/main; do
+        base=$(git merge-base HEAD "$candidate" 2>/dev/null) && break
+    done
+    [ -n "$base" ] || {
+        echo "Cannot establish change base; set DOCS_SYNC_BASE to the recorded base commit." >&2
+        exit 1
+    }
+fi
+git rev-parse --verify "$base^{commit}" >/dev/null
 java -jar tools/target/ai-tools.jar trace --docs-sync "$base"
 
 echo
