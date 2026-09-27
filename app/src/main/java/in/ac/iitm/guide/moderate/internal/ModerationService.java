@@ -194,6 +194,7 @@ public class ModerationService {
      *
      * @param self the article being edited, which may keep its own address; {@code null} for a new one
      */
+    // TODO(DEBT-012): two approvals under one address at once pass this check, and the second is a 500.
     private String freeSlug(String title, UUID self) {
         // contribute refuses a title with no address, so a submission always has one.
         var slug = ArticleAddress.slugOf(title).orElseThrow();

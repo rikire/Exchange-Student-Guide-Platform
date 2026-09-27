@@ -86,6 +86,11 @@ the criteria do not reach it.
 - [ ] Ownership balance check — if it has drifted, the next tasks come from the lighter side
       — check: both members have authored commits in **every** week of this phase, with the hook's
       journal commits excluded — `sh scripts/contribution.sh` reports the two apart
+- [ ] The moderator's pages in the browser check — `BrowserLayoutTest` visits `/moderate/queue` and
+      `/moderate/submissions/{number}` without a session, so it measures the login page they redirect
+      to, not them (found 28 Sep, after FEAT-006 met the layout of FEAT-003)
+      — check: the test logs in first, and the queue and the review page pass NFR-008 and axe at the
+      four widths
 - [ ] Weekly-log paragraphs in each member's own words for W37, W38 and W39 — the W37 and W38 files
       were generated on 28 Sep with the git figures only, and W39 still lacks Abdirakhim's paragraph.
       Each is marked as written after the week it covers

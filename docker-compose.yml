@@ -38,6 +38,7 @@ services:
       # Empty keeps the moderator login closed rather than failing the start: the stand serves
       # readers without it.
       GUIDE_ADMIN_PASSWORD_HASH: ${GUIDE_ADMIN_PASSWORD_HASH:-}
+      # TODO(DEBT-014): SERVER_SERVLET_SESSION_COOKIE_SECURE: "true" once the stand is behind TLS.
     ports:
       - "8080:8080"
 

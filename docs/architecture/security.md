@@ -132,11 +132,13 @@ Decided in [ADR-0009](adr/ADR-0009-admin-authentication.md).
   (`.env.example` says how to make one). Never in `application.yml`, never in git. With no hash set,
   no password logs in. Built with FEAT-006: `shared/security`'s `ModeratorLoginController`, and
   `WebSecurity` sends every `/moderate/**` request without a moderator session to the login page.
-- The session id changes on a successful login, against session fixation.
+- The session id changes on a successful login, against session fixation. The CSRF token does not
+  yet ([DEBT-013](../tech-debt.md)).
 - Failed login attempts are logged at `WARN`, without the password typed. **Not yet rate limited**
   — that waits for NFR-005 ([DEBT-011](../tech-debt.md)).
 - Session cookie: `HttpOnly`, `SameSite=Lax`, and `Secure` whenever the deployment is behind TLS
-  (`SERVER_SERVLET_SESSION_COOKIE_SECURE=true`; the first two are set in `application.yml`).
+  (`SERVER_SERVLET_SESSION_COOKIE_SECURE=true`; the first two are set in `application.yml`). The
+  stand serves plain HTTP and does not set it yet ([DEBT-014](../tech-debt.md)).
 - Every destructive admin action — delete, bulk import — is logged with what was affected. This log
   is the only trace of who did what, because the identity model deliberately has nobody to name.
   Approving and rejecting a submission are logged at `INFO` with its number.

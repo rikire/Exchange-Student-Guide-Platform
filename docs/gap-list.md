@@ -22,13 +22,9 @@ real figure can only be higher.
 | FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 5 | 0 |
 | FR-012 | planned | could | Looking up a submission's status | 3 | 0 | 3 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
-| FR-014 | planned | must | Moderation queue | 2 | 5 | 0 |
-| FR-015 | planned | must | Reviewing a submission | 2 | 3 | 0 |
+| FR-015 | in-progress | must | Reviewing a submission | 2 | 3 | 0 |
 | FR-016 | planned | should | Downloading a media asset | 3 | 0 | 3 |
-| FR-017 | planned | must | Approving a submission | 3 | 8 | 0 |
-| FR-018 | planned | must | Rejecting a submission | 2 | 3 | 0 |
 | FR-019 | planned | could | Providing a rejection reason | 2 | 0 | 2 |
-| FR-020 | planned | should | Retaining article revisions | 1 | 3 | 0 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
@@ -53,6 +49,9 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
+| DEBT-014 | The stand's session cookie is not marked `Secure` | the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any |
+| DEBT-013 | The CSRF token is not replaced when the moderator logs in | the security review of phase 4 ([04-hardening.md](roadmap/04-hardening.md)). |
+| DEBT-012 | Two approvals under one address at the same moment answer `500`, not `409` | the edge cases of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), or the first |
 | DEBT-011 | Failed moderator logins are logged but not rate limited | NFR-005, phase 4 ([04-hardening.md](roadmap/04-hardening.md)) — and in any case before |
 | DEBT-010 | An article's old address answers `404` after an edit changes its title | the first renamed article anyone complains about, or the phase 4 edge cases, whichever |
 | DEBT-009 | An edit whose article stopped being published answers `404`, not `409` | FR-026 (removing a published article), phase 4. |

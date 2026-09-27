@@ -439,7 +439,7 @@ THEN it is rejected
 
 ### FR-014 — Moderation queue
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When a moderator opens the queue, the system shall list every submission awaiting a decision,
@@ -461,7 +461,7 @@ THEN the system shows that the queue is empty
 
 ### FR-015 — Reviewing a submission
 
-**Status:** planned
+**Status:** in-progress
 **Priority:** must
 
 When a moderator opens a submission from the queue, the system shall show its full text and any
@@ -511,7 +511,7 @@ THEN it is not returned
 
 ### FR-017 — Approving a submission
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When a moderator approves a new-article submission, adjusting its summary and tags if needed, the
@@ -540,7 +540,7 @@ THEN the approval is rejected
 
 ### FR-018 — Rejecting a submission
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When a moderator rejects a submission, the system shall mark it as rejected and remove it from the
@@ -583,7 +583,7 @@ THEN the rejection is stored without one
 
 ### FR-020 — Retaining article revisions
 
-**Status:** planned
+**Status:** done
 **Priority:** should
 
 When an edit submission is approved, the system shall retain the article's content prior to the

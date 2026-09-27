@@ -20,6 +20,68 @@ constraint hides it.
 
 ## Register
 
+### DEBT-014 — The stand's session cookie is not marked `Secure`
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `docker-compose.yml` — the `app` service's environment
+
+**Cause:** [ADR-0009](architecture/adr/ADR-0009-admin-authentication.md) marks the moderator's session
+cookie `Secure` behind TLS. The stand serves plain HTTP on port 8080, where a `Secure` cookie would
+never be sent back and nobody could stay logged in, so `SERVER_SERVLET_SESSION_COOKIE_SECURE` is not
+set (review of FEAT-006, 28 Sep).
+
+**Consequence:** once the stand is reachable over a network, the moderator's session cookie travels
+in clear text and can be copied off the wire; whoever has it is the moderator until it expires.
+
+**How to fix:** put the stand behind TLS (a reverse proxy in `docker-compose.yml`) and set
+`SERVER_SERVLET_SESSION_COOKIE_SECURE: "true"` on the `app` service in the same change.
+
+**Trigger:** the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any
+case before the stand is reachable from outside the machine it runs on.
+
+### DEBT-013 — The CSRF token is not replaced when the moderator logs in
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/java/in/ac/iitm/guide/shared/security/ModeratorLoginController.java`
+
+**Cause:** Spring Security's `formLogin` replaces the CSRF token on login through
+`CsrfAuthenticationStrategy`. The moderator login is its own controller (FEAT-006: `formLogin` needs
+a username and answers a wrong password with a redirect, not `401`), and it changes the session id
+but not the token (review of FEAT-006, 28 Sep).
+
+**Consequence:** someone who can plant a CSRF cookie in the moderator's browser before login — which
+takes control of a sibling domain — knows the token the moderator uses afterwards and can forge an
+approval. Low risk on a single-host deployment.
+
+**How to fix:** in `ModeratorLoginController.logIn`, call `CsrfAuthenticationStrategy` with the
+application's `CookieCsrfTokenRepository` after the session id changes, and a test that the token
+before login is refused after it.
+
+**Trigger:** the security review of phase 4 ([04-hardening.md](roadmap/04-hardening.md)).
+
+### DEBT-012 — Two approvals under one address at the same moment answer `500`, not `409`
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java` — `freeSlug`
+
+**Cause:** approval checks that the title's address is free, then writes the article. Two different
+submissions with one address approved at the same moment both pass the check, and the second fails
+on the unique `slug` at commit, which nothing turns into the contracted `409` (review of FEAT-006,
+28 Sep).
+
+**Consequence:** the second moderator sees an error page instead of "an article with this title
+already exists". No bad data: the second approval rolls back and its submission stays pending.
+
+**How to fix:** catch the unique-constraint violation on `article_slug_key` around the approval and
+answer it as `ApprovalConflictException`, with a test that inserts the article between the check and
+the write.
+
+**Trigger:** the edge cases of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), or the first
+time two moderators work the queue at once.
+
 ### DEBT-011 — Failed moderator logins are logged but not rate limited
 
 **Status:** open

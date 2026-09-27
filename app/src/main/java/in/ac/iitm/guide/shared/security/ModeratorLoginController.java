@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 // trace:FR-014
 // TODO(DEBT-011): failed attempts are logged, not rate limited, until NFR-005.
+// TODO(DEBT-013): the CSRF token is not replaced on login, as formLogin would do.
 @Controller
 class ModeratorLoginController {
 

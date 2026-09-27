@@ -1,7 +1,7 @@
 ---
 id: FEAT-006
 title: Moderating a submission
-status: in-progress
+status: done
 covers: [FR-014, FR-015, FR-017, FR-018, FR-020]
 slice: moderate
 routes: ["GET /moderate/login", "POST /moderate/login", "GET /moderate/queue", "GET /moderate/submissions/{number}", "POST /moderate/submissions/{number}/approve", "POST /moderate/submissions/{number}/reject"]
@@ -25,6 +25,7 @@ code:
 tests:
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginTest.java
+  - app/src/test/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepositoryTest.java
 ---
 
 # FEAT-006 — Moderating a submission
@@ -104,6 +105,19 @@ the stored security context are Spring Security's own classes.
 
 Checked 28 Sep: all 16 tests red before the implementation, green after; removing the "already
 decided" guard turns three of them red, the invariant test among them.
+
+**After the review of 28 Sep** (the `dod-reviewer` pass, confirmed by the human): the article an edit
+is approved against is locked for the approval, so two approved edits of one article at once each
+keep the other's text as their revision instead of both keeping the same old one
+(`ModerateArticleRepositoryTest`). Three lesser risks are debt: simultaneous approvals under one
+address answer `500` ([DEBT-012](../tech-debt.md)), the CSRF token is not replaced on login
+([DEBT-013](../tech-debt.md)), and the stand's session cookie is not `Secure` until TLS
+([DEBT-014](../tech-debt.md)).
+
+**Accepted by the human on 28 Sep** after using it in a browser (H2, `seed` profile): submitting two
+articles and an edit, a wrong and a right password, approving one article, rejecting the other and
+approving the edit. On that acceptance FR-014, FR-017, FR-018 and FR-020 are `done`; FR-015 stays
+`in-progress` until the review page shows media (`media` step).
 
 ## Deliberately out of scope
 
