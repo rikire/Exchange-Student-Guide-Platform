@@ -12,7 +12,8 @@ One rule: **a change in behaviour and a change in its description happen in the 
 |---|---|---|
 | `app/src/main/resources/db/migration/**` | `docs/architecture/data-model.md` or the ERD source | blocks |
 | `shared/persistence/**` | `docs/architecture/data-model.md` or the ERD source | blocks |
-| A controller or `templates/**` | `docs/architecture/routes.yml`, the route contract (or `ui-routes.md`, whose tables it writes) | blocks |
+| A controller | `docs/architecture/routes.yml`, the route contract (or `ui-routes.md`, whose tables it writes) | blocks |
+| A page template, `templates/**` outside `templates/shared/` | The route contract as above, or the feature file — a class or a layout detail changes no route (decided 27 Sep) | blocks |
 | A published type in a slice package | `docs/architecture/overview.md`, an ADR, or the feature file | blocks |
 | A slice's internals | The feature file — the `code`, `tests` and `status` fields | warns |
 | `pom.xml` | An ADR or `docs/architecture/overview.md` | warns |
