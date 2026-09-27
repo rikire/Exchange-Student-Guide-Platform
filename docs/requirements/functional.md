@@ -197,7 +197,7 @@ THEN that link does not appear in A's backlink list
 
 ### FR-007 — Full-text search across articles
 
-**Status:** in-progress
+**Status:** done
 **Priority:** must
 
 When a reader searches a query, the system shall return the published articles whose title, body,

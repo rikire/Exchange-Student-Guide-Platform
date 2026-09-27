@@ -1,7 +1,7 @@
 ---
 id: FEAT-007
 title: Searching the guide
-status: in-progress
+status: done
 covers: [FR-007]
 slice: search
 routes: ["GET /search"]
@@ -106,6 +106,12 @@ Evidence, 28 Sep: the first thirteen tests of `SearchFlowTest` were red first (`
 then green; the tests added after review were red first where they asked for new behaviour. Four negative tests were shown to catch their fault: with `Submission` indexed and searched
 too, the pending and the rejected test went red; without the `removedAt` filter, the removed-article
 test did; without `tags.name` among the fields, the tag test did.
+
+**Accepted by the human on 28 Sep** after using it in a browser (H2, `seed` profile): searching,
+following the results to articles and on through their links. The empty-query prompt in the
+browser's own language (`required` on the input) is kept as it is, by the human's decision. Tags on
+a result are not links yet: browsing by tag is FR-008, the `taxonomy` step. On that acceptance FR-007
+is `done`.
 
 ## Deliberately out of scope
 
