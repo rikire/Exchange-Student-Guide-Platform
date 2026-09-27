@@ -143,7 +143,7 @@ Where the steps above and this queue compete for the same days, the human orders
     mail server may send from its name (item 7)
     — check: the answers recorded in `docs/stakeholder/` and turned into requirements or constraints
 
-11. [ ] **A route specification that code and tests can read** — raised by the human on 27 Sep.
+11. [x] **A route specification that code and tests can read** — raised by the human on 27 Sep.
     `ui-routes.md` is the route contract, and CON-008 rules out OpenAPI because every response is
     HTML, but it is a Markdown table: nothing checks that it matches the controllers, and a test that
     needs the list of routes would have to parse prose. Options to weigh: a test that compares the
@@ -151,6 +151,11 @@ Where the steps above and this queue compete for the same days, the human orders
     which the table is generated
     — check: the option chosen by the human, and a route added to code without the contract (or the
     other way round) fails the build
+    **Done 27 Sep:** the human chose the machine-readable file. `docs/architecture/routes.yml` holds
+    every route and deferred feature; `ai-tools routes` writes the two tables of `ui-routes.md` from
+    it, byte for byte the tables it replaced, and `routes --check` in `check.sh` fails when they are
+    stale; `RouteContractTest` compares the `built` routes with Spring's mappings in both directions,
+    shown red each way.
 
 ## Readiness criterion
 

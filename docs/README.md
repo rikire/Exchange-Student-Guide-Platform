@@ -28,7 +28,8 @@ Map of the project documentation. How the repository is laid out:
 |---|---|
 | [architecture/overview.md](architecture/overview.md) | C4 levels 1–3 and the slice map |
 | [architecture/data-model.md](architecture/data-model.md) | Tables, relations, indexes and why |
-| [architecture/ui-routes.md](architecture/ui-routes.md) | The route contract — the source of truth |
+| [architecture/routes.yml](architecture/routes.yml) | The route contract — the source of truth |
+| [architecture/ui-routes.md](architecture/ui-routes.md) | The route contract to read: its conventions, and tables written from `routes.yml` |
 | [architecture/adr/](architecture/adr/) | Architectural decisions and their reasoning |
 
 ## Work and state

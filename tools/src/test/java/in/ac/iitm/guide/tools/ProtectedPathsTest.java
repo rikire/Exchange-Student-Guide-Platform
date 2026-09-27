@@ -25,6 +25,14 @@ class ProtectedPathsTest {
     }
 
     @Test
+    void the_route_contract_is_protected_in_the_file_it_is_written_in() {
+        // Since 27 Sep the contract is edited in routes.yml and ui-routes.md's tables are generated
+        // from it; protecting only the Markdown let the contract change without anyone being asked.
+        assertNotNull(ProtectedPaths.reasonFor("docs/architecture/routes.yml"));
+        assertNotNull(ProtectedPaths.reasonFor("docs/architecture/ui-routes.md"));
+    }
+
+    @Test
     void the_journal_is_written_by_the_hooks_and_must_not_ask() {
         assertNull(ProtectedPaths.reasonFor("docs/ai/journal/2026-09-02-abcd1234.md"));
     }

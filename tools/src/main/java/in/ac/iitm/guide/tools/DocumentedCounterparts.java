@@ -22,6 +22,9 @@ public final class DocumentedCounterparts {
 
     private static final String DATA_MODEL = "docs/architecture/data-model.md";
     private static final String ROUTES = "docs/architecture/ui-routes.md";
+    /** The source of ROUTES' tables since 27 Sep; building a route changes only its status here. */
+    private static final String ROUTE_CONTRACT = "docs/architecture/routes.yml";
+
     private static final String OVERVIEW = "docs/architecture/overview.md";
 
     private static final String ERD = "docs/diagrams/src/erd.puml";
@@ -29,7 +32,8 @@ public final class DocumentedCounterparts {
     private static final String FEATURES = "docs/features/FEAT-";
 
     private static final Predicate<String> SCHEMA_DOCS = path -> path.equals(DATA_MODEL) || path.equals(ERD);
-    private static final Predicate<String> ROUTE_DOCS = path -> path.equals(ROUTES);
+    private static final Predicate<String> ROUTE_DOCS = path -> path.equals(ROUTES) || path.equals(ROUTE_CONTRACT);
+    private static final String ROUTE_UPDATE = ROUTE_CONTRACT + " (then `ai-tools routes` rewrites " + ROUTES + ")";
     private static final Predicate<String> FEATURE_DOCS = path -> path.startsWith(FEATURES) && path.endsWith(".md");
     private static final Predicate<String> DECISION_DOCS =
             path -> path.equals(OVERVIEW) || (path.startsWith(ADRS) && path.endsWith(".md"));
@@ -53,7 +57,7 @@ public final class DocumentedCounterparts {
             return new Rule("migration", DATA_MODEL + " (or the ERD source)", true, SCHEMA_DOCS);
         }
         if (relativePath.startsWith(TEMPLATES)) {
-            return new Rule("routes", ROUTES, true, ROUTE_DOCS);
+            return new Rule("routes", ROUTE_UPDATE, true, ROUTE_DOCS);
         }
         if (relativePath.equals("pom.xml")
                 || relativePath.equals("app/pom.xml")
@@ -74,7 +78,7 @@ public final class DocumentedCounterparts {
             return null;
         }
         if (relativePath.endsWith("Controller.java")) {
-            return new Rule("routes", ROUTES, true, ROUTE_DOCS);
+            return new Rule("routes", ROUTE_UPDATE, true, ROUTE_DOCS);
         }
         // Directly in the slice package is what other slices are allowed to depend on, so it is the
         // boundary; anything nested is that slice's own business.

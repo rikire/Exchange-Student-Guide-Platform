@@ -26,6 +26,8 @@ import java.util.List;
  *   trace --docs-sync &lt;ref&gt;  fail when a change since ref touches the schema, the routes or a slice
  *                          boundary and the document describing it did not change
  *   gaps                   write docs/gap-list.md: what is not done, open debt, criteria with no test
+ *   routes                 write the route tables of docs/architecture/ui-routes.md from routes.yml
+ *   routes --check         fail when those tables differ from routes.yml
  *   ownership              write docs/team/ownership.md from git history, the hook's commits apart
  *   schema-freeze          fail when a migration added after the freeze names no ADR in its header
  *   review-scope <base>    print the shared review inventory and state fingerprint as JSON
@@ -68,6 +70,7 @@ public final class Main {
                     Gaps.write(Repo.find(null));
                     System.out.println("wrote docs/gap-list.md");
                 }
+                case "routes" -> routes(Arrays.copyOfRange(args, 1, args.length));
                 case "ownership" -> {
                     Ownership.write(Repo.find(null));
                     System.out.println("wrote docs/team/ownership.md");
@@ -110,6 +113,23 @@ public final class Main {
         System.out.println("non-functional requirements: " + counts.nonFunctional());
         System.out.println("constraints:                 " + counts.constraints());
         System.out.println("use cases:                   " + counts.useCases());
+    }
+
+    private static void routes(String[] args) throws Exception {
+        Repo repo = Repo.find(null);
+        if (args.length == 1 && args[0].equals("--check")) {
+            List<String> problems = Routes.check(repo);
+            if (problems.isEmpty()) {
+                return;
+            }
+            problems.forEach(problem -> System.err.println("ai-tools: " + problem));
+            System.exit(1);
+        }
+        if (args.length != 0) {
+            throw new IllegalArgumentException("usage: ai-tools routes [--check]");
+        }
+        Routes.write(repo);
+        System.out.println("wrote the route tables of " + Routes.DOC);
     }
 
     private static void trace(String[] args) throws Exception {

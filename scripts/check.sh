@@ -49,6 +49,11 @@ echo "==> build, tests and formatting"
 echo "==> traceability: no gap in the chain, generated files current"
 java -jar tools/target/ai-tools.jar trace --check
 
+# The route tables in ui-routes.md are written from routes.yml, the route contract; the app's
+# RouteContractTest holds that file to the controllers.
+echo "==> route tables current with routes.yml"
+java -jar tools/target/ai-tools.jar routes --check
+
 # A change to the schema, the routes or a slice boundary must come with the document that describes
 # it (docs/ai/docs-sync.md). CI passes the commit its run started from in DOCS_SYNC_BASE; locally the
 # base is what the remote already has, so that a change committed and about to be pushed is still

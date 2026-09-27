@@ -42,10 +42,12 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `docs/team/ownership.md` | `ai-tools ownership` | `java -jar tools/target/ai-tools.jar ownership` |
 | `docs/gap-list.md` | `ai-tools gaps` |
 | the `From git` paragraphs of `docs/team/weekly-log/*.md` | `ai-tools weekly [--week 2026-W39]` | the same command; the members' own words in the same files are never touched | `java -jar tools/target/ai-tools.jar gaps` |
+| the two route tables in `docs/architecture/ui-routes.md` | `ai-tools routes`, from `docs/architecture/routes.yml` | `java -jar tools/target/ai-tools.jar routes`; `routes --check` fails when they are stale |
 | `docs/diagrams/out/**` | PlantUML | `scripts/diagrams.sh`. Committed, unlike the other rows here — the architecture documents embed these as images (see `docs/diagrams/src/README.md`) |
 
 The generated files say in their opening lines what writes them, and a hand edit is lost on the next
-run. Of the five, `ai-tools trace --check` also compares the two files `trace` writes with what it would
+run. `ai-tools routes --check` compares the route tables with `routes.yml` the same way. Of the rest,
+`ai-tools trace --check` also compares the two files `trace` writes with what it would
 write now and fails on a difference, so a matrix that no longer matches the anchors is refused by the
 `Stop` hook and by CI (`scripts/check.sh`). `ownership`, `gaps` and `weekly` read git history or the
 whole repository at the moment they run and are not compared: they are refreshed when someone needs the

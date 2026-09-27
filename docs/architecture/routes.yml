@@ -1,0 +1,285 @@
+# The route contract: one entry per route, the source of the tables in ui-routes.md.
+# `ai-tools routes` writes those tables; RouteContractTest compares the `built` routes with the
+# controllers in both directions. Text fields are Markdown, folded here and joined back to one
+# line by YAML. Decided by the human on 27 Sep (docs/roadmap/03-main-flow.md, queue item 11).
+
+routes:
+  - methods: [GET]
+    path: /articles/{title}
+    slice: articleview
+    status: built
+    template: >-
+      `articleview/Article.html`
+    fields: >-
+      — (read only)
+    responses: >-
+      `200` published; `404` unapproved / rejected / removed / no match
+    serves: >-
+      FR-001 (UC-003). Also where FR-002 and FR-004 are visible — the body is rendered with wiki
+      links resolved and red links styled inline; neither has a route of its own
+
+  - methods: [GET]
+    path: /
+    slice: home
+    status: built
+    template: >-
+      `home/Landing.html`
+    fields: >-
+      —
+    responses: >-
+      `200` always
+    serves: >-
+      FR-009 (UC-007)
+
+  - methods: [GET]
+    path: /search
+    query: "q={query}"
+    slice: search
+    status: planned
+    template: >-
+      `search/SearchResults.html`
+    fields: >-
+      `q` (text, required)
+    responses: >-
+      `200` always, including zero matches; `400` if `q` is missing or blank — an empty query is the
+      landing page's job, and redirecting there silently would hide a broken link from whoever built
+      it
+    serves: >-
+      FR-007 (UC-001)
+
+  - methods: [GET]
+    path: /media/{id}
+    slice: media
+    status: planned
+    template: >-
+      — (bytes, not a template)
+    fields: >-
+      —
+    responses: >-
+      `200` for an asset on a published article; `200` for an asset on a pending or rejected
+      submission **only** with a moderator session; `404` otherwise. `nosniff` always, `Range`
+      supported for video — see [security.md](security.md)
+    serves: >-
+      FR-001 (an Article is "…and zero or more attached media assets"), FR-015 ("full text **and any
+      media assets**"). FR-016's download response is phase 4 — see the deferred table
+
+  - methods: [GET]
+    path: /submit
+    slice: contribute
+    status: built
+    template: >-
+      `contribute/SubmissionForm.html`
+    fields: >-
+      — (empty form; fields below belong to the POST)
+    responses: >-
+      `200` always
+    serves: >-
+      FR-010 (UC-010) — entry point
+
+  - methods: [POST]
+    path: /submissions
+    slice: contribute
+    status: built
+    template: >-
+      re-renders `contribute/SubmissionForm.html` on `422`
+    fields: >-
+      CSRF token (hidden, required); `title` (text, required, unique among published titles
+      case-insensitively); `summary` (text, required); `body` (markdown textarea, required — may
+      contain `[[Title]]`, stored unchanged per FR-003); `attachment` (file, optional — one
+      photo/document/video, NFR-001's size limits and CON-006's type list; **not built**, arrives
+      with the `media` step, [DEBT-008](../tech-debt.md)); `tags` (repeatable text, optional; the
+      form shows at least five fields and ignores the empty ones)
+    responses: >-
+      `302` to the confirmation route on success; `422` on a title collision (with the offered
+      link/rename choice) or a rejected attachment
+    serves: >-
+      FR-010 (UC-010), FR-003 (UC-012)
+
+  - methods: [GET]
+    path: /articles/{title}/edit
+    slice: contribute
+    status: built
+    template: >-
+      `contribute/SubmissionForm.html`, pre-filled from the article
+    fields: >-
+      — (pre-filled form; fields below belong to the POST)
+    responses: >-
+      `200` published; `404` not published (same rule as the read route)
+    serves: >-
+      FR-011 (UC-011) — entry point
+
+  - methods: [POST]
+    path: /articles/{title}/edits
+    slice: contribute
+    status: built
+    template: >-
+      re-renders `contribute/SubmissionForm.html` on `422`
+    fields: >-
+      Same fields as `POST /submissions`, CSRF token included; FR-011 allows any subset to change.
+      The target article comes from `{title}`, not a form field
+    responses: >-
+      `302` to the confirmation route on success; `404` if `{title}` matches no published article —
+      FR-011's "no longer published" is unconditional, so a POST aimed straight at an unknown or
+      never-published title is refused the same way the GET is; `422` on a title collision with a
+      *different* article, or a rejected attachment; `409` if the target was published at the GET
+      and is not at this POST — **not built**: nothing can unpublish an article before FR-026 (phase
+      4), so this answers `404` for now, [DEBT-009](../tech-debt.md)
+    serves: >-
+      FR-011 (UC-011), FR-003 (UC-012)
+
+  - methods: [GET]
+    path: /submissions/{number}/confirmation
+    slice: contribute
+    status: built
+    template: >-
+      `contribute/SubmissionConfirmation.html`
+    fields: >-
+      —
+    responses: >-
+      `200` if `{number}` exists; `404` otherwise
+    serves: >-
+      FR-010 / FR-011's "shown a submission number"
+
+  - methods: [GET]
+    path: /moderate/queue
+    slice: moderate
+    status: planned
+    template: >-
+      `moderate/ModerationQueue.html`
+    fields: >-
+      —
+    responses: >-
+      `200` always, including the empty-queue state; `302` to `/moderate/login` unauthenticated
+    serves: >-
+      FR-014 (UC-014)
+
+  - methods: [GET]
+    path: /moderate/submissions/{number}
+    slice: moderate
+    status: planned
+    template: >-
+      `moderate/SubmissionReview.html` (also hosts the two POST forms below)
+    fields: >-
+      — (the editable fields below are part of this page but submit to the two POST routes)
+    responses: >-
+      `200` pending, or `200` showing "no longer pending" if already decided (FR-015 shows the
+      state, it does not hide the submission); `404` if `{number}` was never issued; `302`
+      unauthenticated
+    serves: >-
+      FR-015 (UC-015)
+
+  - methods: [POST]
+    path: /moderate/submissions/{number}/approve
+    slice: moderate
+    status: planned
+    template: >-
+      `moderate/SubmissionReview.html` on error
+    fields: >-
+      CSRF token (hidden, required); `summary` (text, editable, pre-filled from the submission);
+      `tags` (repeatable text, editable, pre-filled from the submission's suggested tags)
+    responses: >-
+      `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated
+    serves: >-
+      FR-017 (UC-016)
+
+  - methods: [POST]
+    path: /moderate/submissions/{number}/reject
+    slice: moderate
+    status: planned
+    template: >-
+      `moderate/SubmissionReview.html` on error
+    fields: >-
+      CSRF token (hidden, required); `reason` (text, optional — FR-019, `could`; the field is
+      already on the shared review screen, so it is recorded here rather than left off, even though
+      rejecting itself does not require it)
+    responses: >-
+      `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated
+    serves: >-
+      FR-018 (UC-017)
+
+  - methods: [GET, POST]
+    path: /moderate/login
+    slice: shared/security
+    status: planned
+    template: >-
+      `shared/security/AdminLogin.html`
+    fields: >-
+      CSRF token (hidden, required); `password` (text, required)
+    responses: >-
+      `200` form; `302` to `/moderate/queue` on success; `401` re-rendering the form on a wrong
+      password. **Not gated** — the one carve-out in the rule above
+    serves: >-
+      Not itself an `FR` — the session gate [ADR-0009](adr/ADR-0009-admin-authentication.md)
+      decided, without which every `/moderate/**` row above is unreachable
+
+# Features whose routes are not designed yet: kept here so the whole contract is in one place.
+deferred:
+  - feature: >-
+      Browse/filter articles by tag
+    priority: should
+    requirements: >-
+      FR-008
+  - feature: >-
+      Download a media attachment
+    priority: should
+    requirements: >-
+      FR-016 — the bytes *are* routed above, because FR-001 and FR-015 need them. What is deferred
+      is the reader-facing download: the `Content-Disposition: attachment` response and the button
+      on the article screen
+  - feature: >-
+      Backlinks on an article
+    priority: could
+    requirements: >-
+      FR-006
+  - feature: >-
+      Creating an article from a red link
+    priority: could
+    requirements: >-
+      FR-005
+  - feature: >-
+      Report an article
+    priority: could
+    requirements: >-
+      FR-021
+  - feature: >-
+      Look up a submission's status by its number
+    priority: could
+    requirements: >-
+      FR-012 — needs no gate when it arrives, per
+      [ADR-0011](adr/ADR-0011-submission-number-format.md)
+  - feature: >-
+      Abuse handling (rate limiting + CAPTCHA)
+    priority: should
+    requirements: >-
+      FR-013
+  - feature: >-
+      Providing a rejection reason
+    priority: could
+    requirements: >-
+      FR-019 — the field is already routed above, since it lives on a `must`-scope screen; the
+      requirement behind it is still deferred
+  - feature: >-
+      Version-history groundwork
+    priority: should
+    requirements: >-
+      FR-020 — no UI route; storage only
+  - feature: >-
+      Closing a report
+    priority: could
+    requirements: >-
+      FR-022
+  - feature: >-
+      Write/publish directly, bypassing the queue (×2)
+    priority: could
+    requirements: >-
+      FR-023, FR-024
+  - feature: >-
+      Edit the homepage, including pinned
+    priority: could
+    requirements: >-
+      FR-025
+  - feature: >-
+      Remove a published article
+    priority: should
+    requirements: >-
+      FR-026

@@ -76,6 +76,14 @@ class DocsSyncTest {
     }
 
     @Test
+    void a_route_built_with_its_entry_in_the_contract_file_needs_nothing_more() {
+        // Building a route changes its status in routes.yml, which ui-routes.md's tables do not
+        // show, so the generated document may not change at all; the contract file is the update.
+        assertEquals(List.of(), findings(CONTROLLER, "docs/architecture/routes.yml"));
+        assertEquals(List.of(), findings(TEMPLATE, "docs/architecture/routes.yml"));
+    }
+
+    @Test
     void a_controller_and_a_template_are_one_finding_listing_both_files() {
         List<DocsSync.Finding> found = blocking(CONTROLLER, TEMPLATE);
 

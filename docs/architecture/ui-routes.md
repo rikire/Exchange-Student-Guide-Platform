@@ -88,6 +88,10 @@ code.
 
 ## Routes
 
+**Written from [routes.yml](routes.yml) by `ai-tools routes` since 27 Sep** — edit that file, not
+the table; `RouteContractTest` fails when it and the controllers disagree, in either direction.
+
+<!-- routes:table - written by `ai-tools routes` from routes.yml; edit that file -->
 | Route | Slice | Template | Form fields | Response codes | Serves |
 |---|---|---|---|---|---|
 | `GET /articles/{title}` | `articleview` | `articleview/Article.html` | — (read only) | `200` published; `404` unapproved / rejected / removed / no match | FR-001 (UC-003). Also where FR-002 and FR-004 are visible — the body is rendered with wiki links resolved and red links styled inline; neither has a route of its own |
@@ -104,6 +108,7 @@ code.
 | `POST /moderate/submissions/{number}/approve` | `moderate` | `moderate/SubmissionReview.html` on error | CSRF token (hidden, required); `summary` (text, editable, pre-filled from the submission); `tags` (repeatable text, editable, pre-filled from the submission's suggested tags) | `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated | FR-017 (UC-016) |
 | `POST /moderate/submissions/{number}/reject` | `moderate` | `moderate/SubmissionReview.html` on error | CSRF token (hidden, required); `reason` (text, optional — FR-019, `could`; the field is already on the shared review screen, so it is recorded here rather than left off, even though rejecting itself does not require it) | `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated | FR-018 (UC-017) |
 | `GET /moderate/login`, `POST /moderate/login` | `shared/security` | `shared/security/AdminLogin.html` | CSRF token (hidden, required); `password` (text, required) | `200` form; `302` to `/moderate/queue` on success; `401` re-rendering the form on a wrong password. **Not gated** — the one carve-out in the rule above | Not itself an `FR` — the session gate [ADR-0009](adr/ADR-0009-admin-authentication.md) decided, without which every `/moderate/**` row above is unreachable |
+<!-- /routes:table -->
 
 ### Why the confirmation route needs no gate
 
@@ -180,6 +185,9 @@ found-and-closed note is not a substitute for re-reading the whole table afterwa
 
 ## Deferred — `should`/`could` features, not routed in this pass
 
+Also written from [routes.yml](routes.yml), its `deferred` list.
+
+<!-- routes:deferred - written by `ai-tools routes` from routes.yml; edit that file -->
 | Feature | Priority | FR |
 |---|---|---|
 | Browse/filter articles by tag | should | FR-008 |
@@ -195,5 +203,7 @@ found-and-closed note is not a substitute for re-reading the whole table afterwa
 | Write/publish directly, bypassing the queue (×2) | could | FR-023, FR-024 |
 | Edit the homepage, including pinned | could | FR-025 |
 | Remove a published article | should | FR-026 |
+<!-- /routes:deferred -->
 
-Added to `ui-routes.md` when phase 4 picks each one up, per the roadmap's revised milestone plan.
+Moved into `routes` in [routes.yml](routes.yml) when phase 4 picks each one up, per the roadmap's
+revised milestone plan.

@@ -23,7 +23,8 @@ public final class Commands {
             "ownership",
             "weekly",
             "schema-freeze",
-            "review-scope");
+            "review-scope",
+            "routes");
 
     public static final Set<String> HOOK =
             Set.of("prompt", "guard", "bash", "stop", "note", "english", "author", "compact", "docs-sync", "subagent");

@@ -32,6 +32,7 @@ public final class ProtectedPaths {
         RULES.put("docs/architecture/adr/", "an ADR records a decision that is expensive to reverse");
         RULES.put("docs/architecture/data-model.md", "the database schema is a human decision");
         RULES.put("docs/architecture/ui-routes.md", "the route contract is a human decision");
+        RULES.put("docs/architecture/routes.yml", "the route contract is a human decision");
         RULES.put("app/src/main/resources/db/migration/", "a migration changes the schema of a running system");
         RULES.put("docs/stakeholder/", "this records what the stakeholder actually said");
         RULES.put("docs/course/", "these documents are submitted for grading");
