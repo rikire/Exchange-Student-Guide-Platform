@@ -74,7 +74,11 @@ class BrowserLayoutTest {
             article.setSlug(ArticleAddress.slugOf(article.getTitle()).orElseThrow());
             article.setSummary("Register within 14 days of arriving in India.");
             article.setBody("## Before you go\n\nBring your passport, visa and [[Hostel Life]] papers.\n\n"
-                    + "- Photographs\n- Proof of address\n\nछात्रावास में पंजीकरण। விடுதி பதிவு.");
+                    + "- Photographs\n- Proof of address\n\nछात्रावास में पंजीकरण। விடுதி பதிவு.\n\n"
+                    + "| Semester | Start date | End date | Where to register before the semester begins |\n"
+                    + "|---|---|---|---|\n"
+                    + "| Semester 1 | 15.01.2026 | 31.05.2026 | The Office of Global Engagement, first floor |\n"
+                    + "| Semester 2 | 27.07.2026 | 30.11.2026 | The Office of Global Engagement, first floor |");
             article.setPublishedAt(now);
             article.setUpdatedAt(now);
             var tag = new Tag();

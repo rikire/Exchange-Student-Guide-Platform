@@ -65,7 +65,8 @@ chosen over raw HTML precisely so that there is no HTML allowlist to hand-mainta
 - **Raw HTML passthrough is disabled in the Markdown converter.** This is the rule that makes
   ADR-0001 true rather than aspirational — a converter left in its permissive default would let a
   `<script>` block through untouched and reintroduce the surface the ADR was written to avoid.
-  The converter is commonmark-java 0.30.0, configured once in `wikilink/WikiLinkRenderer` with
+  The converter is commonmark-java 0.30.0 with its tables extension, configured once in
+  `wikilink/WikiLinkRenderer` with
   `escapeHtml(true)` and `sanitizeUrls(true)`: the first shows raw HTML as text, the second empties
   a `javascript:` link. The library states that it does not restrict tags itself, so both settings
   carry the whole guarantee, and `WikiLinkRendererTest` fails when either is switched off (checked by

@@ -150,6 +150,47 @@ class WikiLinkRendererTest {
     }
 
     @Test
+    // trace:FR-001
+    void a_table_written_in_markdown_renders_as_a_table() {
+        // Three seed articles hold tables (the academic calendar among them), shown as raw pipes
+        // until the tables extension was added on 28 Sep.
+        var html = renderer.render("| Semester | Start date |\n|---|---|\n| Semester 1 | 15.01.2026 |", NOTHING_EXISTS);
+
+        assertThat(html)
+                .contains("<table")
+                .contains("<th>Semester</th>")
+                .contains("<td>15.01.2026</td>")
+                .doesNotContain("|---|");
+    }
+
+    @Test
+    // trace:FR-001
+    void a_table_can_be_scrolled_from_the_keyboard() {
+        // A wide table scrolls inside itself on a phone (site.css); axe's scrollable-region-focusable
+        // asks that the keyboard can reach it too (NFR-007).
+        var html = renderer.render("| A |\n|---|\n| b |", NOTHING_EXISTS);
+
+        assertThat(html).contains("<table tabindex=\"0\">");
+    }
+
+    @Test
+    // trace:FR-001
+    void raw_html_in_a_table_cell_is_escaped() {
+        var html = renderer.render("| A |\n|---|\n| <script>alert(1)</script> |", NOTHING_EXISTS);
+
+        assertThat(html).contains("&lt;script&gt;").doesNotContain("<script>");
+    }
+
+    @Test
+    // trace:FR-002
+    void a_wiki_link_in_a_table_cell_renders() {
+        var html = renderer.render(
+                "| See |\n|---|\n| [[Hostel Life]] |", titles -> Map.of("Hostel Life", "/articles/hostel-life"));
+
+        assertThat(html).contains("<td><a href=\"/articles/hostel-life\" class=\"wikilink\">Hostel Life</a></td>");
+    }
+
+    @Test
     // trace:FR-002
     void a_page_without_links_never_asks_the_resolver() {
         var calls = new ArrayList<Set<String>>();

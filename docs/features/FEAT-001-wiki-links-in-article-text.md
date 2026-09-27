@@ -67,6 +67,11 @@ Decided by the human on 28 Sep, when the corner cases were derived by the method
 - **`[[[Title]]]`** is the link with a bracket on each side; **`[[A|[[Title]]]]`** links only the
   inner title; **`[[Title|b|c]]`** shows `b|c`, the words being everything after the first bar;
   **`[[Title]]s`** is the link followed by the letter.
+- **Tables as GitHub writes them render as tables** (28 Sep), through commonmark-java's own
+  tables extension; three seed articles, the academic calendar among them, showed raw pipes before.
+  Raw HTML in a cell is escaped like anywhere else, a wiki link in a cell renders, and a table
+  carries `tabindex="0"`: on a phone a wide one scrolls sideways inside itself (site.css, NFR-008),
+  and axe asks that the keyboard can reach a region that scrolls (NFR-007).
 - **Two links with nothing between them** both render, and the address does not depend on the
   machine's locale (`[[ISTANBUL]]` under a Turkish default still names "Istanbul").
 - **A red link is a `<span class="wikilink wikilink-missing">`, not an anchor.** FR-005 (clicking a

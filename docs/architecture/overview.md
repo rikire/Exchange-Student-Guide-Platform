@@ -68,6 +68,9 @@ Docker is not running; the default build stays on H2 and needs no Docker (DEBT-0
 dependencies of its own and is used only inside `wikilink/WikiLinkRenderer`, which is plain Java, so
 the choice does not touch the slice rules. Chosen over flexmark-java, whose last release is May 2023;
 the security settings it must run with are in [security.md](security.md), "Article content".
+Since 28 September with its tables extension, `commonmark-ext-gfm-tables` (same project, version and
+BSD-2-Clause licence), added by the human's decision: CommonMark has no tables, and three seed
+articles hold them.
 
 **Spring Security: `spring-boot-starter-security`**, added 27 September with FEAT-005 (version from
 the Spring Boot BOM, 3.5.16), for the CSRF token that [security.md](security.md) requires on every

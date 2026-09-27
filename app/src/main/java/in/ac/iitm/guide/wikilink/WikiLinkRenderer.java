@@ -8,6 +8,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.commonmark.Extension;
+import org.commonmark.ext.gfm.tables.TableBlock;
+import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.CustomNode;
 import org.commonmark.node.Image;
@@ -38,15 +41,20 @@ public class WikiLinkRenderer {
 
     private static final Pattern WIKI_LINK = Pattern.compile("\\[\\[([^\\[\\]]*)]]");
 
-    private final Parser parser = Parser.builder().build();
+    // Tables as GitHub writes them (the human, 28 Sep): CommonMark has none, and seed articles use them.
+    private static final List<Extension> EXTENSIONS = List.of(TablesExtension.create());
+
+    private final Parser parser = Parser.builder().extensions(EXTENSIONS).build();
 
     // escapeHtml and sanitizeUrls are what make ADR-0001's "no HTML allowlist" true: the converter
     // does not pass raw HTML through, so there is nothing to filter afterwards. Changing either is
     // the human's decision (docs/ai/collaboration.md).
     private final HtmlRenderer htmlRenderer = HtmlRenderer.builder()
+            .extensions(EXTENSIONS)
             .escapeHtml(true)
             .sanitizeUrls(true)
             .attributeProviderFactory(context -> WikiLinkRenderer::markExternalLink)
+            .attributeProviderFactory(context -> WikiLinkRenderer::makeTableFocusable)
             .nodeRendererFactory(WikiLinkHtml::new)
             .build();
 
@@ -81,6 +89,17 @@ public class WikiLinkRenderer {
     private static void markExternalLink(Node node, String tagName, Map<String, String> attributes) {
         if (node instanceof Link link && isExternal(link.getDestination())) {
             attributes.put("rel", "nofollow noopener noreferrer");
+        }
+    }
+
+    /**
+     * A wide table scrolls sideways inside itself on a phone (site.css, NFR-008), and a region that
+     * scrolls has to be reachable from the keyboard as well (NFR-007, axe's
+     * scrollable-region-focusable).
+     */
+    private static void makeTableFocusable(Node node, String tagName, Map<String, String> attributes) {
+        if (node instanceof TableBlock) {
+            attributes.put("tabindex", "0");
         }
     }
 

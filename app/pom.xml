@@ -106,6 +106,13 @@
       <artifactId>commonmark</artifactId>
       <version>${commonmark.version}</version>
     </dependency>
+    <!-- GitHub-style tables, which CommonMark itself lacks; same project, version and licence
+         (BSD-2-Clause), checked on Maven Central on 2026-09-28. Added by the human's decision. -->
+    <dependency>
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark-ext-gfm-tables</artifactId>
+      <version>${commonmark.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

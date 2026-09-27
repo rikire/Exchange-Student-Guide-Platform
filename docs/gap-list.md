@@ -13,7 +13,7 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-001 | in-progress | must | Reading a published article | 3 | 28 | 0 |
+| FR-001 | in-progress | must | Reading a published article | 3 | 31 | 0 |
 | FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
 | FR-006 | planned | could | Backlinks on an article | 3 | 0 | 3 |
 | FR-010 | in-progress | must | Submitting a new article | 4 | 16 | 0 |

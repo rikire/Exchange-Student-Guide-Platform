@@ -134,6 +134,12 @@ p a, .article-body a { text-decoration: underline; }
   .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 }
 
+/* Tables in an article body (FEAT-001, 28 Sep). A wide one scrolls sideways inside itself, never the
+   page (NFR-008): display block with overflow, as GitHub renders Markdown tables. */
+.article-body table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 0 0 var(--space-4); }
+.article-body th, .article-body td { border: 1px solid var(--line); padding: var(--space-2) var(--space-3); text-align: left; vertical-align: top; }
+.article-body th { background: var(--sand); font-weight: 600; }
+
 /* FEAT-008: the tag page, and a tag chip that leads to it. */
 .eyebrow { color: var(--ink-soft); margin: 0 0 var(--space-2); }
 .tag-title { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-3); }
