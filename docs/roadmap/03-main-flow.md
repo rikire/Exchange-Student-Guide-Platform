@@ -80,7 +80,7 @@ the criteria do not reach it.
 ## Queue raised on 27 September
 
 Raised by the human after FEAT-005, taken **one at a time in this order** — the next is discussed
-only when the one before is settled. Items 2–7 change requirements or architecture, so each starts
+only when the one before is settled. Items 2, 3 and 5–8 change requirements or architecture, so each starts
 as a discussion and becomes a requirement, an ADR or a step above only with the human's decision.
 Where the steps above and this queue compete for the same days, the human orders them.
 
@@ -89,31 +89,49 @@ Where the steps above and this queue compete for the same days, the human orders
    — check: the profile passes, and fails with `flyway-database-postgresql` removed
    **Done 27 Sep:** 164 tests pass on PostgreSQL 17.11; red with the Flyway module removed. The
    failure without Docker was not run, since the demo stand runs on the same Docker.
-2. [ ] **Markdown editor** — first the requirement (what a contributor must be able to do, on a
+2. [x] **Markdown editor** — first the requirement (what a contributor must be able to do, on a
    phone, in Devanagari and Tamil, without JavaScript), then the library, from a sourced comparison
    — check: a requirement with acceptance criteria agreed, and a library chosen with its version,
    licence and WebJar verified
+   **Decided 27 Sep:** FR-027 (must), FR-028 (`[[` completion, should), NFR-007 (WCAG 2.2 AA) and
+   [ADR-0013](../architecture/adr/ADR-0013-markdown-editor-and-front-end-assets.md) — EasyMDE from its
+   WebJar, server-rendered preview, a strict Content-Security-Policy, WebJars only. Building it is a
+   separate contract, with a browser check under the policy and a Hindi and Tamil check on a phone.
 3. [ ] **Responsive layout** — a requirement for every screen from phone to desktop, and how to build
    it (own tokens and CSS, or a framework)
    — check: the requirement agreed; the approach recorded
-4. [ ] **Frontend interactivity** — whether a lightweight library (htmx, Alpine.js or none) is
+4. [ ] **Build the Markdown editor** — FR-027 and FR-028 on the `contribute` form, as ADR-0013
+   decides: EasyMDE from its WebJar, a preview endpoint that renders with `WikiLinkRenderer` and caps
+   the text's size, CDN downloads off, our own toolbar icons, the draft kept by EasyMDE's `autosave`
+   and cleared after a successful submission, the strict Content-Security-Policy sent by every page
+   from `shared/security`. The preview endpoint's missing rate limit is a debt entry until NFR-005.
+   Comes after the responsive layout, so the editor goes into a layout that already fits a phone.
+   — check: a test per FR-027 criterion; the editor works in a browser under the policy; typing
+   Hindi and Tamil with Gboard on Android and the iOS keyboard does not duplicate, drop or reorder
+   characters (if it does and no setting fixes it, TinyMDE is tried against the same checks); FR-028
+   either works or is recorded as not done
+5. [ ] **Frontend interactivity** — whether a lightweight library (htmx, Alpine.js or none) is
    added, and for what
    — check: the choice recorded as an ADR with the alternatives weighed
-5. [ ] **All screens, with features not yet built** — how screens of unbuilt slices are shown
+6. [ ] **All screens, with features not yet built** — how screens of unbuilt slices are shown
    without fake data passing for real (for example fixtures only under a separate profile, each one a
    debt entry)
    — check: the option chosen; every screen in `docs/design/screens/` reachable
-6. [ ] **Email one-time code for submitting** — against spam and bots, a way to ban an address
+7. [ ] **Email one-time code for submitting** — against spam and bots, a way to ban an address
    later, and approval status sent by email. Collects an email address but creates no account;
    touches CON-001's reason (personal data), ADR-0008 (which challenge), a mail server, and what OGE
    agrees to store
    — check: a requirement and an ADR agreed, and the stakeholder's answer recorded
-7. [ ] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
+8. [ ] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
    Reverses CON-004 ("No diffs"); belongs to the review screen of `moderate` (FR-015)
    — check: CON-004 revised by the human and the requirement written
-8. [ ] **Walk through every screen and feature** with the human, and turn what comes out into
+9. [ ] **Walk through every screen and feature** with the human, and turn what comes out into
    requirements and steps
    — check: the list of changes recorded
+10. [ ] **Questions for OGE**, asked together rather than one meeting each: whether OGE is bound by
+    GIGW and so by a WCAG level (NFR-007); what OGE agrees to store about contributors and which
+    mail server may send from its name (item 7)
+    — check: the answers recorded in `docs/stakeholder/` and turned into requirements or constraints
 
 ## Readiness criterion
 

@@ -35,11 +35,14 @@ real figure can only be higher.
 | FR-024 | planned | could | Editing an article directly | 4 | 0 | 4 |
 | FR-025 | planned | could | Editing the homepage's pinned articles | 2 | 0 | 2 |
 | FR-026 | planned | should | Removing a published article | 4 | 0 | 4 |
+| FR-027 | planned | must | Writing an article's body | 5 | 0 | 5 |
+| FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
 | NFR-001 | planned |  | Upload size limit | 0 | 0 | 0 |
 | NFR-002 | planned |  | Search latency | 0 | 0 | 0 |
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
 | NFR-004 | in-progress |  | Exportability | 0 | 24 | 0 |
 | NFR-005 | planned |  | Submission rate limit | 0 | 0 | 0 |
+| NFR-007 | planned |  | Accessibility | 0 | 0 | 0 |
 
 ## Done, with criteria that no test is anchored to
 

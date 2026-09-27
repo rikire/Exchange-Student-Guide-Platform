@@ -39,6 +39,8 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-024 | planned |  |  |  |  |  |  | Editing an article directly |
 | FR-025 | planned |  |  |  |  |  |  | Editing the homepage's pinned articles |
 | FR-026 | planned |  |  |  |  |  |  | Removing a published article |
+| FR-027 | planned |  |  |  |  |  |  | Writing an article's body |
+| FR-028 | planned |  |  |  |  |  |  | Completing a wiki link while writing |
 
 ## Non-functional requirements
 
@@ -50,6 +52,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | NFR-004 | in-progress | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest |  |  | article, article_tag, tag | Exportability |
 | NFR-005 | planned |  |  |  |  |  |  | Submission rate limit |
 | NFR-006 | done | FEAT-005 | SubmissionNumbers | SubmissionNumbersTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Submission number unguessability |
+| NFR-007 | planned |  |  |  |  |  |  | Accessibility |
 
 ## Constraints
 

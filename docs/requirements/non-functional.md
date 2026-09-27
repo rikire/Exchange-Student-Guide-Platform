@@ -98,3 +98,17 @@ submission, because [CON-001](constraints.md) leaves no account to check the hol
 source. Verified by a test asserting that numbers generated for consecutive submissions share no
 ordering — sorting a batch by issue time does not sort it by value — and that the generator is seeded
 from `SecureRandom` rather than a counter, a timestamp, or a content hash.
+
+### NFR-007 — Accessibility
+
+**Status:** planned
+
+Every screen can be used from the keyboard alone and with a screen reader, with enough contrast and
+text that scales, so that a student with a visual or motor impairment can read, search and
+contribute. Decided with the human on 27 Sep. Whether OGE, as part of a government institute, is
+bound to a national standard (GIGW) that names a level is NOT VERIFIED and is a question for the
+stakeholder; if it is, it becomes a constraint rather than our choice.
+
+**Fit criterion:** WCAG 2.2 level AA on every screen. Verified by an automated accessibility check
+of each template in the build, and by a manual pass with the keyboard and a screen reader over the
+demo scenario before each stage submission.

@@ -771,3 +771,63 @@ GIVEN an article that has already been removed
 WHEN a reader requests its route
 THEN the system does not show its content
 ```
+
+### FR-027 — Writing an article's body
+
+**Status:** planned
+**Priority:** must
+
+When a contributor writes or edits an article's body, the system shall offer formatting controls
+that insert Markdown, show beside the text a preview rendered by the server exactly as the article
+would be published, updated as they type, and keep an unsent draft in their browser. Text in any
+script shall pass through writing, preview and submission unchanged.
+
+Decided with the human on 27 Sep; the editor that meets it is chosen in
+[ADR-0013](../architecture/adr/ADR-0013-markdown-editor-and-front-end-assets.md).
+
+**Acceptance criteria:**
+
+```
+GIVEN a contributor writing or editing a body
+WHEN they use a formatting control with text selected
+THEN the corresponding Markdown is inserted around the selection
+
+GIVEN a contributor writing or editing a body
+WHEN they pause typing
+THEN the preview beside the text shows the server's rendering of the current text, wiki links
+  resolved as FR-002 and FR-004 define
+
+GIVEN text in any script, typed with that script's input method, pasted or edited
+WHEN it is previewed and submitted
+THEN the preview shows it and the submission stores it unchanged
+
+GIVEN a form with an unsent body
+WHEN the page is closed and reopened in the same browser
+THEN the draft is restored
+  AND it is cleared once the submission succeeds
+
+GIVEN any screen width from a phone to a desktop
+WHEN the editor is shown
+THEN it can be used without scrolling sideways
+```
+
+### FR-028 — Completing a wiki link while writing
+
+**Status:** planned
+**Priority:** should
+
+When a contributor types `[[` followed by letters in an article's body, the system shall offer the
+titles of published articles that match, and choosing one shall complete the wiki link.
+
+**Acceptance criteria:**
+
+```
+GIVEN a contributor writing a body
+WHEN they type [[ followed by letters
+THEN published titles matching those letters are offered
+  AND choosing one completes the link as [[Title]]
+
+GIVEN letters that match no published title
+WHEN they are typed after [[
+THEN nothing is offered and the text is left as typed
+```

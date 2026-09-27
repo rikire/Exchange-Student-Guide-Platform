@@ -345,7 +345,7 @@ this audit, so it is a second reading by the same reader. The three checkups
 [02-skeleton.md](02-skeleton.md)); nothing under `.claude/`, `CLAUDE.md` or `docs/ai/` changed after
 them, so they were not repeated.
 
-**Confirmed, with what was checked.** Requirements: 26 `FR`, 26 `UC`, 7 `CON`. `cjm/scenario-trace.md`
+**Confirmed, with what was checked.** Requirements on 26 Sep: 26 `FR`, 26 `UC`, 7 `CON`. `cjm/scenario-trace.md`
 exists and is linked from all three journey files. Four diagram sources and their renders, the ERD
 among them. ADR-0001 to ADR-0012, the eight planned topics among them. Twelve routes in
 `ui-routes.md`. Twenty seed articles and the FRRO one. The reply to the scoping feedback is dated
@@ -361,7 +361,7 @@ among them. ADR-0001 to ADR-0012, the eight planned topics among them. Twelve ro
 
 **Not checked.** The page count of `design-doc.pdf` ("4 pages"): no PDF tool is installed and reading
 the file by hand was unreliable. The glossary and the scenario trace were checked for existence and
-links, not re-read against the 26 `FR` and fifteen screens. No claim found false beyond B1–B4, which
+links, not re-read against the 26 `FR` of 26 Sep and fifteen screens. No claim found false beyond B1–B4, which
 are stale names and counts, not wrong behaviour.
 
 ## Open questions
