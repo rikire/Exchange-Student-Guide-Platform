@@ -1,26 +1,23 @@
 ---
 name: feature
-description: Open a new feature - its file, its identifiers, its link to requirements. Creates a FEAT-XXX file, so it is invoked by a person rather than inferred.
+description: Prepare a feature specification and link it to requirements after a confirmed contract. Propose missing requirements before writing them.
 argument-hint: <short description of the feature>
-disable-model-invocation: true
 ---
 
-Open a new feature: **$ARGUMENTS**
+Open a feature for **$ARGUMENTS** under the confirmed contract. If none exists, follow
+[the contract procedure](../../../docs/ai/prompting.md) first. Approval is about decisions, not
+permission to invoke this skill; use it autonomously inside an already approved task.
 
-The order is mandatory; do not skip steps.
+1. Read the relevant requirements, existing features and [repository map](../../../docs/repository-map.md).
+2. Identify covered FR/NFR identifiers. If a requirement is missing or must change, present the
+   proposed wording and acceptance criteria, then wait for explicit human approval before writing it.
+   Calling this skill, approving implementation, or agreeing to research is not that approval.
+3. Reuse agreed architecture. Propose any new slice, route semantics, schema or architectural decision
+   and wait before recording it. Do not ask again about decisions already explicitly approved.
+4. Allocate the next free FEAT identifier and use [the template](../../../docs/features/_TEMPLATE.md).
+   Record the approved behavior, boundaries and acceptance criteria. Front matter describes current
+   files, not intended future files. Cite the contract/decision confirmation in the feature body.
+5. Show the result. If no new decision is needed, continue the approved implementation without an
+   extra confirmation round. If invoked only to prepare a specification, stop after that deliverable.
 
-1. Read [docs/ai/workflow.md](../../../docs/ai/workflow.md) and [docs/repository-map.md](../../../docs/repository-map.md).
-2. Find the next free `FEAT-XXX` by looking at the files in `docs/features/`.
-3. Work out which requirements in `docs/requirements/functional.md` the feature covers.
-   - If no suitable requirement exists, **write the requirement first**, not the feature.
-   - If a requirement's wording is ambiguous, stop and ask, following
-     [docs/ai/stop-and-ask.md](../../../docs/ai/stop-and-ask.md). Do not fill the gap yourself.
-4. Decide which slice this belongs to, and say why. If it does not fit any existing slice, that is a
-   decision for the human — stop and ask rather than inventing a slice.
-5. Create `docs/features/FEAT-XXX-<kebab-slug>.md` from
-   [docs/features/_TEMPLATE.md](../../../docs/features/_TEMPLATE.md). Fill in the front matter completely.
-6. In the file, describe: the goal, the scenario, the routes involved, the schema impact, the
-   acceptance criteria, and what is deliberately **out** of scope.
-7. Show me the file and ask what needs clarifying before any code is written.
-
-Do not write code at this step.
+Requirement status changes and human acceptance follow [verification](../../../docs/ai/verification.md).

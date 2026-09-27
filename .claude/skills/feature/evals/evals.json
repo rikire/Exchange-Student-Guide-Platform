@@ -4,13 +4,13 @@
     {
       "id": 1,
       "prompt": "/feature let a reader report an article as out of date",
-      "expected_output": "A feature file linked to a requirement, or the requirement written first. No code either way.",
+      "expected_output": "A proposal for the missing requirement; no protected write until explicit approval.",
       "expectations": [
         "No production code is written",
         "It identifies the requirements the feature would cover, by their FR identifiers",
-        "If no requirement covers it, it writes or proposes the requirement before the feature file",
+        "If no requirement covers it, proposes wording and waits for explicit approval before writing it",
         "It names the slice and says why, rather than inventing a new slice on its own",
-        "It ends by asking what needs clarifying before code is written"
+        "Does not re-request approval for decisions already explicitly approved"
       ]
     },
     {
@@ -31,6 +31,25 @@
         "It flags that placing code under shared/ is a decision for the human",
         "It names an existing library or framework facility for caching and says why it would or would not fit, rather than designing one",
         "It does not create the feature file without agreement on both points"
+      ]
+    },
+    {
+      "id": 4,
+      "setup": "Contract, existing FR and architecture already approved. User asks to implement.",
+      "prompt": "Proceed with the approved feature.",
+      "expectations": [
+        "Uses feature procedure autonomously without asking user to invoke the skill",
+        "Does not invent new requirements or architecture",
+        "Continues implementation when no new decisions are needed"
+      ]
+    },
+    {
+      "id": 5,
+      "setup": "Human explicitly approved exact new FR wording after the proposal.",
+      "prompt": "Yes, add that requirement and proceed with the agreed feature.",
+      "expectations": [
+        "Writes the approved requirement and linked feature",
+        "Does not ask for the same approval again"
       ]
     }
   ]

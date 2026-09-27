@@ -1,54 +1,25 @@
 ---
 name: dod
-description: Run the Definition of Done over the current changes. Use before calling work finished, before a commit that closes a feature, or whenever someone asks whether something is done, ready, or safe to merge.
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git ls-files:*), Bash(./mvnw:*)
+description: Assess readiness against acceptance criteria and current evidence, including required review. Use before claiming implementation verified or when asked whether a change is ready.
 ---
 
-## What has actually changed
+Use [verification](../../../docs/ai/verification.md) to establish the shared base, inventory,
+pre-existing-change exclusions and fingerprint. Missing scope is a verification error, not an empty
+change. Do not suppress Git errors. An empty task change is reported as such, not as verified work.
 
-Committed, not yet on `origin/main`:
+Apply the relevant items in [Definition of Done](../../../docs/ai/definition-of-done.md).
+Choose the process-only or product verification suite from verification.md. Reuse existing results
+only under its evidence rules; do not run overlapping full suites merely to tick another item.
+For each criterion give PASS, FAIL, BLOCKED, NOT RUN, or justified NOT APPLICABLE, with evidence.
+Use the recorded base for documentation checks. Missing tools may be diagnosed by reading but a
+required executable check remains BLOCKED until it runs successfully.
 
-!`git diff origin/main...HEAD --stat || true`
+Read the shared change and identify correctness risks, unnecessary additions and missing evidence.
+Give `dod-reviewer` the same scope, criteria and logs in a fresh context. Report confirmed findings,
+assumptions and NEEDS_DECISION separately. If delegation is unavailable, disclose the missing review.
+Fix confirmed defects within the contract, rerun affected checks and review substantive fixes without
+asking permission again. Escalate only changed requirements, architecture or other protected decisions.
 
-Uncommitted, in files git already tracks:
-
-!`git diff HEAD --stat || true`
-
-New and untracked, which neither diff above shows:
-
-!`git ls-files --others --exclude-standard || true`
-
-## The checklist
-
-Run the checklist in [docs/ai/definition-of-done.md](../../../docs/ai/definition-of-done.md).
-
-The three lists above are the subject. They are injected rather than described because a checklist
-run from memory of what was changed is a checklist run against the wrong thing. Once a change is
-committed, `git diff HEAD` is empty; the first list is what still counts. Read every file in the
-third list in full, since no diff shows it.
-
-Go through the items **one at a time** and give an honest verdict for each: passed, failed, or not
-applicable. Run the checks for real, not from memory:
-
-- `./mvnw -q verify`
-- `./mvnw test`
-- `./mvnw -pl app test -Dtest=ModularityTest`
-
-Do items 6 and 7 with the tool: `java -jar tools/target/ai-tools.jar trace --docs-sync HEAD` and
-`java -jar tools/target/ai-tools.jar trace --check`. If the jar is not built, do them by reading, the
-way `/trace-check` describes, and say in the verdict that they were checked by hand. Reporting a
-checklist item as passed on the strength of a command that failed is the exact failure this list
-exists to prevent.
-
-## The second reading
-
-Then **re-read your own change in full** (`git diff origin/main...HEAD`, `git diff HEAD` and each
-untracked file) and say separately: what looks doubtful, what was added "just in case", and what
-should be deleted.
-
-Then hand the same change to the `dod-reviewer` subagent and report what it found. You wrote this
-code, so your reading of it is the one reading that cannot be independent; the subagent sees the
-diff and the criteria without the reasoning that produced them. Where it disagrees with your own
-verdict, say so rather than picking the more comfortable of the two.
-
-Do not report "all done" if any item failed. List what is left and ask whether to fix it now.
+Conclude **implementation verified** only when the evidence protocol permits it. Otherwise list the
+remaining gaps. Do not claim **accepted by the human**, change requirement status, commit or publish
+without the corresponding explicit authorization.

@@ -7,6 +7,7 @@ load everything into context.
 |---|---|
 | [collaboration.md](collaboration.md) | Who decides what, how the agent disagrees, plans, takes feedback and works with subagents |
 | [prompting.md](prompting.md) | From request to confirmed contract |
+| [verification.md](verification.md) | Shared review scope, evidence and completion |
 | [workflow.md](workflow.md) | A feature from statement to commit, TDD, technical debt |
 | [testing.md](testing.md) | What to assert, what to mock, how to derive the corner cases |
 | [stop-and-ask.md](stop-and-ask.md) | Observable stop triggers and recovery |
@@ -30,8 +31,8 @@ enforcement.
 
 | Mechanism | When it delivers | Documents |
 |---|---|---|
-| **Gate** — the hook asks or refuses | at the action | `collaboration` (protected paths), `stop-and-ask`, `workflow` (the test-first order) |
-| **Reminder** — `additionalContext` | at the action | `prompting` (every prompt), `docs-sync` (a tracked area changed), `roadmap` (the deadline, each session start) |
+| **Gate** — the hook asks or refuses | at the action | `collaboration` (protected paths), `collaboration` (sensitive new-file areas) |
+| **Reminder** — `additionalContext` | at the action | `prompting` (every prompt), `workflow` (test-first and filename reminders), `docs-sync` (a tracked area changed), `roadmap` (the deadline, each session start) |
 | **Path rule** — `.claude/rules/` | when a matching file is **read** | `code-style`, `testing`, `architecture-rules`, `collaboration` (its decision table, on the schema), `docs-sync` (how to write documentation, on any document) |
 | **Subagent** — its own context | when invoked | `definition-of-done` (`dod-reviewer`), `testing` (`test-reviewer`), `collaboration` §8 (`researcher`, `grader`: read-only by their tool list) |
 | **Memory** — nothing delivers it | never | what is left of `collaboration` and `workflow` |
@@ -57,11 +58,11 @@ Rules 1 to 6 are stated in [CLAUDE.md](../../CLAUDE.md).
 | 1. The human decides | A hook asks before an `Edit`, `Write` or `NotebookEdit` lands in a protected file. A write through Bash is not covered ([audit](audit-2026-09-21.md), P7) |
 | 2. Confirmed contract before implementation | Reminder with every prompt, by a hook — reinforced, not gated: no mechanism can judge whether a request was complete |
 | 3. Stop on a trigger, and when unsure | Good faith. Nothing detects a refuted hypothesis or a repeated attempt |
-| 4. Test before code | Creating a production class with no matching test asks first and names the expected file. The order cannot be proved afterwards, so it is asked at creation |
+| 4. Test before code | A missing matching test emits an advisory reminder. Only actual RED/GREEN execution establishes order; filename matching does not |
 | 5. Documentation in the same turn | Partly: a `PostToolUse` hook names the document a change has put out of date, once per tracked area per session, and the turn cannot end while a document describes something the repository does not contain |
 | 6. Nothing is lost | Partly: an edit adding a marker with no debt reference is refused. The traceability half: `ai-tools trace --check` refuses a gap in the chain from requirement to test, or a matrix that no longer matches the anchors, at the end of the turn and in CI |
 | The journal is in English | The turn cannot end while it owes a rendering; the entry is committed when it is written |
-| Do not reinvent what a library does | Partly: creating a file whose name suggests a wheel asks first. Whether the answer is honest is not mechanisable |
+| Do not reinvent what a library does | Partly: a filename suggesting a wheel emits an advisory reminder. Whether the answer is honest is not mechanisable |
 | The human takes part in domain, schema and security decisions | Partly: creating a file under `shared/`, in the schema or security packages, asks first |
 | A switched-off or sleeping test | An edit adding `@Disabled` without a debt entry, or `Thread.sleep` under `src/test/`, is refused; a `@Test` that asserts nothing is questioned |
 | The record survives a shortened conversation | A `PreCompact` hook writes that the context was compacted. It marks the gap; it does not preserve what was discarded |
@@ -92,15 +93,15 @@ nothing in the repository can change it.
 ## Slash commands
 
 They live in `.claude/skills/<name>/SKILL.md`. **Person only** means the assistant cannot invoke the
-command: those seven write into the record or into the human's decision space, and a command that
+command: those five write into the record or into the human's decision space, and a command that
 files an ADR because it inferred one was wanted is worse than no command.
 
 | Command | What it does | Who can start it |
 |---|---|---|
 | `/sharpen <text>` | States the contract for a request without acting on it | either |
-| `/feature <description>` | Opens a feature file and links it to requirements | person only |
+| `/feature <description>` | Opens a feature under an approved contract; missing requirements need approval | either |
 | `/adr <topic>` | Records an architectural decision | person only |
-| `/sync-docs` | Brings documentation back in step with the changes | person only |
+| `/sync-docs` | Updates approved descriptions; protects requirements and architecture | either |
 | `/trace-check` | Shows gaps in requirement coverage | either, own context |
 | `/dod` | Runs the readiness checklist | either |
 | `/journal-note <text>` | Adds a note to the journal | person only |
@@ -126,3 +127,5 @@ scenarios of `sharpen` and those of `dod` and `feature` are written and unrun: n
 them and none should be quoted.
 
 The technical debt register is [docs/tech-debt.md](../tech-debt.md).
+
+Current process changes and behavioral validation are recorded in the task state; historical audits above are snapshots, not current pass claims. See [verification](verification.md).

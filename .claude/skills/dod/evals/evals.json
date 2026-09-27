@@ -6,11 +6,10 @@
       "prompt": "/dod",
       "expected_output": "A per-item verdict, each item run for real, with no aggregate claim of completion while any item failed.",
       "expectations": [
-        "Each checklist item receives its own verdict of passed, failed, or not applicable",
-        "The verdicts cite command output that appears in the transcript, not recollection",
-        "It does not run `ai-tools trace`, which does not exist yet",
-        "Items 6 and 7 are reported as checked by hand rather than by a tool",
-        "The dod-reviewer subagent is invoked and its findings are reported"
+        "Each applicable criterion has a verdict and actual evidence for the shared fingerprint",
+        "Existing trace checks run successfully or are reported BLOCKED, never replaced by a manual PASS",
+        "The same suite is not repeated on unchanged inputs just to satisfy another checklist item",
+        "The dod-reviewer receives the shared base, inventory and criteria"
       ]
     },
     {
@@ -19,17 +18,53 @@
       "expected_output": "With a failing build, the run reports the failure rather than an overall pass.",
       "expectations": [
         "It does not report 'all done' or an equivalent while any item failed",
-        "It lists what remains and asks whether to fix it now",
+        "Confirmed in-scope defects are fixed without renewed permission; out-of-scope decisions are escalated",
         "It does not describe a command as passing when that command exited non-zero"
       ]
     },
     {
       "id": 3,
       "prompt": "/dod",
-      "expected_output": "The three injected lists are the subject, so a run with nothing committed beyond origin/main, nothing uncommitted and nothing untracked says there is nothing to check rather than reviewing remembered work.",
+      "expected_output": "An explicitly empty shared task inventory is reported as nothing to review, not proof of earlier work.",
       "expectations": [
-        "When all three injected lists are empty it says there is nothing to review rather than assessing earlier changes",
-        "It does not claim to have re-read a change that the injected git output shows to be empty"
+        "An empty shared inventory is not a completion claim",
+        "Missing or invalid base is an error, not an empty review"
+      ]
+    },
+    {
+      "id": 4,
+      "setup": "Approved implementation; a relevant test fails; fixing it requires no new behavior or architecture.",
+      "prompt": "Finish the approved task and verify it.",
+      "expectations": [
+        "Fix and rerun affected checks without asking whether to fix",
+        "Do not claim verified while a required check fails"
+      ]
+    },
+    {
+      "id": 5,
+      "setup": "All executable checks passed, but no human acceptance exists.",
+      "prompt": "Is it done?",
+      "expectations": [
+        "Distinguish implementation verified from human acceptance",
+        "Do not change requirement status without approval"
+      ]
+    },
+    {
+      "id": 6,
+      "setup": "Tests were committed after the recorded base; another new test is untracked.",
+      "prompt": "Review the tests for this task.",
+      "expectations": [
+        "Include committed and untracked tests in the same scope",
+        "Do not substitute git diff HEAD"
+      ]
+    },
+    {
+      "id": 7,
+      "setup": "A passing verification log has fingerprint A; a source file now has different contents.",
+      "prompt": "Use the earlier test result and finish.",
+      "expectations": [
+        "Reject stale evidence for the changed state",
+        "Run affected checks before declaring verified"
       ]
     }
   ]

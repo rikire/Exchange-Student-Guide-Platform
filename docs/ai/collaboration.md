@@ -36,7 +36,7 @@ and starting on it is not agreement.
 2. shows up in a route, a migration, a requirement or an ADR, or
 3. adds a dependency — **or replaces one with our own code**, or
 4. moves the boundary of a slice, or
-5. introduces a failure mode the tests cannot see — a cache, a retry, a timeout, anything async, or
+5. introduces new failure semantics — a cache, a retry, a timeout, anything async, or
 6. decides what a person sees when something goes wrong, or whether data is lost.
 
 Everything else is implementation, and deciding it alone is required: asking about a variable name is
@@ -62,7 +62,7 @@ Writing our own is proposed like a dependency ([workflow.md](workflow.md) §7a).
 | Anything under `shared/security`, and the Markdown converter's raw-HTML setting | human — one wrong setting is stored XSS |
 | What is logged, at what level, where it may carry visitor text | human — secrets and personal data |
 | The error text and status a visitor sees | human — it is the product |
-| Caching, retries, timeouts, backoff, async, scheduled jobs | human — each adds a mode no test will show |
+| Caching, retries, timeouts, backoff, async, scheduled jobs | human — approve new failure semantics; tests can cover them but do not choose them |
 | Writing our own instead of using a library | human — see item 3 |
 | Weakening or deleting an assertion | human — it changes what "passing" means |
 | Whether a requirement counts as covered | human — it is the evidence the rubric asks for |
@@ -78,7 +78,8 @@ Where validation lives is settled and not in this table: the domain always valid
 layers may as well, never instead ([architecture-rules.md](architecture-rules.md)).
 
 Editing a protected file asks the human, and so does creating a file under `shared/`, in the schema
-or security packages, or with a name that suggests a wheel ([README.md](README.md)). Feature files and
+or security packages, ([README.md](README.md)). Filename-only suspicions and missing test filenames emit advisory context,
+not permission requests. Their absence never proves correctness. Feature files and
 the debt register are deliberately unprotected: the agent keeps those itself.
 
 ## 2. Honesty
@@ -178,8 +179,9 @@ The steps of the confirmed contract ([prompting.md](prompting.md)) become a plan
   not.
 - **An edit that contradicts an instruction means the rule and reality have diverged.** Propose
   changing the instruction rather than continuing your own way.
-- **A repeated remark is a defect in the instructions**, not inattention: the second identical remark
-  becomes an edit of `docs/ai/`.
+- **Diagnose repeated failures** before changing rules: was the instruction delivered, conflicting,
+  forgotten after compaction, or unsupported by a tool? Choose the smallest correction and a behavioral
+  regression scenario. Changes to permanent instructions still require agreement.
 - Instructions change only with the human's consent and in their own commit
   ([security.md](security.md)).
 
@@ -256,21 +258,25 @@ the machine. Finding it is the agent's job; installing it is the human's decisio
 
 **Look in this order.**
 
-1. The repository's own tools: `scripts/`, the `ai-tools.jar` subcommands, `.claude/skills/`,
-   `.claude/agents/`. A task they already do is not a reason to search.
-   [repository-map.md](../repository-map.md) says what `tools/` and `scripts/` hold; `docs-check`,
-   for one, already finds links between documents that lead nowhere.
-2. The official plugin marketplace and the Claude Code documentation.
-3. The community marketplace.
-4. The tool's own documentation.
+1. Identify the missing capability. Check repository tools, installed programs, project dependencies,
+   standard-library facilities and the current client's callable tools and connected integrations.
+2. If a gap remains, inspect the candidate's official documentation and compatibility, then the
+   relevant skill/plugin/package catalog. Prefer existing facilities over installing a duplicate.
+3. Consider community sources when needed, verifying provenance and required access. Distinguish
+   no result, failed search, installed, connected and functionally tested.
 
-Searching is reading and needs no permission; use `researcher` when the answer will decide something.
+Using an existing permitted capability or skill inside the approved contract needs no extra approval.
+Installation, account connection, new access or cost requires explicit approval. After installation,
+exercise the actual required function and record evidence; a manifest entry is not success.
+
+Searching is reading and needs no permission. Use `researcher` for a bounded independent question
+when a separate context adds value; a routine lookup does not require delegation.
 
 **Propose, do not install.** One message, in the format of [stop-and-ask.md](stop-and-ask.md):
 
 - the candidate and its source;
-- what it adds (skills, agents, hooks, MCP servers) and its context cost, read from its details or
-  manifest and not from its description;
+- what it adds (skills, agents, hooks, MCP servers) and what its manifest establishes about loading; context cost is unknown unless measured
+  or established by documentation, not inferred from file count;
 - what it needs besides itself: an LSP plugin needs its language server installed separately;
 - licence and date of the last update, or "not verified";
 - the scope it would live at, and what happens without it;

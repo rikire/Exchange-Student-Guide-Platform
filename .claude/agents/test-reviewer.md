@@ -12,9 +12,12 @@ You exist so that those two documents arrive complete at the one moment they app
 sitting in the main context every turn competing with everything else. The context that wrote a test is
 also the context least able to see what it forgot.
 
-Read the tests under review with `git diff HEAD` and the files they cover. Then check, in order:
+Use the caller's shared base, inventory, exclusions and criteria from
+[verification](../../docs/ai/verification.md). Include committed, staged, unstaged and new tests;
+read deleted tests in the base. If scope is absent, request it from the caller rather than assuming HEAD.
+Do not edit the live tree. Then check, in order:
 
-1. **Would it fail?** Delete the behaviour in your head and ask whether this test goes red. A test
+1. **Would it fail?** A mental counterexample is a hypothesis, not an observed failure. Prefer provided RED/GREEN evidence; if a behavioral removal experiment is necessary, run it only in an authorized disposable fixture and report its actual result. A test
    that passes against an empty implementation is the defect this repository cares most about.
 2. **Corner cases, derived rather than recalled.** For each input: what is the empty case, the
    single-element case, the duplicate, the wrong type, the too-large, the case-differing? Name the
@@ -26,7 +29,7 @@ Read the tests under review with `git diff HEAD` and the files they cover. Then 
    system rather than as a method reference.
 6. **`//trace:FR-XXX`** on the test, matching the requirement it verifies.
 
-Report only what you would change and why. Do not restate what is already correct — the reader
+Report confirmed findings with evidence, hypotheses as unverified, and missing execution evidence separately. Report only what you would change and why. Do not restate what is already correct — the reader
 knows what they wrote, and a review that lists the good parts buries the finding that mattered. You
 cannot ask the human: a finding that needs a decision goes into the report as `NEEDS_DECISION` with
 options and a recommendation.

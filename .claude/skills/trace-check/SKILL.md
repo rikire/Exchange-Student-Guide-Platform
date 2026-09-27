@@ -5,7 +5,8 @@ context: fork
 agent: Explore
 ---
 
-Check that nothing has fallen out of the chain "requirement to code to test".
+Check the shared scope from [verification](../../../docs/ai/verification.md), including its base,
+criteria and pre-existing changes. Structural traceability is not proof of behavioral coverage.
 
 This runs in its own context because it reads widely and returns a short answer. The files it opens
 are of no use to the conversation afterwards, and leaving them there crowds out the work itself.
@@ -14,7 +15,7 @@ are of no use to the conversation afterwards, and leaving them there crowds out 
 java -jar tools/target/ai-tools.jar trace --check
 ```
 
-It exits non-zero and lists every gap. If the jar is not built, do the check by reading:
+It exits non-zero and lists every gap. If the jar is not built, report the executable check BLOCKED. Reading can diagnose these gaps but cannot turn that check into PASS:
 
 1. Every requirement with status `done` in `docs/requirements/` has a feature file that covers it,
    an anchor `//trace:FR-XXX` in production code, and one in a test.
@@ -26,4 +27,4 @@ It exits non-zero and lists every gap. If the jar is not built, do the check by 
    anchors claimed.
 
 Show the gaps as a list, worst first, and for each one say whether it is a missing test, a missing
-anchor, or a status that is ahead of the work. Do not fix them silently; ask which to fix now.
+anchor, or a status that is ahead of the work. Fix confirmed gaps only when this is part of an approved implementation contract; otherwise report them. Requirement or architecture changes need explicit human approval. Do not re-request permission for in-scope fixes.

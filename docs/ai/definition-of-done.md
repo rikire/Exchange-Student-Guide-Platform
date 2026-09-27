@@ -1,6 +1,7 @@
 # Definition of Done
 
-A task is done when **every** item has passed. Items are checked by running commands, not from
+Implementation is verified when every applicable item has current passing evidence; human acceptance
+is separate. Follow [verification](verification.md) for scope, evidence reuse and truthful completion. Items are checked by running commands, not from
 memory: "should work" and "works" are different states. Run the whole list with `/dod`.
 
 Four items do not depend on being remembered: a turn cannot end while item 6 is red; an edit
@@ -10,16 +11,14 @@ The rest rest on this list.
 
 ## 1. It builds and passes static analysis
 
-```bash
-./mvnw -q verify          # compile + tests + Spotless
-```
+Use the applicable aggregate suite from [verification](verification.md). Do not rerun a full build
+whose current evidence is already available merely because another checklist item also needs it.
 
 A Spotless failure means the diff carries noise that makes review harder for the other person.
 
 ## 2. Tests
 
 ```bash
-./mvnw test
 ./mvnw -P postgres verify   # only when the task touches persistence
 ```
 
@@ -50,9 +49,8 @@ is what a reviewer needs and the diff cannot show.
 
 ## 5. Slice boundaries
 
-```bash
-./mvnw -pl app test -Dtest=ModularityTest
-```
+Use the ModularityTest result from the aggregate run; a focused rerun is needed only after a relevant
+change or to diagnose a failure.
 
 - Nothing new was moved into `shared/` without agreement.
 - No slice reaches into another slice's internals.
@@ -62,7 +60,7 @@ is what a reviewer needs and the diff cannot show.
 Rules: [docs-sync.md](docs-sync.md).
 
 ```bash
-java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
+java -jar tools/target/ai-tools.jar trace --docs-sync <base>
 ```
 
 Documentation is updated **in substance**: it describes the new behaviour, not the fact that an edit
@@ -71,12 +69,11 @@ happened.
 ## 7. Traceability
 
 ```bash
-java -jar tools/target/ai-tools.jar trace           # rewrites the matrix and the feature backlog
 java -jar tools/target/ai-tools.jar trace --check   # fails on a gap in the chain or a stale file
 ```
 
-If the jar is not built, walk the list in [`/trace-check`](../../.claude/skills/trace-check/SKILL.md)
-by hand and say so in the verdict. An item reported as passed because a missing command produced no
+If the jar is not built, report the executable check BLOCKED. Manual inspection through
+[`/trace-check`](../../.claude/skills/trace-check/SKILL.md) can diagnose gaps but cannot substitute a PASS. An item reported as passed because a missing command produced no
 output is not a passed item.
 
 - New code carries `//trace:FR-XXX`; so does the test.
@@ -102,10 +99,8 @@ For uploads: type detected from content, size limited, filename generated, deliv
 
 A separate step, **after** all the others.
 
-1. Re-read your own change in full: `git diff origin/main...HEAD` (committed, not yet published),
-   `git diff HEAD` (uncommitted), and each untracked file from
-   `git ls-files --others --exclude-standard`. Once a change is committed `git diff HEAD` is empty
-   and shows nothing.
+1. Re-read the shared review inventory and base from [verification](verification.md), including
+   committed, staged, unstaged, new and deleted files. Respect recorded pre-existing changes.
 2. For each file, answer:
    - **Is this needed?** Code added "for later" and unused now — delete it.
    - **Is any debugging left?** Console output, commented-out code, temporary files.

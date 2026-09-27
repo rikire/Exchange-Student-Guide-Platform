@@ -27,21 +27,26 @@ divergence is most expensive. A gate that fires on every refactor gets worked ar
 ## How it works
 
 1. **At edit time.** The `PostToolUse` hook (`ai-tools hook docs-sync`, since 9 September) names the
-   document that has just gone out of date, once per tracked area per session. It reads this table
-   through `DocumentedCounterparts`, so the table and the mechanism cannot drift apart.
+   document that has just gone out of date, once per tracked area per session. The mapping is implemented in `DocumentedCounterparts.java`; it is not parsed from this table.
+   Update its behavioral tests and this table together when changing the mapping.
 2. **At the end of the turn.** The `Stop` hook runs the check and does not let the turn finish while
    the divergence stands. It does not block twice on the same cause, so the session cannot loop with
    no way for a person to intervene.
 3. **In CI.** The same check on every pull request, in case hooks are disabled locally.
 
 ```bash
-java -jar tools/target/ai-tools.jar trace --docs-sync HEAD
+java -jar tools/target/ai-tools.jar trace --docs-sync <base>
 ```
 
 Steps 2 and 3 are built. The `Stop` hook runs the check against `HEAD` and `scripts/check.sh` runs it
 in CI against where the change began (`DOCS_SYNC_BASE`, else what the remote already has). Only the
 rows marked "blocks" refuse; the others are printed. Against `HEAD` a change already committed in the
 same turn is invisible to the hook, and CI is what catches it.
+
+For explicit verification and skills, use the recorded base from [verification](verification.md),
+not HEAD. The legacy Stop hook's HEAD comparison is only a local reminder/gate and cannot establish
+whole-task readiness. A touched counterpart establishes structural co-change, not semantic accuracy.
+Requirements and architecture documents change only after explicit approval of the proposed update.
 
 ## What "update the document" means
 

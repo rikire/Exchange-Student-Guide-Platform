@@ -5,7 +5,7 @@ The order of the steps makes the expensive decisions before code is written unde
 ## The feature cycle
 
 ```
-confirmed contract -> /feature -> clarify and agree -> ADR (if needed)
+confirmed contract -> /feature -> resolve only NEW decisions -> ADR (if needed)
    -> routes -> migration -> slice interfaces
    -> loop( red test -> minimal implementation -> refactor )
    -> documentation -> trace check -> /dod -> commit
@@ -26,7 +26,7 @@ acceptance criteria and an explicitly drawn scope boundary. No code at this step
 
 ### 2. Clarify and agree
 
-Everything ambiguous is settled **here**, not while writing code. Stop triggers:
+Settle material open decisions before dependent implementation. Reuse approved decisions; do not repeat approval after creating the feature file. Stop triggers:
 [stop-and-ask.md](stop-and-ask.md).
 
 The wording of requirements, the scope of the feature and the set of routes are the human's decision
@@ -66,16 +66,15 @@ Dependency direction: [architecture-rules.md](architecture-rules.md).
 
 ### 7. The TDD loop
 
-Creating a production class under `app/src/main/java/**` with no matching test asks first, naming the
-test file it expected (`TestFirstRule`, via the `PreToolUse` guard). It asks rather than refuses: a
-class split out of one already covered is a real exception, and a gate with no way to answer it gets
-switched off.
+Creating a production class with no matching test emits an advisory reminder. It does not prove
+test order or require an extra permission round. Record actual RED/GREEN evidence; explain legitimate
+exceptions such as extracting already-covered code. Protected architectural decisions still need approval.
 
 Repeated for each acceptance criterion:
 
 1. **Red test.** One criterion, one test; the name repeats the wording of the criterion. Run it and
-   see it **fail**: a test that is green before the implementation checks nothing, and running it is
-   the only way to notice. When a test goes red later, decide first whether the code or the
+   see it **fail**: an unexpectedly green test may exercise existing behavior or miss the new behavior;
+   investigate before treating it as evidence of a new implementation. When a test goes red later, decide first whether the code or the
    expectation is wrong; an expectation rewritten to match the output is a deleted test
    ([definition-of-done.md](definition-of-done.md)).
 2. **Minimal implementation** — exactly enough to turn the test green. Code written "while we are
@@ -114,8 +113,8 @@ already made the mistakes. Find the name before designing; when to look and when
 instead is in [collaboration.md](collaboration.md) §3.
 
 Replacing a library with our own code is the same decision as adding one and is proposed the same way
-([collaboration.md](collaboration.md) §1). Creating a file whose name suggests a wheel — `*Utils`,
-`*Helper`, `*Formatter` — asks about this before it lands.
+([collaboration.md](collaboration.md) §1). A filename such as `*Helper` is only an advisory signal; inspect the actual responsibility.
+Using existing capabilities needs no new permission. Adding a dependency or replacing one still does.
 
 ### 8. Technical debt
 
@@ -125,15 +124,13 @@ If a workaround appeared along the way, or something was done temporarily, the e
 ### 9. Documentation
 
 Rules: [docs-sync.md](docs-sync.md). In the feature file, `code`, `tests` and `status` are updated; a
-requirement moves to `done` only when both the code and the test exist.
+requirement status changes only after explicit human approval supported by current criterion-level
+evidence. File existence is not coverage. Implementation verification and human acceptance are separate.
 
 ### 10. Checks
 
-```bash
-./mvnw verify
-scripts/check.sh
-/dod
-```
+Follow [verification](verification.md): one applicable aggregate suite, current evidence, and `/dod`
+review without redundant full reruns. Fix in-scope failures autonomously; reopen only changed decisions.
 
 ### 11. Commit
 

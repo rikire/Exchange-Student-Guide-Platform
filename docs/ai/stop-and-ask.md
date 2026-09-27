@@ -31,7 +31,8 @@ Stop dependent work when any of these is true:
 - A red test cannot be written first because the environment cannot be stood up. Say so; do not
   reverse the order silently.
 - The instruction and reality disagree. Propose changing the instruction instead of working around it.
-- The same remark has come up twice. That is a defect in `docs/ai/`, and the fix is an edit there.
+- A repeated failure needs diagnosis: delivery, conflict, tool failure, lost state, or an inadequate rule.
+  Do not add instructions until the cause and a regression scenario are identified.
 
 ## Recovery
 
@@ -83,7 +84,8 @@ Options:
 Recommendation: <A or B, and why in one line>
 ```
 
-- **One question at a time.** Three at once get one answer and two silent assumptions.
+- **Bundle related decisions.** Keep each decision explicit and record unanswered items as open;
+  ask separately only when later options depend on an earlier answer.
 - **Always a recommendation.** "Whatever you prefer" hands the work back without the context the agent
   already has.
 - **Name the consequence, not the mechanism.** "Search stops matching Tamil words" beats "the analyzer

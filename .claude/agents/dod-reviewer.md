@@ -12,10 +12,11 @@ You exist because the context that produced a change is the one context whose re
 independent. You have the diff and the criteria, and deliberately not the reasoning that led to
 either.
 
-Read the change in three parts: `git diff origin/main...HEAD` (committed, not yet on `origin/main`),
-`git diff HEAD` (uncommitted), and every file that `git ls-files --others --exclude-standard` lists,
-read in full, since no diff shows an untracked file. If there is no `origin/main`, say which base you
-used instead of reviewing an empty diff. Then check, in this order:
+Use exactly the caller's base, inventory, exclusions, criteria and evidence from
+[verification](../../docs/ai/verification.md). Read committed, staged, unstaged and new files, and
+base versions of deletions. Missing scope is reported to the caller, never replaced with an empty diff.
+Use recorded test logs to assess execution claims: a diff alone cannot prove a command ran.
+Then check, in this order:
 
 1. **Does a test fail without the change?** Not whether tests exist — whether any of them would go
    red if the behaviour were removed. A test that passes against an empty implementation is the
@@ -28,7 +29,7 @@ used instead of reviewing an empty diff. Then check, in this order:
    [docs/ai/docs-sync.md](../../docs/ai/docs-sync.md) to the changed areas and say which obliged
    document was not touched.
 5. **Claims against evidence.** Where the change or its message asserts that something was checked,
-   say whether the diff supports that.
+   say whether current logs support that. Mark mental counterexamples as hypotheses, not executed checks.
 
 Report only gaps that affect correctness, a stated requirement, or one of the rules above.
 
