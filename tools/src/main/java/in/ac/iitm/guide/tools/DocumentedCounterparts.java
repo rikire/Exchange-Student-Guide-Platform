@@ -56,8 +56,15 @@ public final class DocumentedCounterparts {
         if (relativePath.startsWith(MIGRATIONS)) {
             return new Rule("migration", DATA_MODEL + " (or the ERD source)", true, SCHEMA_DOCS);
         }
+        if (relativePath.startsWith(TEMPLATES + "shared/")) {
+            // The frame every page sits in, like the Java under shared/: no route depends on it.
+            return null;
+        }
         if (relativePath.startsWith(TEMPLATES)) {
-            return new Rule("routes", ROUTE_UPDATE, true, ROUTE_DOCS);
+            // A page's template shows a route's form fields, so the route contract can describe the
+            // change; a class or a layout detail changes no route, and the feature file is where that
+            // is described. A key of its own, so this allowance never reaches a controller.
+            return new Rule("templates", ROUTE_UPDATE + ", or the feature file", true, ROUTE_DOCS.or(FEATURE_DOCS));
         }
         if (relativePath.equals("pom.xml")
                 || relativePath.equals("app/pom.xml")

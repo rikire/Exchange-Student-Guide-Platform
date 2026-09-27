@@ -84,11 +84,34 @@ class DocsSyncTest {
     }
 
     @Test
-    void a_controller_and_a_template_are_one_finding_listing_both_files() {
+    void a_controller_and_a_template_are_separate_findings_each_with_its_own_document() {
+        // Until 27 Sep they were one finding. They split when a template became satisfiable by its
+        // feature file: in one finding that allowance would have let a controller through too.
         List<DocsSync.Finding> found = blocking(CONTROLLER, TEMPLATE);
 
-        assertEquals(1, found.size());
-        assertEquals(List.of(CONTROLLER, TEMPLATE), found.get(0).files());
+        assertEquals(2, found.size());
+        assertEquals(List.of(CONTROLLER), found.get(0).files());
+        assertEquals(List.of(TEMPLATE), found.get(1).files());
+    }
+
+    @Test
+    void a_page_template_changed_with_its_feature_file_needs_nothing_more() {
+        // A class or a layout detail in a template changes no route; the feature it belongs to is
+        // where that is described (decided by the human on 27 Sep).
+        assertEquals(List.of(), findings(TEMPLATE, "docs/features/FEAT-003-landing-page.md"));
+    }
+
+    @Test
+    void a_controller_is_not_let_through_by_a_feature_file_alone() {
+        assertEquals(
+                1,
+                blocking(CONTROLLER, "docs/features/FEAT-003-landing-page.md").size());
+    }
+
+    @Test
+    void the_shared_page_frame_is_not_tracked() {
+        // Like the Java under shared/: layout every page sits in, not a contract a route depends on.
+        assertEquals(List.of(), findings("app/src/main/resources/templates/shared/web/Layout.html"));
     }
 
     @Test
