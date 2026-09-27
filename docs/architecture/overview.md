@@ -49,7 +49,7 @@ an engine the product does not ship on.
 **Declared in `app/pom.xml` since 21 September, ahead of the code that uses them.** Both database
 drivers and the two Hibernate Search artifacts (mapper-orm, backend-lucene) are on the build now.
 H2 has been exercised by every persistence test since phase 2 step 1 and the PostgreSQL driver by
-one manual run (below, DEBT-007); no class or test uses Hibernate Search yet (DEBT-004).
+the `postgres` profile since 27 September (below); no class or test uses Hibernate Search yet (DEBT-004).
 
 **Flyway needs a second artifact for PostgreSQL.** Since Flyway 10 each database is its own module:
 `flyway-core` alone runs on H2 but refuses PostgreSQL at start-up with `Unsupported Database`. Found
@@ -58,8 +58,10 @@ schema freeze; every test runs on H2 and could not show it. `flyway-database-pos
 version from the Spring Boot BOM, 11.7.2 like `flyway-core`) was added to `app/pom.xml`. With it,
 migrations V1–V5 apply to an empty PostgreSQL database, Hibernate's `validate` accepts the mapping,
 and the `seed` profile imports the 20 articles; the landing page and an article page answer `200`.
-That was a manual run against a throwaway container, not a test — no automated test runs on
-PostgreSQL yet, which is recorded as DEBT-007.
+That was a manual run against a throwaway container. **Since 27 September `./mvnw -P postgres
+verify` runs the whole suite on PostgreSQL 17** through Testcontainers' JDBC URL
+(`org.testcontainers:postgresql`, test scope, version from the Spring Boot BOM), and fails when
+Docker is not running; the default build stays on H2 and needs no Docker (DEBT-007, resolved).
 
 **Markdown conversion: commonmark-java 0.30.0**, added 25 September for the article page. It has no
 dependencies of its own and is used only inside `wikilink/WikiLinkRenderer`, which is plain Java, so

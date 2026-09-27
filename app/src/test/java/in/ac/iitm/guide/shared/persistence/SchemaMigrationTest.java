@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.sql.ResultSet;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import javax.sql.DataSource;
@@ -61,29 +62,13 @@ class SchemaMigrationTest {
     @Test
     // trace:FR-009
     void article_pinned_at_is_indexed_so_the_homepage_does_not_scan_every_row() throws Exception {
-        try (var connection = dataSource.getConnection()) {
-            var indexedColumns = new HashSet<String>();
-            try (ResultSet indexInfo = connection.getMetaData().getIndexInfo(null, null, "ARTICLE", false, false)) {
-                while (indexInfo.next()) {
-                    indexedColumns.add(indexInfo.getString("COLUMN_NAME"));
-                }
-            }
-            assertThat(indexedColumns).contains("PINNED_AT");
-        }
+        assertThat(indexedColumnsOfArticle()).contains("PINNED_AT");
     }
 
     @Test
     // trace:FR-009
     void article_published_at_is_indexed_so_the_recent_list_does_not_sort_every_row() throws Exception {
-        try (var connection = dataSource.getConnection()) {
-            var indexedColumns = new HashSet<String>();
-            try (ResultSet indexInfo = connection.getMetaData().getIndexInfo(null, null, "ARTICLE", false, false)) {
-                while (indexInfo.next()) {
-                    indexedColumns.add(indexInfo.getString("COLUMN_NAME"));
-                }
-            }
-            assertThat(indexedColumns).contains("PUBLISHED_AT");
-        }
+        assertThat(indexedColumnsOfArticle()).contains("PUBLISHED_AT");
     }
 
     @Test
@@ -146,7 +131,8 @@ class SchemaMigrationTest {
                         "INSERT INTO article (id, title, summary, body, published_at, updated_at)"
                                 + " VALUES (?, 'No address', 's', 'b', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
                         UUID.randomUUID()))
-                .hasMessageContaining("SLUG");
+                .message()
+                .containsIgnoringCase("slug");
     }
 
     @Test
@@ -306,5 +292,23 @@ class SchemaMigrationTest {
         var tag = new Tag();
         tag.setName(name);
         return tag;
+    }
+
+    /**
+     * Upper-cased: H2 stores unquoted names in upper case and PostgreSQL in lower case, and the
+     * metadata lookup only matches the stored form (found by the postgres profile, 27 Sep).
+     */
+    private Set<String> indexedColumnsOfArticle() throws Exception {
+        try (var connection = dataSource.getConnection()) {
+            var metaData = connection.getMetaData();
+            var table = metaData.storesLowerCaseIdentifiers() ? "article" : "ARTICLE";
+            var indexedColumns = new HashSet<String>();
+            try (ResultSet indexInfo = metaData.getIndexInfo(null, null, table, false, false)) {
+                while (indexInfo.next()) {
+                    indexedColumns.add(indexInfo.getString("COLUMN_NAME").toUpperCase(Locale.ROOT));
+                }
+            }
+            return indexedColumns;
+        }
     }
 }

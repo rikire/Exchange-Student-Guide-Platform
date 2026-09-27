@@ -38,8 +38,10 @@ Make it survive real use and real inputs, and make it something a third person c
       closed or entered in the debt register, never merely discussed
 - [ ] Load check: 100 articles of 500 words, search under 2 seconds
       — check: run on the demo stand, not a developer machine, and the number recorded
-- [ ] PostgreSQL profile with Testcontainers
+- [~] PostgreSQL profile with Testcontainers
       — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
+      **Built early, 27 Sep:** `-P postgres` passes all tests locally on PostgreSQL 17.11. Left for
+      this step: running it in CI.
 - [~] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
       — check: media and the index survive `docker compose down` and come back on the next start
       **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the

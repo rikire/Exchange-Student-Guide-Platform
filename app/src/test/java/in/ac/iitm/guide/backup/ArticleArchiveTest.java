@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
 /**
  * The real migrations and the real Hibernate session, no mocks: what matters about an import is
@@ -435,13 +438,18 @@ class ArticleArchiveTest {
 
     /** Every stored fact about every article, as one comparable line each. */
     private List<String> snapshot() {
+        // Tags are joined here rather than in SQL: H2's LISTAGG and PostgreSQL's STRING_AGG differ, and
+        // this test runs on both (the postgres profile, 27 Sep).
+        var tagsBySlug = new HashMap<String, List<String>>();
+        jdbc.query(
+                "SELECT a.slug, t.name FROM article a JOIN article_tag j ON j.article_id = a.id"
+                        + " JOIN tag t ON t.id = j.tag_id ORDER BY t.name",
+                (RowCallbackHandler) row -> tagsBySlug
+                        .computeIfAbsent(row.getString(1), slug -> new ArrayList<>())
+                        .add(row.getString(2)));
         return jdbc.query(
-                """
-                SELECT a.title, a.slug, a.summary, a.body, a.published_at, a.updated_at, a.pinned_at,
-                       COALESCE((SELECT LISTAGG(t.name, ',') WITHIN GROUP (ORDER BY t.name)
-                                 FROM tag t JOIN article_tag j ON j.tag_id = t.id WHERE j.article_id = a.id), '')
-                FROM article a ORDER BY a.slug
-                """,
+                "SELECT a.title, a.slug, a.summary, a.body, a.published_at, a.updated_at, a.pinned_at"
+                        + " FROM article a ORDER BY a.slug",
                 (row, i) -> String.join(
                         "|",
                         row.getString(1),
@@ -454,7 +462,7 @@ class ArticleArchiveTest {
                                 row.getObject(7, OffsetDateTime.class) == null
                                         ? "not pinned"
                                         : row.getObject(7, OffsetDateTime.class).toInstant()),
-                        row.getString(8)));
+                        String.join(",", tagsBySlug.getOrDefault(row.getString(2), List.of()))));
     }
 
     private static String article(String title, String tagsLine, String body) {

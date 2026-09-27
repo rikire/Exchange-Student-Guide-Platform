@@ -51,7 +51,6 @@ None.
 |---|---|---|
 | DEBT-009 | An edit whose article stopped being published answers `404`, not `409` | FR-026 (removing a published article), phase 4. |
 | DEBT-008 | The submission form takes no attachment | the `media` step of phase 3 ([03-main-flow.md](roadmap/03-main-flow.md)). |
-| DEBT-007 | No automated test runs the migrations on PostgreSQL | the first migration added after the schema freeze (V6 or later), or the phase 4 |
 | DEBT-006 | The importer writes articles but no `article_link` rows | the first code that writes `article_link` — the extractor in phase 3, or FR-006 in phase |
 | DEBT-004 | Hibernate Search's two `app/pom.xml` dependencies are declared with no code or test using them yet | already past — recorded at creation, not deferred. |
 | DEBT-002 | The process layer cannot be packaged for a second repository | the first time a second repository needs this, or phase 5 handover — whichever comes |

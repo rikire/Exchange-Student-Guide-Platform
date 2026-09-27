@@ -66,7 +66,12 @@ limit or of a wrong type, and one test per criterion — FR-010's two and FR-011
 
 ### DEBT-007 — No automated test runs the migrations on PostgreSQL
 
-**Status:** open
+**Status:** resolved 2026-09-27 — `./mvnw -P postgres verify` runs the whole suite on PostgreSQL 17
+through Testcontainers' JDBC URL (`org.testcontainers:postgresql`, test scope, 1.21.4 from the Spring
+Boot BOM) and fails when Docker is not running, as the human chose. Shown red with
+`flyway-database-postgresql` removed ("Unsupported Database: PostgreSQL 17.11"). Its first run found
+three tests that only held on H2 — upper-case metadata names and `LISTAGG` — and they were made
+portable; no product defect.
 **Created:** 2026-09-26
 **Marker:** none in code — an absence: every test that touches the database runs on H2
 
@@ -159,7 +164,8 @@ tags and must use the same published type, not a third copy.
 
 **Narrowed 26 Sep (phase 2 audit):** the entry was written for four dependencies. H2 is now
 exercised by every persistence and controller test, so its clause is met. The PostgreSQL driver was
-run once by hand against PostgreSQL 17.11; its automated test is DEBT-007. What remains here is
+run once by hand against PostgreSQL 17.11, and since 27 Sep by every test under `-P postgres`
+(DEBT-007, resolved), so its clause is met too. What remains here is
 Hibernate Search, which no class and no test uses (`grep` for `hibernate.search`, `@Indexed` and
 `SearchSession` under `app/src` finds nothing). The text below is the original, kept for the record.
 

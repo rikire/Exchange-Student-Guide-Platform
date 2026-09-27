@@ -1,7 +1,7 @@
 ---
 id: FEAT-005
 title: Submitting a new article or an edit
-status: in-progress
+status: done
 covers: [FR-003, FR-008, FR-010, FR-011, NFR-006]
 slice: contribute
 routes: ["GET /submit", "POST /submissions", "GET /articles/{title}/edit", "POST /articles/{title}/edits", "GET /submissions/{number}/confirmation"]

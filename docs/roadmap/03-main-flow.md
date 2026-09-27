@@ -77,6 +77,44 @@ the criteria do not reach it.
       — check: both members have authored commits in **every** week of this phase, with the hook's
       journal commits excluded — `sh scripts/contribution.sh` reports the two apart
 
+## Queue raised on 27 September
+
+Raised by the human after FEAT-005, taken **one at a time in this order** — the next is discussed
+only when the one before is settled. Items 2–7 change requirements or architecture, so each starts
+as a discussion and becomes a requirement, an ADR or a step above only with the human's decision.
+Where the steps above and this queue compete for the same days, the human orders them.
+
+1. [x] **PostgreSQL profile** — `-P postgres` runs the tests on PostgreSQL in Testcontainers and
+   fails when Docker is not running; closes DEBT-007 and lets FEAT-005 be marked done
+   — check: the profile passes, and fails with `flyway-database-postgresql` removed
+   **Done 27 Sep:** 164 tests pass on PostgreSQL 17.11; red with the Flyway module removed. The
+   failure without Docker was not run, since the demo stand runs on the same Docker.
+2. [ ] **Markdown editor** — first the requirement (what a contributor must be able to do, on a
+   phone, in Devanagari and Tamil, without JavaScript), then the library, from a sourced comparison
+   — check: a requirement with acceptance criteria agreed, and a library chosen with its version,
+   licence and WebJar verified
+3. [ ] **Responsive layout** — a requirement for every screen from phone to desktop, and how to build
+   it (own tokens and CSS, or a framework)
+   — check: the requirement agreed; the approach recorded
+4. [ ] **Frontend interactivity** — whether a lightweight library (htmx, Alpine.js or none) is
+   added, and for what
+   — check: the choice recorded as an ADR with the alternatives weighed
+5. [ ] **All screens, with features not yet built** — how screens of unbuilt slices are shown
+   without fake data passing for real (for example fixtures only under a separate profile, each one a
+   debt entry)
+   — check: the option chosen; every screen in `docs/design/screens/` reachable
+6. [ ] **Email one-time code for submitting** — against spam and bots, a way to ban an address
+   later, and approval status sent by email. Collects an email address but creates no account;
+   touches CON-001's reason (personal data), ADR-0008 (which challenge), a mail server, and what OGE
+   agrees to store
+   — check: a requirement and an ADR agreed, and the stakeholder's answer recorded
+7. [ ] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
+   Reverses CON-004 ("No diffs"); belongs to the review screen of `moderate` (FR-015)
+   — check: CON-004 revised by the human and the requirement written
+8. [ ] **Walk through every screen and feature** with the human, and turn what comes out into
+   requirements and steps
+   — check: the list of changes recorded
+
 ## Readiness criterion
 
 The mid-demo scenario runs end to end on real data; both of us appear in the git history in every

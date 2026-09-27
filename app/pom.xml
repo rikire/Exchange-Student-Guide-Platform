@@ -122,6 +122,13 @@
       <version>${db-util.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- The postgres profile below runs the suite on a throwaway PostgreSQL through this module's JDBC
+         URL; the version is Spring Boot's (DEBT-007). -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -145,4 +152,27 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- ./mvnw -P postgres verify: the same tests on PostgreSQL 17, the production database, instead
+         of H2. A container per JVM via Testcontainers' JDBC URL; without a running Docker the context
+         cannot start and the build fails, since a skipped check would pass silently. -->
+    <profile>
+      <id>postgres</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <spring.datasource.url>jdbc:tc:postgresql:17:///guide?TC_DAEMON=true</spring.datasource.url>
+                <spring.datasource.driver-class-name>org.testcontainers.jdbc.ContainerDatabaseDriver</spring.datasource.driver-class-name>
+              </systemPropertyVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
