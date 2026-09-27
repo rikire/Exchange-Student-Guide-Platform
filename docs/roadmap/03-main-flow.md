@@ -126,6 +126,12 @@ Where the steps above and this queue compete for the same days, the human orders
    scrolled sideways at 320 px, targets of 22–40 px, one axe failure), now green at all four widths.
    **Agreed next, 27 Sep:** `moderate` (with item 8's diff if CON-004 is revised), then `search`, then
    the content, then item 4; the questions for OGE (item 10) are worth asking now.
+   **Update 28 Sep:** `moderate` was built by Abdirakhim (FEAT-006, `379f554`) while the queue was
+   being worked, so the next step is `search`, then the content, then item 4. Item 8 now means adding
+   the diff to FEAT-006's review screen. `BrowserLayoutTest` already checks the moderation pages
+   (nine pages at four widths, green on 28 Sep). Waiting for the human: whether CON-004 ("No diffs") is
+   revised for item 8, and whether ADR-0014's wording, which still names `ui-routes.md` as the source
+   of the pages, is brought in line with `routes.yml`.
 
 4. [ ] **Build the Markdown editor** — FR-027 and FR-028 on the `contribute` form, as ADR-0013
    decides: EasyMDE from its WebJar, a preview endpoint that renders with `WikiLinkRenderer` and caps
