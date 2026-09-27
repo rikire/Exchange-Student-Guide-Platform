@@ -7,6 +7,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
@@ -76,6 +77,10 @@ class BrowserLayoutTest {
                     + "- Photographs\n- Proof of address\n\nछात्रावास में पंजीकरण। விடுதி பதிவு.");
             article.setPublishedAt(now);
             article.setUpdatedAt(now);
+            var tag = new Tag();
+            tag.setName("visa");
+            entityManager.persist(tag);
+            article.setTags(Set.of(tag));
             entityManager.persist(article);
         });
         jdbc.update(
@@ -94,7 +99,9 @@ class BrowserLayoutTest {
             playwright.close();
         }
         jdbc.execute("DELETE FROM submission");
+        jdbc.execute("DELETE FROM article_tag");
         jdbc.execute("DELETE FROM article");
+        jdbc.execute("DELETE FROM tag");
     }
 
     @TestFactory
@@ -142,7 +149,8 @@ class BrowserLayoutTest {
     @SuppressWarnings("unchecked")
     private static List<String> pages() throws IOException {
         Map<String, Object> contract = new Yaml().load(Files.readString(RouteContractTest.CONTRACT));
-        var samples = Map.of("{title}", "registering-with-frro", "{number}", NUMBER, "{query}", "frro");
+        var samples =
+                Map.of("{title}", "registering-with-frro", "{number}", NUMBER, "{query}", "frro", "{tag}", "visa");
         var pages = new ArrayList<String>();
         for (var route : (List<Map<String, Object>>) contract.get("routes")) {
             if (!"built".equals(route.get("status")) || !((List<String>) route.get("methods")).contains("GET")) {

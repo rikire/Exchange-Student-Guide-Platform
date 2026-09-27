@@ -49,6 +49,22 @@ routes:
       FR-007 (UC-001)
 
   - methods: [GET]
+    path: /tags/{tag}
+    slice: taxonomy
+    status: built
+    template: >-
+      `taxonomy/TagBrowse.html`
+    fields: >-
+      —
+    responses: >-
+      `200` when a published article carries a tag with this address; `404` otherwise, including a
+      tag only a pending or rejected submission or a removed article carries. The address is the tag's name by the article
+      address rule (`wikilink`'s `ArticleAddress`), so `visa/frro` and `visa frro` share `/tags/visa-frro`
+      and a tag of only symbols has none (decided 28 Sep, FEAT-008)
+    serves: >-
+      FR-008 (UC-002)
+
+  - methods: [GET]
     path: /media/{id}
     slice: media
     status: planned
@@ -217,11 +233,6 @@ routes:
 
 # Features whose routes are not designed yet: kept here so the whole contract is in one place.
 deferred:
-  - feature: >-
-      Browse/filter articles by tag
-    priority: should
-    requirements: >-
-      FR-008
   - feature: >-
       Download a media attachment
     priority: should

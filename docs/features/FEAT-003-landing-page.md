@@ -63,9 +63,10 @@ The requirement fixes neither the numbers nor the overlap; these are ours, each 
 - **Tags on the cards load in batches of 50** (`hibernate.default_batch_fetch_size`), not one query per
   card. A collection join fetch was rejected because Hibernate would then apply the page limit in
   memory. The query count does not grow with the number of articles: `PageQueryCountTest`.
-- **The search box submits to `/search`, which does not exist until phase 3**, so submitting it gives
-  a 404 for now. The box is the requirement ("a search entry point"); the route is FR-007.
-- **Tags are shown but do not link anywhere yet**: browsing by tag is FR-008, phase 3.
+- **The search box submits to `/search`**, served since 28 Sep by FEAT-007. The box is the
+  requirement ("a search entry point"); the route is FR-007.
+- **Every tag links to its page** (`/tags/{tag}`, FEAT-008, since 28 Sep), on the article cards and
+  in the tag list.
 - **The frame every page sits in is `shared/web/Layout.html`**, with the design tokens in
   `static/css/tokens.css`. Bootstrap is not used: the design screens are written on plain CSS with the
   tokens of [reference.md](../design/reference.md), and adding it later is one stylesheet link.

@@ -25,7 +25,7 @@
           <h3 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
           <p class="article-card-summary" th:text="${card.summary}">Summary</p>
           <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
-            <li class="chip" th:each="tag : ${card.tags}" th:text="${tag}">tag</li>
+            <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${card.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
           </ul>
         </article>
       </div>
@@ -39,7 +39,7 @@
           <h3 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
           <p class="article-card-summary" th:text="${card.summary}">Summary</p>
           <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
-            <li class="chip" th:each="tag : ${card.tags}" th:text="${tag}">tag</li>
+            <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${card.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
           </ul>
         </article>
       </div>
@@ -48,7 +48,7 @@
     <section th:if="${!landing.tags.isEmpty()}">
       <h2 class="section-title">Tags</h2>
       <ul class="tag-cloud">
-        <li class="chip" th:each="tag : ${landing.tags}" th:text="${tag}">tag</li>
+        <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${landing.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
       </ul>
     </section>
   </main>

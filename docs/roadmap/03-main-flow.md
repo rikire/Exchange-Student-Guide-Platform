@@ -55,9 +55,12 @@ the criteria do not reach it.
       then derived by the dimensions of testing.md, each now a test, five of them answers
       decided by the human, one of them an escape that stays a link (a code span shows the syntax).
       The link extractor of DEBT-006 waits for FR-006 in phase 4, by the human's decision.
-- [ ] `taxonomy` — tags, navigation by tag
+- [x] `taxonomy` — tags, navigation by tag
       — check: browsing a tag returns exactly the published articles carrying it — an unapproved
       submission with that tag must not appear
+      **Done 28 Sep:** [FEAT-008](../features/FEAT-008-browsing-by-tag.md), `GET /tags/{tag}`, every
+      FR-008 criterion a test in `TagBrowseTest`. A tag's address follows the article address rule
+      (decided by the human over five alternatives), and every tag chip is now a link.
 - [x] `search` — indexing and querying, the English analyzer (renamed 28 Sep by the human from
       "both analyzers": the Hindi and Tamil one is NFR-003's)
       — check: FR-007's four criteria are four tests, including both negative ones (an unapproved

@@ -3,6 +3,7 @@ package in.ac.iitm.guide.home.internal;
 import in.ac.iitm.guide.home.persistence.LandingReadRepository;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +38,8 @@ public class LandingPageService {
         var recent =
                 articles.findByPinnedAtIsNullAndRemovedAtIsNullOrderByPublishedAtDesc(PageRequest.of(0, RECENT_LIMIT));
         var tags = articles.findTagNamesInUse(PageRequest.of(0, TAG_LIMIT));
-        return new LandingPage(cards(pinned), cards(recent), tags);
+        return new LandingPage(
+                cards(pinned), cards(recent), tags.stream().map(TagLink::of).toList());
     }
 
     private static List<LandingPage.Card> cards(List<Article> articles) {
@@ -47,7 +49,7 @@ public class LandingPageService {
     private static LandingPage.Card card(Article article) {
         // A title with no letters or digits has no address and could not have been published.
         var path = ArticleAddress.pathOf(article.getSlug());
-        var tags = article.getTags().stream().map(Tag::getName).sorted().toList();
+        var tags = TagLink.of(article.getTags().stream().map(Tag::getName).toList());
         return new LandingPage.Card(article.getTitle(), article.getSummary(), path, tags);
     }
 }

@@ -119,6 +119,10 @@ articles and an edit, a wrong and a right password, approving one article, rejec
 approving the edit. On that acceptance FR-014, FR-017, FR-018 and FR-020 are `done`; FR-015 stays
 `in-progress` until the review page shows media (`media` step).
 
+**28 Sep, with FEAT-008:** the queue's date is formatted in English whatever the moderator's browser
+asks for (`the_date_in_the_queue_is_in_english_whatever_language_the_browser_asks_for`, red first
+with a Russian `Accept-Language`), as the human asked that everything be in English.
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).

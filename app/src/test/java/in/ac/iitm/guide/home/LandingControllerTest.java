@@ -135,7 +135,8 @@ class LandingControllerTest {
 
         var cloud = landing().split("class=\"tag-cloud\"", 2)[1];
 
-        assertThat(count(cloud, "<li class=\"chip\"")).isEqualTo(50);
+        // "chip" and not "chip\"": a tag with a page is "chip chip-link" since FEAT-008.
+        assertThat(count(cloud, "<li class=\"chip")).isEqualTo(50);
         assertThat(cloud).contains(">tag-049<").doesNotContain(">tag-050<");
     }
 

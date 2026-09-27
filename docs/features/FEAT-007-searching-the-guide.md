@@ -110,8 +110,8 @@ test did; without `tags.name` among the fields, the tag test did.
 **Accepted by the human on 28 Sep** after using it in a browser (H2, `seed` profile): searching,
 following the results to articles and on through their links. The empty-query prompt in the
 browser's own language (`required` on the input) is kept as it is, by the human's decision. Tags on
-a result are not links yet: browsing by tag is FR-008, the `taxonomy` step. On that acceptance FR-007
-is `done`.
+a result were not links yet: browsing by tag is FR-008, the `taxonomy` step (links since 28 Sep,
+FEAT-008). On that acceptance FR-007 is `done`.
 
 ## Deliberately out of scope
 

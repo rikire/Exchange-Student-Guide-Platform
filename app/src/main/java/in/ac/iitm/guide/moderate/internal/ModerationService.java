@@ -13,7 +13,9 @@ import in.ac.iitm.guide.taxonomy.TagRejectedException;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -53,7 +55,17 @@ public class ModerationService {
     }
 
     /** A line of the queue. */
-    public record QueueEntry(String number, SubmissionType type, String title, OffsetDateTime submittedAt) {}
+    public record QueueEntry(String number, SubmissionType type, String title, OffsetDateTime submittedAt) {
+
+        // English whatever the moderator's browser asks for (the human, 28 Sep).
+        private static final DateTimeFormatter SUBMITTED =
+                DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm", Locale.ENGLISH);
+
+        /** @return {@link #submittedAt} as the queue shows it */
+        public String submitted() {
+            return SUBMITTED.format(submittedAt);
+        }
+    }
 
     /** A submission as the moderator reads it; {@code status} says whether it can still be decided. */
     public record Review(

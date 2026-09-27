@@ -30,7 +30,7 @@
           <h2 class="article-card-title"><a th:href="@{${hit.path}}" th:text="${hit.title}">Registering with FRRO</a></h2>
           <p class="article-card-summary" th:text="${hit.summary}">Summary</p>
           <ul class="chip-row" th:if="${!hit.tags.isEmpty()}">
-            <li class="chip" th:each="tag : ${hit.tags}" th:text="${tag}">tag</li>
+            <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${hit.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
           </ul>
         </article>
       </div>

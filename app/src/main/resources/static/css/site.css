@@ -134,6 +134,18 @@ p a, .article-body a { text-decoration: underline; }
   .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 }
 
+/* FEAT-008: the tag page, and a tag chip that leads to it. */
+.eyebrow { color: var(--ink-soft); margin: 0 0 var(--space-2); }
+.tag-title { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-3); }
+.article-card-meta { margin: 0; color: var(--ink-soft); }
+.chip a { color: inherit; text-decoration: none; }
+.chip a:hover { text-decoration: underline; }
+/* A linked chip is a target: 44 px on a phone or tablet (NFR-008), the design's 26 px pill on a wide screen. */
+@media (max-width: 1023px) {
+  .chip-link { height: auto; padding: 0; }
+  .chip-link > a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--target); min-width: var(--target); padding: 0 var(--space-3); }
+}
+
 /* A link that stands alone rather than in running text is a target, 44 px tall (NFR-008). */
 .page-actions a { display: inline-flex; align-items: center; min-height: var(--target); }
 

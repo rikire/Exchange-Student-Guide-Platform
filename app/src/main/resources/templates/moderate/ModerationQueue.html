@@ -19,7 +19,7 @@
           <td class="queue-number" th:text="${entry.number}">SUB-7QM2-K9XP-4TVB</td>
           <td><span class="chip" th:text="${entry.type.name() == 'EDIT'} ? 'Edit' : 'New article'">New article</span></td>
           <td th:text="${entry.title}">Getting a local SIM card</td>
-          <td><time th:datetime="${entry.submittedAt}" th:text="${#temporals.format(entry.submittedAt, 'd MMM yyyy, HH:mm')}">28 Sep 2026, 10:00</time></td>
+          <td><time th:datetime="${entry.submittedAt}" th:text="${entry.submitted}">28 Sep 2026, 10:00</time></td>
           <td><a th:href="@{/moderate/submissions/{number}(number=${entry.number})}">Review →</a></td>
         </tr>
       </tbody>

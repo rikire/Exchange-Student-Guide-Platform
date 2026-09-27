@@ -8,7 +8,7 @@
   <main class="site-main">
     <article>
       <ul class="chip-row" th:if="${!article.tags.isEmpty()}">
-        <li class="chip" th:each="tag : ${article.tags}" th:text="${tag}">tag</li>
+        <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${article.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
       </ul>
       <h1 class="article-title" th:text="${article.title}">Title</h1>
       <!-- th:utext: bodyHtml is WikiLinkRenderer's output. The converter escapes raw HTML and

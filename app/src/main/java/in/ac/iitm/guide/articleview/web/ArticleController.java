@@ -2,6 +2,7 @@ package in.ac.iitm.guide.articleview.web;
 
 import in.ac.iitm.guide.articleview.persistence.ArticleReadRepository;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ class ArticleController {
         var article =
                 articles.findBySlugAndRemovedAtIsNull(slug).orElseThrow(() -> new ArticleNotFoundException(address));
 
-        var tags = article.getTags().stream().map(Tag::getName).sorted().toList();
+        var tags = TagLink.of(article.getTags().stream().map(Tag::getName).toList());
         model.addAttribute(
                 "article",
                 new ArticlePage(
@@ -73,5 +74,5 @@ class ArticleController {
      * What the template shows; {@code bodyHtml} is the converter's output and is the only unescaped
      * part. {@code editPath} leads to proposing an edit (FR-011, {@code contribute}).
      */
-    record ArticlePage(String title, List<String> tags, String bodyHtml, String editPath) {}
+    record ArticlePage(String title, List<TagLink> tags, String bodyHtml, String editPath) {}
 }

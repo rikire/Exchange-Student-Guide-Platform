@@ -2,6 +2,7 @@ package in.ac.iitm.guide.search.internal;
 
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class ArticleSearchService {
     }
 
     private static SearchResults.Hit hit(Article article) {
-        var tags = article.getTags().stream().map(Tag::getName).sorted().toList();
+        var tags = TagLink.of(article.getTags().stream().map(Tag::getName).toList());
         return new SearchResults.Hit(
                 article.getTitle(), article.getSummary(), ArticleAddress.pathOf(article.getSlug()), tags);
     }

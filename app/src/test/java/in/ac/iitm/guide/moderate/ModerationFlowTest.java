@@ -92,6 +92,22 @@ class ModerationFlowTest {
 
     @Test
     // trace:FR-014
+    void the_date_in_the_queue_is_in_english_whatever_language_the_browser_asks_for() throws Exception {
+        // The human asked on 28 Sep that everything be in English; the month name followed the
+        // browser's Accept-Language until then.
+        pending("Getting a SIM card", MONDAY);
+
+        var queue = mockMvc.perform(get("/moderate/queue").session(loggedIn()).header("Accept-Language", "ru-RU"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(queue).contains("28 Sep 2026");
+    }
+
+    @Test
+    // trace:FR-014
     void with_nothing_pending_the_queue_says_it_is_empty() throws Exception {
         var rejected = pending("Already turned down", MONDAY);
         decide(rejected, SubmissionStatus.REJECTED);
