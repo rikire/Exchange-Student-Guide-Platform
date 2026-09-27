@@ -39,8 +39,10 @@ moderation state machine, the search engine, the media storage layout are ADRs; 
 
 ### 4. The route contract
 
-Routes before controllers. `docs/architecture/ui-routes.md` is the source of truth: path, slice,
-template, form fields, response codes, and `trace: FR-XXX`. It is the server-rendered equivalent of an
+Routes before controllers. `docs/architecture/routes.yml` is the source of truth: methods, path, slice,
+status, template, form fields, response codes, and the requirements served. `ai-tools routes` writes
+its tables into `docs/architecture/ui-routes.md`, and `RouteContractTest` fails when a controller and
+the file disagree in either direction (since 27 Sep). It is the server-rendered equivalent of an
 API specification, and the documentation gate treats it that way.
 
 ### 5. The schema
@@ -57,7 +59,7 @@ Designed before the implementation exists. Each layer has its own notion of "int
 
 | Level | What counts as the interface here |
 |---|---|
-| Routes | The entry in `ui-routes.md`: path, method, response codes, form fields |
+| Routes | The entry in `routes.yml`: path, method, response codes, form fields |
 | Slice | The types that sit directly in the slice package — everything else is internal |
 | Between slices | A published type in the slice package, or an `ApplicationEvent` |
 | Domain | The types and their invariants: what may exist at all |

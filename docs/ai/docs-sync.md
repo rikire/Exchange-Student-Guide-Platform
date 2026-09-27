@@ -12,7 +12,7 @@ One rule: **a change in behaviour and a change in its description happen in the 
 |---|---|---|
 | `app/src/main/resources/db/migration/**` | `docs/architecture/data-model.md` or the ERD source | blocks |
 | `shared/persistence/**` | `docs/architecture/data-model.md` or the ERD source | blocks |
-| A controller or `templates/**` | `docs/architecture/ui-routes.md` | blocks |
+| A controller or `templates/**` | `docs/architecture/routes.yml`, the route contract (or `ui-routes.md`, whose tables it writes) | blocks |
 | A published type in a slice package | `docs/architecture/overview.md`, an ADR, or the feature file | blocks |
 | A slice's internals | The feature file — the `code`, `tests` and `status` fields | warns |
 | `pom.xml` | An ADR or `docs/architecture/overview.md` | warns |

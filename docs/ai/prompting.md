@@ -87,7 +87,7 @@ a decision that belongs to the human. Walk this list and name only the rows that
 | What does a visitor see when it fails? | Error paths are where "done" becomes "half done" |
 | What happens with empty or absent data? | No results, no tags, a deleted article behind a wiki link |
 | Does it need a migration? | The schema is frozen after phase 2 |
-| Does the route contract change? | Then `ui-routes.md` changes in the same turn |
+| Does the route contract change? | Then `routes.yml` changes in the same turn, and `ai-tools routes` rewrites `ui-routes.md` |
 | Who is allowed to do it? | Anonymous contributor, or moderator only |
 | Does it touch the moderation queue, media or the search index? | Those three couple to almost everything |
 | What is the acceptance criterion? | It becomes a test name; if it cannot be phrased, it cannot be tested |

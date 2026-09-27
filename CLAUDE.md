@@ -128,7 +128,8 @@ command that errors is worse than one that is absent, because it is tried.
 
 - Bypass checks: `--no-verify`, `-DskipTests`, a suppression without an explanation.
 - Edit generated files: `docs/traceability.md`, `docs/features/README.md`, `docs/team/ownership.md`,
-  `docs/gap-list.md`, `docs/diagrams/out/`. Each is rewritten by its generator, so a hand edit is lost
+  `docs/gap-list.md`, `docs/diagrams/out/`, the route tables in `docs/architecture/ui-routes.md` (edit
+  `routes.yml` instead). Each is rewritten by its generator, so a hand edit is lost
   on the next run.
 - Change your own instructions (`CLAUDE.md`, `docs/ai/`, `.claude/`) without agreement, or in a
   commit that also carries code.

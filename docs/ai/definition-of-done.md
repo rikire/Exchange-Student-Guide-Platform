@@ -43,8 +43,9 @@ is what a reviewer needs and the diff cannot show.
 
 ## 4. Routes
 
-- Every new or changed route is in `docs/architecture/ui-routes.md`: path, slice, template, form
-  fields, response codes, `trace`.
+- Every new or changed route is in `docs/architecture/routes.yml`, marked `built` once it is served:
+  path, slice, template, form fields, response codes, the requirements it serves. `ai-tools routes`
+  then rewrites the tables in `ui-routes.md`, and `RouteContractTest` holds the file to the code.
 - Error paths are covered, not only the happy one: what a visitor sees on 404 and on a rejected form.
 
 ## 5. Slice boundaries
