@@ -67,6 +67,9 @@ public final class Ownership {
     }
 
     static String build(List<History.Commit> commits, Members members, List<String> slices) {
+        commits = commits.stream()
+                .filter(commit -> !members.isBot(commit.email()))
+                .toList();
         List<String> contributors = new ArrayList<>();
         members.all().forEach(member -> contributors.add(member.id()));
         boolean anyUnregistered = commits.stream()

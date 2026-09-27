@@ -45,6 +45,8 @@ class WeeklyTest {
                     name: Boris B
                     emails:
                       - boris@example.com
+                bots:
+                  - 49699333+dependabot[bot]@users.noreply.github.com
                 """);
         repo = Repo.find(repoRoot.toString());
         members = Members.load(repo);
@@ -324,5 +326,14 @@ class WeeklyTest {
 
         assertEquals(first, Files.readString(repo.resolve("docs/team/weekly-log/" + WEEK + ".md")));
         assertTrue(first.startsWith("# 2026-W38"), first);
+    }
+
+    @Test
+    void a_bots_commits_are_left_out_rather_than_reported_as_unregistered() {
+        String text = log(
+                null, commit("49699333+dependabot[bot]@users.noreply.github.com", WEEK, "build: bump x", "pom.xml"));
+
+        assertFalse(text.contains("UNREGISTERED"), text);
+        assertTrue(section(text, "Anna A").contains("0 authored commits"), text);
     }
 }

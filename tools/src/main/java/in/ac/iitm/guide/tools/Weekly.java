@@ -80,6 +80,9 @@ public final class Weekly {
 
     /** The log for {@code week}: a new one when {@code existing} is null, otherwise that one refreshed. */
     static String build(List<History.Commit> commits, Members members, String week, String existing) {
+        commits = commits.stream()
+                .filter(commit -> !members.isBot(commit.email()))
+                .toList();
         // display name -> the paragraph of figures, in registry order
         Map<String, String> paragraphs = new LinkedHashMap<>();
         for (Members.Member member : members.all()) {

@@ -46,6 +46,8 @@ class OwnershipTest {
                     name: Boris B
                     emails:
                       - boris@example.com
+                bots:
+                  - 49699333+dependabot[bot]@users.noreply.github.com
                 """);
         members = Members.load(Repo.find(repoRoot.toString()));
     }
@@ -254,5 +256,18 @@ class OwnershipTest {
 
         assertTrue(text.contains("**Generated**"), text);
         assertTrue(text.contains("Stop"), text);
+    }
+
+    @Test
+    void a_bots_commits_are_left_out_rather_than_given_an_unregistered_column() {
+        String text = table(
+                commit("anna@example.com", "feat: a", change(BASE + "home/A.java", 1, 0)),
+                commit(
+                        "49699333+dependabot[bot]@users.noreply.github.com",
+                        "build: bump x",
+                        change(BASE + "home/B.java", 1, 0)));
+
+        assertFalse(text.contains("UNREGISTERED"), text);
+        assertEquals("1", row(text, "Per slice", "home").get(1));
     }
 }

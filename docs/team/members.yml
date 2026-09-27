@@ -21,4 +21,9 @@ members:
     emails:
       - abdraoper@gmail.com
 
+# Bots that commit but are not members. Their commits pass the authors check and are left out of
+# the contribution figures: a dependency bump is nobody's work, and whoever merges it answers for it.
+bots:
+  - 49699333+dependabot[bot]@users.noreply.github.com
+
 contact: ge26z860@smail.iitm.ac.in

@@ -31,15 +31,17 @@ public final class Members {
     }
 
     private final List<Member> members;
+    private final List<String> bots;
 
-    private Members(List<Member> members) {
+    private Members(List<Member> members, List<String> bots) {
         this.members = members;
+        this.bots = bots;
     }
 
     public static Members load(Repo repo) throws IOException {
         Path file = repo.resolve(REGISTRY.toString());
         if (!Files.isRegularFile(file)) {
-            return new Members(List.of());
+            return new Members(List.of(), List.of());
         }
         JsonNode root = YAML.readTree(Files.readString(file));
 
@@ -49,11 +51,19 @@ public final class Members {
             node.path("emails").forEach(email -> emails.add(email.asText()));
             parsed.add(new Member(node.path("id").asText(""), node.path("name").asText(""), List.copyOf(emails)));
         }
-        return new Members(List.copyOf(parsed));
+        // Bots commit (Dependabot) but are not members: their work is nobody's contribution, and
+        // listing them keeps them from being reported as a member with an unregistered address.
+        List<String> bots = new ArrayList<>();
+        root.path("bots").forEach(email -> bots.add(email.asText().strip()));
+        return new Members(List.copyOf(parsed), List.copyOf(bots));
     }
 
     public List<Member> all() {
         return members;
+    }
+
+    public boolean isBot(String email) {
+        return email != null && bots.stream().anyMatch(bot -> bot.equalsIgnoreCase(email.strip()));
     }
 
     public Optional<Member> byEmail(String email) {
@@ -83,7 +93,7 @@ public final class Members {
     public List<String> unregisteredAuthors(Repo repo) {
         List<String> unknown = new ArrayList<>();
         for (String email : Git.run(repo, "log", "--format=%ae").lines()) {
-            if (!email.isBlank() && byEmail(email).isEmpty() && !unknown.contains(email)) {
+            if (!email.isBlank() && byEmail(email).isEmpty() && !isBot(email) && !unknown.contains(email)) {
                 unknown.add(email);
             }
         }
