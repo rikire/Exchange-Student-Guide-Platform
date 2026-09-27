@@ -92,3 +92,14 @@ OpenAPI document has nowhere to put.
 
 Revisit if a real machine consumer appears, such as a mobile client or an OGE system pulling
 articles. That is an ADR and a dependency decision, not something to add quietly.
+
+### CON-009 — Two approvals under one address at the same moment are not answered gracefully
+
+**Rationale:** When two moderators approve two different submissions whose titles share an address
+at the same moment, the second one gets an error page (`500`) instead of the contracted `409`. OGE
+moderates behind one shared password (ADR-0009), so two people approving same-titled submissions in
+the same instant is not a realistic event. Nothing is harmed when it happens: the unique `slug`
+refuses the second write, that approval rolls back, and its submission stays pending for a second
+try, which then gets the ordinary `409`. Handling it would take a test that forces the race and code
+that translates the database's refusal. The human judged that not worth it on 28 Sep, so it was
+closed as DEBT-012.

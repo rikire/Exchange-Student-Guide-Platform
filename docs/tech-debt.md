@@ -63,7 +63,11 @@ before login is refused after it.
 
 ### DEBT-012 — Two approvals under one address at the same moment answer `500`, not `409`
 
-**Status:** open
+**Status:** resolved 2026-09-28 — not fixed, by the human's decision: the race needs two moderators
+approving same-titled submissions in one instant behind one shared password, and it harms no data.
+Now the deliberate constraint
+[CON-009](requirements/constraints.md#con-009--two-approvals-under-one-address-at-the-same-moment-are-not-answered-gracefully).
+The code marker is replaced by a reference to it.
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java` — `freeSlug`
 

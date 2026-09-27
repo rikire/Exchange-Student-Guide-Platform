@@ -110,7 +110,8 @@ decided" guard turns three of them red, the invariant test among them.
 is approved against is locked for the approval, so two approved edits of one article at once each
 keep the other's text as their revision instead of both keeping the same old one
 (`ModerateArticleRepositoryTest`). Three lesser risks are debt: simultaneous approvals under one
-address answer `500` ([DEBT-012](../tech-debt.md)), the CSRF token is not replaced on login
+address answer `500` ([DEBT-012](../tech-debt.md), closed on 28 Sep as the constraint
+[CON-009](../requirements/constraints.md), not fixed), the CSRF token is not replaced on login
 ([DEBT-013](../tech-debt.md)), and the stand's session cookie is not `Secure` until TLS
 ([DEBT-014](../tech-debt.md)).
 

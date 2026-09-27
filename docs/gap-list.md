@@ -49,7 +49,6 @@ None.
 |---|---|---|
 | DEBT-014 | The stand's session cookie is not marked `Secure` | the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any |
 | DEBT-013 | The CSRF token is not replaced when the moderator logs in | the security review of phase 4 ([04-hardening.md](roadmap/04-hardening.md)). |
-| DEBT-012 | Two approvals under one address at the same moment answer `500`, not `409` | the edge cases of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), or the first |
 | DEBT-011 | Failed moderator logins are logged but not rate limited | NFR-005, phase 4 ([04-hardening.md](roadmap/04-hardening.md)) — and in any case before |
 | DEBT-010 | An article's old address answers `404` after an edit changes its title | the first renamed article anyone complains about, or the phase 4 edge cases, whichever |
 | DEBT-009 | An edit whose article stopped being published answers `404`, not `409` | FR-026 (removing a published article), phase 4. |

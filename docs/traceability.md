@@ -66,6 +66,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | CON-005 |  |  |  |  |  |  |  | Single-language interface |
 | CON-006 |  |  |  |  |  |  |  | Accepted media types |
 | CON-008 |  |  |  |  |  |  |  | No machine-facing API, and so no OpenAPI specification |
+| CON-009 |  |  |  |  |  |  |  | Two approvals under one address at the same moment are not answered gracefully |
 
 ## Gaps
 
