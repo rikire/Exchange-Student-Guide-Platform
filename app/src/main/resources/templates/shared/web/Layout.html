@@ -17,6 +17,9 @@
       <img class="site-logo" th:src="@{/img/oge-logo.svg}" alt="OGE logo">
       <span class="site-name">Exchange Student Guide</span>
     </a>
+    <nav class="site-nav">
+      <a th:href="@{/submit}">Submit an article</a>
+    </nav>
   </header>
   <main class="site-main" th:replace="${content}">page content</main>
   <footer class="site-footer">Office of Global Engagement, IIT Madras</footer>

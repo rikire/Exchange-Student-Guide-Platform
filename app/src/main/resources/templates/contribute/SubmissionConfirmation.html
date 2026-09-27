@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Submission received — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Your submission is in the queue</h1>
+    <div class="result-card">
+      <p class="number-label">Submission number</p>
+      <p class="submission-number" th:text="${number}">SUB-K7M2-QX9P-4TVB</p>
+      <p>OGE will review it before it is published. <strong>This number is your only way to check on it later</strong>: there is no account to save it to, so keep it somewhere safe.</p>
+      <p><a th:href="@{/}">Back to the guide</a></p>
+    </div>
+  </main>
+</body>
+</html>

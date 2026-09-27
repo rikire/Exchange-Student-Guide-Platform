@@ -66,6 +66,16 @@ dependencies of its own and is used only inside `wikilink/WikiLinkRenderer`, whi
 the choice does not touch the slice rules. Chosen over flexmark-java, whose last release is May 2023;
 the security settings it must run with are in [security.md](security.md), "Article content".
 
+**Spring Security: `spring-boot-starter-security`**, added 27 September with FEAT-005 (version from
+the Spring Boot BOM, 3.5.16), for the CSRF token that [security.md](security.md) requires on every
+state-changing form. `shared/security/WebSecurity` leaves every route public and keeps the defaults:
+a POST without the token is refused with `403` before the controller runs. The token is kept in an
+`HttpOnly` cookie rather than the session, so a form still submits after the 30-minute session has
+expired (decided 27 Sep: writing an article can take longer, and the refusal lost the text); and the default response
+headers are sent, including `Cache-Control: no-store` on static files. Boot's default user store is
+excluded (`application.yml`), so no account exists and no generated password reaches the log. The moderator login of [ADR-0009](adr/ADR-0009-admin-authentication.md) is the next
+thing built on it, with `moderate`.
+
 ## Level 3 — slices
 
 ![Slices](../diagrams/out/c4-component.svg)
@@ -75,9 +85,11 @@ itself, from the imports between slices, and rendered beside the designed one:
 
 ![Slices as the code has them](../diagrams/out/c4-component-actual.svg)
 
-`home`, `articleview` and `backup` each use a published type of `wikilink` (`ArticleAddress`,
-`WikiLinkRenderer`), and `backup` also uses `shared`. `ModularityTest` writes that diagram and checks
-those three arrows are in it, so it cannot drift from the code without a test failing.
+`home`, `articleview`, `backup` and `contribute` each use a published type of `wikilink`
+(`ArticleAddress`, `WikiLinkRenderer`), and `backup` also uses `shared`. Since 27 September
+`backup` and `contribute` also use `taxonomy`'s `Tags`, the only way a tag reaches the table
+(ADR-0005). `ModularityTest` writes that diagram and checks
+those six arrows are in it, so it cannot drift from the code without a test failing.
 
 Ten vertical slices plus `shared`. The list is owned by
 [architecture-rules.md](../ai/architecture-rules.md); the decision to structure the application this
@@ -89,8 +101,9 @@ under `in.ac.iitm.guide` carrying a `package-info.java`, which is all Spring Mod
 it as an application module — so the diagram above and the module list the build sees are the same
 list, and a slice added to one without the other fails a test. On 10 September the packages were
 otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
-and the other six slices (`search`, `taxonomy`, `contribute`, `moderate`, `media`, `report`) stay
-empty until phase 3 ([02-skeleton.md](../roadmap/02-skeleton.md)).
+since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), and the other four
+slices (`search`, `moderate`, `media`, `report`) stay empty until their phase 3 steps
+([03-main-flow.md](../roadmap/03-main-flow.md)).
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

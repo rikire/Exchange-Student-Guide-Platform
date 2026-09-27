@@ -14,13 +14,12 @@ real figure can only be higher.
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
 | FR-001 | in-progress | must | Reading a published article | 3 | 28 | 0 |
-| FR-003 | planned | must | Writing wiki links into a submission | 1 | 0 | 1 |
 | FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
 | FR-006 | planned | could | Backlinks on an article | 3 | 0 | 3 |
 | FR-007 | planned | must | Full-text search across articles | 4 | 0 | 4 |
-| FR-008 | planned | should | Browsing articles by tag | 4 | 2 | 2 |
-| FR-010 | planned | must | Submitting a new article | 4 | 2 | 2 |
-| FR-011 | planned | must | Proposing an edit to an existing article | 5 | 0 | 5 |
+| FR-008 | in-progress | should | Browsing articles by tag | 4 | 9 | 0 |
+| FR-010 | in-progress | must | Submitting a new article | 4 | 16 | 0 |
+| FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 5 | 0 |
 | FR-012 | planned | could | Looking up a submission's status | 3 | 0 | 3 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
 | FR-014 | planned | must | Moderation queue | 2 | 0 | 2 |
@@ -41,7 +40,6 @@ real figure can only be higher.
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
 | NFR-004 | in-progress |  | Exportability | 0 | 24 | 0 |
 | NFR-005 | planned |  | Submission rate limit | 0 | 0 | 0 |
-| NFR-006 | planned |  | Submission number unguessability | 0 | 0 | 0 |
 
 ## Done, with criteria that no test is anchored to
 
@@ -51,9 +49,10 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
+| DEBT-009 | An edit whose article stopped being published answers `404`, not `409` | FR-026 (removing a published article), phase 4. |
+| DEBT-008 | The submission form takes no attachment | the `media` step of phase 3 ([03-main-flow.md](roadmap/03-main-flow.md)). |
 | DEBT-007 | No automated test runs the migrations on PostgreSQL | the first migration added after the schema freeze (V6 or later), or the phase 4 |
 | DEBT-006 | The importer writes articles but no `article_link` rows | the first code that writes `article_link` — the extractor in phase 3, or FR-006 in phase |
-| DEBT-005 | The tag rule of ADR-0005 is written twice until `taxonomy` exists | the first line of code in the `taxonomy` slice. `contribute` (phase 3) will also write |
 | DEBT-004 | Hibernate Search's two `app/pom.xml` dependencies are declared with no code or test using them yet | already past — recorded at creation, not deferred. |
 | DEBT-002 | The process layer cannot be packaged for a second repository | the first time a second repository needs this, or phase 5 handover — whichever comes |
 

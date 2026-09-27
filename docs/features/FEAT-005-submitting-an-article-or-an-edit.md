@@ -2,7 +2,7 @@
 id: FEAT-005
 title: Submitting a new article or an edit
 status: in-progress
-covers: [FR-003, FR-010, FR-011, NFR-006]
+covers: [FR-003, FR-008, FR-010, FR-011, NFR-006]
 slice: contribute
 routes: ["GET /submit", "POST /submissions", "GET /articles/{title}/edit", "POST /articles/{title}/edits", "GET /submissions/{number}/confirmation"]
 tables: [submission, submission_tag, tag, article]
@@ -10,8 +10,21 @@ code:
   - app/src/main/java/in/ac/iitm/guide/taxonomy/Tags.java
   - app/src/main/java/in/ac/iitm/guide/taxonomy/TagRejectedException.java
   - app/src/main/java/in/ac/iitm/guide/taxonomy/persistence/TagRepository.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/web/SubmissionController.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionService.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionNumbers.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionRejectedException.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/internal/ArticleNotPublishedException.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/persistence/ContributeArticleRepository.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/persistence/SubmissionRepository.java
+  - app/src/main/java/in/ac/iitm/guide/shared/security/WebSecurity.java
+  - app/src/main/resources/templates/contribute/SubmissionForm.html
+  - app/src/main/resources/templates/contribute/SubmissionConfirmation.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/taxonomy/TagsTest.java
+  - app/src/test/java/in/ac/iitm/guide/contribute/SubmissionFlowTest.java
+  - app/src/test/java/in/ac/iitm/guide/contribute/internal/SubmissionNumbersTest.java
+  - app/src/test/java/in/ac/iitm/guide/shared/security/WebSecurityTest.java
 ---
 
 # FEAT-005 — Submitting a new article or an edit
@@ -66,6 +79,8 @@ Each follows from something already decided; each has a test.
 - **Title, summary and body are required**; blank after trimming is empty. The title is at most 255
   characters (the column). Blank tag fields are ignored; a tag longer than 64 characters (the column)
   is refused with `422` by `taxonomy`.
+- **FR-008 is covered only for storing a tag** — `Tags`, the one way a tag reaches the table. Browsing
+  by tag is the `taxonomy` step of phase 3 and a feature of its own.
 - **Tags go through `taxonomy`**, which trims and lower-cases them and creates the missing ones
   (ADR-0005). A tag suggested on a submission that is never approved stays in `tag`; the landing page
   lists only tags on live articles, so it is not shown anywhere.
@@ -76,30 +91,41 @@ Each follows from something already decided; each has a test.
   hyphens ignored.
 - **The confirmation page shows the number for any submission that exists**, whatever its state:
   holding the number is the authorisation (ADR-0011).
-- **CSRF** is Spring Security's default token on every POST (security.md), added with this feature
-  because it is the first to have a form. Every route stays public; the moderator login comes with
-  `moderate`.
+- **The tag limit is 64 UTF-16 units, the title's 255**, not characters: H2 counts `VARCHAR` length
+  in UTF-16 units where PostgreSQL counts characters, found by `TagsTest` on 27 Sep. Devanagari and
+  Tamil are one unit a character, so only characters outside the Basic Multilingual Plane (Brahmi,
+  emoji) count twice.
+- **The number is written here, not taken from a library**: Guava's and Commons Codec's base32 are
+  RFC 4648, whose alphabet keeps the `I`, `L`, `O`, `U` that Crockford drops.
+- **An article page links to "Propose an edit", and every page's header to "Submit an article"**.
+- **CSRF** is Spring Security's token on every POST (security.md), added with this feature because
+  it is the first to have a form. It is kept in an `HttpOnly` cookie, not the session, so a form still
+  submits after the session expires (the human's choice on 27 Sep, over a 403 page or a longer
+  session). Every route stays public; the moderator login comes with
+  `moderate`. Boot's default user store is excluded in `application.yml`: it would create a `user`
+  whose random password is written to the log on every start (security.md: no secret in a log line).
 
 ## Acceptance criteria
 
-- [ ] A new article submitted through the form is pending in the queue and the contributor is shown
+- [x] A new article submitted through the form is pending in the queue and the contributor is shown
       its number (FR-010)
-- [ ] A title matching an existing article's case-insensitively is refused with a link to propose an
+- [x] A title matching an existing article's case-insensitively is refused with a link to propose an
       edit to it and the option to change the title (FR-010)
-- [ ] A title whose address is taken by another title is refused the same way (roadmap, 25 Sep)
-- [ ] A proposed edit is pending in the queue, tied to its article, and the contributor is shown its
+- [x] A title whose address is taken by another title is refused the same way (roadmap, 25 Sep)
+- [x] A proposed edit is pending in the queue, tied to its article, and the contributor is shown its
       number (FR-011)
-- [ ] An edit whose new title matches a different article's is refused with a link to that article
+- [x] An edit whose new title matches a different article's is refused with a link to that article
       and the option to change the title (FR-011)
-- [ ] An edit to an article that is not published is refused: `404` on the form and on the POST
+- [x] An edit to an article that is not published is refused: `404` on the form and on the POST
       (FR-011)
-- [ ] `[[Title]]` markup in a submitted body is stored unchanged (FR-003)
-- [ ] A submission is reachable from no public page: its title is on neither `/` nor an article
+- [x] `[[Title]]` markup in a submitted body is stored unchanged (FR-003)
+- [x] A submission is reachable from no public page: its title is on neither `/` nor an article
       address
-- [ ] Submission numbers are not ordered by issue and are drawn from `SecureRandom` (NFR-006)
-- [ ] A number is found ignoring case and hyphens; a number never issued is `404`
-- [ ] A POST without a CSRF token is refused and stores nothing
-- [ ] Tags are stored trimmed and lower-cased, one row per tag however it was spelled (ADR-0005)
+- [x] Submission numbers are not ordered by issue and are drawn from `SecureRandom` (NFR-006)
+- [x] A number is found ignoring case and hyphens; a number never issued is `404`
+- [x] A POST without a CSRF token is refused and stores nothing
+- [x] A form still submits after its session has expired
+- [x] Tags are stored trimmed and lower-cased, one row per tag however it was spelled (ADR-0005)
 
 ## Deliberately out of scope
 

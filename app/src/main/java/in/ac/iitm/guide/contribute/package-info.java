@@ -1,12 +1,7 @@
 /**
  * Creating an article and proposing an edit, both of which enter the moderation queue rather than publishing.
  *
- * <p>Serves FR-010, FR-011, FR-012.
- *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p>Serves FR-003, FR-010, FR-011 (FEAT-005); FR-012's status lookup is phase 4. Writes
+ * {@code submission} only, never {@code article}: publishing is {@code moderate}'s (ADR-0003).
  */
 package in.ac.iitm.guide.contribute;

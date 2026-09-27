@@ -87,7 +87,7 @@ setting.
 
 ### NFR-006 — Submission number unguessability
 
-**Status:** planned
+**Status:** done
 
 A submission number cannot be arrived at by guessing, incrementing, or working backwards from
 another one. It is the only thing standing between a stranger and a contributor's unapproved

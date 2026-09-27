@@ -15,15 +15,15 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 |---|---|---|---|---|---|---|---|---|
 | FR-001 | in-progress | FEAT-002 | Article, ArticleAddress, ArticleController, ArticleNotFoundException, ArticleReadRepository, MediaAsset | ArticleAddressTest, ArticleControllerTest, NotFoundPageTest, PageQueryCountTest, SchemaMigrationTest | V1__create_content_and_moderation_schema, V3__add_media_asset_owner_constraint, V4__add_media_link_and_tag_lookup_indexes, V5__add_article_slug | GET /articles/{title} | article, article_tag, tag | Reading a published article |
 | FR-002 | done | FEAT-001, FEAT-002 | ArticleController, TitleResolver, WikiLinkRenderer | ArticleAddressTest, ArticleControllerTest, WikiLinkRendererTest |  | GET /articles/{title} | article, article_tag, tag | Rendering wiki links |
-| FR-003 | planned |  |  |  |  |  |  | Writing wiki links into a submission |
+| FR-003 | done | FEAT-005 | SubmissionService | SubmissionFlowTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Writing wiki links into a submission |
 | FR-004 | done | FEAT-001, FEAT-002 | ArticleController, ArticleLink, WikiLinkRenderer | ArticleControllerTest, SchemaMigrationTest, WikiLinkRendererTest | V1__create_content_and_moderation_schema | GET /articles/{title} | article, article_tag, tag | Red-link rendering |
 | FR-005 | planned |  |  |  |  |  |  | Creating an article from a red link |
 | FR-006 | planned |  |  |  | V4__add_media_link_and_tag_lookup_indexes |  |  | Backlinks on an article |
 | FR-007 | planned |  |  |  |  |  |  | Full-text search across articles |
-| FR-008 | planned |  | Tag | SchemaMigrationTest | V1__create_content_and_moderation_schema, V4__add_media_link_and_tag_lookup_indexes |  |  | Browsing articles by tag |
+| FR-008 | in-progress | FEAT-005 | Tag, TagRejectedException, TagRepository, Tags | SchemaMigrationTest, TagsTest | V1__create_content_and_moderation_schema, V4__add_media_link_and_tag_lookup_indexes | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Browsing articles by tag |
 | FR-009 | done | FEAT-003, FEAT-004 | LandingController, LandingPage, LandingPageService, LandingReadRepository | ArticleArchiveTest, LandingControllerTest, PageQueryCountTest, SchemaMigrationTest | V1__create_content_and_moderation_schema, V6__add_article_published_at_index | GET / | article, article_tag, tag | Landing page |
-| FR-010 | planned |  | Submission | SchemaMigrationTest | V1__create_content_and_moderation_schema |  |  | Submitting a new article |
-| FR-011 | planned |  |  |  |  |  |  | Proposing an edit to an existing article |
+| FR-010 | in-progress | FEAT-005 | ContributeArticleRepository, Submission, SubmissionController, SubmissionRejectedException, SubmissionRepository, SubmissionService, WebSecurity | SchemaMigrationTest, SubmissionFlowTest, SubmissionNumbersTest, WebSecurityTest | V1__create_content_and_moderation_schema | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Submitting a new article |
+| FR-011 | in-progress | FEAT-005 | ArticleNotPublishedException, ContributeArticleRepository, SubmissionController, SubmissionRejectedException, SubmissionService | SubmissionFlowTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Proposing an edit to an existing article |
 | FR-012 | planned |  |  |  |  |  |  | Looking up a submission's status |
 | FR-013 | planned |  |  |  |  |  |  | Abuse handling without accounts |
 | FR-014 | planned |  |  |  | V2__add_moderation_and_report_query_indexes |  |  | Moderation queue |
@@ -47,9 +47,9 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | NFR-001 | planned |  |  |  |  |  |  | Upload size limit |
 | NFR-002 | planned |  |  |  |  |  |  | Search latency |
 | NFR-003 | planned |  |  |  |  |  |  | Multilingual content survival |
-| NFR-004 | in-progress | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchiveTagRepository, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest |  |  | article, article_tag, tag | Exportability |
+| NFR-004 | in-progress | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest |  |  | article, article_tag, tag | Exportability |
 | NFR-005 | planned |  |  |  |  |  |  | Submission rate limit |
-| NFR-006 | planned |  |  |  |  |  |  | Submission number unguessability |
+| NFR-006 | done | FEAT-005 | SubmissionNumbers | SubmissionNumbersTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Submission number unguessability |
 
 ## Constraints
 

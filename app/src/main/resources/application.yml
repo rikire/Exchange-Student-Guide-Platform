@@ -1,6 +1,11 @@
 spring:
   application:
     name: exchange-student-guide
+  autoconfigure:
+    # Spring Security is here for CSRF only. Without this, Boot creates a "user" with a random
+    # password and logs the password at start-up; nothing logs in until the moderator login
+    # (ADR-0009), which declares its own account source.
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   thymeleaf:
     cache: false
   jpa:

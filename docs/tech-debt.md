@@ -20,6 +20,50 @@ constraint hides it.
 
 ## Register
 
+### DEBT-009 — An edit whose article stopped being published answers `404`, not `409`
+
+**Status:** open
+**Created:** 2026-09-27
+**Marker:** `app/src/main/java/in/ac/iitm/guide/contribute/internal/ArticleNotPublishedException.java`
+
+**Cause:** [ui-routes.md](architecture/ui-routes.md) answers `POST /articles/{title}/edits` with
+`409` when the target was published at the form and is not at the POST, and `404` when it was never
+there. Telling the two apart needs the form to carry which article it was opened for. Nothing can
+unpublish an article until FR-026 (phase 4), so the `409` path cannot be reached, and FEAT-005 built
+only the `404`.
+
+**Consequence:** once FR-026 exists, a contributor whose article is removed while they write gets
+"not found" instead of "this changed while you were editing", and loses their text either way.
+
+**How to fix:** put the target article's id in a hidden field of the edit form; in `submitEdit`,
+when the address matches no live article and that id names a removed one, answer `409`. A test that
+removes the article between the GET and the POST.
+
+**Trigger:** FR-026 (removing a published article), phase 4.
+
+### DEBT-008 — The submission form takes no attachment
+
+**Status:** open
+**Created:** 2026-09-27
+**Marker:** `app/src/main/resources/templates/contribute/SubmissionForm.html` — the comment where the
+attachment field belongs
+
+**Cause:** FR-010 and FR-011 let a contributor attach one photo, document or video, and each has two
+criteria about it (over the size limit, not an accepted type). Checking the type from the content and
+storing the file is the `media` slice ([ADR-0006](architecture/adr/ADR-0006-media-storage-and-upload-security.md)),
+which does not exist yet. FEAT-005 was cut to the text of a submission by the human on 27 Sep.
+
+**Consequence:** the demo scenario's "proposes an edit with a photo" cannot be shown, and the four
+media criteria of FR-010/FR-011 have no test. The gap list shows them only as this entry: its
+per-requirement count sees at least as many tests as criteria for FR-010 and FR-011 and reports no
+gap.
+
+**How to fix:** in the `media` step: the `attachment` field on the form (`multipart/form-data`), the
+upload handed to `media`'s published type, a `422` with the error on the form for a file over the
+limit or of a wrong type, and one test per criterion — FR-010's two and FR-011's two.
+
+**Trigger:** the `media` step of phase 3 ([03-main-flow.md](roadmap/03-main-flow.md)).
+
 ### DEBT-007 — No automated test runs the migrations on PostgreSQL
 
 **Status:** open

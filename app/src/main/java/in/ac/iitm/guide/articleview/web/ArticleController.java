@@ -40,7 +40,11 @@ class ArticleController {
         var tags = article.getTags().stream().map(Tag::getName).sorted().toList();
         model.addAttribute(
                 "article",
-                new ArticlePage(article.getTitle(), tags, renderer.render(article.getBody(), this::resolve)));
+                new ArticlePage(
+                        article.getTitle(),
+                        tags,
+                        renderer.render(article.getBody(), this::resolve),
+                        ArticleAddress.pathOf(article.getSlug()) + "/edit"));
         return "articleview/Article";
     }
 
@@ -65,6 +69,9 @@ class ArticleController {
         return hrefs;
     }
 
-    /** What the template shows; {@code bodyHtml} is the converter's output and is the only unescaped part. */
-    record ArticlePage(String title, List<String> tags, String bodyHtml) {}
+    /**
+     * What the template shows; {@code bodyHtml} is the converter's output and is the only unescaped
+     * part. {@code editPath} leads to proposing an edit (FR-011, {@code contribute}).
+     */
+    record ArticlePage(String title, List<String> tags, String bodyHtml, String editPath) {}
 }

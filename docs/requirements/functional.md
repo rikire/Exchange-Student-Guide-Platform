@@ -119,7 +119,7 @@ THEN it renders as a red link showing "some words"
 
 ### FR-003 — Writing wiki links into a submission
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When a submission's body contains `[[Title]]` markup, the system shall store it unchanged.
@@ -230,7 +230,7 @@ THEN no result appears for it
 
 ### FR-008 — Browsing articles by tag
 
-**Status:** planned
+**Status:** in-progress
 **Priority:** should
 
 When a reader selects a tag, the system shall return the published articles that carry it.
@@ -287,7 +287,7 @@ THEN the most recently added articles are shown
 
 ### FR-010 — Submitting a new article
 
-**Status:** planned
+**Status:** in-progress
 **Priority:** must
 
 When a contributor submits a new article — its title, a summary and its body — optionally attaching
@@ -332,7 +332,7 @@ THEN the submission is rejected
 
 ### FR-011 — Proposing an edit to an existing article
 
-**Status:** planned
+**Status:** in-progress
 **Priority:** must
 
 When a contributor proposes an edit to a published article — changing its title, its summary, its
