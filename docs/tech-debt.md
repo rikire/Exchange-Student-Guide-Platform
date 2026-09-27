@@ -80,7 +80,9 @@ a one-off command, not in a page.
 
 ### DEBT-005 — The tag rule of ADR-0005 is written twice until `taxonomy` exists
 
-**Status:** open
+**Status:** resolved 2026-09-27 — `taxonomy` publishes `Tags.named`, `backup` calls it, and
+`tagsNamed` keeps only the translation of a refused tag into an `ArchiveFormatException`. The
+importer's tag tests passed unchanged through the swap.
 **Created:** 2026-09-25
 **Marker:** `app/src/main/java/in/ac/iitm/guide/backup/ArticleArchive.java` — `tagsNamed`, whose
 javadoc names this entry

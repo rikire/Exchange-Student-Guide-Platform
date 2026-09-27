@@ -3,9 +3,10 @@ package in.ac.iitm.guide.backup;
 import in.ac.iitm.guide.backup.internal.ArchivedArticle;
 import in.ac.iitm.guide.backup.internal.FrontMatter;
 import in.ac.iitm.guide.backup.persistence.ArchiveArticleRepository;
-import in.ac.iitm.guide.backup.persistence.ArchiveTagRepository;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.taxonomy.TagRejectedException;
+import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,14 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -43,9 +40,9 @@ public class ArticleArchive {
     private static final int EXPORT_PAGE_SIZE = 100;
 
     private final ArchiveArticleRepository articles;
-    private final ArchiveTagRepository tags;
+    private final Tags tags;
 
-    ArticleArchive(ArchiveArticleRepository articles, ArchiveTagRepository tags) {
+    ArticleArchive(ArchiveArticleRepository articles, Tags tags) {
         this.articles = articles;
         this.tags = tags;
     }
@@ -156,33 +153,12 @@ public class ArticleArchive {
         }
     }
 
-    /**
-     * Stored trimmed and lower-cased (ADR-0005). The {@code taxonomy} slice owns that rule and does
-     * not exist yet, so it is repeated here.
-     */
-    // TODO(DEBT-005): call taxonomy's published tag rule instead of repeating it
-
+    /** Through {@code taxonomy}, which owns the tag rule (ADR-0005); a rejected tag names its file. */
     private Set<Tag> tagsNamed(String fileName, List<String> names) {
-        var normalised = new LinkedHashSet<String>();
-        for (var name : names) {
-            var tag = name.strip().toLowerCase(Locale.ROOT);
-            if (tag.isEmpty()) {
-                throw new ArchiveFormatException(fileName + ": a tag is empty");
-            }
-            normalised.add(tag);
+        try {
+            return tags.named(names);
+        } catch (TagRejectedException e) {
+            throw new ArchiveFormatException(fileName + ": " + e.getMessage());
         }
-        var existing =
-                tags.findByNameIn(normalised).stream().collect(Collectors.toMap(Tag::getName, Function.identity()));
-        var result = new LinkedHashSet<Tag>();
-        for (var name : normalised) {
-            result.add(existing.computeIfAbsent(name, this::newTag));
-        }
-        return result;
-    }
-
-    private Tag newTag(String name) {
-        var tag = new Tag();
-        tag.setName(name);
-        return tags.save(tag);
     }
 }

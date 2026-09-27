@@ -14,7 +14,6 @@ code:
   - app/src/main/java/in/ac/iitm/guide/backup/internal/ArchivedArticle.java
   - app/src/main/java/in/ac/iitm/guide/backup/internal/SeedRunner.java
   - app/src/main/java/in/ac/iitm/guide/backup/persistence/ArchiveArticleRepository.java
-  - app/src/main/java/in/ac/iitm/guide/backup/persistence/ArchiveTagRepository.java
 tests:
   - app/src/test/java/in/ac/iitm/guide/backup/ArticleArchiveTest.java
   - app/src/test/java/in/ac/iitm/guide/backup/SeedRunnerTest.java
@@ -43,7 +42,8 @@ None.
 
 ## Schema impact
 
-None. Reads and writes `article`, `tag` and `article_tag` through two repositories the slice owns.
+None. Reads and writes `article` and `article_tag` through the repository the slice owns; tags are
+found or created through `taxonomy`'s published `Tags`.
 
 ## Decisions this feature fixed
 
@@ -65,8 +65,9 @@ None. Reads and writes `article`, `tag` and `article_tag` through two repositori
   and drop the first without saying so.
 - **One bad file rolls the whole import back.** Files are read in name order, so the same input fails
   on the same file.
-- **Tags are stored trimmed and lower-cased** (ADR-0005), by `backup` itself until `taxonomy` exists —
-  DEBT-005.
+- **Tags are stored trimmed and lower-cased** (ADR-0005) by `taxonomy`'s `Tags`, which `backup` calls;
+  a tag it refuses fails the import as an `ArchiveFormatException` naming the file (DEBT-005,
+  resolved 27 Sep).
 - **`created` and `updated` become `published_at` and `updated_at`.** YAML reads a timestamp to the
   millisecond, so an export and re-import keeps timestamps to the millisecond, not below. A date with
   no time is midnight UTC.
@@ -121,8 +122,8 @@ links to articles and `/articles/registering-with-frro` returned 200.
 
 1. **Values the database cannot hold.** A title of about a hundred Devanagari letters gives a file
    name over 255 bytes and the export fails with an `UncheckedIOException`; a title over 255
-   characters or a tag over 64 reaches the database and fails as a `DataIntegrityViolationException`
-   instead of an `ArchiveFormatException`. The import still rolls back. Not met by any article today.
+   characters reaches the database and fails as a `DataIntegrityViolationException` instead of an
+   `ArchiveFormatException` (a tag over 64 is refused by `taxonomy` since 27 Sep). The import still rolls back. Not met by any article today.
 2. **A file saved with a byte-order mark**, or with spaces after the closing `---`, is refused as
    having no front matter, which names the wrong fault. Not met by any seed file.
 3. **Article links.** The importer writes no `article_link` rows, because the extractor does not
