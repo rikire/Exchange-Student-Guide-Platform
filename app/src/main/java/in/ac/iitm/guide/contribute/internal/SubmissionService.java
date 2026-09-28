@@ -2,6 +2,9 @@ package in.ac.iitm.guide.contribute.internal;
 
 import in.ac.iitm.guide.contribute.persistence.ContributeArticleRepository;
 import in.ac.iitm.guide.contribute.persistence.SubmissionRepository;
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaRejectedException;
+import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Submission;
 import in.ac.iitm.guide.shared.persistence.SubmissionStatus;
@@ -19,8 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Puts a new article or an edit into the moderation queue, pending, and never publishes anything:
- * this slice writes {@code submission} only (ADR-0003). The rules about what may be submitted live
- * here, not on the form (docs/ai/architecture-rules.md, "Validation always lives in the domain").
+ * this slice writes {@code submission} only (ADR-0003), and hands an attachment to {@code media}. The
+ * rules about what may be submitted live here, not on the form (docs/ai/architecture-rules.md,
+ * "Validation always lives in the domain").
  */
 // trace:FR-010
 // trace:FR-011
@@ -35,46 +39,51 @@ public class SubmissionService {
     private final SubmissionRepository submissions;
     private final SubmissionNumbers numbers;
     private final Tags tags;
+    private final MediaAssets media;
 
     SubmissionService(
             ContributeArticleRepository articles,
             SubmissionRepository submissions,
             SubmissionNumbers numbers,
-            Tags tags) {
+            Tags tags,
+            MediaAssets media) {
         this.articles = articles;
         this.submissions = submissions;
         this.numbers = numbers;
         this.tags = tags;
+        this.media = media;
     }
 
     /** What a contributor typed. The body is kept exactly as written (FR-003). */
     public record Draft(String title, String summary, String body, List<String> tags) {}
 
     /**
+     * @param attachment the one file FR-010 allows, if the contributor chose one
      * @return the submission number
-     * @throws SubmissionRejectedException if the draft cannot be published as it is, or its title is
-     *     taken
+     * @throws SubmissionRejectedException if the draft cannot be published as it is, its title is
+     *     taken, or the attachment is refused
      */
     @Transactional
-    public String submitNewArticle(Draft draft) {
+    public String submitNewArticle(Draft draft, Optional<Upload> attachment) {
         var slug = check(draft);
         articles.findBySlug(slug).ifPresent(existing -> {
             throw new SubmissionRejectedException(
                     "An article with this title already exists. Propose an edit to it, or choose another title.",
                     existing.getRemovedAt() == null ? existing.getSlug() : null);
         });
-        return save(draft, SubmissionType.NEW_ARTICLE, null);
+        return save(draft, SubmissionType.NEW_ARTICLE, null, attachment);
     }
 
     /**
      * @param address the address of the article being edited, as it appears in the path
+     * @param attachment the one file FR-011 allows, if the contributor chose one
      * @return the submission number
      * @throws ArticleNotPublishedException if no published article is at that address
-     * @throws SubmissionRejectedException if the draft cannot be published as it is, or its new title
-     *     belongs to a different article
+     * @throws SubmissionRejectedException if the draft cannot be published as it is, its new title
+     *     belongs to a different article, or the attachment is refused
      */
     @Transactional
-    public String submitEdit(String address, Draft draft) {
+    public String submitEdit(String address, Draft draft, Optional<Upload> attachment) {
         var target = published(address);
         var slug = check(draft);
         if (!slug.equals(target.getSlug())) {
@@ -84,7 +93,7 @@ public class SubmissionService {
                         other.getRemovedAt() == null ? other.getSlug() : null);
             });
         }
-        return save(draft, SubmissionType.EDIT, target.getId());
+        return save(draft, SubmissionType.EDIT, target.getId(), attachment);
     }
 
     /**
@@ -129,7 +138,7 @@ public class SubmissionService {
                 .orElseThrow(() -> new SubmissionRejectedException("The title needs at least one letter or digit."));
     }
 
-    private String save(Draft draft, SubmissionType type, UUID target) {
+    private String save(Draft draft, SubmissionType type, UUID target, Optional<Upload> attachment) {
         var submission = new Submission();
         submission.setSubmissionNumber(numbers.next());
         submission.setType(type);
@@ -144,6 +153,14 @@ public class SubmissionService {
         } catch (TagRejectedException e) {
             throw new SubmissionRejectedException(e.getMessage() + ".");
         }
-        return submissions.save(submission).getSubmissionNumber();
+        var saved = submissions.save(submission);
+        try {
+            // The refusal rolls the submission back with it: a contributor fixes the file and sends
+            // the whole form again.
+            attachment.ifPresent(upload -> media.attach(saved.getId(), upload));
+        } catch (MediaRejectedException e) {
+            throw new SubmissionRejectedException(e.getMessage());
+        }
+        return saved.getSubmissionNumber();
     }
 }

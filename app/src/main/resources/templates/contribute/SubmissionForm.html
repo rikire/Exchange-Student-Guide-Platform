@@ -15,7 +15,7 @@
     </div>
 
     <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
-    <form class="submission-form" method="post" th:action="@{${form.action}}">
+    <form class="submission-form" method="post" enctype="multipart/form-data" th:action="@{${form.action}}">
       <label class="field">
         <span class="field-label">Title</span>
         <input class="field-input" type="text" name="title" required maxlength="255" th:value="${form.title}">
@@ -30,7 +30,12 @@
         <textarea class="field-textarea" name="body" required th:text="${form.body}"></textarea>
         <span class="field-help">Link to another article with [[Title]].</span>
       </label>
-      <!-- TODO(DEBT-008): the attachment field (one photo, document or video) arrives with the media step. -->
+      <label class="field">
+        <span class="field-label">Attachment (optional)</span>
+        <!-- accept= only narrows the file picker; the type is read from the content (FEAT-009). -->
+        <input class="field-input" type="file" name="attachment" accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4">
+        <span class="field-help" th:text="${accepted}">One photo up to 10 MB, a PDF up to 20 MB or an MP4 video up to 200 MB.</span>
+      </label>
       <fieldset class="field">
         <legend class="field-label">Suggested tags</legend>
         <div class="tag-fields">

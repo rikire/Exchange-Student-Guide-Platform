@@ -20,6 +20,47 @@ constraint hides it.
 
 ## Register
 
+### DEBT-016 — The files of rejected submissions stay in the media root
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/java/in/ac/iitm/guide/media/MediaAssets.java` — `moveToArticle`, the only
+place an asset changes owner
+
+**Cause:** FEAT-009 stores an attachment when it is submitted. A rejected submission keeps its row
+and its file; ADR-0006 already allows an orphan as "wasted disk, not exposure", and the human put the
+cleanup off on 28 Sep.
+
+**Consequence:** every rejected attachment keeps its bytes, and its `size_bytes` counts towards
+NFR-001's 20 GB volume, so spam that is rejected still fills the storage, up to refusing every
+upload.
+
+**How to fix:** a sweep that deletes the rows and files of assets whose submission was rejected
+longer ago than a set time, with a test that a published article's asset is never swept.
+
+**Trigger:** the volume passing half its limit, or phase 4's hardening
+([04-hardening.md](roadmap/04-hardening.md)), whichever comes first.
+
+### DEBT-015 — A file far over the container's limit gets a closed connection, not the page
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/resources/application.yml` — `spring.servlet.multipart`
+
+**Cause:** FEAT-009 answers a form over the container's limit with `413` and the form. Tomcat reads
+at most 2 MB past the limit (`server.tomcat.max-swallow-size`) to deliver that answer and then closes
+the connection: checked on 28 Sep, a file 5 MB over the test's limit ended in a broken pipe instead of
+the page. Raising the setting means the server reads that much more of a request it has already
+refused, which is a choice between a clear message and the cost of reading a stranger's upload.
+
+**Consequence:** a contributor who picks a file more than 2 MB over 200 MB sees the browser's
+connection error rather than the form's message.
+
+**How to fix:** the human decides `server.tomcat.max-swallow-size` (unlimited, a set size, or the
+default), and a test through a real server pins the answer at a file past it.
+
+**Trigger:** the first report of an upload ending in a connection error, or phase 4's hardening.
+
 ### DEBT-014 — The stand's session cookie is not marked `Secure`
 
 **Status:** open

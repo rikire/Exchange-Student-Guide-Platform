@@ -95,7 +95,15 @@ public class MediaAssets {
         }
     }
 
+    /** @return what may be attached, and how large, as a form tells a contributor */
+    public String accepted() {
+        return "One photo (JPEG, PNG or WebP) up to " + MediaSettings.spoken(settings.photoLimit())
+                + ", a PDF up to " + MediaSettings.spoken(settings.documentLimit())
+                + " or an MP4 video up to " + MediaSettings.spoken(settings.videoLimit()) + ".";
+    }
+
     /** Moves every asset of an approved submission to the article it became or changed. */
+    // TODO(DEBT-016): a rejected submission's assets are never moved and never removed.
     @Transactional
     public void moveToArticle(UUID submissionId, UUID articleId) {
         assets.moveToArticle(submissionId, articleId);

@@ -2,12 +2,16 @@ package in.ac.iitm.guide.contribute;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import in.ac.iitm.guide.media.MediaTestFiles;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.persistence.EntityManager;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +26,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -37,6 +44,12 @@ import org.springframework.transaction.support.TransactionTemplate;
 class SubmissionFlowTest {
 
     private static final Pattern CSRF = Pattern.compile("name=\"_csrf\" value=\"([^\"]+)\"");
+    private static final Path MEDIA = MediaTestFiles.newRoot();
+
+    @DynamicPropertySource
+    static void media(DynamicPropertyRegistry registry) {
+        MediaTestFiles.smallLimits(registry, MEDIA);
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,6 +74,11 @@ class SubmissionFlowTest {
         jdbc.execute("DELETE FROM submission");
         jdbc.execute("DELETE FROM article");
         jdbc.execute("DELETE FROM tag");
+    }
+
+    @AfterEach
+    void clearTheMediaRoot() throws IOException {
+        MediaTestFiles.empty(MEDIA);
     }
 
     @Test
@@ -316,6 +334,139 @@ class SubmissionFlowTest {
 
         assertThat(page("/articles/hostel-life")).contains("href=\"/articles/hostel-life/edit\"");
         assertThat(page("/")).contains("href=\"/submit\"");
+    }
+
+    @Test
+    // trace:FR-010
+    void the_form_sends_files_and_offers_one_attachment() throws Exception {
+        var form = page("/submit");
+
+        assertThat(form).contains("enctype=\"multipart/form-data\"");
+        assertThat(form).contains("type=\"file\"").contains("name=\"attachment\"");
+    }
+
+    @Test
+    // trace:FR-010
+    void a_new_article_submitted_with_a_photo_is_pending_in_the_queue_and_the_photo_is_stored_with_it()
+            throws Exception {
+        var photo = file("sim-booth.jpg", MediaTestFiles.jpeg(30, 20));
+
+        var result = submitWith("/submit", "/submissions", photo);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(302);
+        assertThat(onlySubmission()).containsEntry("STATUS", "PENDING");
+        assertThat(onlyAsset())
+                .containsEntry("SUBMISSION_ID", onlySubmission().get("ID"))
+                .containsEntry("ORIGINAL_NAME", "sim-booth.jpg");
+    }
+
+    @Test
+    // trace:FR-011
+    void an_edit_submitted_with_a_photo_is_pending_in_the_queue_and_the_photo_is_stored_with_it() throws Exception {
+        publish("Registering with FRRO");
+        var photo = file("frro-form.jpg", MediaTestFiles.jpeg(30, 20));
+
+        var result = submitWith("/articles/registering-with-frro/edit", "/articles/registering-with-frro/edits", photo);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(302);
+        assertThat(onlySubmission()).containsEntry("TYPE", "EDIT").containsEntry("STATUS", "PENDING");
+        assertThat(onlyAsset()).containsEntry("SUBMISSION_ID", onlySubmission().get("ID"));
+    }
+
+    @Test
+    // trace:FR-010
+    void a_new_article_with_an_attachment_over_its_limit_is_refused_with_a_message_and_nothing_is_stored()
+            throws Exception {
+        var large = file("big.pdf", MediaTestFiles.pdf(16 * 1024 + 1));
+
+        var result = submitWith("/submit", "/submissions", large);
+
+        assertRefusedKeepingTheText(result, "larger than 16 KB");
+    }
+
+    @Test
+    // trace:FR-011
+    void an_edit_with_an_attachment_over_its_limit_is_refused_with_a_message_and_nothing_is_stored() throws Exception {
+        publish("Registering with FRRO");
+        var large = file("big.pdf", MediaTestFiles.pdf(16 * 1024 + 1));
+
+        var result = submitWith("/articles/registering-with-frro/edit", "/articles/registering-with-frro/edits", large);
+
+        assertRefusedKeepingTheText(result, "larger than 16 KB");
+    }
+
+    @Test
+    // trace:FR-010
+    void a_new_article_with_an_attachment_not_of_an_accepted_type_is_refused_with_a_message() throws Exception {
+        var page = file("form.jpg", "<!DOCTYPE html><html><body>hi</body></html>".getBytes());
+
+        var result = submitWith("/submit", "/submissions", page);
+
+        assertRefusedKeepingTheText(result, "not an accepted type");
+    }
+
+    @Test
+    // trace:FR-011
+    void an_edit_with_an_attachment_not_of_an_accepted_type_is_refused_with_a_message() throws Exception {
+        publish("Registering with FRRO");
+        var page = file("form.jpg", "<!DOCTYPE html><html><body>hi</body></html>".getBytes());
+
+        var result = submitWith("/articles/registering-with-frro/edit", "/articles/registering-with-frro/edits", page);
+
+        assertRefusedKeepingTheText(result, "not an accepted type");
+    }
+
+    @Test
+    // trace:FR-010
+    void a_form_sent_with_no_file_chosen_is_submitted_without_an_attachment() throws Exception {
+        // A browser sends the file field even when nothing was chosen: an empty part with no name.
+        var nothing = file("", new byte[0]);
+
+        var result = submitWith("/submit", "/submissions", nothing);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(302);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM media_asset", Integer.class))
+                .isZero();
+    }
+
+    private void assertRefusedKeepingTheText(MvcResult result, String message) throws Exception {
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+        assertThat(result.getResponse().getContentAsString())
+                .contains(message)
+                .as("the form again, with what was typed")
+                .contains("value=\"With a file\"")
+                .contains("The text that goes with it.");
+        assertThat(submissionCount()).isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM media_asset", Integer.class))
+                .isZero();
+        assertThat(MediaTestFiles.files(MEDIA)).isEmpty();
+    }
+
+    private static MockMultipartFile file(String name, byte[] bytes) {
+        return new MockMultipartFile("attachment", name, "application/octet-stream", bytes);
+    }
+
+    /** As {@link #submit}, sent as {@code multipart/form-data} with one file. */
+    private MvcResult submitWith(String formPath, String action, MockMultipartFile attachment) throws Exception {
+        var form = mockMvc.perform(get(formPath)).andExpect(status().isOk()).andReturn();
+        var matcher = CSRF.matcher(form.getResponse().getContentAsString());
+        assertThat(matcher.find())
+                .as("the form at %s carries a CSRF token", formPath)
+                .isTrue();
+        var session = (MockHttpSession) form.getRequest().getSession();
+
+        var request = multipart(action)
+                .file(attachment)
+                .session(session)
+                .param("_csrf", matcher.group(1))
+                .param("title", "With a file")
+                .param("summary", "A summary.")
+                .param("body", "The text that goes with it.");
+        return mockMvc.perform(withCookiesOf(form, request)).andReturn();
+    }
+
+    private Map<String, Object> onlyAsset() {
+        return jdbc.queryForMap("SELECT * FROM media_asset");
     }
 
     private MvcResult submitNew(String title, String summary, String body, String... tags) throws Exception {

@@ -3,18 +3,23 @@ package in.ac.iitm.guide.contribute.web;
 import in.ac.iitm.guide.contribute.internal.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
 import in.ac.iitm.guide.contribute.internal.SubmissionService.Draft;
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 /** The routes of FEAT-005 (docs/architecture/ui-routes.md): the form, its two POSTs, the confirmation. */
 // trace:FR-010
@@ -26,9 +31,11 @@ class SubmissionController {
     private static final int TAG_FIELDS = 5;
 
     private final SubmissionService submissions;
+    private final MediaAssets media;
 
-    SubmissionController(SubmissionService submissions) {
+    SubmissionController(SubmissionService submissions, MediaAssets media) {
         this.submissions = submissions;
+        this.media = media;
     }
 
     @GetMapping("/submit")
@@ -42,11 +49,12 @@ class SubmissionController {
             @RequestParam(defaultValue = "") String summary,
             @RequestParam(defaultValue = "") String body,
             @RequestParam(defaultValue = "") List<String> tags,
+            @RequestParam(required = false) MultipartFile attachment,
             Model model,
             HttpServletResponse response) {
         var draft = new Draft(title, summary, body, filled(tags));
         try {
-            return confirmation(submissions.submitNewArticle(draft));
+            return confirmation(submissions.submitNewArticle(draft, chosen(attachment)));
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(slug -> ArticleAddress.pathOf(slug) + "/edit");
             var page = FormPage.forNewArticle(draft)
@@ -67,11 +75,12 @@ class SubmissionController {
             @RequestParam(defaultValue = "") String summary,
             @RequestParam(defaultValue = "") String body,
             @RequestParam(defaultValue = "") List<String> tags,
+            @RequestParam(required = false) MultipartFile attachment,
             Model model,
             HttpServletResponse response) {
         var draft = new Draft(title, summary, body, filled(tags));
         try {
-            return confirmation(submissions.submitEdit(address, draft));
+            return confirmation(submissions.submitEdit(address, draft, chosen(attachment)));
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(ArticleAddress::pathOf);
             var page = FormPage.forEdit(address, draft).refused(e.getMessage(), link.orElse(null), "Open that article");
@@ -86,6 +95,17 @@ class SubmissionController {
         return "contribute/SubmissionConfirmation";
     }
 
+    /**
+     * A browser sends the file field when nothing was chosen, as an empty part with no name; that is
+     * no attachment. An empty file that has a name was chosen, and {@code media} refuses it.
+     */
+    private static Optional<Upload> chosen(MultipartFile attachment) {
+        if (attachment == null || (attachment.isEmpty() && !StringUtils.hasText(attachment.getOriginalFilename()))) {
+            return Optional.empty();
+        }
+        return Optional.of(new Upload(attachment.getOriginalFilename(), attachment.getSize(), attachment));
+    }
+
     /** The form's tag fields arrive whether or not they were filled in; an empty one is not a tag. */
     private static List<String> filled(List<String> tags) {
         return tags.stream().filter(tag -> !tag.isBlank()).toList();
@@ -95,12 +115,13 @@ class SubmissionController {
         return "redirect:/submissions/" + number + "/confirmation";
     }
 
-    private static String form(Model model, FormPage page) {
+    private String form(Model model, FormPage page) {
         model.addAttribute("form", page);
+        model.addAttribute("accepted", media.accepted());
         return "contribute/SubmissionForm";
     }
 
-    private static String refused(Model model, HttpServletResponse response, FormPage page) {
+    private String refused(Model model, HttpServletResponse response, FormPage page) {
         response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
         return form(model, page);
     }
