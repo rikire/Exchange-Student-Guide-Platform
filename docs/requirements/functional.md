@@ -774,7 +774,7 @@ THEN the system does not show its content
 
 ### FR-027 — Writing an article's body
 
-**Status:** planned
+**Status:** done
 **Priority:** must
 
 When a contributor writes or edits an article's body, the system shall offer formatting controls

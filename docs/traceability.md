@@ -39,7 +39,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-024 | planned |  |  |  |  |  |  | Editing an article directly |
 | FR-025 | planned |  |  |  |  |  |  | Editing the homepage's pinned articles |
 | FR-026 | planned |  |  |  |  |  |  | Removing a published article |
-| FR-027 | planned |  |  |  |  |  |  | Writing an article's body |
+| FR-027 | done | FEAT-010 | BodyPreview, ContributeArticleRepository, PreviewController, WebSecurity | BrowserEditorTest, ContentSecurityPolicyTest, EditorPreviewTest |  | POST /contribute/preview | article | Writing an article's body |
 | FR-028 | planned |  |  |  |  |  |  | Completing a wiki link while writing |
 
 ## Non-functional requirements
