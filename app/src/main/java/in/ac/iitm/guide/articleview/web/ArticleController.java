@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 // trace:FR-001
 // trace:FR-002
 // trace:FR-004
+// trace:FR-030
 @Controller
 class ArticleController {
 
