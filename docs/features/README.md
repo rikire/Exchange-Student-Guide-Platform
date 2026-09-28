@@ -19,3 +19,4 @@ Every feature file with its status, the requirements it covers and the slice it 
 | FEAT-011 | [A layout for any screen width and for the keyboard](FEAT-011-layout-for-any-screen-and-the-keyboard.md) | done | NFR-007, NFR-008 | shared |  |  |
 | FEAT-012 | [Looking up a submission's status](FEAT-012-looking-up-a-submission.md) | done | FR-012 | contribute | GET /submissions/status | submission, article |
 | FEAT-013 | [Removing an article](FEAT-013-removing-an-article.md) | done | FR-026 | moderate | GET /moderate/articles/{title}/remove, POST /moderate/articles/{title}/remove | article |
+| FEAT-014 | [What links here](FEAT-014-backlinks.md) | done | FR-006 | backlink | GET /articles/{title} | article_link, article |

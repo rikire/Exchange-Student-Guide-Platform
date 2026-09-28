@@ -31,9 +31,13 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: FR-030's two criteria are tests, one of them in a real browser in print media
       **Built 29 Sep:** [FEAT-002](../features/FEAT-002-article-page.md), `ArticleControllerTest` and
       `BrowserPrintTest`. Accepted by the human in a browser the same day.
-- [ ] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
+- [x] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
       — check: a published article linking to another appears in its backlink list; a link from an
       unapproved or rejected submission does not — three tests
+      **Built early, 29 Sep:** [FEAT-014](../features/FEAT-014-backlinks.md), a `backlink` slice fed by
+      `ArticleTextChanged` ([ADR-0016](../architecture/adr/ADR-0016-backlinks-through-an-event-fed-slice.md),
+      chosen by the human over three alternatives); the three checks and six more cases are tests.
+      Closes DEBT-006. Accepted by the human in a browser the same day.
 - [x] Moved from phase 3, 10 Sep: FR-026 — removing a published article
       — check: after removal the article's route no longer resolves, it drops from search and its
       tags, a wiki link to it becomes red, and it drops from the pinned section if pinned — FR-026's

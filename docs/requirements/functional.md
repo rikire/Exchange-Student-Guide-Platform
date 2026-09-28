@@ -170,7 +170,7 @@ THEN they are taken to a page inviting them to create the article
 
 ### FR-006 — Backlinks on an article
 
-**Status:** planned
+**Status:** done
 **Priority:** could
 
 When a published article's page is displayed, the system shall list the other published articles

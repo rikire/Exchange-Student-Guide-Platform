@@ -273,7 +273,8 @@ deployment work, whichever comes first.
 
 ### DEBT-006 — The importer writes articles but no `article_link` rows
 
-**Status:** open
+**Status:** resolved 2026-09-29 — [FEAT-014](features/FEAT-014-backlinks.md): the importer publishes
+`ArticleTextChanged`, and an empty link table is filled from every article at start-up
 **Created:** 2026-09-25
 **Marker:** none in code — an absence: `ArticleArchive.importFiles` saves the article and its tags and
 nothing else
