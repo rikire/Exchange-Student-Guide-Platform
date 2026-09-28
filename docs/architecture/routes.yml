@@ -180,6 +180,25 @@ routes:
       FR-010 / FR-011's "shown a submission number"
 
   - methods: [GET]
+    path: /submissions/status
+    query: "number={number}"
+    slice: contribute
+    status: built
+    template: >-
+      `contribute/SubmissionStatus.html`
+    fields: >-
+      `number` (text; any case, with or without the hyphens and the `SUB` prefix, as ADR-0011 reads a
+      typed number)
+    responses: >-
+      `200` with the form alone when `number` is missing or blank; `200` with the status (pending,
+      approved with a link to the article while it is live at its address, rejected with the
+      moderator's reason if one was given) — never the submission's text; `404` with the form and
+      "No such submission was found" for a number never issued or text that cannot be one. No gate:
+      the 60-bit number is the authorisation ([ADR-0011](adr/ADR-0011-submission-number-format.md))
+    serves: >-
+      FR-012 (UC-013)
+
+  - methods: [GET]
     path: /moderate/queue
     slice: moderate
     status: built
@@ -279,12 +298,6 @@ deferred:
     priority: could
     requirements: >-
       FR-021
-  - feature: >-
-      Look up a submission's status by its number
-    priority: could
-    requirements: >-
-      FR-012 — needs no gate when it arrives, per
-      [ADR-0011](adr/ADR-0011-submission-number-format.md)
   - feature: >-
       Abuse handling (rate limiting + CAPTCHA)
     priority: should

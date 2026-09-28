@@ -21,9 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-/** The routes of FEAT-005 (docs/architecture/ui-routes.md): the form, its two POSTs, the confirmation. */
+/**
+ * The routes of FEAT-005 (docs/architecture/ui-routes.md): the form, its two POSTs, the confirmation;
+ * and FEAT-012's status lookup.
+ */
 // trace:FR-010
 // trace:FR-011
+// trace:FR-012
 @Controller
 class SubmissionController {
 
@@ -93,6 +97,23 @@ class SubmissionController {
         var issued = submissions.issued(number).orElseThrow(SubmissionNotFoundException::new);
         model.addAttribute("number", issued);
         return "contribute/SubmissionConfirmation";
+    }
+
+    /** Without a number, or with a blank one, the page is only the form to type one into. */
+    @GetMapping("/submissions/status")
+    String status(@RequestParam(required = false) String number, Model model, HttpServletResponse response) {
+        model.addAttribute("typed", number);
+        if (number == null || number.isBlank()) {
+            return "contribute/SubmissionStatus";
+        }
+        var found = submissions.statusOf(number);
+        if (found.isEmpty()) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            model.addAttribute("notFound", true);
+        } else {
+            model.addAttribute("found", found.get());
+        }
+        return "contribute/SubmissionStatus";
     }
 
     /**

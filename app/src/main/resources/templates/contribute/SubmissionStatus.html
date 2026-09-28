@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Track a submission — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Track a submission</h1>
+    <form class="search-form search-form-page" th:action="@{/submissions/status}" method="get">
+      <input class="search-input" type="text" name="number" required th:value="${typed}"
+             placeholder="SUB-K7M2-QX9P-4TVB" aria-label="Submission number" autocomplete="off">
+      <button class="search-button" type="submit">Check status</button>
+    </form>
+
+    <div class="form-error" role="alert" th:if="${notFound}">
+      <p>No such submission was found. Check the number on your confirmation page.</p>
+    </div>
+
+    <div class="result-card" th:if="${found}">
+      <p class="number-label">Submission <span th:text="${found.number}">SUB-B2WH-4RSD-7NKF</span></p>
+      <p th:switch="${found.status.name()}">
+        <span th:case="'PENDING'" class="status-pill status-pending">Pending — waiting for OGE to review it</span>
+        <span th:case="'APPROVED'" class="status-pill status-approved">Approved</span>
+        <span th:case="'REJECTED'" class="status-pill status-rejected">Rejected</span>
+      </p>
+      <p class="page-actions" th:if="${found.articlePath}"><a th:href="@{${found.articlePath}}">Read the article</a></p>
+      <div th:if="${found.rejectionReason}">
+        <p class="number-label">Reason given by the moderator</p>
+        <p th:text="${found.rejectionReason}">The reason.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

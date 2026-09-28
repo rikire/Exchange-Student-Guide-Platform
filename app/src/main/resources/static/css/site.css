@@ -168,6 +168,12 @@ p a, .article-body a { text-decoration: underline; }
 /* A link that stands alone rather than in running text is a target, 44 px tall (NFR-008). */
 .page-actions a { display: inline-flex; align-items: center; min-height: var(--target); }
 
+/* FEAT-012: a submission's status, as the pill of docs/design/screens/SubmissionStatus.html. */
+.status-pill { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-3); border-radius: var(--radius-pill); font-weight: 600; }
+.status-pending { background: var(--sand-raised); color: var(--ink); }
+.status-approved { background: var(--sand-raised); color: var(--maroon-dark); }
+.status-rejected { background: var(--paper); color: var(--red); border: 1px solid var(--red); }
+
 /* Secondary text is small only on a wide screen; on a phone or tablet it is read at body size (NFR-008). */
 @media (max-width: 1023px) {
   .field-help, .site-footer, .number-label { font-size: var(--text-body); }
