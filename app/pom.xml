@@ -60,6 +60,20 @@
       <version>${noto-sans.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- The Markdown editor of FR-027 (ADR-0013). dist/easymde.min.js bundles CodeMirror, marked and
+         the spell checker, so the WebJars it declares for them, by version range, are left out. -->
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>easymde</artifactId>
+      <version>${easymde.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!-- CSRF on every form (security.md), from FEAT-005; the moderator login (ADR-0009) builds on it. -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
