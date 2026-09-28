@@ -22,6 +22,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/shared/security/ContentSecurityPolicyTest.java
   - app/src/test/java/in/ac/iitm/guide/BrowserEditorTest.java
   - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserKeyboardTest.java
 ---
 
 # FEAT-010 — The Markdown editor on the submission form
@@ -108,6 +109,9 @@ And ADR-0013's conditions:
 - **EasyMDE clears the draft when the form is submitted**, before the server answers. FR-027 keeps
   it until success, so that listener is suppressed (`autosave.binded`) and the confirmation page
   clears the draft (`draft-sent.js`).
+- **EasyMDE bound Tab to indenting**, so the keyboard could not leave the body (WCAG 2.1.2), and the
+  focused editor drew no ring. Found by `BrowserKeyboardTest` on 28 Sep: Tab and Shift-Tab now move
+  the focus, a list is nested with spaces, and the editor draws the ring.
 - EasyMDE's syntax colours for links, quotes and HTML tags failed axe's contrast rule; `editor.css`
   replaces them with the palette's.
 - `BrowserLayoutTest` counted CodeMirror's hidden input, a textarea inside a 3-by-0 box, as a 13-px

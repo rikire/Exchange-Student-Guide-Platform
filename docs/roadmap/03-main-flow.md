@@ -112,11 +112,16 @@ the criteria do not reach it.
 - [ ] Ownership balance check — if it has drifted, the next tasks come from the lighter side
       — check: both members have authored commits in **every** week of this phase, with the hook's
       journal commits excluded — `sh scripts/contribution.sh` reports the two apart
-- [ ] The moderator's pages in the browser check — `BrowserLayoutTest` visits `/moderate/queue` and
+- [x] The moderator's pages in the browser check — `BrowserLayoutTest` visits `/moderate/queue` and
       `/moderate/submissions/{number}` without a session, so it measures the login page they redirect
       to, not them (found 28 Sep, after FEAT-006 met the layout of FEAT-003)
       — check: the test logs in first, and the queue and the review page pass NFR-008 and axe at the
       four widths
+      **Done 28 Sep:** `BrowserLayoutTest` signs in before `/moderate/**` and fails on any redirect.
+      Signed in, it found the queue 541 px wide at 320, and the Review link and the Reject button
+      under 44 px; fixed, so NFR-008 is done. The same day `BrowserKeyboardTest` walked the demo
+      scenario from the keyboard and found the editor trapping Tab with no focus ring; fixed, and
+      NFR-007 is done without the manual screen-reader pass, which the human dropped.
 - [ ] Weekly-log paragraphs in each member's own words for W37, W38 and W39 — the W37 and W38 files
       were generated on 28 Sep with the git figures only, and W39 still lacks Abdirakhim's paragraph.
       Each is marked as written after the week it covers
