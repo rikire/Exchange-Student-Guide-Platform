@@ -142,14 +142,15 @@ routes:
       re-renders `contribute/SubmissionForm.html` on `422`
     fields: >-
       Same fields as `POST /submissions`, CSRF token included; FR-011 allows any subset to change.
-      The target article comes from `{title}`, not a form field
+      The target article comes from `{title}`; `article` (hidden) names the article the form was
+      opened for, only to tell a removal since apart (DEBT-009, closed)
     responses: >-
       `302` to the confirmation route on success; `404` if `{title}` matches no published article —
       FR-011's "no longer published" is unconditional, so a POST aimed straight at an unknown or
       never-published title is refused the same way the GET is; `422` on a title collision with a
-      *different* article, or a rejected attachment; `413` as for `POST /submissions`; `409` if the target was published at the GET
-      and is not at this POST — **not built**: nothing can unpublish an article before FR-026 (phase
-      4), so this answers `404` for now, [DEBT-009](../tech-debt.md)
+      *different* article, or a rejected attachment; `413` as for `POST /submissions`; `409` re-rendering
+      the form with the text typed when the article the form was opened for was removed (FR-026)
+      before this POST
     serves: >-
       FR-011 (UC-011), FR-003 (UC-012)
 

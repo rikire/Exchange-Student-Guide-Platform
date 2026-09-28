@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.contribute.web;
 
+import in.ac.iitm.guide.contribute.internal.ArticleRemovedWhileEditingException;
 import in.ac.iitm.guide.contribute.internal.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
 import in.ac.iitm.guide.contribute.internal.SubmissionService.Draft;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,7 +71,8 @@ class SubmissionController {
 
     @GetMapping("/articles/{address}/edit")
     String editForm(@PathVariable String address, Model model) {
-        return form(model, FormPage.forEdit(address, submissions.draftOf(address)));
+        var editing = submissions.editing(address);
+        return form(model, FormPage.forEdit(address, editing.article(), editing.draft()));
     }
 
     @PostMapping("/articles/{address}/edits")
@@ -80,15 +83,27 @@ class SubmissionController {
             @RequestParam(defaultValue = "") String body,
             @RequestParam(defaultValue = "") List<String> tags,
             @RequestParam(required = false) MultipartFile attachment,
+            @RequestParam(required = false) UUID article,
             Model model,
             HttpServletResponse response) {
         var draft = new Draft(title, summary, body, filled(tags));
         try {
-            return confirmation(submissions.submitEdit(address, draft, chosen(attachment)));
+            return confirmation(submissions.submitEdit(address, article, draft, chosen(attachment)));
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(ArticleAddress::pathOf);
-            var page = FormPage.forEdit(address, draft).refused(e.getMessage(), link.orElse(null), "Open that article");
+            var page = FormPage.forEdit(address, article, draft)
+                    .refused(e.getMessage(), link.orElse(null), "Open that article");
             return refused(model, response, page);
+        } catch (ArticleRemovedWhileEditingException e) {
+            response.setStatus(HttpStatus.CONFLICT.value());
+            return form(
+                    model,
+                    FormPage.forEdit(address, article, draft)
+                            .refused(
+                                    "This article was removed while you were editing it, so the edit cannot be sent."
+                                            + " Your text is still below; copy it if you want to keep it.",
+                                    null,
+                                    null));
         }
     }
 
@@ -157,29 +172,31 @@ class SubmissionController {
             List<String> tags,
             String error,
             String linkHref,
-            String linkLabel) {
+            String linkLabel,
+            UUID article) {
 
         static FormPage forNewArticle(Draft draft) {
-            return of("Submit a new article", "/submissions", draft);
+            return of("Submit a new article", "/submissions", draft, null);
         }
 
-        static FormPage forEdit(String address, Draft draft) {
+        /** @param article the article the form was opened for, sent back so DEBT-009's 409 can be told apart */
+        static FormPage forEdit(String address, UUID article, Draft draft) {
             var path =
                     ArticleAddress.slugOf(address).map(ArticleAddress::pathOf).orElseThrow();
-            return of("Propose an edit", path + "/edits", draft);
+            return of("Propose an edit", path + "/edits", draft, article);
         }
 
-        private static FormPage of(String heading, String action, Draft draft) {
+        private static FormPage of(String heading, String action, Draft draft, UUID article) {
             var fields = new ArrayList<>(draft.tags());
             do {
                 fields.add("");
             } while (fields.size() < TAG_FIELDS);
             return new FormPage(
-                    heading, action, draft.title(), draft.summary(), draft.body(), fields, null, null, null);
+                    heading, action, draft.title(), draft.summary(), draft.body(), fields, null, null, null, article);
         }
 
         FormPage refused(String error, String linkHref, String linkLabel) {
-            return new FormPage(heading, action, title, summary, body, tags, error, linkHref, linkLabel);
+            return new FormPage(heading, action, title, summary, body, tags, error, linkHref, linkLabel, article);
         }
     }
 

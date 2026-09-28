@@ -78,15 +78,22 @@ public class SubmissionService {
 
     /**
      * @param address the address of the article being edited, as it appears in the path
+     * @param openedFor the article the form was opened for, when the form said
      * @param attachment the one file FR-011 allows, if the contributor chose one
      * @return the submission number
      * @throws ArticleNotPublishedException if no published article is at that address
+     * @throws ArticleRemovedWhileEditingException if the article the form was opened for has been
+     *     removed since
      * @throws SubmissionRejectedException if the draft cannot be published as it is, its new title
      *     belongs to a different article, or the attachment is refused
      */
     @Transactional
-    public String submitEdit(String address, Draft draft, Optional<Upload> attachment) {
-        var target = published(address);
+    public String submitEdit(String address, UUID openedFor, Draft draft, Optional<Upload> attachment) {
+        var target = ArticleAddress.slugOf(address)
+                .flatMap(articles::findWithTagsBySlugAndRemovedAtIsNull)
+                .orElseThrow(() -> removedMeanwhile(openedFor)
+                        ? new ArticleRemovedWhileEditingException()
+                        : new ArticleNotPublishedException(address));
         var slug = check(draft);
         if (!slug.equals(target.getSlug())) {
             articles.findBySlug(slug).ifPresent(other -> {
@@ -99,14 +106,21 @@ public class SubmissionService {
     }
 
     /**
-     * @return the published article at that address as a draft to edit
+     * The edit form's content, and which article it was opened for, so a submission can tell an
+     * article removed meanwhile from an address that never had one (DEBT-009, FR-026).
+     */
+    public record Editing(UUID article, Draft draft) {}
+
+    /**
+     * @return the published article at that address, as a draft to edit
      * @throws ArticleNotPublishedException if there is none
      */
     @Transactional(readOnly = true)
-    public Draft draftOf(String address) {
+    public Editing editing(String address) {
         var article = published(address);
         var tagNames = article.getTags().stream().map(Tag::getName).sorted().toList();
-        return new Draft(article.getTitle(), article.getSummary(), article.getBody(), tagNames);
+        return new Editing(
+                article.getId(), new Draft(article.getTitle(), article.getSummary(), article.getBody(), tagNames));
     }
 
     /**
@@ -150,6 +164,13 @@ public class SubmissionService {
     @Transactional(readOnly = true)
     public Optional<String> issued(String typedNumber) {
         return SubmissionNumbers.canonical(typedNumber).filter(submissions::existsBySubmissionNumber);
+    }
+
+    private boolean removedMeanwhile(UUID openedFor) {
+        return openedFor != null
+                && articles.findById(openedFor)
+                        .map(article -> article.getRemovedAt() != null)
+                        .orElse(false);
     }
 
     private Article published(String address) {

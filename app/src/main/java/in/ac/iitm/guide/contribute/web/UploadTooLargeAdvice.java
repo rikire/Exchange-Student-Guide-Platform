@@ -49,7 +49,8 @@ class UploadTooLargeAdvice {
         var edit = EDIT.matcher(path);
         if (edit.matches()) {
             try {
-                return FormPage.forEdit(edit.group(1), submissions.draftOf(edit.group(1)));
+                var editing = submissions.editing(edit.group(1));
+                return FormPage.forEdit(edit.group(1), editing.article(), editing.draft());
             } catch (ArticleNotPublishedException e) {
                 // The article went while the file was on its way; the empty form is still somewhere to go.
             }

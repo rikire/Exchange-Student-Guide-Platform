@@ -16,6 +16,7 @@
 
     <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
     <form class="submission-form" method="post" enctype="multipart/form-data" th:action="@{${form.action}}">
+      <input type="hidden" name="article" th:if="${form.article}" th:value="${form.article}">
       <label class="field">
         <span class="field-label">Title</span>
         <input class="field-input" type="text" name="title" required maxlength="255" th:value="${form.title}">

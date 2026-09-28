@@ -22,6 +22,9 @@ public interface ContributeArticleRepository extends Repository<Article, UUID> {
     /** Removed articles included: the unique {@code slug} and {@code title} hold across them too. */
     Optional<Article> findBySlug(String slug);
 
+    /** Removed articles included: an edit form's article may have been removed while it was open. */
+    Optional<Article> findById(UUID id);
+
     /** The tags come with the article: the edit form is filled in from them. */
     @EntityGraph(attributePaths = "tags")
     Optional<Article> findWithTagsBySlugAndRemovedAtIsNull(String slug);

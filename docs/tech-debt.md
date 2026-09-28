@@ -190,7 +190,8 @@ comes first.
 
 ### DEBT-009 — An edit whose article stopped being published answers `404`, not `409`
 
-**Status:** open
+**Status:** resolved 2026-09-29 — [FEAT-013](features/FEAT-013-removing-an-article.md): the edit form
+carries the article's id, and a POST whose article was removed since answers `409` with the text kept
 **Created:** 2026-09-27
 **Marker:** `app/src/main/java/in/ac/iitm/guide/contribute/internal/ArticleNotPublishedException.java`
 

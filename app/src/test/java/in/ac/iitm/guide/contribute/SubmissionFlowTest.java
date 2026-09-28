@@ -422,6 +422,41 @@ class SubmissionFlowTest {
                 .isZero();
     }
 
+    @Test
+    // trace:FR-011
+    // trace:FR-026
+    void an_edit_sent_after_its_article_was_removed_answers_409_and_keeps_the_text() throws Exception {
+        publish("Hostel Life");
+        var form = mockMvc.perform(get("/articles/hostel-life/edit"))
+                .andExpect(status().isOk())
+                .andReturn();
+        var html = form.getResponse().getContentAsString();
+        var csrf = CSRF.matcher(html);
+        var article = Pattern.compile("name=\"article\" value=\"([^\"]+)\"").matcher(html);
+        assertThat(csrf.find()).isTrue();
+        assertThat(article.find())
+                .as("the edit form names the article it was opened for")
+                .isTrue();
+        jdbc.update("UPDATE article SET removed_at = CURRENT_TIMESTAMP");
+
+        var result = mockMvc.perform(withCookiesOf(
+                        form,
+                        post("/articles/hostel-life/edits")
+                                .session((MockHttpSession) form.getRequest().getSession())
+                                .param("_csrf", csrf.group(1))
+                                .param("article", article.group(1))
+                                .param("title", "Hostel Life")
+                                .param("summary", "Rooms and mess.")
+                                .param("body", "My careful text about the hostel.")))
+                .andReturn();
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(409);
+        assertThat(result.getResponse().getContentAsString())
+                .contains("removed while you were editing")
+                .contains("My careful text about the hostel.");
+        assertThat(submissionCount()).isZero();
+    }
+
     private void assertRefusedKeepingTheText(MvcResult result, String message) throws Exception {
         assertThat(result.getResponse().getStatus()).isEqualTo(422);
         assertThat(result.getResponse().getContentAsString())
