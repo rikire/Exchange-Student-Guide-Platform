@@ -81,7 +81,8 @@ routes:
       [security.md](security.md)
     serves: >-
       FR-001 (an Article is "…and zero or more attached media assets"), FR-015 ("full text **and any
-      media assets**"). FR-016's download response is phase 4 — see the deferred table
+      media assets**"), FR-016 (every asset on an article page has a Download link to this route
+      with the `download` attribute, so a photo or a video is saved under its original name too)
 
   - methods: [GET]
     path: /submit
@@ -277,13 +278,6 @@ routes:
 
 # Features whose routes are not designed yet: kept here so the whole contract is in one place.
 deferred:
-  - feature: >-
-      Download a media attachment
-    priority: should
-    requirements: >-
-      FR-016 — the bytes *are* routed above, because FR-001 and FR-015 need them. What is deferred
-      is the reader-facing download: the `Content-Disposition: attachment` response and the button
-      on the article screen
   - feature: >-
       Backlinks on an article
     priority: could
