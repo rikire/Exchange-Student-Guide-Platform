@@ -102,7 +102,7 @@ from `SecureRandom` rather than a counter, a timestamp, or a content hash.
 
 ### NFR-007 — Accessibility
 
-**Status:** planned
+**Status:** done
 
 Every screen can be used from the keyboard alone and with a screen reader, with enough contrast and
 text that scales, so that a student with a visual or motor impairment can read, search and
@@ -111,12 +111,14 @@ bound to a national standard (GIGW) that names a level is NOT VERIFIED and is a 
 stakeholder; if it is, it becomes a constraint rather than our choice.
 
 **Fit criterion:** WCAG 2.2 level AA on every screen. Verified by an automated accessibility check
-of each template in the build, and by a manual pass with the keyboard and a screen reader over the
-demo scenario before each stage submission.
+of each template in the build (axe, `BrowserLayoutTest`), and by an automated walk through the demo
+scenario from the keyboard alone, the focus visible at every stop (`BrowserKeyboardTest`). The
+manual pass with a screen reader was dropped by the human on 28 Sep; what a screen reader announces
+is checked only as far as axe checks names and roles.
 
 ### NFR-008 — Usable at any screen width
 
-**Status:** planned
+**Status:** done
 
 Every screen works from a small phone to a wide desktop, because most contributors and readers are
 students on phones. Decided with the human on 27 Sep. WCAG 2.2 AA (NFR-007) already asks for reflow

@@ -16,3 +16,4 @@ Every feature file with its status, the requirements it covers and the slice it 
 | FEAT-008 | [Browsing by tag](FEAT-008-browsing-by-tag.md) | done | FR-008 | taxonomy | GET /tags/{tag} | article, article_tag, tag |
 | FEAT-009 | [Attaching media to a submission](FEAT-009-attaching-media-to-a-submission.md) | done | FR-010, FR-011, FR-015, FR-001, NFR-001 | media | POST /submissions, POST /articles/{title}/edits, GET /media/{id} | media_asset |
 | FEAT-010 | [The Markdown editor on the submission form](FEAT-010-markdown-editor.md) | done | FR-027 | contribute | POST /contribute/preview | article |
+| FEAT-011 | [A layout for any screen width and for the keyboard](FEAT-011-layout-for-any-screen-and-the-keyboard.md) | done | NFR-007, NFR-008 | shared |  |  |
