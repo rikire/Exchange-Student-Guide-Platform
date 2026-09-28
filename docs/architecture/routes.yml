@@ -149,6 +149,23 @@ routes:
     serves: >-
       FR-011 (UC-011), FR-003 (UC-012)
 
+  - methods: [POST]
+    path: /contribute/preview
+    slice: contribute
+    status: built
+    template: >-
+      — (an HTML fragment for the editor's preview pane, not a page)
+    fields: >-
+      CSRF token (the form's hidden field, sent by the editor's script); `body` (text, the Markdown
+      being written)
+    responses: >-
+      `200` with the body rendered as the article page renders it — wiki links resolved against
+      published articles, raw HTML escaped; `413` when `body` is longer than 100,000 characters
+      (decided 28 Sep); `403` without the token. Anonymous and not yet rate limited: that waits for
+      NFR-005, [DEBT-017](../tech-debt.md)
+    serves: >-
+      FR-027's preview ([ADR-0013](adr/ADR-0013-markdown-editor-and-front-end-assets.md))
+
   - methods: [GET]
     path: /submissions/{number}/confirmation
     slice: contribute

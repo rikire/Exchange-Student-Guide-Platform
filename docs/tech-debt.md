@@ -20,6 +20,24 @@ constraint hides it.
 
 ## Register
 
+### DEBT-017 — The editor's preview is not rate limited
+
+**Status:** open
+**Created:** 2026-09-28
+**Marker:** `app/src/main/java/in/ac/iitm/guide/contribute/internal/BodyPreview.java` — `render`
+
+**Cause:** ADR-0013 makes the preview a public, anonymous endpoint (`POST /contribute/preview`,
+FEAT-010) and bounds it by size now and by rate when NFR-005 is built.
+
+**Consequence:** anyone holding a form's CSRF token can have the server parse and render 100,000
+characters and run one query per request, as often as they send them.
+
+**How to fix:** NFR-005's limiter applied to the preview route, with a test that the request past the
+limit is refused and the one before it is not.
+
+**Trigger:** NFR-005 in phase 4 ([04-hardening.md](roadmap/04-hardening.md)), or the first sign of
+load on the route, whichever comes first.
+
 ### DEBT-016 — The files of rejected submissions stay in the media root
 
 **Status:** open
