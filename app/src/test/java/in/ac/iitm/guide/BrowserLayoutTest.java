@@ -211,20 +211,38 @@ class BrowserLayoutTest {
     }
 
     /**
+     * Whether an element is inside a box that hides its overflow and has no width or no height, so none
+     * of it shows. The editor's CodeMirror takes keystrokes through such a textarea, 1000 by 13 px
+     * inside a 3-by-0 box (FR-027); it is neither text anyone reads nor a target anyone taps.
+     */
+    private static final String CLIPPED_AWAY =
+            """
+            e => {
+              for (let box = e.parentElement; box; box = box.parentElement) {
+                const r = box.getBoundingClientRect();
+                if (getComputedStyle(box).overflow === 'hidden' && (r.width === 0 || r.height === 0)) return true;
+              }
+              return false;
+            }""";
+
+    /**
      * Visible text under 16 CSS pixels, from the element that holds it. Chips and the pinned badge
-     * are labels rather than body text (docs/design/reference.md) and are the only exemptions.
+     * are labels rather than body text (docs/design/reference.md) and, with what is clipped away,
+     * the only exemptions.
      */
     private static final String SMALL_TEXT =
             """
             () => [...document.querySelectorAll('body *')]
               .filter(e => e.offsetParent !== null)
+              .filter(e => !(CLIPPED_AWAY)(e))
               .filter(e => [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim() !== '')
                         || e.matches('input:not([type=hidden]), textarea'))
               .filter(e => !e.closest('.chip, .pinned-badge'))
               .filter(e => parseFloat(getComputedStyle(e).fontSize) < 16)
               .map(e => 'text under 16 px: <' + e.tagName.toLowerCase() + ' class="' + e.className + '"> "'
                         + (e.textContent || e.name || '').trim().slice(0, 30) + '"')
-            """;
+            """
+                    .replace("CLIPPED_AWAY", CLIPPED_AWAY);
 
     /**
      * Buttons, controls and navigation links smaller than 44 by 44. A link is exempt only inside
@@ -234,6 +252,7 @@ class BrowserLayoutTest {
             """
             () => [...document.querySelectorAll('a, button, input:not([type=hidden]), textarea, select')]
               .filter(e => e.offsetParent !== null)
+              .filter(e => !(CLIPPED_AWAY)(e))
               .filter(e => {
                 if (e.tagName !== 'A') return true;
                 const block = e.closest('p, li, .article-body');
@@ -244,7 +263,8 @@ class BrowserLayoutTest {
               .map(([e, r]) => 'target under 44 px: <' + e.tagName.toLowerCase() + '> "'
                         + (e.textContent || e.name || '').trim().slice(0, 30) + '" is '
                         + Math.round(r.width) + ' x ' + Math.round(r.height))
-            """;
+            """
+                    .replace("CLIPPED_AWAY", CLIPPED_AWAY);
 
     /** Whether the typeface loaded: a page whose font CSS 404s falls back silently to system-ui. */
     private static final String FONT_LOADED =
