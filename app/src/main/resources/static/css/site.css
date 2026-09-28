@@ -131,13 +131,17 @@ p a, .article-body a { text-decoration: underline; }
 .article-actions { margin: var(--space-5) 0 0; }
 
 /* Moderation (FEAT-006) */
-.queue-table { width: 100%; border-collapse: collapse; }
+/* On a phone the queue is wider than the screen; like a table in an article, it scrolls sideways
+   inside itself, never the page (NFR-008), and takes focus so the keyboard can scroll it too. Its
+   position keeps the visually hidden header label, absolutely positioned, inside the scroll. */
+.queue-table { position: relative; display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.queue-table td a { display: inline-flex; align-items: center; min-height: var(--target); }
 .queue-table th, .queue-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 .queue-number { font-family: ui-monospace, monospace; white-space: nowrap; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .review-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
 .review-side { display: flex; flex-direction: column; gap: var(--space-4); }
-.button-reject { font: inherit; font-weight: 600; padding: var(--space-2) var(--space-4); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); color: var(--red); cursor: pointer; }
+.button-reject { font: inherit; font-weight: 600; min-height: var(--target); padding: var(--space-2) var(--space-4); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); color: var(--red); cursor: pointer; }
 @media (min-width: 60rem) {
   .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 }

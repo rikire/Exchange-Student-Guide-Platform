@@ -10,7 +10,7 @@
 
     <p class="empty-note" th:if="${#lists.isEmpty(entries)}">The queue is empty. Nothing is waiting for a decision.</p>
 
-    <table class="queue-table" th:unless="${#lists.isEmpty(entries)}">
+    <table class="queue-table" tabindex="0" aria-label="Submissions waiting for a decision" th:unless="${#lists.isEmpty(entries)}">
       <thead>
         <tr><th scope="col">Submission</th><th scope="col">Type</th><th scope="col">Title</th><th scope="col">Submitted</th><th scope="col"><span class="visually-hidden">Review</span></th></tr>
       </thead>
