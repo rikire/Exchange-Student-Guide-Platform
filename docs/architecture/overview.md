@@ -92,6 +92,10 @@ moderator login of [ADR-0009](adr/ADR-0009-admin-authentication.md) (FEAT-006) d
 either: `ModeratorLoginController` compares the one password with the hash in
 `GUIDE_ADMIN_PASSWORD_HASH` and stores the authenticated session itself.
 
+**The moderator's diff**, added 29 September (ADR-0015): java-diff-utils 4.17, Apache-2.0, no
+runtime dependencies, imported only by `moderate`'s `TextDiff`, which compares an edit with its live
+article for the review page (FR-029).
+
 **Browser checks and the typeface**, added 27 September (ADR-0014): Playwright for Java 1.63.0 and
 axe-core's Playwright integration 4.13.0, test scope, run by `./mvnw -pl app -P browser verify`, which
 opens every built GET route of `routes.yml` in Chromium at 320, 768, 1280 and 1920 px and checks

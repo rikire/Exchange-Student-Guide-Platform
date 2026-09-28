@@ -128,6 +128,14 @@
       <version>${commonmark.version}</version>
     </dependency>
 
+    <!-- FR-029: the paragraphs and words an edit changes, for the moderator's review (ADR-0015).
+         Apache-2.0, no runtime dependencies. -->
+    <dependency>
+      <groupId>io.github.java-diff-utils</groupId>
+      <artifactId>java-diff-utils</artifactId>
+      <version>${java-diff-utils.version}</version>
+    </dependency>
+
     <!-- FEAT-009: the type of an upload from its bytes, never from its name (security.md).
          Apache-2.0. tika-core only: the detector, not the parsers. -->
     <dependency>

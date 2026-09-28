@@ -51,6 +51,9 @@
     <tika.version>3.3.2</tika.version>
     <metadata-extractor.version>2.21.0</metadata-extractor.version>
     <twelvemonkeys.version>3.15.2</twelvemonkeys.version>
+    <!-- FR-029, the moderator's diff (ADR-0015): checked on Maven Central on 2026-09-29, 4.17 the
+         release in its metadata, Apache-2.0, no runtime dependencies. Added by the human's decision. -->
+    <java-diff-utils.version>4.17</java-diff-utils.version>
 
     <spotless.version>2.44.0</spotless.version>
     <maven-shade.version>3.6.2</maven-shade.version>
