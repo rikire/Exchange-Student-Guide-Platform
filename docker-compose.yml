@@ -11,8 +11,8 @@
 # start-up, so removing the volume (docker volume rm, then up) is how the index is rebuilt after a
 # database restore or a change to how articles are indexed (FEAT-007).
 #
-# Not finished (phase 4, docs/roadmap/04-hardening.md): guide-media is declared but mounted nowhere,
-# because no code writes media yet.
+# Uploaded media (FEAT-009) is kept in the guide-media volume, so an attachment survives a restart
+# and a rebuild of the image.
 
 services:
   db:
@@ -44,9 +44,11 @@ services:
       GUIDE_ADMIN_PASSWORD_HASH: ${GUIDE_ADMIN_PASSWORD_HASH:-}
       GUIDE_INDEX_TYPE: local-filesystem
       GUIDE_INDEX_DIR: /var/lib/guide/index
+      GUIDE_MEDIA_ROOT: /var/lib/guide/media
       # TODO(DEBT-014): SERVER_SERVLET_SESSION_COOKIE_SECURE: "true" once the stand is behind TLS.
     volumes:
       - guide-index:/var/lib/guide/index
+      - guide-media:/var/lib/guide/media
     ports:
       - "8080:8080"
 
