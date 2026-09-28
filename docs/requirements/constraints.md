@@ -56,11 +56,16 @@ moderators deciding, not a community reaching consensus among many editors.
 **Rationale:** There are no accounts to attach a personal watchlist to, and nothing persists per
 visitor across sessions.
 
-### CON-004 — No diffs
+### CON-004 — No stored diffs
 
-**Rationale:** Version-history groundwork (FR-020) retains each revision's full content, but
-rendering a visual diff is UI complexity the timeframe doesn't justify; a moderator reviews the
-proposed text in full, not a comparison view.
+**Rationale:** Version-history groundwork (FR-020) retains each revision's full content, not a diff
+against the next one: a full copy is read whole, needs no patch applied to rebuild it, and costs
+little at this size.
+
+**Narrowed 29 Sep by the human:** until then this constraint also ruled out *showing* a diff, so the
+moderator read an edit in full. Rereading a whole article to find one changed sentence is what the
+moderator's review page is for, so [FR-029](functional.md#fr-029--seeing-what-an-edit-changes) now
+shows it, computed when the page is rendered and never stored.
 
 ### CON-005 — Single-language interface
 
