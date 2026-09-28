@@ -209,3 +209,16 @@ p a, .article-body a { text-decoration: underline; }
 /* FR-016: the Download link under each file, a 44-px target on a phone (NFR-008). */
 .media-download-row { margin: 0 0 var(--space-4); }
 .media-download { display: inline-flex; align-items: center; min-height: var(--target); font-weight: 600; }
+
+/* FR-030: "Save as PDF" beside "Propose an edit", and the page as it prints — the article alone. */
+.article-actions { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
+.print-button { font: inherit; font-weight: 600; min-height: var(--target); padding: var(--space-2) var(--space-4); border: 1px solid var(--maroon); border-radius: var(--radius-card); background: var(--paper); color: var(--maroon); cursor: pointer; }
+.print-button[hidden] { display: none; }
+@media print {
+  .site-header, .site-nav, .site-footer, .article-actions, .media-download-row, .media-video { display: none; }
+  body, .site-main { background: var(--paper); color: var(--ink); }
+  .site-main { max-width: none; padding: 0; margin: 0; }
+  .article-body { max-width: none; }
+  .media-photo img { max-width: 100%; break-inside: avoid; }
+  .chip { border: 1px solid var(--ink); background: none; }
+}
