@@ -16,6 +16,7 @@ import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 // trace:FR-010
 // trace:FR-011
+// trace:FR-012
 // trace:FR-003
 @Service
 public class SubmissionService {
@@ -105,6 +107,43 @@ public class SubmissionService {
         var article = published(address);
         var tagNames = article.getTags().stream().map(Tag::getName).sorted().toList();
         return new Draft(article.getTitle(), article.getSummary(), article.getBody(), tagNames);
+    }
+
+    /**
+     * What FR-012 shows to whoever holds the number: the status, the moderator's reason, and where an
+     * approved submission can be read — never the submission's own text.
+     *
+     * @param articlePath the article's page while it is live at its address, else {@code null}
+     */
+    public record Status(String number, SubmissionStatus status, String rejectionReason, String articlePath) {}
+
+    /** @return the status of the submission a typed number names, when it was ever issued */
+    @Transactional(readOnly = true)
+    public Optional<Status> statusOf(String typedNumber) {
+        return SubmissionNumbers.canonical(typedNumber)
+                .flatMap(submissions::findBySubmissionNumber)
+                .map(submission -> new Status(
+                        submission.getSubmissionNumber(),
+                        submission.getStatus(),
+                        submission.getRejectionReason(),
+                        submission.getStatus() == SubmissionStatus.APPROVED
+                                ? liveAddress(submission)
+                                        .map(ArticleAddress::pathOf)
+                                        .orElse(null)
+                                : null));
+    }
+
+    /**
+     * An edit names its article by id, so the link follows a later rename. A new article is found by
+     * the address of its title, since {@code article} keeps no link back to the submission (ADR-0003):
+     * once a later edit renames it, or it is removed, there is no link to show.
+     */
+    private Optional<String> liveAddress(Submission submission) {
+        if (submission.getType() == SubmissionType.EDIT) {
+            return articles.findLiveSlugById(submission.getTargetArticleId());
+        }
+        return ArticleAddress.slugOf(submission.getTitle())
+                .filter(slug -> articles.findLiveSlugs(Set.of(slug)).contains(slug));
     }
 
     /** @return the stored form of a typed number, when it was ever issued */

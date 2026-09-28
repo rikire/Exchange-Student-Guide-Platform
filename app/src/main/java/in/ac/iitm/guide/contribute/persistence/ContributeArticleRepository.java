@@ -10,11 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 /**
- * What a contributor's form needs of the published table: a title check, an article to edit, and the
- * live addresses a preview links to.
+ * What a contributor's form needs of the published table: a title check, an article to edit, the
+ * live addresses a preview links to, and the address of the article an approved edit changed.
  */
 // trace:FR-010
 // trace:FR-011
+// trace:FR-012
 // trace:FR-027
 public interface ContributeArticleRepository extends Repository<Article, UUID> {
 
@@ -28,4 +29,7 @@ public interface ContributeArticleRepository extends Repository<Article, UUID> {
     /** One query for every address a previewed body links to, as the article page asks it. */
     @Query("select a.slug from Article a where a.slug in :slugs and a.removedAt is null")
     Set<String> findLiveSlugs(Collection<String> slugs);
+
+    @Query("select a.slug from Article a where a.id = :id and a.removedAt is null")
+    Optional<String> findLiveSlugById(UUID id);
 }
