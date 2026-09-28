@@ -59,15 +59,23 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
       **Built early, 27 Sep:** `-P postgres` passes all tests locally on PostgreSQL 17.11. Left for
       this step: running it in CI.
-- [~] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
+- [x] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
       — check: media and the index survive `docker compose down` and come back on the next start
       **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the
       `seed` profile. Checked by hand: `/` and the FRRO article return 200, 20 articles are in the
       database, and after `down` and `up` they are still 20. **28 Sep:** `guide-index` is mounted
       (FEAT-007), and the index was checked by hand to survive `down` and `up` without a rebuild.
       Left for this step: `guide-media`, mounted nowhere, since no code writes media yet.
-- [ ] Demo stand: compose plus the real content
+      **Done 29 Sep:** `guide-media` mounted at `GUIDE_MEDIA_ROOT`, and in the demo run on the stand
+      ([03-main-flow.md](03-main-flow.md), "Demo run on the compose stand") an uploaded photo
+      survived both a restart and a recreated container. The one-command start is `docker compose up
+      --build`, in the README; the human decided on 29 Sep that no separate script is needed.
+- [x] Demo stand: compose plus the real content
       — check: the mid-demo scenario runs end to end on the stand, from a browser, in one sitting
+      **Done 29 Sep:** from empty volumes, PostgreSQL 17.11 and the 30 seed articles, the scenario
+      was walked over HTTP and then accepted by the human in a browser in one sitting — see "Demo run
+      on the compose stand" in [03-main-flow.md](03-main-flow.md). The red link is shown only in the
+      editor's preview, since no seed article carries one.
 - [ ] **Meeting with OGE** — show Mr. Thukaram the working stand, record what he says in
       `docs/stakeholder/` and turn it into requirements or constraints
       — check: every point he raises becomes a requirement, a recorded constraint with its reason,
