@@ -20,7 +20,8 @@ routes:
       where FR-002 and FR-004 are visible — the body is rendered with wiki links resolved and red
       links styled inline; neither has a route of its own. And FR-030: the page carries the "Save as
       PDF" control, which `/js/print.js` turns into the browser's print, and print styles leave the
-      site out; `ArticleController` serves it, so the anchor is there
+      site out; `ArticleController` serves it, so the anchor is there. A signed-in moderator also
+      sees "Remove this article", leading to FR-026's confirmation
 
   - methods: [GET]
     path: /
@@ -263,6 +264,33 @@ routes:
     serves: >-
       FR-018 (UC-017); FR-019 stores the reason
 
+  - methods: [GET]
+    path: /moderate/articles/{title}/remove
+    slice: moderate
+    status: built
+    template: >-
+      `moderate/RemoveArticle.html`
+    fields: >-
+      — (the confirmation; Remove submits to the POST below, Cancel goes back to the article)
+    responses: >-
+      `200` for a published article; `404` if `{title}` matches no published article, removed ones
+      included; `302` unauthenticated
+    serves: >-
+      FR-026 — asks first, because removal cannot be undone from the application
+
+  - methods: [POST]
+    path: /moderate/articles/{title}/remove
+    slice: moderate
+    status: built
+    template: >-
+      — (redirects)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/queue` once `removed_at` is set; `404` as the GET; `302` unauthenticated
+    serves: >-
+      FR-026
+
   - methods: [GET, POST]
     path: /moderate/login
     slice: shared/security
@@ -320,8 +348,3 @@ deferred:
     priority: could
     requirements: >-
       FR-025
-  - feature: >-
-      Remove a published article
-    priority: should
-    requirements: >-
-      FR-026

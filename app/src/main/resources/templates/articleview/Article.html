@@ -19,6 +19,7 @@
         <a th:href="@{${article.editPath}}">Propose an edit</a>
         <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->
         <button class="print-button" type="button" data-print hidden>Save as PDF</button>
+        <a th:if="${article.removePath}" th:href="@{${article.removePath}}">Remove this article</a>
       </p>
     </article>
     <script th:src="@{/js/print.js}" defer></script>

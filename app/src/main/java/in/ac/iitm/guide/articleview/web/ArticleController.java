@@ -7,6 +7,7 @@ import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,8 +23,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 // trace:FR-002
 // trace:FR-004
 // trace:FR-030
+// trace:FR-026
 @Controller
 class ArticleController {
+
+    /** The role the moderator login grants (ADR-0009); only it is offered FR-026's removal. */
+    private static final String MODERATOR = "MODERATOR";
 
     private final ArticleReadRepository articles;
     private final MediaAssets media;
@@ -36,7 +41,7 @@ class ArticleController {
     }
 
     @GetMapping("/articles/{address}")
-    String show(@PathVariable String address, Model model) {
+    String show(@PathVariable String address, Model model, HttpServletRequest request) {
         // The address is put through the same rule as a title, so /articles/HOSTEL-Life reaches the
         // article stored under "hostel-life" (ui-routes.md: matched case-insensitively).
         var slug = ArticleAddress.slugOf(address).orElseThrow(() -> new ArticleNotFoundException(address));
@@ -51,7 +56,10 @@ class ArticleController {
                         tags,
                         renderer.render(article.getBody(), this::resolve),
                         media.ofArticle(article.getId()),
-                        ArticleAddress.pathOf(article.getSlug()) + "/edit"));
+                        ArticleAddress.pathOf(article.getSlug()) + "/edit",
+                        request.isUserInRole(MODERATOR)
+                                ? "/moderate/articles/" + article.getSlug() + "/remove"
+                                : null));
         return "articleview/Article";
     }
 
@@ -79,7 +87,14 @@ class ArticleController {
     /**
      * What the template shows; {@code bodyHtml} is the converter's output and is the only unescaped
      * part. {@code media} are the attached assets (FR-001's Article, FEAT-009). {@code editPath} leads
-     * to proposing an edit (FR-011, {@code contribute}).
+     * to proposing an edit (FR-011, {@code contribute}). {@code removePath} leads to FR-026's removal
+     * and is {@code null} for anyone but the signed-in moderator.
      */
-    record ArticlePage(String title, List<TagLink> tags, String bodyHtml, List<MediaItem> media, String editPath) {}
+    record ArticlePage(
+            String title,
+            List<TagLink> tags,
+            String bodyHtml,
+            List<MediaItem> media,
+            String editPath,
+            String removePath) {}
 }

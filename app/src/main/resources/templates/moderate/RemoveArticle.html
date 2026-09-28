@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title th:text="'Remove ' + ${candidate.title} + ' — Exchange Student Guide'">Remove an article</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title" th:text="'Remove “' + ${candidate.title} + '”?'">Remove “Hostel Life”?</h1>
+    <div class="result-card">
+      <p>It will disappear from the site, from search and from its tags, and wiki links to it will turn
+        red. It cannot be brought back from here.</p>
+      <form class="page-actions remove-actions" method="post"
+            th:action="@{/moderate/articles/{address}/remove(address=${address})}">
+        <button class="button-reject" type="submit">Remove</button>
+        <a th:href="@{${candidate.path}}">Cancel</a>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
