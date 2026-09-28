@@ -385,7 +385,7 @@ THEN the submission is rejected
 
 ### FR-012 — Looking up a submission's status
 
-**Status:** planned
+**Status:** done
 **Priority:** could
 
 When a contributor enters a submission number, the system shall show its status: pending, approved,

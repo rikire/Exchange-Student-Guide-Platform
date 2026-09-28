@@ -17,7 +17,6 @@ real figure can only be higher.
 | FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
 | FR-006 | planned | could | Backlinks on an article | 3 | 0 | 3 |
 | FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 8 | 0 |
-| FR-012 | planned | could | Looking up a submission's status | 3 | 0 | 3 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
 | FR-016 | planned | should | Downloading a media asset | 3 | 2 | 1 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |

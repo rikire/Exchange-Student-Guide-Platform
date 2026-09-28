@@ -20,6 +20,12 @@ Make it survive real use and real inputs, and make it something a third person c
       **Built early, 29 Sep:** [FEAT-006](../features/FEAT-006-moderating-a-submission.md), both
       criteria and five more cases (the field on the form, trimming, blank, the 2000-character limit
       and one over it) as tests in `ModerationFlowTest`. Accepted by the human in a browser the same day.
+- [x] FR-012 — looking up a submission's status by its number, taken early at the human's choice on
+      29 Sep so that FR-019's reason reaches the contributor
+      — check: FR-012's three criteria are three tests
+      **Built 29 Sep:** [FEAT-012](../features/FEAT-012-looking-up-a-submission.md), `GET
+      /submissions/status`, the three criteria and nine more cases in `SubmissionStatusTest`. Accepted by
+      the human in a browser the same day.
 - [ ] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
       — check: a published article linking to another appears in its backlink list; a link from an
       unapproved or rejected submission does not — three tests
