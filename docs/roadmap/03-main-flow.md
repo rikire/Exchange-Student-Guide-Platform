@@ -106,6 +106,7 @@ the criteria do not reach it.
       its pages and listing what needs checking with OGE. The `seed` profile on H2 logs "30 articles
       imported", and "FRRO registration" returns `Registering with FRRO` first. Checked locally, not
       on the compose stand, which needs `POSTGRES_PASSWORD` in `.env`.
+      **Checked on the compose stand 29 Sep:** see the demo run below.
 - [ ] `ai-tools`: the gap list and rubric generators; the first honest gap list
       — check: `ai-tools gaps` (phase 3) produces a non-empty list containing at least one item
       neither of us would have volunteered
@@ -227,6 +228,18 @@ Where the steps above and this queue compete for the same days, the human orders
 
 The mid-demo scenario runs end to end on real data; both of us appear in the git history in every
 week of the phase; the gap list is written honestly rather than trimmed before the demo.
+
+**Demo run on the compose stand, 29 Sep — the first part met.** `docker compose up --build` from
+empty volumes: PostgreSQL 17.11, six migrations, "Seed: 30 articles imported". Walked over HTTP,
+then accepted by the human in the browser: "FRRO registration" returns `Registering with FRRO`
+first; a wiki link resolves and a missing title renders as `wikilink-missing`; an edit with a JPEG
+waits in the queue, is on no public page or search result, and its media answers `404` to anyone
+but the moderator; the moderator logs in, sees the photo, approves, and the article, the photo and
+search show the new text; the photo survives both a restart and a recreated container. Found on the
+way: `guide-media` was declared but not mounted, so an uploaded photo was lost with the container —
+now mounted at `GUIDE_MEDIA_ROOT`, and `.env.example` no longer lists variables the stand ignores.
+Left open: none of the 30 articles contains a red link, so the demo can show one only in the
+editor's preview.
 
 ## Open questions
 
