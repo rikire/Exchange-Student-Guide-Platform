@@ -41,6 +41,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-026 | planned |  |  |  |  |  |  | Removing a published article |
 | FR-027 | done | FEAT-010 | BodyPreview, ContributeArticleRepository, PreviewController, WebSecurity | BrowserEditorTest, ContentSecurityPolicyTest, EditorPreviewTest |  | POST /contribute/preview | article | Writing an article's body |
 | FR-028 | planned |  |  |  |  |  |  | Completing a wiki link while writing |
+| FR-029 | done | FEAT-006 | ModerationService | ModerationFlowTest, TextDiffTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Seeing what an edit changes |
 
 ## Non-functional requirements
 
@@ -62,7 +63,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | CON-001 |  |  |  |  |  |  |  | No user accounts |
 | CON-002 |  |  |  |  |  |  |  | No discussion pages |
 | CON-003 |  |  |  |  |  |  |  | No watchlists |
-| CON-004 |  |  |  |  |  |  |  | No diffs |
+| CON-004 |  |  |  |  |  |  |  | No stored diffs |
 | CON-005 |  |  |  |  |  |  |  | Single-language interface |
 | CON-006 |  |  |  |  |  |  |  | Accepted media types |
 | CON-008 |  |  |  |  |  |  |  | No machine-facing API, and so no OpenAPI specification |

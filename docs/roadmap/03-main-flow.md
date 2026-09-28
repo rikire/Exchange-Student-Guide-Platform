@@ -199,9 +199,13 @@ Where the steps above and this queue compete for the same days, the human orders
    touches CON-001's reason (personal data), ADR-0008 (which challenge), a mail server, and what OGE
    agrees to store
    — check: a requirement and an ADR agreed, and the stakeholder's answer recorded
-8. [ ] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
+8. [x] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
    Reverses CON-004 ("No diffs"); belongs to the review screen of `moderate` (FR-015)
    — check: CON-004 revised by the human and the requirement written
+   **Decided and built 29 Sep:** CON-004 narrowed to "no stored diffs", FR-029 (`should`) written,
+   [ADR-0015](../architecture/adr/ADR-0015-showing-an-edit-as-a-diff.md) — two columns chosen by the
+   human over three alternatives, stacked on a phone, java-diff-utils 4.17. Built in
+   [FEAT-006](../features/FEAT-006-moderating-a-submission.md).
 9. [ ] **Walk through every screen and feature** with the human, and turn what comes out into
    requirements and steps
    — check: the list of changes recorded

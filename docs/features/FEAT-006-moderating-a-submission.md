@@ -2,7 +2,7 @@
 id: FEAT-006
 title: Moderating a submission
 status: done
-covers: [FR-014, FR-015, FR-017, FR-018, FR-019, FR-020]
+covers: [FR-014, FR-015, FR-017, FR-018, FR-019, FR-020, FR-029]
 slice: moderate
 routes: ["GET /moderate/login", "POST /moderate/login", "GET /moderate/queue", "GET /moderate/submissions/{number}", "POST /moderate/submissions/{number}/approve", "POST /moderate/submissions/{number}/reject"]
 tables: [submission, submission_tag, article, article_tag, tag, revision]
@@ -15,6 +15,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/ApprovalRefusedException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/ApprovalConflictException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/RejectionRefusedException.java
+  - app/src/main/java/in/ac/iitm/guide/moderate/internal/TextDiff.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateSubmissionRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/RevisionRepository.java
@@ -25,6 +26,7 @@ code:
   - app/src/main/resources/templates/shared/security/AdminLogin.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
+  - app/src/test/java/in/ac/iitm/guide/moderate/internal/TextDiffTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepositoryTest.java
 ---
@@ -41,7 +43,8 @@ scenario — the moderator approves the edit and it goes live — does not exist
 
 The OGE moderator opens `/moderate/queue`, is sent to the login page, types the office's shared
 password and lands on the queue: every pending submission, oldest first. They open one and read its
-full text as it would be published. They adjust the summary and the tags if needed and approve it: a
+full text as it would be published — or, for an edit, first what it changes, the published text on
+the left and the proposed on the right (FR-029). They adjust the summary and the tags if needed and approve it: a
 new article goes live at its address, an edit replaces the article's text and the text it replaced is
 kept as a revision. Or they reject it, with a reason if they give one, and it leaves the queue. Either way they are back at the queue.
 
@@ -137,11 +140,24 @@ reason, a blank one) turn red with the trimming removed — except "no reason", 
 criterion rather than an implementation choice. Accepted by the human on 29 Sep after rejecting a
 submission with a reason in a browser (H2, `seed` profile); on that acceptance FR-019 is `done`.
 
+**29 Sep, FR-029 (queue item 8, decided by the human):** the review of an edit shows what it changes
+against the live article, as [ADR-0015](../architecture/adr/ADR-0015-showing-an-edit-as-a-diff.md)
+decides: two columns (stacked on a phone), removed text in red and struck through, added text in
+green and underlined, unchanged paragraphs folded, and title, summary and tags as old and new. The
+full proposed text sits under "Show the full proposed text". `TextDiff` arranges what java-diff-utils
+finds into plain segments, which the template escapes. Tests: eleven in `TextDiffTest`, eight in
+`ModerationFlowTest`; sixteen were red before the implementation, and the three that were not (a new
+article, HTML in an edit, a text that did change) each went red under a mutation of the guard it
+covers. `BrowserLayoutTest`'s sample submission is now an edit, so the comparison is measured at four
+widths: it first found the phone labels under 16 px, now fixed. Accepted by the human on 29 Sep
+after proposing an edit and reviewing it in a browser, wide and narrow; on that acceptance FR-029 is
+`done`.
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).
 - Showing the rejection reason to anyone — FR-012 (looking up a submission's status), not built.
-- A diff of an edit — CON-004, and queue item 8 of the roadmap.
+- A diff of the rendered page rather than of its Markdown — ADR-0015's option C.
 - Logout — no route in the contract; the session expires on its own.
 - The admin panel, direct publishing (FR-023, FR-024), removal (FR-026) — phase 4.
 
