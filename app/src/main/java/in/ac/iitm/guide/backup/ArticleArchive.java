@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.backup;
 
+import in.ac.iitm.guide.backlink.ArticleTextChanged;
 import in.ac.iitm.guide.backup.internal.ArchivedArticle;
 import in.ac.iitm.guide.backup.internal.FrontMatter;
 import in.ac.iitm.guide.backup.persistence.ArchiveArticleRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
  * writes it back out in the same format.
  */
 // trace:NFR-004
+// trace:FR-006
 @Service
 public class ArticleArchive {
 
@@ -41,10 +44,12 @@ public class ArticleArchive {
 
     private final ArchiveArticleRepository articles;
     private final Tags tags;
+    private final ApplicationEventPublisher events;
 
-    ArticleArchive(ArchiveArticleRepository articles, Tags tags) {
+    ArticleArchive(ArchiveArticleRepository articles, Tags tags, ApplicationEventPublisher events) {
         this.articles = articles;
         this.tags = tags;
+        this.events = events;
     }
 
     /**
@@ -80,6 +85,7 @@ public class ArticleArchive {
             article.setPinnedAt(parsed.pinned());
             article.setTags(tagsNamed(file.getKey(), parsed.tags()));
             articles.save(article);
+            events.publishEvent(new ArticleTextChanged(article.getId()));
             imported++;
         }
         return new ImportReport(imported, List.copyOf(skipped));

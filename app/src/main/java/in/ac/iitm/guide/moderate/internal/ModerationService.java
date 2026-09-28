@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.moderate.internal;
 
+import in.ac.iitm.guide.backlink.ArticleTextChanged;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.MediaItem;
 import in.ac.iitm.guide.moderate.persistence.ModerateArticleRepository;
@@ -23,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 // trace:FR-019
 // trace:FR-020
 // trace:FR-029
+// trace:FR-006
 @Service
 public class ModerationService {
 
@@ -51,18 +54,21 @@ public class ModerationService {
     private final RevisionRepository revisions;
     private final Tags tags;
     private final MediaAssets media;
+    private final ApplicationEventPublisher events;
 
     ModerationService(
             ModerateSubmissionRepository submissions,
             ModerateArticleRepository articles,
             RevisionRepository revisions,
             Tags tags,
-            MediaAssets media) {
+            MediaAssets media,
+            ApplicationEventPublisher events) {
         this.submissions = submissions;
         this.articles = articles;
         this.revisions = revisions;
         this.tags = tags;
         this.media = media;
+        this.events = events;
     }
 
     /** A line of the queue. */
@@ -243,6 +249,7 @@ public class ModerationService {
         article.setTags(chosenTags);
         articles.save(article);
         media.moveToArticle(submission.getId(), article.getId());
+        events.publishEvent(new ArticleTextChanged(article.getId()));
     }
 
     private void applyEdit(Submission submission, String summary, Set<Tag> chosenTags, OffsetDateTime now) {
@@ -266,6 +273,7 @@ public class ModerationService {
         article.setUpdatedAt(now);
         article.setTags(chosenTags);
         media.moveToArticle(submission.getId(), article.getId());
+        events.publishEvent(new ArticleTextChanged(article.getId()));
     }
 
     /**

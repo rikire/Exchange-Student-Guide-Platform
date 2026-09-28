@@ -32,15 +32,24 @@ class ModularityTest {
     private static final ApplicationModules MODULES = ApplicationModules.of(GuideApplication.class);
 
     /**
-     * The ten slices of docs/ai/architecture-rules.md, plus {@code shared}.
+     * The eleven slices of docs/ai/architecture-rules.md, plus {@code shared}.
      *
      * <p>Kept as a literal list rather than derived from the packages, because deriving it would
      * make the assertion agree with whatever the code happens to contain — including agreeing that
      * there is nothing at all.
      */
     private static final String[] DOCUMENTED_MODULES = {
-        "home", "articleview", "search", "taxonomy", "contribute",
-        "moderate", "report", "media", "wikilink", "backup",
+        "home",
+        "articleview",
+        "search",
+        "taxonomy",
+        "contribute",
+        "moderate",
+        "report",
+        "media",
+        "wikilink",
+        "backlink",
+        "backup",
         "shared",
     };
 

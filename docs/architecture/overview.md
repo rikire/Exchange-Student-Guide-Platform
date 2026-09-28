@@ -116,27 +116,30 @@ itself, from the imports between slices, and rendered beside the designed one:
 `home`, `articleview`, `backup`, `contribute` and `moderate` each use a published type of `wikilink`
 (`ArticleAddress`, `WikiLinkRenderer`), and `backup` also uses `shared`. `backup`, `contribute` and,
 since 28 September, `moderate` also use `taxonomy`'s `Tags`, the only way a tag reaches the table
-(ADR-0005). `ModularityTest` writes that diagram and checks
+(ADR-0005). Since 29 September `articleview` asks `backlink` for what links here, `moderate` and
+`backup` publish its `ArticleTextChanged`, and `backlink` uses `wikilink`'s parser (ADR-0016).
+`ModularityTest` writes that diagram and checks
 those eight arrows are in it, so it cannot drift from the code without a test failing.
 
-Ten vertical slices plus `shared`. The list is owned by
+Eleven vertical slices plus `shared`. The list is owned by
 [architecture-rules.md](../ai/architecture-rules.md); the decision to structure the application this
 way, and the two alternatives weighed against it, are in
 [ADR-0002](adr/ADR-0002-vertical-slices-on-spring-modulith.md).
 
-**Declared in code since 10 September, and verified by the build.** Each of the eleven is a package
+**Declared in code since 10 September, and verified by the build.** Each of the twelve is a package
 under `in.ac.iitm.guide` carrying a `package-info.java`, which is all Spring Modulith needs to treat
 it as an application module — so the diagram above and the module list the build sees are the same
 list, and a slice added to one without the other fails a test. On 10 September the packages were
 otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
 since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), since 28 September
-`moderate` (FEAT-006), `search` (FEAT-007) and `media` (FEAT-009), and `report` stays empty until its
+`moderate` (FEAT-006), `search` (FEAT-007) and `media` (FEAT-009), since 29 September `backlink`
+(FR-006, [ADR-0016](adr/ADR-0016-backlinks-through-an-event-fed-slice.md)), and `report` stays empty until its
 step ([03-main-flow.md](../roadmap/03-main-flow.md)).
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —
 there was no boundary to violate — and had passed since the skeleton was created, proving nothing.
-`every_slice_in_the_architecture_map_is_a_module` now asserts the eleven names against the list
+`every_slice_in_the_architecture_map_is_a_module` now asserts the twelve names against the list
 above, so an empty pass and a real pass are distinguishable. **Resolved 22 September, ahead of its own
 trigger:** `shared` carried `@ApplicationModule(type = ApplicationModule.Type.OPEN)` the moment its
 first entities landed in `shared.persistence` (phase 2 step 1), rather than waiting for the first

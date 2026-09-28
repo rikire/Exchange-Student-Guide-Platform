@@ -24,7 +24,8 @@ Container_Boundary(web, "Web application") {
   Component(moderate, "moderate", "slice", "The queue, approval, rejection, revisions, removal (FR-014 to FR-020, FR-026)", $tags="planned")
   Component(report, "report", "slice", "Flagging an article, and closing the flag (FR-021, FR-022)", $tags="planned")
   Component(media, "media", "slice", "Upload, storage, safe delivery (FR-016)", $tags="planned")
-  Component(wikilink, "wikilink", "plain Java", "The [[link]] parser and backlinks. No Spring, no JPA — so its tests run without a context (FR-002 to FR-006)")
+  Component(wikilink, "wikilink", "plain Java", "The [[link]] parser and renderer. No Spring, no JPA — so its tests run without a context (FR-002 to FR-005)")
+  Component(backlink, "backlink", "slice", "Owns article_link: re-reads an article's links on ArticleTextChanged, answers what links here (FR-006, ADR-0016)")
   Component(backup, "backup", "slice", "Export and import of the whole knowledge base (NFR-004, ADR-0007)")
 
   Component(shared, "shared", "persistence · web · security", "JPA entities and Flyway migrations, layout fragments, CSRF, rate limiting, admin authentication")
@@ -35,7 +36,11 @@ ContainerDb(index, "Search index")
 ContainerDb(mediaroot, "Media root")
 
 ' Between slices: only a published type or an ApplicationEvent, never a direct call (ADR-0002).
-Rel(articleview, wikilink, "Renders links, resolves red links, reads backlinks", "published type")
+Rel(articleview, wikilink, "Renders links, resolves red links", "published type")
+Rel(articleview, backlink, "Asks what links here", "published type")
+Rel(moderate, backlink, "Published or edited — re-read its links", "ApplicationEvent")
+Rel(backup, backlink, "Imported — re-read its links", "ApplicationEvent")
+Rel(backlink, wikilink, "Finds the links in a body with the page's own parser", "published type")
 Rel(home, wikilink, "Builds the path to an article from its address", "published type")
 Rel(backup, wikilink, "Derives an article's address from its title on import", "published type")
 Rel(contribute, wikilink, "Parses links out of a submission", "published type", $tags="planned")
@@ -54,6 +59,7 @@ Rel(backup, search, "Reindex after an import", "ApplicationEvent", $tags="planne
 ' arrow here: ArchUnit forbids it from importing jakarta.persistence at all.
 Rel(home, db, "Pinned and recent articles", "own repository")
 Rel(articleview, db, "One published article", "own repository")
+Rel(backlink, db, "article_link", "own repository")
 Rel(search, db, "Article content, to index", "own repository", $tags="planned")
 Rel(taxonomy, db, "Tags and article_tag", "own repository", $tags="planned")
 Rel(contribute, db, "Submissions", "own repository", $tags="planned")
