@@ -831,3 +831,39 @@ GIVEN letters that match no published title
 WHEN they are typed after [[
 THEN nothing is offered and the text is left as typed
 ```
+
+### FR-029 — Seeing what an edit changes
+
+**Status:** done
+**Priority:** should
+
+When a moderator reviews an edit submission, the system shall show the published article's text and
+the proposed text side by side, limited to the paragraphs that changed and their neighbours, with
+removed text marked in red and added text marked in green. A change to the title, the summary or the
+tags shall be shown as the old value and the new one. Added 29 Sep, narrowing
+[CON-004](constraints.md).
+
+**Acceptance criteria:**
+
+```
+GIVEN an edit that changes one word of a paragraph
+WHEN the moderator opens its review
+THEN the old paragraph is shown with that word marked as removed
+  AND the new paragraph is shown with the new word marked as added
+
+GIVEN an edit that adds a paragraph, or removes one
+WHEN the moderator opens its review
+THEN the added paragraph is shown marked as added, or the removed one marked as removed
+
+GIVEN an edit that changes the title, the summary or the tags
+WHEN the moderator opens its review
+THEN the old and the new value of each changed field are shown
+
+GIVEN an edit whose text is the same as the published article's
+WHEN the moderator opens its review
+THEN the review says the text has not changed
+
+GIVEN a submission of a new article
+WHEN the moderator opens its review
+THEN its text is shown in full, with no comparison
+```
