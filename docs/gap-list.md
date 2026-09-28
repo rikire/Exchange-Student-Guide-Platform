@@ -51,4 +51,4 @@ None.
 
 ## Gaps in the traceability chain
 
-- FR-030 is done and no code carries its anchor
+None.
