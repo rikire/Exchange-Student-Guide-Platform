@@ -28,7 +28,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-013 | planned |  |  |  |  |  |  | Abuse handling without accounts |
 | FR-014 | done | FEAT-006 | ModerateSubmissionRepository, ModerationController, ModerationService, ModeratorLoginController, WebSecurity | ModerationFlowTest, ModeratorLoginTest | V2__add_moderation_and_report_query_indexes | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Moderation queue |
 | FR-015 | done | FEAT-006, FEAT-009 | MediaAssets, MediaController, MediaItem, ModerateSubmissionRepository, ModerationController, ModerationService | MediaDeliveryTest, ModerationFlowTest | V4__add_media_link_and_tag_lookup_indexes | GET /media/{id}, GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /articles/{title}/edits, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject, POST /submissions | article, article_tag, media_asset, revision, submission, submission_tag, tag | Reviewing a submission |
-| FR-016 | planned |  |  | MediaDeliveryTest |  |  |  | Downloading a media asset |
+| FR-016 | done | FEAT-009 |  | MediaDeliveryTest |  | GET /media/{id}, POST /articles/{title}/edits, POST /submissions | media_asset | Downloading a media asset |
 | FR-017 | done | FEAT-006 | ModerateArticleRepository, ModerateSubmissionRepository, ModerationController, ModerationService | MediaAssetsTest, ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Approving a submission |
 | FR-018 | done | FEAT-006 | ModerateSubmissionRepository, ModerationController, ModerationService | ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Rejecting a submission |
 | FR-019 | done | FEAT-006 | ModerationController, ModerationService | ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Providing a rejection reason |
@@ -71,7 +71,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 
 ## Gaps
 
-None.
+- FR-016 is done and no code carries its anchor
 
 ## Notes
 

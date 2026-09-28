@@ -18,7 +18,6 @@ real figure can only be higher.
 | FR-006 | planned | could | Backlinks on an article | 3 | 0 | 3 |
 | FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 8 | 0 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
-| FR-016 | planned | should | Downloading a media asset | 3 | 2 | 1 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
@@ -52,4 +51,4 @@ None.
 
 ## Gaps in the traceability chain
 
-None.
+- FR-016 is done and no code carries its anchor

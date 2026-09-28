@@ -484,7 +484,7 @@ THEN the system shows that it is no longer pending
 
 ### FR-016 — Downloading a media asset
 
-**Status:** planned
+**Status:** done
 **Priority:** should
 
 When a reader requests a media asset attached to a published article, the system shall return it

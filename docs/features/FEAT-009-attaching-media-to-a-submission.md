@@ -2,7 +2,7 @@
 id: FEAT-009
 title: Attaching media to a submission
 status: done
-covers: [FR-010, FR-011, FR-015, FR-001, NFR-001]
+covers: [FR-010, FR-011, FR-015, FR-001, FR-016, NFR-001]
 slice: media
 routes: ["POST /submissions", "POST /articles/{title}/edits", "GET /media/{id}"]
 tables: [media_asset]
@@ -170,9 +170,17 @@ Found while building, each settled rather than guessed:
 **Accepted by the human on 28 Sep** after those two checks from a phone ("everything works"). The
 requirements' statuses are left for the human to change.
 
+**29 Sep, FR-016 (phase 4, taken early at the human's choice):** every asset on an article page, and
+on the moderator's review, has a Download link to `GET /media/{id}` with the `download` attribute and
+the original name, so a photo or a video, which the server sends inline, is saved rather than opened.
+The server is unchanged: a document already came as an attachment, and the access rules that FR-016's
+second and third criteria ask for were built and tested with this feature on 28 Sep, now anchored to
+FR-016. The link test was red before the template changed; `BrowserLayoutTest` measures the link at
+four widths, 44 px on a phone. Accepted by the human on 29 Sep after downloading an attached file from
+an approved edit in a browser; on that acceptance FR-016 is `done`.
+
 ## Deliberately out of scope
 
-- FR-016's download button on the article screen and its tests: phase 4, as routed.
 - Assets in the export archive (ADR-0007) — the backup slice's work.
 - Removing the files of rejected submissions: they are unreachable and only take space; recorded as
   debt, by the human's decision on 28 Sep.

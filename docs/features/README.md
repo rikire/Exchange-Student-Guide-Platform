@@ -14,7 +14,7 @@ Every feature file with its status, the requirements it covers and the slice it 
 | FEAT-006 | [Moderating a submission](FEAT-006-moderating-a-submission.md) | done | FR-014, FR-015, FR-017, FR-018, FR-019, FR-020, FR-029 | moderate | GET /moderate/login, POST /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | submission, submission_tag, article, article_tag, tag, revision |
 | FEAT-007 | [Searching the guide](FEAT-007-searching-the-guide.md) | done | FR-007 | search | GET /search | article, article_tag, tag |
 | FEAT-008 | [Browsing by tag](FEAT-008-browsing-by-tag.md) | done | FR-008 | taxonomy | GET /tags/{tag} | article, article_tag, tag |
-| FEAT-009 | [Attaching media to a submission](FEAT-009-attaching-media-to-a-submission.md) | done | FR-010, FR-011, FR-015, FR-001, NFR-001 | media | POST /submissions, POST /articles/{title}/edits, GET /media/{id} | media_asset |
+| FEAT-009 | [Attaching media to a submission](FEAT-009-attaching-media-to-a-submission.md) | done | FR-010, FR-011, FR-015, FR-001, FR-016, NFR-001 | media | POST /submissions, POST /articles/{title}/edits, GET /media/{id} | media_asset |
 | FEAT-010 | [The Markdown editor on the submission form](FEAT-010-markdown-editor.md) | done | FR-027 | contribute | POST /contribute/preview | article |
 | FEAT-011 | [A layout for any screen width and for the keyboard](FEAT-011-layout-for-any-screen-and-the-keyboard.md) | done | NFR-007, NFR-008 | shared |  |  |
 | FEAT-012 | [Looking up a submission's status](FEAT-012-looking-up-a-submission.md) | done | FR-012 | contribute | GET /submissions/status | submission, article |

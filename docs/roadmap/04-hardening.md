@@ -33,9 +33,12 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: after removal the article's route no longer resolves, it drops from search and its
       tags, a wiki link to it becomes red, and it drops from the pinned section if pinned — FR-026's
       four criteria as four tests
-- [ ] Moved from phase 3, 10 Sep: FR-016 — downloading a media attachment
+- [x] Moved from phase 3, 10 Sep: FR-016 — downloading a media attachment
       — check: a media asset on a published article downloads; one attached to an unapproved or a
       rejected submission does not — three tests
+      **Built early, 29 Sep:** [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md), the
+      Download link on the article page; the three checks are tests in `MediaDeliveryTest`, the
+      delivery and access ones from 28 Sep. Accepted by the human in a browser the same day.
 - [ ] Edge cases: empty query, injection attempt, HTML in article text, duplicate titles, a title
       over 100 characters, circular wiki links, a corrupt import archive, a file whose extension
       lies about its content, a file over the limit
