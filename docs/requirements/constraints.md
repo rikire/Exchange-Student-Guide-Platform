@@ -70,11 +70,18 @@ Full UI translation is out of scope for the team size and timeframe.
 
 ### CON-006 — Accepted media types
 
-**Rationale:** Only images, video, documents and audio are accepted as media assets — covering
+**Rationale:** Only images, video and documents are accepted as media assets — covering
 everything the stakeholder's content genuinely needs (photos of forms, scanned documents,
-instructional video or audio) — everything else, including executables and archives, is rejected
+instructional video) — everything else, including audio, executables and archives, is rejected
 outright. A narrow allowlist keeps the upload surface small and reduces the attack surface for a
 malicious file.
+
+**Narrowed 28 September by the human: audio removed.** It entered on 7 September from the answer
+"maybe audio", and nothing since has needed it: no requirement, use case or stakeholder request, and
+FR-010, FR-011 and NFR-001 already named only photos, documents and video — NFR-001 had no audio
+size limit. The one use found for it, the pronunciation of Tamil or Hindi phrases, is served by a
+link in the article's text. Each accepted type is more to detect, test and serve safely, so audio
+returns only when OGE asks for it.
 
 ### CON-008 — No machine-facing API, and so no OpenAPI specification
 
