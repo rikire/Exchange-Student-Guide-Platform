@@ -192,7 +192,9 @@ removes the article between the GET and the POST.
 
 ### DEBT-008 — The submission form takes no attachment
 
-**Status:** open
+**Status:** resolved 2026-09-28 — [FEAT-009](features/FEAT-009-attaching-media-to-a-submission.md)
+adds the `attachment` field, hands it to `media`, and answers a refused file with `422` on the form;
+FR-010's and FR-011's two media criteria each are tests in `SubmissionFlowTest` (`7dcec8f`)
 **Created:** 2026-09-27
 **Marker:** `app/src/main/resources/templates/contribute/SubmissionForm.html` — the comment where the
 attachment field belongs
