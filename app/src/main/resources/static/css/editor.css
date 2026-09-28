@@ -11,6 +11,9 @@
   border-color: var(--line);
 }
 
+/* The keyboard's focus is on CodeMirror's hidden input, so the ring goes on the editor (NFR-007). */
+.EasyMDEContainer .CodeMirror-focused { outline: 2px solid var(--maroon); outline-offset: 2px; }
+
 /* EasyMDE's greys and green for links, addresses, quotes and HTML tags are under WCAG AA's 4.5:1 on
    white (NFR-007); the palette's own colours are over it. */
 .cm-s-easymde .cm-link, .cm-s-easymde .cm-url, .cm-s-easymde .cm-quote { color: var(--ink-soft); }

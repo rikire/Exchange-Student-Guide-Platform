@@ -96,6 +96,11 @@
   // CodeMirror's own input has no label; the one on the page belongs to the hidden textarea.
   editor.codemirror.getInputField().setAttribute('aria-label', 'Body (Markdown)');
 
+  // EasyMDE binds Tab to indenting, so a keyboard user could not leave the editor (WCAG 2.1.2).
+  // False hands both keys back to the browser; a list is nested with spaces instead.
+  var keys = Object.assign({}, editor.codemirror.getOption('extraKeys'), { Tab: false, 'Shift-Tab': false });
+  editor.codemirror.setOption('extraKeys', keys);
+
   // EasyMDE takes its buttons out of the tab order; the keyboard shortcuts alone are not discoverable.
   Object.keys(editor.toolbarElements).forEach(function (name) {
     editor.toolbarElements[name].tabIndex = 0;
