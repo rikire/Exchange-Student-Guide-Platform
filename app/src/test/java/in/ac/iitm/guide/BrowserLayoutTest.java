@@ -108,11 +108,19 @@ class BrowserLayoutTest {
         attachToTheArticle("form.jpg", MediaTestFiles.jpeg(1600, 1200));
         attachToTheArticle(
                 "FRRO checklist with a long file name for a narrow phone screen.pdf", MediaTestFiles.pdf(2_000));
+        // An edit, so the review is measured with FR-029's comparison: a changed word in a long line,
+        // a new paragraph and a changed title and summary.
         jdbc.update(
-                "INSERT INTO submission (id, submission_number, type, title, summary, body, status, submitted_at)"
-                        + " VALUES (?, ?, 'NEW_ARTICLE', 't', 's', 'b', 'PENDING', CURRENT_TIMESTAMP)",
+                "INSERT INTO submission (id, submission_number, type, target_article_id, title, summary, body,"
+                        + " status, submitted_at) VALUES (?, ?, 'EDIT', ?, ?, ?, ?, 'PENDING', CURRENT_TIMESTAMP)",
                 UUID.randomUUID(),
-                NUMBER);
+                NUMBER,
+                jdbc.queryForObject("SELECT id FROM article", UUID.class),
+                "Registering with the FRRO online",
+                "Register on the e-FRRO portal within 14 days of arriving in India.",
+                "## Before you go\n\nBring your passport, visa, admission letter and [[Hostel Life]] papers.\n\n"
+                        + "- Photographs\n- Proof of address\n\nछात्रावास में पंजीकरण। விடுதி பதிவு.\n\n"
+                        + "Registration-is-done-through-the-e-FRRO-portal-and-needs-no-visit-in-most-cases.");
     }
 
     /** A wide photo and a long-named document, so the article is measured with its media (FEAT-009). */

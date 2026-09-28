@@ -24,6 +24,12 @@
   --space-5: 24px;
   --space-6: 40px;
 
+  /* FR-029's marks: dark text on a pale ground, both above 4.5:1 (WCAG 1.4.3). */
+  --diff-removed-bg: #FDE2E1;
+  --diff-removed-ink: #8A1C14;
+  --diff-added-bg: #DDF4E4;
+  --diff-added-ink: #14532D;
+
   --radius-card: 6px;
   --radius-pill: 999px;
 

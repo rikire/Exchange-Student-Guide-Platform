@@ -259,6 +259,104 @@ class ModerationFlowTest {
     }
 
     @Test
+    // trace:FR-029
+    void the_review_of_an_edit_marks_the_removed_word_and_the_added_one() throws Exception {
+        var article = published("Hostel Life", "Bring your passport today.");
+        var edit = pendingEdit(article, "Hostel Life", "Bring your visa today.");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).contains("<del class=\"diff-removed\">passport</del>");
+        assertThat(review).contains("<ins class=\"diff-added\">visa</ins>");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_shows_a_changed_title_as_old_and_new() throws Exception {
+        var article = published("Hostel Life", "The text.");
+        var edit = pendingEdit(article, "Hostel Life in Chennai", "The text.");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review)
+                .containsPattern("<del class=\"diff-removed\">Hostel Life</del>\\s*<span[^>]*>→</span>\\s*"
+                        + "<ins class=\"diff-added\">Hostel Life in Chennai</ins>");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_shows_a_changed_summary_as_old_and_new() throws Exception {
+        var article = published("Hostel Life", "The text.");
+        var edit = pendingEdit(article, "Hostel Life", "The text.");
+        jdbc.update("UPDATE submission SET summary = ? WHERE id = ?", "Rooms, mess and rules.", edit.getId());
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).contains("<del class=\"diff-removed\">A summary.</del>");
+        assertThat(review).contains("<ins class=\"diff-added\">Rooms, mess and rules.</ins>");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_shows_changed_tags_as_old_and_new() throws Exception {
+        var article = published("Hostel Life", "The text.");
+        tag(article, "visa");
+        var edit = pendingEdit(article, "Hostel Life", "The text.");
+        tag(edit, "hostel");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).contains("<del class=\"diff-removed\">visa</del>");
+        assertThat(review).contains("<ins class=\"diff-added\">hostel</ins>");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_with_the_same_text_says_the_text_has_not_changed() throws Exception {
+        var article = published("Hostel Life", "The text.");
+        var edit = pendingEdit(article, "Hostel Life", "The text.");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).contains("The text has not changed");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_a_new_article_shows_its_text_in_full_with_no_comparison() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var review = page(loggedIn(), reviewPath(submission));
+
+        assertThat(review).doesNotContain("diff-table");
+        assertThat(review).contains("<strong>passport</strong>");
+    }
+
+    @Test
+    // trace:FR-029
+    void html_in_an_edit_is_shown_as_text_in_the_comparison() throws Exception {
+        var article = published("Hostel Life", "The text.");
+        var edit = pendingEdit(article, "Hostel Life", "The text <script>alert(1)</script>");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).contains("&lt;script&gt;alert(1)&lt;/script&gt;");
+        assertThat(review).doesNotContain("<script>alert(1)");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_keeps_its_full_text_one_click_away() throws Exception {
+        var article = published("Hostel Life", "Bring your passport today.");
+        var edit = pendingEdit(article, "Hostel Life", "Bring your **visa** today.");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).containsPattern("<details[^>]*>\\s*<summary[^>]*>Show the full proposed text</summary>");
+        assertThat(review).contains("<strong>visa</strong>");
+    }
+
+    @Test
     // trace:FR-019
     void the_review_page_offers_an_optional_reason_on_the_reject_form() throws Exception {
         var submission = pending("Getting a SIM card", MONDAY);
@@ -628,6 +726,22 @@ class ModerationFlowTest {
         article.setTags(Set.<Tag>of());
         transaction.executeWithoutResult(status -> entityManager.persist(article));
         return article;
+    }
+
+    private void tag(Article article, String name) {
+        jdbc.update("INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)", article.getId(), newTag(name));
+    }
+
+    private void tag(Submission submission, String name) {
+        jdbc.update(
+                "INSERT INTO submission_tag (submission_id, tag_id) VALUES (?, ?)", submission.getId(), newTag(name));
+    }
+
+    private UUID newTag(String name) {
+        var tag = new Tag();
+        tag.setName(name);
+        transaction.executeWithoutResult(status -> entityManager.persist(tag));
+        return tag.getId();
     }
 
     private Submission save(Submission submission) {

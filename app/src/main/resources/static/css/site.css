@@ -178,3 +178,30 @@ p a, .article-body a { text-decoration: underline; }
 @media (max-width: 1023px) {
   .field-help, .site-footer, .number-label { font-size: var(--text-body); }
 }
+
+/* FR-029: what an edit changes, published on the left and proposed on the right; one column on a
+   phone, where two would scroll sideways (NFR-008). Red and green are paired with strike-through and
+   underline, so the marks do not depend on colour alone (WCAG 1.4.1). */
+.diff { margin: 0 0 var(--space-5); }
+.diff-fields { margin: 0 0 var(--space-4); }
+.diff-fields div { margin: 0 0 var(--space-2); }
+.diff-fields dt { font-weight: 600; }
+.diff-fields dd { margin: 0; overflow-wrap: anywhere; }
+.diff-removed { background: var(--diff-removed-bg); color: var(--diff-removed-ink); text-decoration: line-through; }
+.diff-added { background: var(--diff-added-bg); color: var(--diff-added-ink); text-decoration: underline; }
+.diff-table { border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden; }
+.diff-head { display: none; }
+.diff-row { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
+.diff-row:first-of-type { border-top: none; }
+.diff-before, .diff-after { padding: var(--space-3); white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.diff-side { display: block; font-weight: 600; color: var(--ink-soft); }
+.diff-skipped { margin: 0; padding: var(--space-2) var(--space-3); border-top: 1px solid var(--line); color: var(--ink-soft); background: var(--sand); }
+.full-text { margin: 0 0 var(--space-5); }
+.full-text summary { min-height: var(--target); display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+@media (min-width: 48rem) {
+  .diff-head { display: grid; grid-template-columns: 1fr 1fr; background: var(--sand); font-weight: 600; }
+  .diff-head span { padding: var(--space-2) var(--space-3); }
+  .diff-row { grid-template-columns: 1fr 1fr; }
+  .diff-before { border-right: 1px solid var(--line); }
+  .diff-side { display: none; }
+}

@@ -23,7 +23,33 @@
     <div class="review-layout">
       <!-- bodyHtml is the Markdown converter's output with raw HTML disabled (ADR-0001), the one unescaped part. -->
       <div>
-        <div class="article-body" th:utext="${bodyHtml}">The submission's text.</div>
+        <section class="diff" th:if="${review.comparison}" aria-labelledby="diff-heading">
+          <h2 class="section-title" id="diff-heading">What this edit changes</h2>
+          <dl class="diff-fields" th:unless="${review.comparison.fields.isEmpty()}">
+            <div th:each="change : ${review.comparison.fields}">
+              <dt th:text="${change.field}">Title</dt>
+              <dd><del class="diff-removed" th:text="${change.before}">Old title</del> <span aria-hidden="true">→</span> <ins class="diff-added" th:text="${change.after}">New title</ins></dd>
+            </div>
+          </dl>
+          <p class="empty-note" th:if="${review.comparison.body.unchanged()}">The text has not changed.</p>
+          <div class="diff-table" th:unless="${review.comparison.body.unchanged()}">
+            <div class="diff-head" aria-hidden="true"><span>Published</span><span>Proposed</span></div>
+            <th:block th:each="row : ${review.comparison.body.rows}">
+              <p class="diff-skipped" th:if="${row.kind.name() == 'SKIPPED'}"
+                 th:text="${row.skipped == 1} ? '1 unchanged paragraph' : ${row.skipped} + ' unchanged paragraphs'">3 unchanged paragraphs</p>
+              <div class="diff-row" th:unless="${row.kind.name() == 'SKIPPED'}"
+                   th:classappend="${'diff-row-' + #strings.toLowerCase(row.kind.name())}">
+                <div class="diff-before"><span class="diff-side">Published</span><th:block th:each="part : ${row.before}"><del class="diff-removed" th:if="${part.marked}" th:text="${part.text}">old</del><span th:unless="${part.marked}" th:text="${part.text}">same</span></th:block></div>
+                <div class="diff-after"><span class="diff-side">Proposed</span><th:block th:each="part : ${row.after}"><ins class="diff-added" th:if="${part.marked}" th:text="${part.text}">new</ins><span th:unless="${part.marked}" th:text="${part.text}">same</span></th:block></div>
+              </div>
+            </th:block>
+          </div>
+        </section>
+        <details class="full-text" th:if="${review.comparison}">
+          <summary>Show the full proposed text</summary>
+          <div class="article-body" th:utext="${bodyHtml}">The submission's text.</div>
+        </details>
+        <div class="article-body" th:unless="${review.comparison}" th:utext="${bodyHtml}">The submission's text.</div>
         <div th:replace="~{media/Attachments :: list(${review.media})}"></div>
       </div>
 

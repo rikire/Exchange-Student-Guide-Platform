@@ -222,9 +222,10 @@ routes:
     responses: >-
       `200` pending, or `200` showing "no longer pending" if already decided (FR-015 shows the
       state, it does not hide the submission); `404` if `{number}` was never issued; `302`
-      unauthenticated
+      unauthenticated. For an edit, the page first shows what it changes against the live article
+      (FR-029, [ADR-0015](adr/ADR-0015-showing-an-edit-as-a-diff.md)), the full text one click away
     serves: >-
-      FR-015 (UC-015)
+      FR-015 (UC-015); FR-029
 
   - methods: [POST]
     path: /moderate/submissions/{number}/approve
