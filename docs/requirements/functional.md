@@ -287,7 +287,7 @@ THEN the most recently added articles are shown
 
 ### FR-010 — Submitting a new article
 
-**Status:** in-progress
+**Status:** done
 **Priority:** must
 
 When a contributor submits a new article — its title, a summary and its body — optionally attaching
