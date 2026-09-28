@@ -83,8 +83,8 @@ the criteria do not reach it.
       Photos (JPEG, PNG, WebP), PDF and MP4, the type read by Tika; photos re-encoded and turned upright;
       NFR-001's limits as settings; `GET /media/{id}` serves an unapproved asset only to a moderator.
       Both checks above are tests, and DEBT-008 is closed. Narrowed by the human the same day: audio
-      out of CON-006, DOCX out of the formats. Left: the human's acceptance, a real phone photo, and
-      the answers DEBT-015 and the 50-megapixel ceiling wait for.
+      out of CON-006, DOCX out of the formats; the 50-megapixel ceiling kept, DEBT-015 put off and
+      NFR-001 marked done. Left: the human's acceptance and a real phone photo.
 - [ ] ~~Admin panel behind the single password~~
       — check: a test enumerates the admin routes **from the route contract** rather than by hand,
       and asserts each one redirects when unauthenticated; a route added later without a test fails it

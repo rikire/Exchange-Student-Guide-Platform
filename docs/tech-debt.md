@@ -60,6 +60,7 @@ connection error rather than the form's message.
 default), and a test through a real server pins the answer at a file past it.
 
 **Trigger:** the first report of an upload ending in a connection error, or phase 4's hardening.
+Put off to then by the human on 28 Sep.
 
 ### DEBT-014 — The stand's session cookie is not marked `Secure`
 

@@ -151,10 +151,11 @@ Found while building, each settled rather than guessed:
 - **The CSRF token is read from a multipart body** by Spring Security through a real Tomcat, shown by
   `UploadTooLargeTest` rather than assumed.
 - **A file more than 2 MB over the container's limit** ends in a closed connection, not the `413`
-  page: Tomcat's `max-swallow-size`. Checked with a 5 MB file, recorded as DEBT-015 for the human.
+  page: Tomcat's `max-swallow-size`. Checked with a 5 MB file, recorded as DEBT-015; left as it
+  is for now by the human on 28 Sep.
 - **A decoded photo is at most 50 megapixels** (`PhotoEncoder.LARGEST_PIXELS`), since decoding costs
   four bytes a pixel whatever the file's size; a 48-megapixel phone photo fits. Over it, the photo is
-  refused as not an accepted type. Awaiting the human's confirmation of the figure.
+  refused as not an accepted type. Confirmed by the human on 28 Sep.
 - **An approved edit adds its asset to the article's**, beside those already there.
 - **Not yet checked on a phone**: a real photo taken in portrait, uploaded from a phone's browser,
   shown upright on the article.

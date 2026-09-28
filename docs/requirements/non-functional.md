@@ -35,7 +35,8 @@ triggers it, as an unwanted-behaviour clause, not here.
 
 ### NFR-001 — Upload size limit
 
-**Status:** planned
+**Status:** done — marked by the human on 28 Sep on FEAT-009's evidence: the four limits are
+`guide.media.*` settings, and `MediaAssetsTest` enforces each at its configured value
 
 An uploaded media asset's size does not exceed a configurable maximum that differs by file type,
 and the whole media volume does not exceed a configurable maximum of its own. Both are application
