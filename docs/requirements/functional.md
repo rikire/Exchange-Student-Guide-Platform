@@ -867,3 +867,28 @@ GIVEN a submission of a new article
 WHEN the moderator opens its review
 THEN its text is shown in full, with no comparison
 ```
+
+### FR-030 — Saving an article as a PDF
+
+**Status:** in-progress
+**Priority:** could
+
+When a reader chooses to save a published article, the system shall offer it for printing in a form
+that keeps the article's title, tags, text and photos and leaves out the site's header, navigation,
+footer and controls, so that the browser's "Save as PDF" produces the article alone. Added 29 Sep at
+the human's request; the browser makes the PDF, so every script the article is written in keeps its
+shaping.
+
+**Acceptance criteria:**
+
+```
+GIVEN a published article
+WHEN a reader opens it in a browser that runs scripts
+THEN a "Save as PDF" control is offered
+  AND using it opens the browser's print dialog
+
+GIVEN a published article
+WHEN it is printed
+THEN its title, tags, text and photos are printed
+  AND the site's header, navigation, footer and controls are not
+```
