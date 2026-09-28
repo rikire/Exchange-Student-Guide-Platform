@@ -741,7 +741,7 @@ THEN it no longer appears in the landing page's pinned section
 
 ### FR-026 — Removing a published article
 
-**Status:** planned
+**Status:** done
 **Priority:** should
 
 When a moderator removes a published article, the system shall stop resolving its route, and shall

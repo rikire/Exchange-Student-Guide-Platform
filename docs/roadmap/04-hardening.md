@@ -34,10 +34,14 @@ Make it survive real use and real inputs, and make it something a third person c
 - [ ] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
       — check: a published article linking to another appears in its backlink list; a link from an
       unapproved or rejected submission does not — three tests
-- [ ] Moved from phase 3, 10 Sep: FR-026 — removing a published article
+- [x] Moved from phase 3, 10 Sep: FR-026 — removing a published article
       — check: after removal the article's route no longer resolves, it drops from search and its
       tags, a wiki link to it becomes red, and it drops from the pinned section if pinned — FR-026's
       four criteria as four tests
+      **Built early, 29 Sep:** [FEAT-013](../features/FEAT-013-removing-an-article.md) — "Remove this
+      article" for the signed-in moderator, a confirmation, `removed_at` set; the four criteria are
+      tests in `ArticleRemovalTest`, and DEBT-009's `409` one in `SubmissionFlowTest`. Accepted by the
+      human in a browser the same day.
 - [x] Moved from phase 3, 10 Sep: FR-016 — downloading a media attachment
       — check: a media asset on a published article downloads; one attached to an unapproved or a
       rejected submission does not — three tests
