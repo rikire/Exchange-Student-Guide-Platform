@@ -186,6 +186,12 @@ public page. The exact columns are not fixed by the ADR and are `.claude/rules/s
 the migration is written; open in that ADR is whether a removed article's outbound links are cleared
 or left stale.
 
+**Written since 29 September by `backlink` alone** ([ADR-0016](adr/ADR-0016-backlinks-through-an-event-fed-slice.md)):
+`target_title` holds the linked title's **address** (`ArticleAddress.slugOf`), so `[[hostel life]]`
+and `[[Hostel Life]]` are one row; `target_article_id` is the article at that address, re-pointed
+when an article is published or renamed. A removed article's rows are left and filtered out when
+read, which closes the open question above.
+
 **`article_link` is indexed on `target_article_id`** (`article_link_target_article_id_idx`, added
 22 Sep). The primary key `(source_article_id, target_title)` serves "what does this article link to",
 not FR-006's backlinks — "what links here" — which reads by `target_article_id`; without this index
