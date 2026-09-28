@@ -6,8 +6,37 @@ covers: [FR-010, FR-011, FR-015, FR-001, NFR-001]
 slice: media
 routes: ["POST /submissions", "POST /articles/{title}/edits", "GET /media/{id}"]
 tables: [media_asset]
-code: []
-tests: []
+code:
+  - app/src/main/java/in/ac/iitm/guide/media/package-info.java
+  - app/src/main/java/in/ac/iitm/guide/media/MediaAssets.java
+  - app/src/main/java/in/ac/iitm/guide/media/MediaItem.java
+  - app/src/main/java/in/ac/iitm/guide/media/MediaKind.java
+  - app/src/main/java/in/ac/iitm/guide/media/MediaRejectedException.java
+  - app/src/main/java/in/ac/iitm/guide/media/Upload.java
+  - app/src/main/java/in/ac/iitm/guide/media/internal/AcceptedType.java
+  - app/src/main/java/in/ac/iitm/guide/media/internal/MediaConfiguration.java
+  - app/src/main/java/in/ac/iitm/guide/media/internal/MediaFiles.java
+  - app/src/main/java/in/ac/iitm/guide/media/internal/MediaSettings.java
+  - app/src/main/java/in/ac/iitm/guide/media/internal/PhotoEncoder.java
+  - app/src/main/java/in/ac/iitm/guide/media/persistence/MediaAssetRepository.java
+  - app/src/main/java/in/ac/iitm/guide/media/web/MediaController.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/web/SubmissionController.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/web/UploadTooLargeAdvice.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionService.java
+  - app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java
+  - app/src/main/java/in/ac/iitm/guide/articleview/web/ArticleController.java
+  - app/src/main/resources/templates/media/Attachments.html
+  - app/src/main/resources/templates/contribute/SubmissionForm.html
+  - app/src/main/resources/templates/moderate/SubmissionReview.html
+  - app/src/main/resources/templates/articleview/Article.html
+  - app/src/main/resources/application.yml
+tests:
+  - app/src/test/java/in/ac/iitm/guide/media/MediaAssetsTest.java
+  - app/src/test/java/in/ac/iitm/guide/media/MediaDeliveryTest.java
+  - app/src/test/java/in/ac/iitm/guide/contribute/SubmissionFlowTest.java
+  - app/src/test/java/in/ac/iitm/guide/contribute/UploadTooLargeTest.java
+  - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
 ---
 
 # FEAT-009 — Attaching media to a submission
@@ -84,29 +113,51 @@ on Wikipedia and the libraries on Maven Central:
 
 ## Acceptance criteria
 
-- [ ] A new article submitted with a photo is pending in the queue and the photo is stored with it.
-- [ ] An edit submitted with a photo is pending in the queue and the photo is stored with it.
-- [ ] A new article with an attachment over its limit is refused with a message, nothing stored.
-- [ ] An edit with an attachment over its limit is refused with a message, nothing stored.
-- [ ] A new article with an attachment not of an accepted type is refused with a message.
-- [ ] An edit with an attachment not of an accepted type is refused with a message.
-- [ ] A file whose name says `.jpg` and whose content is HTML is refused.
-- [ ] SVG, HTML, an executable, a ZIP and a Word document are refused; a HEIC photo is refused
+- [x] A new article submitted with a photo is pending in the queue and the photo is stored with it.
+- [x] An edit submitted with a photo is pending in the queue and the photo is stored with it.
+- [x] A new article with an attachment over its limit is refused with a message, nothing stored.
+- [x] An edit with an attachment over its limit is refused with a message, nothing stored.
+- [x] A new article with an attachment not of an accepted type is refused with a message.
+- [x] An edit with an attachment not of an accepted type is refused with a message.
+- [x] A file whose name says `.jpg` and whose content is HTML is refused.
+- [x] SVG, HTML, an executable, a ZIP and a Word document are refused; a HEIC photo is refused
       with the hint.
-- [ ] A stored photo is re-encoded: bytes hidden after its image data are not kept.
-- [ ] A photo with an EXIF orientation is stored upright.
-- [ ] An original name such as `../../x.jpg` does not reach the stored path.
-- [ ] Each of NFR-001's four limits is enforced at its configured value.
-- [ ] A request over the container's limit answers `413` with the form and an error.
-- [ ] An asset on a pending submission answers `404` without a moderator session.
-- [ ] An asset on a rejected submission answers `404` without a moderator session.
-- [ ] An asset on a pending submission is returned to a moderator.
-- [ ] An asset on a published article is returned to anyone, with `nosniff`.
-- [ ] A document is returned as an attachment; a photo is not.
-- [ ] A `Range` request for a video answers `206` with that range.
-- [ ] An unknown id answers `404`.
-- [ ] Approving a submission moves its asset to the article, and the article shows it.
-- [ ] The review screen shows the submission's asset.
+- [x] A stored photo is re-encoded: bytes hidden after its image data are not kept.
+- [x] A photo with an EXIF orientation is stored upright.
+- [x] An original name such as `../../x.jpg` does not reach the stored path.
+- [x] Each of NFR-001's four limits is enforced at its configured value.
+- [x] A request over the container's limit answers `413` with the form and an error.
+- [x] An asset on a pending submission answers `404` without a moderator session.
+- [x] An asset on a rejected submission answers `404` without a moderator session.
+- [x] An asset on a pending submission is returned to a moderator.
+- [x] An asset on a published article is returned to anyone, with `nosniff`.
+- [x] A document is returned as an attachment; a photo is not.
+- [x] A `Range` request for a video answers `206` with that range.
+- [x] An unknown id answers `404`.
+- [x] Approving a submission moves its asset to the article, and the article shows it.
+- [x] The review screen shows the submission's asset.
+
+Evidence, 28 Sep: each criterion is a test in the files above, red first. Tests that passed before
+their code existed were shown to catch their fault instead: with the EXIF step removed the
+orientation test went red, with the photo stored as uploaded the polyglot test did, with every asset
+served to everyone the pending, rejected and removed-article delivery tests did, and without the
+image width rule `BrowserLayoutTest` measured the article at 1633 px wide at 320. Run: `./mvnw verify`,
+`-P postgres` and `-P browser` (the article measured with a 1600 px photo and a long-named PDF).
+
+Found while building, each settled rather than guessed:
+
+- **The container's multipart limits** are 1 MB a file by default, which would refuse a 10 MB photo;
+  they are now 200 MB a file and 210 MB a request (`spring.servlet.multipart`).
+- **The CSRF token is read from a multipart body** by Spring Security through a real Tomcat, shown by
+  `UploadTooLargeTest` rather than assumed.
+- **A file more than 2 MB over the container's limit** ends in a closed connection, not the `413`
+  page: Tomcat's `max-swallow-size`. Checked with a 5 MB file, recorded as DEBT-015 for the human.
+- **A decoded photo is at most 50 megapixels** (`PhotoEncoder.LARGEST_PIXELS`), since decoding costs
+  four bytes a pixel whatever the file's size; a 48-megapixel phone photo fits. Over it, the photo is
+  refused as not an accepted type. Awaiting the human's confirmation of the figure.
+- **An approved edit adds its asset to the article's**, beside those already there.
+- **Not yet checked on a phone**: a real photo taken in portrait, uploaded from a phone's browser,
+  shown upright on the article.
 
 ## Deliberately out of scope
 

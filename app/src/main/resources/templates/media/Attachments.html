@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- FEAT-009: an article's or a submission's assets. A photo is shown, a video plays, a document is
+       named with its size; each is fetched from GET /media/{id}, which decides who may have it. -->
+  <div class="media-list" th:fragment="list(items)" th:if="${!items.isEmpty()}">
+    <th:block th:each="item : ${items}">
+      <figure class="media-photo" th:if="${item.kind().name() == 'PHOTO'}">
+        <img th:src="@{${item.href()}}" th:alt="${item.originalName()}" alt="Attached photo" loading="lazy">
+      </figure>
+      <video class="media-video" th:if="${item.kind().name() == 'VIDEO'}" th:src="@{${item.href()}}" controls preload="metadata"
+             th:aria-label="${item.originalName()}"></video>
+      <div class="media-block" th:if="${item.kind().name() == 'DOCUMENT'}">
+        <div>
+          <a class="media-name" th:href="@{${item.href()}}" th:text="${item.originalName()}">checklist.pdf</a>
+          <div class="media-meta" th:text="${item.size()}">240 KB</div>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 package in.ac.iitm.guide.moderate.internal;
 
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaItem;
 import in.ac.iitm.guide.moderate.persistence.ModerateArticleRepository;
 import in.ac.iitm.guide.moderate.persistence.ModerateSubmissionRepository;
 import in.ac.iitm.guide.moderate.persistence.RevisionRepository;
@@ -42,16 +44,19 @@ public class ModerationService {
     private final ModerateArticleRepository articles;
     private final RevisionRepository revisions;
     private final Tags tags;
+    private final MediaAssets media;
 
     ModerationService(
             ModerateSubmissionRepository submissions,
             ModerateArticleRepository articles,
             RevisionRepository revisions,
-            Tags tags) {
+            Tags tags,
+            MediaAssets media) {
         this.submissions = submissions;
         this.articles = articles;
         this.revisions = revisions;
         this.tags = tags;
+        this.media = media;
     }
 
     /** A line of the queue. */
@@ -75,6 +80,7 @@ public class ModerationService {
             String summary,
             String body,
             List<String> tags,
+            List<MediaItem> media,
             SubmissionStatus status) {
 
         public boolean pending() {
@@ -104,6 +110,7 @@ public class ModerationService {
                 submission.getSummary(),
                 submission.getBody(),
                 tagNames,
+                media.ofSubmission(submission.getId()),
                 submission.getStatus());
     }
 
@@ -176,6 +183,7 @@ public class ModerationService {
         article.setUpdatedAt(now);
         article.setTags(chosenTags);
         articles.save(article);
+        media.moveToArticle(submission.getId(), article.getId());
     }
 
     private void applyEdit(Submission submission, String summary, Set<Tag> chosenTags, OffsetDateTime now) {
@@ -198,6 +206,7 @@ public class ModerationService {
         article.setBody(submission.getBody());
         article.setUpdatedAt(now);
         article.setTags(chosenTags);
+        media.moveToArticle(submission.getId(), article.getId());
     }
 
     /**

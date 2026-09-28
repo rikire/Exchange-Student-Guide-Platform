@@ -25,8 +25,11 @@ public interface MediaAssetRepository extends JpaRepository<MediaAsset, UUID> {
     @Query("SELECT COALESCE(SUM(m.sizeBytes), 0) FROM MediaAsset m")
     long totalBytes();
 
-    /** Sets the article and clears the submission in one statement, so the owner check of V3 holds. */
-    @Modifying
+    /**
+     * Sets the article and clears the submission in one statement, so the owner check of V3 holds. The
+     * flush first writes an article that approval has only just created, which the foreign key needs.
+     */
+    @Modifying(flushAutomatically = true)
     @Query("UPDATE MediaAsset m SET m.articleId = :article, m.submissionId = NULL WHERE m.submissionId = :submission")
     int moveToArticle(@Param("submission") UUID submissionId, @Param("article") UUID articleId);
 }

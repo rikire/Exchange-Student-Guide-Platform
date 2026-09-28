@@ -1,6 +1,8 @@
 package in.ac.iitm.guide.articleview.web;
 
 import in.ac.iitm.guide.articleview.persistence.ArticleReadRepository;
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaItem;
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
@@ -23,11 +25,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 class ArticleController {
 
     private final ArticleReadRepository articles;
+    private final MediaAssets media;
 
     private final WikiLinkRenderer renderer = new WikiLinkRenderer();
 
-    ArticleController(ArticleReadRepository articles) {
+    ArticleController(ArticleReadRepository articles, MediaAssets media) {
         this.articles = articles;
+        this.media = media;
     }
 
     @GetMapping("/articles/{address}")
@@ -45,6 +49,7 @@ class ArticleController {
                         article.getTitle(),
                         tags,
                         renderer.render(article.getBody(), this::resolve),
+                        media.ofArticle(article.getId()),
                         ArticleAddress.pathOf(article.getSlug()) + "/edit"));
         return "articleview/Article";
     }
@@ -72,7 +77,8 @@ class ArticleController {
 
     /**
      * What the template shows; {@code bodyHtml} is the converter's output and is the only unescaped
-     * part. {@code editPath} leads to proposing an edit (FR-011, {@code contribute}).
+     * part. {@code media} are the attached assets (FR-001's Article, FEAT-009). {@code editPath} leads
+     * to proposing an edit (FR-011, {@code contribute}).
      */
-    record ArticlePage(String title, List<TagLink> tags, String bodyHtml, String editPath) {}
+    record ArticlePage(String title, List<TagLink> tags, String bodyHtml, List<MediaItem> media, String editPath) {}
 }

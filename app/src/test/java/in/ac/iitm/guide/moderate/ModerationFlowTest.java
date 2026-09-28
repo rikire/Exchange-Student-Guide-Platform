@@ -5,6 +5,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaItem;
+import in.ac.iitm.guide.media.MediaTestFiles;
+import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Submission;
 import in.ac.iitm.guide.shared.persistence.SubmissionStatus;
@@ -12,6 +16,8 @@ import in.ac.iitm.guide.shared.persistence.SubmissionType;
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.persistence.EntityManager;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,11 +52,15 @@ class ModerationFlowTest {
     private static final String PASSWORD = "the office's password";
     private static final Pattern CSRF = Pattern.compile("name=\"_csrf\" value=\"([^\"]+)\"");
     private static final OffsetDateTime MONDAY = OffsetDateTime.parse("2026-09-28T10:00:00+05:30");
+    private static final Path MEDIA = MediaTestFiles.ROOT;
 
     @DynamicPropertySource
     static void password(DynamicPropertyRegistry registry) {
         registry.add("guide.admin.password-hash", () -> new BCryptPasswordEncoder(4).encode(PASSWORD));
     }
+
+    @Autowired
+    private MediaAssets media;
 
     @Autowired
     private MockMvc mockMvc;
@@ -74,6 +85,11 @@ class ModerationFlowTest {
         jdbc.execute("DELETE FROM submission");
         jdbc.execute("DELETE FROM article");
         jdbc.execute("DELETE FROM tag");
+    }
+
+    @AfterEach
+    void clearTheMediaRoot() throws IOException {
+        MediaTestFiles.empty(MEDIA);
     }
 
     @Test
@@ -357,6 +373,72 @@ class ModerationFlowTest {
     // --- The moderator's side, as a browser does it.
 
     /** Logs in with the password through the real form, and returns the session that holds it. */
+    @Test
+    // trace:FR-015
+    void the_review_screen_shows_the_submissions_photo_and_names_its_document() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var photo = attach(submission, "sim-booth.jpg", MediaTestFiles.jpeg(30, 20));
+        var document = attach(submission, "price list.pdf", MediaTestFiles.pdf(2_000));
+
+        var review = page(loggedIn(), reviewPath(submission));
+
+        assertThat(review).contains("<img").contains("src=\"" + photo.href() + "\"");
+        assertThat(review).contains("href=\"" + document.href() + "\"").contains("price list.pdf");
+    }
+
+    @Test
+    // trace:FR-017
+    void approving_a_new_article_moves_its_photo_to_the_article_which_shows_it() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var photo = attach(submission, "sim-booth.jpg", MediaTestFiles.jpeg(30, 20));
+
+        approve(loggedIn(), submission, "Where to buy one.");
+
+        var article = jdbc.queryForObject("SELECT id FROM article", UUID.class);
+        assertThat(media.ofArticle(article)).extracting(MediaItem::id).containsExactly(photo.id());
+        assertThat(publicPage("/articles/getting-a-sim-card")).contains("src=\"" + photo.href() + "\"");
+        assertThat(mockMvc.perform(get(photo.href())).andReturn().getResponse().getStatus())
+                .as("the photo is now everyone's")
+                .isEqualTo(200);
+    }
+
+    @Test
+    // trace:FR-017
+    void approving_an_edit_adds_its_photo_to_the_existing_article() throws Exception {
+        var article = published("Registering with FRRO", "Go to the office.");
+        var submission = pendingEdit(article, "Registering with FRRO", "Go to the office with the form.");
+        var photo = attach(submission, "frro-form.jpg", MediaTestFiles.jpeg(30, 20));
+
+        approve(loggedIn(), submission, "A summary.");
+
+        assertThat(media.ofArticle(article.getId())).extracting(MediaItem::id).containsExactly(photo.id());
+        assertThat(publicPage("/articles/registering-with-frro")).contains("src=\"" + photo.href() + "\"");
+    }
+
+    @Test
+    // trace:FR-018
+    void rejecting_a_submission_leaves_its_photo_unreachable() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var photo = attach(submission, "sim-booth.jpg", MediaTestFiles.jpeg(30, 20));
+
+        reject(loggedIn(), submission);
+
+        assertThat(mockMvc.perform(get(photo.href())).andReturn().getResponse().getStatus())
+                .isEqualTo(404);
+    }
+
+    private MediaItem attach(Submission submission, String name, byte[] bytes) {
+        return media.attach(submission.getId(), new Upload(name, bytes.length, new ByteArrayResource(bytes)));
+    }
+
+    private String publicPage(String path) throws Exception {
+        return mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
     private MockHttpSession loggedIn() throws Exception {
         var session = new MockHttpSession();
         var form = mockMvc.perform(get("/moderate/login").session(session)).andReturn();

@@ -72,6 +72,13 @@ Since 28 September with its tables extension, `commonmark-ext-gfm-tables` (same 
 BSD-2-Clause licence), added by the human's decision: CommonMark has no tables, and three seed
 articles hold them.
 
+**Media: `tika-core` 3.3.2, `metadata-extractor` 2.21.0 and TwelveMonkeys `imageio-webp` 3.15.2**,
+added 28 September with FEAT-009 by the human's decision, each checked on Maven Central and used only
+inside `media`. Tika's detector reads an upload's type from its bytes (Apache-2.0; `tika-core` alone,
+none of the parsers); metadata-extractor reads a photo's EXIF orientation before re-encoding drops it
+(Apache-2.0); TwelveMonkeys lets the JDK's ImageIO read WebP (BSD). Tika's module that tells a Word
+document from a macro-enabled one or a spreadsheet brings Apache POI, so DOCX is not accepted.
+
 **Spring Security: `spring-boot-starter-security`**, added 27 September with FEAT-005 (version from
 the Spring Boot BOM, 3.5.16), for the CSRF token that [security.md](security.md) requires on every
 state-changing form. `shared/security/WebSecurity` keeps the defaults — a POST without the token is
@@ -119,8 +126,8 @@ it as an application module — so the diagram above and the module list the bui
 list, and a slice added to one without the other fails a test. On 10 September the packages were
 otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
 since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), since 28 September
-`moderate` (FEAT-006) and `search` (FEAT-007), and the other two slices (`media`, `report`) stay
-empty until their phase 3 steps ([03-main-flow.md](../roadmap/03-main-flow.md)).
+`moderate` (FEAT-006), `search` (FEAT-007) and `media` (FEAT-009), and `report` stays empty until its
+step ([03-main-flow.md](../roadmap/03-main-flow.md)).
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

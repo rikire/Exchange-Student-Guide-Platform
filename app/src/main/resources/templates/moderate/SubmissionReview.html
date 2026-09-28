@@ -22,7 +22,10 @@
 
     <div class="review-layout">
       <!-- bodyHtml is the Markdown converter's output with raw HTML disabled (ADR-0001), the one unescaped part. -->
-      <div class="article-body" th:utext="${bodyHtml}">The submission's text.</div>
+      <div>
+        <div class="article-body" th:utext="${bodyHtml}">The submission's text.</div>
+        <div th:replace="~{media/Attachments :: list(${review.media})}"></div>
+      </div>
 
       <div class="review-side" th:if="${review.pending()}">
         <form class="result-card submission-form" method="post"

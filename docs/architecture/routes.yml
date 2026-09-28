@@ -15,8 +15,10 @@ routes:
     responses: >-
       `200` published; `404` unapproved / rejected / removed / no match
     serves: >-
-      FR-001 (UC-003). Also where FR-002 and FR-004 are visible — the body is rendered with wiki
-      links resolved and red links styled inline; neither has a route of its own
+      FR-001 (UC-003), with the article's attached media below the text, each fetched from
+      `GET /media/{id}` ([FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md)). Also
+      where FR-002 and FR-004 are visible — the body is rendered with wiki links resolved and red
+      links styled inline; neither has a route of its own
 
   - methods: [GET]
     path: /

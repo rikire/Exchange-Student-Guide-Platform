@@ -6,6 +6,9 @@ import com.deque.html.axecore.playwright.AxeBuilder;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaTestFiles;
+import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
@@ -27,6 +30,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.yaml.snakeyaml.Yaml;
@@ -60,6 +64,9 @@ class BrowserLayoutTest {
     @Autowired
     private JdbcTemplate jdbc;
 
+    @Autowired
+    private MediaAssets media;
+
     private Playwright playwright;
     private Browser browser;
 
@@ -87,12 +94,29 @@ class BrowserLayoutTest {
             article.setTags(Set.of(tag));
             entityManager.persist(article);
         });
+        attachToTheArticle("form.jpg", MediaTestFiles.jpeg(1600, 1200));
+        attachToTheArticle(
+                "FRRO checklist with a long file name for a narrow phone screen.pdf", MediaTestFiles.pdf(2_000));
         jdbc.update(
                 "INSERT INTO submission (id, submission_number, type, title, summary, body, status, submitted_at)"
                         + " VALUES (?, ?, 'NEW_ARTICLE', 't', 's', 'b', 'PENDING', CURRENT_TIMESTAMP)",
                 UUID.randomUUID(),
                 NUMBER);
     }
+
+    /** A wide photo and a long-named document, so the article is measured with its media (FEAT-009). */
+    private void attachToTheArticle(String name, byte[] bytes) {
+        var submission = UUID.randomUUID();
+        jdbc.update(
+                "INSERT INTO submission (id, submission_number, type, title, summary, body, status, submitted_at)"
+                        + " VALUES (?, ?, 'NEW_ARTICLE', 't', 's', 'b', 'APPROVED', CURRENT_TIMESTAMP)",
+                submission,
+                "SUB-MEDI-A000-%04d".formatted(++attached));
+        media.attach(submission, new Upload(name, bytes.length, new ByteArrayResource(bytes)));
+        media.moveToArticle(submission, jdbc.queryForObject("SELECT id FROM article", UUID.class));
+    }
+
+    private int attached;
 
     @AfterAll
     void closeTheBrowserAndClearTheFixtures() {
@@ -102,6 +126,7 @@ class BrowserLayoutTest {
         if (playwright != null) {
             playwright.close();
         }
+        jdbc.execute("DELETE FROM media_asset");
         jdbc.execute("DELETE FROM submission");
         jdbc.execute("DELETE FROM article_tag");
         jdbc.execute("DELETE FROM article");
@@ -158,6 +183,10 @@ class BrowserLayoutTest {
         var pages = new ArrayList<String>();
         for (var route : (List<Map<String, Object>>) contract.get("routes")) {
             if (!"built".equals(route.get("status")) || !((List<String>) route.get("methods")).contains("GET")) {
+                continue;
+            }
+            // GET /media/{id} answers bytes, not a page; the media it serves are measured on the article.
+            if ("media".equals(route.get("slice"))) {
                 continue;
             }
             var path = (String) route.get("path");
