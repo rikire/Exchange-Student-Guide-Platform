@@ -15,6 +15,12 @@
            sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
       <div class="article-body" th:utext="${article.bodyHtml}">Body</div>
       <div th:replace="~{media/Attachments :: list(${article.media})}"></div>
+      <section class="backlinks" th:unless="${backlinks.isEmpty()}" aria-labelledby="backlinks-heading">
+        <h2 class="section-title" id="backlinks-heading">What links here</h2>
+        <ul class="backlink-list">
+          <li th:each="link : ${backlinks}"><a th:href="@{${link.path}}" th:text="${link.title}">Arriving</a></li>
+        </ul>
+      </section>
       <p class="article-actions page-actions">
         <a th:href="@{${article.editPath}}">Propose an edit</a>
         <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->

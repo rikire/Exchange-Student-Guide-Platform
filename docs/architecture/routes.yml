@@ -21,7 +21,8 @@ routes:
       links styled inline; neither has a route of its own. And FR-030: the page carries the "Save as
       PDF" control, which `/js/print.js` turns into the browser's print, and print styles leave the
       site out; `ArticleController` serves it, so the anchor is there. A signed-in moderator also
-      sees "Remove this article", leading to FR-026's confirmation
+      sees "Remove this article", leading to FR-026's confirmation. FR-006: below the text, "What
+      links here" lists up to 50 live articles linking to this one, from `backlink` (ADR-0016)
 
   - methods: [GET]
     path: /

@@ -1,6 +1,7 @@
 package in.ac.iitm.guide.articleview.web;
 
 import in.ac.iitm.guide.articleview.persistence.ArticleReadRepository;
+import in.ac.iitm.guide.backlink.Backlinks;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.MediaItem;
 import in.ac.iitm.guide.shared.persistence.Tag;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 // trace:FR-004
 // trace:FR-030
 // trace:FR-026
+// trace:FR-006
 @Controller
 class ArticleController {
 
@@ -32,12 +34,14 @@ class ArticleController {
 
     private final ArticleReadRepository articles;
     private final MediaAssets media;
+    private final Backlinks backlinks;
 
     private final WikiLinkRenderer renderer = new WikiLinkRenderer();
 
-    ArticleController(ArticleReadRepository articles, MediaAssets media) {
+    ArticleController(ArticleReadRepository articles, MediaAssets media, Backlinks backlinks) {
         this.articles = articles;
         this.media = media;
+        this.backlinks = backlinks;
     }
 
     @GetMapping("/articles/{address}")
@@ -60,6 +64,7 @@ class ArticleController {
                         request.isUserInRole(MODERATOR)
                                 ? "/moderate/articles/" + article.getSlug() + "/remove"
                                 : null));
+        model.addAttribute("backlinks", backlinks.linkingTo(article.getId()));
         return "articleview/Article";
     }
 

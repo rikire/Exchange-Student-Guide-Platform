@@ -215,10 +215,15 @@ p a, .article-body a { text-decoration: underline; }
 .print-button { font: inherit; font-weight: 600; min-height: var(--target); padding: var(--space-2) var(--space-4); border: 1px solid var(--maroon); border-radius: var(--radius-card); background: var(--paper); color: var(--maroon); cursor: pointer; }
 .print-button[hidden] { display: none; }
 @media print {
-  .site-header, .site-nav, .site-footer, .article-actions, .media-download-row, .media-video { display: none; }
+  .site-header, .site-nav, .site-footer, .article-actions, .media-download-row, .media-video, .backlinks { display: none; }
   body, .site-main { background: var(--paper); color: var(--ink); }
   .site-main { max-width: none; padding: 0; margin: 0; }
   .article-body { max-width: none; }
   .media-photo img { max-width: 100%; break-inside: avoid; }
   .chip { border: 1px solid var(--ink); background: none; }
 }
+
+/* FR-006: "What links here" under an article; each link a 44-px target on a phone (NFR-008). */
+.backlinks { margin: var(--space-5) 0; }
+.backlink-list { margin: 0; padding-left: var(--space-5); }
+.backlink-list a { display: inline-flex; align-items: center; min-height: var(--target); }
