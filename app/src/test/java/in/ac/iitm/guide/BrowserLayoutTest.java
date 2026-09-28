@@ -32,6 +32,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.yaml.snakeyaml.Yaml;
 
@@ -40,7 +43,9 @@ import org.yaml.snakeyaml.Yaml;
  * routes.yml, and the not-found page, at four widths. Runs only under {@code -P browser}.
  *
  * <p>The pages come from the route contract rather than a list here, so a route marked built is
- * checked from that moment; a path variable it uses must have a sample below, or this fails.
+ * checked from that moment; a path variable it uses must have a sample below, or this fails. The
+ * moderator's pages are measured signed in: without a session they redirect to the login page, and
+ * this measured that page in their place until 28 Sep.
  */
 // trace:NFR-007
 // trace:NFR-008
@@ -51,6 +56,12 @@ class BrowserLayoutTest {
     private static final List<Integer> WIDTHS = List.of(320, 768, 1280, 1920);
     private static final Set<Integer> PHONE_AND_TABLET = Set.of(320, 768);
     private static final String NUMBER = "SUB-K7M2-QX9P-4TVB";
+    private static final String PASSWORD = "the office's password";
+
+    @DynamicPropertySource
+    static void password(DynamicPropertyRegistry registry) {
+        registry.add("guide.admin.password-hash", () -> new BCryptPasswordEncoder(4).encode(PASSWORD));
+    }
 
     @LocalServerPort
     private int port;
@@ -147,12 +158,19 @@ class BrowserLayoutTest {
     private void check(String path, int width) {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {
             Page page = context.newPage();
+            if (path.startsWith("/moderate/") && !path.equals("/moderate/login")) {
+                signIn(page);
+            }
             page.navigate("http://localhost:" + port + path);
+            assertThat(page.url())
+                    .as("the page measured is the one asked for, not one it redirected to")
+                    .isEqualTo("http://localhost:" + port + path);
 
             var problems = new ArrayList<String>();
             var scrollWidth = ((Number) page.evaluate("document.documentElement.scrollWidth")).intValue();
             if (scrollWidth > width) {
-                problems.add("scrolls sideways: the page is " + scrollWidth + " px wide");
+                problems.add("scrolls sideways: the page is " + scrollWidth + " px wide, past the edge: "
+                        + page.evaluate(PAST_THE_EDGE));
             }
             if (PHONE_AND_TABLET.contains(width)) {
                 problems.addAll(stringList(page.evaluate(SMALL_TEXT)));
@@ -172,6 +190,13 @@ class BrowserLayoutTest {
 
             assertThat(problems).as("%s at %d px", path, width).isEmpty();
         }
+    }
+
+    private void signIn(Page page) {
+        page.navigate("http://localhost:" + port + "/moderate/login");
+        page.fill("input[name=password]", PASSWORD);
+        page.click("button[type=submit]");
+        page.waitForURL(url -> !url.endsWith("/moderate/login"));
     }
 
     /** The built GET routes of routes.yml with their variables filled in, and the not-found page. */
@@ -265,6 +290,17 @@ class BrowserLayoutTest {
                         + Math.round(r.width) + ' x ' + Math.round(r.height))
             """
                     .replace("CLIPPED_AWAY", CLIPPED_AWAY);
+
+    /** The innermost elements that reach past the right edge of the window: what to fix. */
+    private static final String PAST_THE_EDGE =
+            """
+            () => [...document.querySelectorAll('body *')]
+              .filter(e => e.getBoundingClientRect().right > window.innerWidth + 1)
+              .filter(e => ![...e.children].some(c => c.getBoundingClientRect().right > window.innerWidth + 1))
+              .slice(0, 3)
+              .map(e => '<' + e.tagName.toLowerCase() + ' class="' + e.className + '">')
+              .join(', ')
+            """;
 
     /** Whether the typeface loaded: a page whose font CSS 404s falls back silently to system-ui. */
     private static final String FONT_LOADED =
