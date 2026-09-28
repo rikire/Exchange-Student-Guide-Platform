@@ -34,11 +34,15 @@ import org.springframework.transaction.annotation.Transactional;
 // trace:FR-015
 // trace:FR-017
 // trace:FR-018
+// trace:FR-019
 // trace:FR-020
 @Service
 public class ModerationService {
 
     private static final Logger log = LoggerFactory.getLogger(ModerationService.class);
+
+    /** The longest rejection reason stored; the column is unbounded, so the limit is ours (FR-019). */
+    public static final int REASON_LIMIT = 2000;
 
     private final ModerateSubmissionRepository submissions;
     private final ModerateArticleRepository articles;
@@ -143,12 +147,19 @@ public class ModerationService {
     }
 
     /**
+     * @param reason what the moderator typed, or {@code null}; a blank one is stored as no reason
      * @throws SubmissionNotFoundException if the number was never issued
      * @throws AlreadyDecidedException if it is no longer pending
+     * @throws RejectionRefusedException if the reason is longer than {@link #REASON_LIMIT}
      */
     @Transactional
-    public void reject(String number) {
+    public void reject(String number, String reason) {
         var submission = pendingForDecision(number);
+        var stored = reason == null || reason.isBlank() ? null : reason.strip();
+        if (stored != null && stored.length() > REASON_LIMIT) {
+            throw new RejectionRefusedException("Keep the reason to " + REASON_LIMIT + " characters or fewer.");
+        }
+        submission.setRejectionReason(stored);
         submission.setStatus(SubmissionStatus.REJECTED);
         submission.setDecidedAt(OffsetDateTime.now());
         log.info("Rejected submission {}", number);

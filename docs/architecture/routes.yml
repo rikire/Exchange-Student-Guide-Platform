@@ -231,12 +231,14 @@ routes:
     template: >-
       `moderate/SubmissionReview.html` on error
     fields: >-
-      CSRF token (hidden, required); `reason` (text, optional — FR-019, `could`, phase 4: the
-      screen design has the field, and FEAT-006 leaves it off the form until FR-019 stores it)
+      CSRF token (hidden, required); `reason` (text, optional, at most 2000 characters after the
+      surrounding whitespace is trimmed; blank is stored as no reason — FR-019)
     responses: >-
-      `302` to `/moderate/queue` on success; `409` if already decided; `302` unauthenticated
+      `302` to `/moderate/queue` on success; `409` if already decided; `422` re-rendering the
+      review with the reason typed and the error when the reason is over 2000 characters (the
+      submission stays pending); `302` unauthenticated
     serves: >-
-      FR-018 (UC-017)
+      FR-018 (UC-017); FR-019 stores the reason
 
   - methods: [GET, POST]
     path: /moderate/login
@@ -288,12 +290,6 @@ deferred:
     priority: should
     requirements: >-
       FR-013
-  - feature: >-
-      Providing a rejection reason
-    priority: could
-    requirements: >-
-      FR-019 — the field is already routed above, since it lives on a `must`-scope screen; the
-      requirement behind it is still deferred
   - feature: >-
       Version-history groundwork
     priority: should

@@ -259,6 +259,81 @@ class ModerationFlowTest {
     }
 
     @Test
+    // trace:FR-019
+    void the_review_page_offers_an_optional_reason_on_the_reject_form() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var review = reviewForm(loggedIn(), submission).getResponse().getContentAsString();
+
+        assertThat(review).containsPattern("<textarea[^>]*name=\"reason\"[^>]*maxlength=\"2000\"");
+    }
+
+    @Test
+    // trace:FR-019
+    void a_reason_given_with_the_rejection_is_stored_with_it() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var result = reject(loggedIn(), submission, "Duplicate of the existing SIM card article.");
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(302);
+        assertThat(reasonOf(submission)).isEqualTo("Duplicate of the existing SIM card article.");
+    }
+
+    @Test
+    // trace:FR-019
+    void a_rejection_without_a_reason_is_stored_without_one() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        reject(loggedIn(), submission);
+
+        assertThat(statusOf(submission)).isEqualTo("REJECTED");
+        assertThat(reasonOf(submission)).isNull();
+    }
+
+    @Test
+    // trace:FR-019
+    void a_reason_of_only_whitespace_is_stored_as_no_reason() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        reject(loggedIn(), submission, "  \n\t ");
+
+        assertThat(statusOf(submission)).isEqualTo("REJECTED");
+        assertThat(reasonOf(submission)).isNull();
+    }
+
+    @Test
+    // trace:FR-019
+    void the_whitespace_around_a_reason_is_not_stored() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        reject(loggedIn(), submission, "\n  Off topic.  \n");
+
+        assertThat(reasonOf(submission)).isEqualTo("Off topic.");
+    }
+
+    @Test
+    // trace:FR-019
+    void a_reason_of_exactly_the_limit_is_stored() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        reject(loggedIn(), submission, "r".repeat(2000));
+
+        assertThat(reasonOf(submission)).hasSize(2000);
+    }
+
+    @Test
+    // trace:FR-019
+    void a_reason_over_the_limit_is_refused_and_the_submission_stays_pending() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var result = reject(loggedIn(), submission, "r".repeat(2001));
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+        assertThat(result.getResponse().getContentAsString()).contains("2000 characters");
+        assertThat(statusOf(submission)).isEqualTo("PENDING");
+    }
+
+    @Test
     // trace:FR-018
     void rejecting_an_already_decided_submission_is_refused() throws Exception {
         var session = loggedIn();
@@ -464,6 +539,14 @@ class ModerationFlowTest {
         return send(session, reviewForm(session, submission), reviewPath(submission) + "/reject", Map.of());
     }
 
+    private MvcResult reject(MockHttpSession session, Submission submission, String reason) throws Exception {
+        return send(
+                session,
+                reviewForm(session, submission),
+                reviewPath(submission) + "/reject",
+                Map.of("reason", List.of(reason)));
+    }
+
     private MvcResult reviewForm(MockHttpSession session, Submission submission) throws Exception {
         return mockMvc.perform(get(reviewPath(submission)).session(session))
                 .andExpect(status().isOk())
@@ -561,6 +644,11 @@ class ModerationFlowTest {
 
     private String statusOf(Submission submission) {
         return jdbc.queryForObject("SELECT status FROM submission WHERE id = ?", String.class, submission.getId());
+    }
+
+    private String reasonOf(Submission submission) {
+        return jdbc.queryForObject(
+                "SELECT rejection_reason FROM submission WHERE id = ?", String.class, submission.getId());
     }
 
     private int articleCount() {

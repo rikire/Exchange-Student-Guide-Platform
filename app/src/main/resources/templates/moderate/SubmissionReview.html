@@ -42,8 +42,12 @@
           </fieldset>
           <button class="button-primary" type="submit">Approve &amp; publish</button>
         </form>
-        <form class="result-card" method="post"
+        <form class="result-card submission-form" method="post"
               th:action="@{/moderate/submissions/{number}/reject(number=${review.number})}">
+          <label class="field">
+            <span class="field-label">Reason (optional)</span>
+            <textarea class="field-textarea reason-textarea" name="reason" th:maxlength="${reasonLimit}" th:text="${reason}"></textarea>
+          </label>
           <button class="button-reject" type="submit">Reject</button>
         </form>
       </div>

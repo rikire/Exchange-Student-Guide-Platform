@@ -20,7 +20,6 @@ real figure can only be higher.
 | FR-012 | planned | could | Looking up a submission's status | 3 | 0 | 3 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
 | FR-016 | planned | should | Downloading a media asset | 3 | 2 | 1 |
-| FR-019 | planned | could | Providing a rejection reason | 2 | 0 | 2 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |

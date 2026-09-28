@@ -2,7 +2,7 @@
 id: FEAT-006
 title: Moderating a submission
 status: done
-covers: [FR-014, FR-015, FR-017, FR-018, FR-020]
+covers: [FR-014, FR-015, FR-017, FR-018, FR-019, FR-020]
 slice: moderate
 routes: ["GET /moderate/login", "POST /moderate/login", "GET /moderate/queue", "GET /moderate/submissions/{number}", "POST /moderate/submissions/{number}/approve", "POST /moderate/submissions/{number}/reject"]
 tables: [submission, submission_tag, article, article_tag, tag, revision]
@@ -14,6 +14,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/AlreadyDecidedException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/ApprovalRefusedException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/ApprovalConflictException.java
+  - app/src/main/java/in/ac/iitm/guide/moderate/internal/RejectionRefusedException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateSubmissionRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/RevisionRepository.java
@@ -42,7 +43,7 @@ The OGE moderator opens `/moderate/queue`, is sent to the login page, types the 
 password and lands on the queue: every pending submission, oldest first. They open one and read its
 full text as it would be published. They adjust the summary and the tags if needed and approve it: a
 new article goes live at its address, an edit replaces the article's text and the text it replaced is
-kept as a revision. Or they reject it, and it leaves the queue. Either way they are back at the queue.
+kept as a revision. Or they reject it, with a reason if they give one, and it leaves the queue. Either way they are back at the queue.
 
 ## Routes
 
@@ -52,7 +53,7 @@ kept as a revision. Or they reject it, and it leaves the queue. Either way they 
 | `GET /moderate/queue` | Pending submissions, oldest first | `moderate/ModerationQueue.html` |
 | `GET /moderate/submissions/{number}` | One submission in full, or "no longer pending" | `moderate/SubmissionReview.html` |
 | `POST /moderate/submissions/{number}/approve` | Publish, or apply the edit | re-renders the review on `409` |
-| `POST /moderate/submissions/{number}/reject` | Mark rejected | re-renders the review on `409` |
+| `POST /moderate/submissions/{number}/reject` | Mark rejected, storing the reason if given | re-renders the review on `409` and `422` |
 
 Codes as in [ui-routes.md](../architecture/ui-routes.md).
 
@@ -89,6 +90,8 @@ Confirmed by the human on 28 Sep with the contract for this step (prompt journal
 - [x] Approving an already decided submission is refused (FR-017)
 - [x] Rejecting a pending submission marks it rejected and removes it from the queue (FR-018)
 - [x] Rejecting an already decided submission is refused (FR-018)
+- [x] A reason given with the rejection is stored with it (FR-019)
+- [x] A rejection without a reason is stored without one (FR-019)
 - [x] Approving an edit retains the article's previous text as a revision (FR-020)
 - [x] No path but approval changes the published table: rejecting, deciding twice and approving
       without a login leave `article` as it was (the step's invariant, roadmap phase 3)
@@ -124,10 +127,20 @@ approving the edit. On that acceptance FR-014, FR-017, FR-018 and FR-020 are `do
 asks for (`the_date_in_the_queue_is_in_english_whatever_language_the_browser_asks_for`, red first
 with a Russian `Accept-Language`), as the human asked that everything be in English.
 
+**29 Sep, FR-019 (phase 4, taken early at the human's choice):** the reject form has an optional
+`reason`, stored in the existing `submission.rejection_reason` column, so no migration. Decided with
+the contract: the surrounding whitespace is trimmed and a blank reason is stored as none; 2000
+characters is the limit (the column is unbounded), enforced by the service with `422` and by
+`maxlength` in the form. The reason is stored only: showing it to the contributor is FR-012's, which is
+not built. Seven tests; five red before the implementation, and the two that were already green (no
+reason, a blank one) turn red with the trimming removed — except "no reason", which guards the
+criterion rather than an implementation choice. Accepted by the human on 29 Sep after rejecting a
+submission with a reason in a browser (H2, `seed` profile); on that acceptance FR-019 is `done`.
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).
-- The rejection reason (FR-019) — phase 4; the field is not on the form yet.
+- Showing the rejection reason to anyone — FR-012 (looking up a submission's status), not built.
 - A diff of an edit — CON-004, and queue item 8 of the roadmap.
 - Logout — no route in the contract; the session expires on its own.
 - The admin panel, direct publishing (FR-023, FR-024), removal (FR-026) — phase 4.

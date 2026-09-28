@@ -5,6 +5,7 @@ import in.ac.iitm.guide.moderate.internal.ApprovalConflictException;
 import in.ac.iitm.guide.moderate.internal.ApprovalRefusedException;
 import in.ac.iitm.guide.moderate.internal.ModerationService;
 import in.ac.iitm.guide.moderate.internal.ModerationService.Review;
+import in.ac.iitm.guide.moderate.internal.RejectionRefusedException;
 import in.ac.iitm.guide.moderate.internal.SubmissionNotFoundException;
 import in.ac.iitm.guide.moderate.persistence.ModerateArticleRepository;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 // trace:FR-015
 // trace:FR-017
 // trace:FR-018
+// trace:FR-019
 @Controller
 class ModerationController {
 
@@ -81,13 +83,21 @@ class ModerationController {
     }
 
     @PostMapping("/moderate/submissions/{number}/reject")
-    String reject(@PathVariable String number, Model model, HttpServletResponse response) {
+    String reject(
+            @PathVariable String number,
+            @RequestParam(required = false) String reason,
+            Model model,
+            HttpServletResponse response) {
         try {
-            moderation.reject(number);
+            moderation.reject(number, reason);
             return "redirect:/moderate/queue";
         } catch (AlreadyDecidedException e) {
             response.setStatus(HttpStatus.CONFLICT.value());
             return reviewPage(model, moderation.review(number), null, null);
+        } catch (RejectionRefusedException e) {
+            response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            model.addAttribute("reason", reason);
+            return reviewPage(model, moderation.review(number), e.getMessage(), null);
         }
     }
 
@@ -112,6 +122,7 @@ class ModerationController {
         model.addAttribute("summary", summary);
         model.addAttribute("tagFields", fields);
         model.addAttribute("error", error);
+        model.addAttribute("reasonLimit", ModerationService.REASON_LIMIT);
         return "moderate/SubmissionReview";
     }
 

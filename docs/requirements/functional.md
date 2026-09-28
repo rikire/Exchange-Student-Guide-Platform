@@ -563,7 +563,7 @@ THEN the rejection attempt is rejected
 
 ### FR-019 — Providing a rejection reason
 
-**Status:** planned
+**Status:** done
 **Priority:** could
 
 When a moderator rejects a submission, they may include a reason; the system shall store it

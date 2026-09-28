@@ -15,8 +15,11 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: FR-023's four criteria and FR-024's four criteria are eight tests; the admin-route
       enumeration test from the original phase-3 step (every admin route redirects when
       unauthenticated, enumerated from the route contract) is included
-- [ ] Moved from phase 3, 10 Sep: FR-019 — providing a rejection reason
+- [x] Moved from phase 3, 10 Sep: FR-019 — providing a rejection reason
       — check: rejecting with a reason stores it, rejecting without one stores none — two tests
+      **Built early, 29 Sep:** [FEAT-006](../features/FEAT-006-moderating-a-submission.md), both
+      criteria and five more cases (the field on the form, trimming, blank, the 2000-character limit
+      and one over it) as tests in `ModerationFlowTest`. Accepted by the human in a browser the same day.
 - [ ] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
       — check: a published article linking to another appears in its backlink list; a link from an
       unapproved or rejected submission does not — three tests
