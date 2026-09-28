@@ -159,12 +159,13 @@ Where the steps above and this queue compete for the same days, the human orders
    the content, then item 4; the questions for OGE (item 10) are worth asking now.
    **Update 28 Sep:** `moderate` was built by Abdirakhim (FEAT-006, `379f554`) while the queue was
    being worked, so the next step is `search`, then the content, then item 4. Item 8 now means adding
-   the diff to FEAT-006's review screen. `BrowserLayoutTest` already checks the moderation pages
-   (nine pages at four widths, green on 28 Sep). Waiting for the human: whether CON-004 ("No diffs") is
+   the diff to FEAT-006's review screen. `BrowserLayoutTest` visits the moderation pages (nine pages
+   at four widths, green on 28 Sep), but without a session, so it measures the login page they
+   redirect to — corrected the same day; see the step on the moderator's pages above. Waiting for the human: whether CON-004 ("No diffs") is
    revised for item 8, and whether ADR-0014's wording, which still names `ui-routes.md` as the source
    of the pages, is brought in line with `routes.yml`.
 
-4. [ ] **Build the Markdown editor** — FR-027 and FR-028 on the `contribute` form, as ADR-0013
+4. [x] **Build the Markdown editor** — FR-027 and FR-028 on the `contribute` form, as ADR-0013
    decides: EasyMDE from its WebJar, a preview endpoint that renders with `WikiLinkRenderer` and caps
    the text's size, CDN downloads off, our own toolbar icons, the draft kept by EasyMDE's `autosave`
    and cleared after a successful submission, the strict Content-Security-Policy sent by every page
@@ -174,6 +175,12 @@ Where the steps above and this queue compete for the same days, the human orders
    Hindi and Tamil with Gboard on Android and the iOS keyboard does not duplicate, drop or reorder
    characters (if it does and no setting fixes it, TinyMDE is tried against the same checks); FR-028
    either works or is recorded as not done
+   **Done 28 Sep:** [FEAT-010](../features/FEAT-010-markdown-editor.md). The preview
+   at `POST /contribute/preview`, limited to 100,000 characters (DEBT-017 for the rate); the policy on
+   every response; each FR-027 criterion a test, `BrowserEditorTest` under the policy with no
+   violation. Decided by the human: FR-028 is a separate contract, and the phone check is dropped —
+   FR-027 is done on the desktop result. Found: CodeMirror's `contenteditable` input, the one a phone
+   uses, dropped Hindi and Tamil typed in desktop Chromium; that is the risk left unchecked.
 5. [ ] **Frontend interactivity** — whether a lightweight library (htmx, Alpine.js or none) is
    added, and for what
    — check: the choice recorded as an ADR with the alternatives weighed
