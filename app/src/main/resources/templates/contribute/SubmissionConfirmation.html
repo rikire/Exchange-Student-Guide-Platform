@@ -13,6 +13,8 @@
       <p>OGE will review it before it is published. <strong>This number is your only way to check on it later</strong>: there is no account to save it to, so keep it somewhere safe.</p>
       <p class="page-actions"><a th:href="@{/}">Back to the guide</a></p>
     </div>
+    <!-- Clears the draft the form kept in this browser, now that the submission succeeded (FR-027). -->
+    <script th:src="@{/js/draft-sent.js}" defer></script>
   </main>
 </body>
 </html>

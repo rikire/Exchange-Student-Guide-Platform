@@ -27,7 +27,8 @@
       </label>
       <label class="field">
         <span class="field-label">Body (Markdown)</span>
-        <textarea class="field-textarea" name="body" required th:text="${form.body}"></textarea>
+        <!-- data-draft names the draft the editor keeps in the browser: one per form (editor.js). -->
+        <textarea class="field-textarea" name="body" required th:data-draft="${form.action}" th:text="${form.body}"></textarea>
         <span class="field-help">Link to another article with [[Title]].</span>
       </label>
       <label class="field">
@@ -47,6 +48,14 @@
         <a th:href="@{/}">Cancel</a>
       </div>
     </form>
+
+    <!-- The editor of FR-027 (ADR-0013), from its WebJar; the version is the root pom's
+         easymde.version and has to change with it. Scripts are files, never inline: the
+         Content-Security-Policy refuses anything else. -->
+    <link rel="stylesheet" th:href="@{/webjars/easymde/2.21.0/dist/easymde.min.css}">
+    <link rel="stylesheet" th:href="@{/css/editor.css}">
+    <script th:src="@{/webjars/easymde/2.21.0/dist/easymde.min.js}" defer></script>
+    <script th:src="@{/js/editor.js}" defer></script>
   </main>
 </body>
 </html>
