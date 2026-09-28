@@ -205,3 +205,7 @@ p a, .article-body a { text-decoration: underline; }
   .diff-before { border-right: 1px solid var(--line); }
   .diff-side { display: none; }
 }
+
+/* FR-016: the Download link under each file, a 44-px target on a phone (NFR-008). */
+.media-download-row { margin: 0 0 var(--space-4); }
+.media-download { display: inline-flex; align-items: center; min-height: var(--target); font-weight: 600; }

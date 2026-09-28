@@ -102,6 +102,7 @@ class MediaDeliveryTest {
 
     @Test
     // trace:FR-001
+    // trace:FR-016
     void an_asset_on_a_published_article_is_returned_to_anyone_with_nosniff() throws Exception {
         var item = published("form.jpg", MediaTestFiles.jpeg(10, 10));
 
@@ -110,6 +111,22 @@ class MediaDeliveryTest {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentType()).isEqualTo("image/jpeg");
         assertThat(response.getHeader("X-Content-Type-Options")).isEqualTo("nosniff");
+    }
+
+    @Test
+    // trace:FR-016
+    void every_file_of_a_published_article_has_a_download_link_under_its_own_name() throws Exception {
+        var article = article();
+        var photo = publishedTo(article, "form.jpg", MediaTestFiles.jpeg(10, 10));
+        var document = publishedTo(article, "FRRO checklist.pdf", MediaTestFiles.pdf(2_000));
+
+        var page = mockMvc.perform(get("/articles/" + slugOf(article)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page).containsPattern("<a[^>]*href=\"" + photo.href() + "\"[^>]*download=\"form.jpg\"");
+        assertThat(page).containsPattern("<a[^>]*href=\"" + document.href() + "\"[^>]*download=\"FRRO checklist.pdf\"");
     }
 
     @Test
@@ -171,10 +188,18 @@ class MediaDeliveryTest {
     }
 
     private MediaItem published(String name, byte[] bytes) {
+        return publishedTo(article(), name, bytes);
+    }
+
+    private MediaItem publishedTo(UUID article, String name, byte[] bytes) {
         var submission = pending();
         var item = attach(submission, name, bytes);
-        media.moveToArticle(submission, article());
+        media.moveToArticle(submission, article);
         return item;
+    }
+
+    private String slugOf(UUID article) {
+        return jdbc.queryForObject("SELECT slug FROM article WHERE id = ?", String.class, article);
     }
 
     private MockHttpSession loggedIn() throws Exception {

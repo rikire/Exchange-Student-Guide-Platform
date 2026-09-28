@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
   <!-- FEAT-009: an article's or a submission's assets. A photo is shown, a video plays, a document is
-       named with its size; each is fetched from GET /media/{id}, which decides who may have it. -->
+       named with its size; each is fetched from GET /media/{id}, which decides who may have it.
+       FR-016: every asset has a Download link; the download attribute saves a photo or a video under
+       its original name too, which the server sends inline. -->
   <div class="media-list" th:fragment="list(items)" th:if="${!items.isEmpty()}">
     <th:block th:each="item : ${items}">
       <figure class="media-photo" th:if="${item.kind().name() == 'PHOTO'}">
@@ -16,6 +18,10 @@
           <div class="media-meta" th:text="${item.size()}">240 KB</div>
         </div>
       </div>
+      <p class="media-download-row">
+        <a class="media-download" th:href="@{${item.href()}}" th:download="${item.originalName()}"
+           th:aria-label="'Download ' + ${item.originalName()}">Download</a>
+      </p>
     </th:block>
   </div>
 </body>
