@@ -49,6 +49,14 @@ logging:
     in.ac.iitm.guide: DEBUG
 
 guide:
+  media:
+    # ADR-0006: the bytes live here, under names the system generates; the stand mounts a volume
+    # (GUIDE_MEDIA_ROOT). NFR-001's limits, which are settings rather than constants.
+    root: ${GUIDE_MEDIA_ROOT:target/media}
+    photo-limit: 10MB
+    document-limit: 20MB
+    video-limit: 200MB
+    volume-limit: 20GB
   admin:
     # ADR-0009: the BCrypt hash of the office's one shared password, never the password and never in
     # git. Empty means no password logs in (FEAT-006). How to make one: .env.example.

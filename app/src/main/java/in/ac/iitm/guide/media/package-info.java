@@ -1,12 +1,11 @@
 /**
- * Upload, storage and delivery. Bytes on the filesystem, metadata in the database.
+ * Upload, storage and delivery. Bytes on the filesystem, metadata in the database (ADR-0006).
  *
- * <p>Serves FR-016, and the delivery route FR-001/FR-015 need.
+ * <p>Serves FR-010's and FR-011's attachment, NFR-001's limits, and the delivery route FR-001 and
+ * FR-015 need; FR-016's download button is phase 4.
  *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p>Published: {@link in.ac.iitm.guide.media.MediaAssets}, the one way a file is stored, moved to an
+ * article on approval, or listed for a page, which {@code contribute}, {@code moderate} and
+ * {@code articleview} call (FEAT-009).
  */
 package in.ac.iitm.guide.media;

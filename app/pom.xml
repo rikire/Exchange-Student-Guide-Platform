@@ -114,6 +114,27 @@
       <version>${commonmark.version}</version>
     </dependency>
 
+    <!-- FEAT-009: the type of an upload from its bytes, never from its name (security.md).
+         Apache-2.0. tika-core only: the detector, not the parsers. -->
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>${tika.version}</version>
+    </dependency>
+    <!-- FEAT-009: the EXIF orientation of a phone photo, which re-encoding would otherwise drop and
+         leave the photo on its side. Apache-2.0. -->
+    <dependency>
+      <groupId>com.drewnoakes</groupId>
+      <artifactId>metadata-extractor</artifactId>
+      <version>${metadata-extractor.version}</version>
+    </dependency>
+    <!-- FEAT-009: a WebP reader for the JDK's ImageIO, so a WebP photo can be re-encoded. BSD. -->
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-webp</artifactId>
+      <version>${twelvemonkeys.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>

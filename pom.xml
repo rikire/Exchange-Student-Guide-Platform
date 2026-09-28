@@ -43,6 +43,12 @@
          does not manage it. Chosen over flexmark-java (no release since 2023-05); see
          docs/architecture/security.md, "Article content". -->
     <commonmark.version>0.30.0</commonmark.version>
+    <!-- FEAT-009 (media), each checked on Maven Central on 2026-09-28 and added by the human's
+         decision: Tika reads a file's type from its bytes, metadata-extractor its EXIF orientation,
+         TwelveMonkeys lets ImageIO read WebP. -->
+    <tika.version>3.3.2</tika.version>
+    <metadata-extractor.version>2.21.0</metadata-extractor.version>
+    <twelvemonkeys.version>3.15.2</twelvemonkeys.version>
 
     <spotless.version>2.44.0</spotless.version>
     <maven-shade.version>3.6.2</maven-shade.version>
