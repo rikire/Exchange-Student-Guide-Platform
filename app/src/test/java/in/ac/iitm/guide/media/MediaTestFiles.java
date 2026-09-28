@@ -16,7 +16,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.DynamicPropertyRegistry;
 
 /**
  * Files for the media tests, made in code so a test names the size and kind it needs. The two that
@@ -26,31 +25,25 @@ public final class MediaTestFiles {
 
     private MediaTestFiles() {}
 
-    /** A media root of the test's own, so no test sees another's files. */
-    public static Path newRoot() {
-        try {
-            return Files.createTempDirectory("guide-media-test");
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    /** NFR-001's limits made small enough for a test file to cross: 64 KB, 16 KB, 32 KB, 256 KB. */
-    public static void smallLimits(DynamicPropertyRegistry registry, Path root) {
-        registry.add("guide.media.root", root::toString);
-        registry.add("guide.media.photo-limit", () -> "64KB");
-        registry.add("guide.media.document-limit", () -> "16KB");
-        registry.add("guide.media.video-limit", () -> "32KB");
-        registry.add("guide.media.volume-limit", () -> "256KB");
-    }
+    /**
+     * The media root every test shares, with NFR-001's limits made small (64 KB a photo, 16 KB a
+     * document, 32 KB a video, 256 KB the volume): both in {@code src/test/resources/config/application.yml}.
+     */
+    public static final Path ROOT = Path.of("target/test-media");
 
     public static List<Path> files(Path root) throws IOException {
+        if (!Files.exists(root)) {
+            return List.of();
+        }
         try (var paths = Files.walk(root)) {
             return paths.filter(Files::isRegularFile).toList();
         }
     }
 
     public static void empty(Path root) throws IOException {
+        if (!Files.exists(root)) {
+            return;
+        }
         try (Stream<Path> paths = Files.walk(root)) {
             for (var path : paths.sorted(Comparator.reverseOrder()).toList()) {
                 if (!path.equals(root)) {

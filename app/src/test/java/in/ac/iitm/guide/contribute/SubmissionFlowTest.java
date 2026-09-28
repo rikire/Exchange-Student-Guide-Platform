@@ -27,8 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -44,12 +42,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 class SubmissionFlowTest {
 
     private static final Pattern CSRF = Pattern.compile("name=\"_csrf\" value=\"([^\"]+)\"");
-    private static final Path MEDIA = MediaTestFiles.newRoot();
-
-    @DynamicPropertySource
-    static void media(DynamicPropertyRegistry registry) {
-        MediaTestFiles.smallLimits(registry, MEDIA);
-    }
+    private static final Path MEDIA = MediaTestFiles.ROOT;
 
     @Autowired
     private MockMvc mockMvc;

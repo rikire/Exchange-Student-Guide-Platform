@@ -1,0 +1,22 @@
+# Test settings, beside (not instead of) the application's own application.yml: Spring Boot reads
+# config/application.yml on the class path after it, so only what is named here changes.
+#
+# NFR-001's limits made small, so a test file can cross them, and one media root for every test.
+# Kept here rather than in each test's @DynamicPropertySource because every distinct set of
+# properties is a Spring context of its own with its own ten database connections, and on
+# PostgreSQL ten contexts used up the hundred it accepts (found 28 Sep, FEAT-009).
+guide:
+  media:
+    root: target/test-media
+    photo-limit: 64KB
+    document-limit: 16KB
+    video-limit: 32KB
+    volume-limit: 256KB
+
+# Spring keeps every test context alive for reuse, each with its own connection pool. Three
+# connections serve one test at a time; Hikari's default ten times the number of contexts is what
+# ran PostgreSQL's hundred out.
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 3

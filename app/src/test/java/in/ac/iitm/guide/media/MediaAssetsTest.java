@@ -30,8 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
@@ -41,12 +39,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @SpringBootTest
 class MediaAssetsTest {
 
-    private static final Path ROOT = MediaTestFiles.newRoot();
-
-    @DynamicPropertySource
-    static void media(DynamicPropertyRegistry registry) {
-        MediaTestFiles.smallLimits(registry, ROOT);
-    }
+    private static final Path ROOT = MediaTestFiles.ROOT;
 
     @Autowired
     private MediaAssets media;

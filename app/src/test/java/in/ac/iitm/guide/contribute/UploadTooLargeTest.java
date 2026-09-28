@@ -28,11 +28,10 @@ import org.springframework.util.LinkedMultiValueMap;
 class UploadTooLargeTest {
 
     private static final Pattern CSRF = Pattern.compile("name=\"_csrf\" value=\"([^\"]+)\"");
-    private static final Path MEDIA = MediaTestFiles.newRoot();
+    private static final Path MEDIA = MediaTestFiles.ROOT;
 
     @DynamicPropertySource
     static void smallContainerLimit(DynamicPropertyRegistry registry) {
-        MediaTestFiles.smallLimits(registry, MEDIA);
         registry.add("spring.servlet.multipart.max-file-size", () -> "4KB");
         registry.add("spring.servlet.multipart.max-request-size", () -> "8KB");
     }

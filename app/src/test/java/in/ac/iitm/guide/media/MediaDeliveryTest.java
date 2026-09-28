@@ -40,11 +40,10 @@ class MediaDeliveryTest {
 
     private static final String PASSWORD = "the office's password";
     private static final Pattern CSRF = Pattern.compile("name=\"_csrf\" value=\"([^\"]+)\"");
-    private static final Path ROOT = MediaTestFiles.newRoot();
+    private static final Path ROOT = MediaTestFiles.ROOT;
 
     @DynamicPropertySource
     static void settings(DynamicPropertyRegistry registry) {
-        MediaTestFiles.smallLimits(registry, ROOT);
         registry.add("guide.admin.password-hash", () -> new BCryptPasswordEncoder(4).encode(PASSWORD));
     }
 
