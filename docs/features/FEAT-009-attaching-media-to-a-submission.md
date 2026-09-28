@@ -157,8 +157,11 @@ Found while building, each settled rather than guessed:
   four bytes a pixel whatever the file's size; a 48-megapixel phone photo fits. Over it, the photo is
   refused as not an accepted type. Confirmed by the human on 28 Sep.
 - **An approved edit adds its asset to the article's**, beside those already there.
-- **Not yet checked on a phone**: a real photo taken in portrait, uploaded from a phone's browser,
-  shown upright on the article.
+- **Checked by the human from a phone, 28 Sep** (seed profile, H2): an edit proposed from the
+  phone's browser with a picture, the queue, the review screen showing it. The stored file was a
+  1056 × 1158 PNG with no EXIF block left, so the phone had sent a PNG, not a camera photo; the
+  EXIF orientation still waits for a portrait photo from the camera. The submission was not
+  approved, by the human's choice; approval and the article are covered by `ModerationFlowTest`.
 
 ## Deliberately out of scope
 
