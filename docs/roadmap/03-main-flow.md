@@ -70,7 +70,7 @@ the criteria do not reach it.
       One analyzer, English stemming; the second, for Hindi and Tamil, is NFR-003's and not built.
       The route contract's `400` for a blank query was kept over the contract's suggested answer.
       Closes DEBT-004.
-- [ ] `media` — upload, type detection from content, safe delivery
+- [x] `media` — upload, type detection from content, safe delivery
       — check: a file whose extension lies about its content is rejected, and media attached to an
       unapproved submission is unreachable by anyone who has not been given its id
       **Narrowed 10 Sep:** FR-016 (downloading a media attachment) moves to phase 4 — see
@@ -79,12 +79,13 @@ the criteria do not reach it.
       the `attachment` field, the upload handed to `media`, and FR-010's and FR-011's two media
       criteria each (over the size limit, not an accepted type) as four tests. Closes
       [DEBT-008](../tech-debt.md).
-      **Built 28 Sep, not yet accepted:** [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md).
+      **Built and accepted 28 Sep:** [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md).
       Photos (JPEG, PNG, WebP), PDF and MP4, the type read by Tika; photos re-encoded and turned upright;
       NFR-001's limits as settings; `GET /media/{id}` serves an unapproved asset only to a moderator.
       Both checks above are tests, and DEBT-008 is closed. Narrowed by the human the same day: audio
       out of CON-006, DOCX out of the formats; the 50-megapixel ceiling kept, DEBT-015 put off and
-      NFR-001 marked done. Left: the human's acceptance and a real phone photo.
+      NFR-001 marked done. Accepted after the human uploaded camera photos from a phone and saw them
+      upright on the review screen.
 - [ ] ~~Admin panel behind the single password~~
       — check: a test enumerates the admin routes **from the route contract** rather than by hand,
       and asserts each one redirects when unauthenticated; a route added later without a test fails it

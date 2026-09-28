@@ -1,7 +1,7 @@
 ---
 id: FEAT-009
 title: Attaching media to a submission
-status: in-progress
+status: done
 covers: [FR-010, FR-011, FR-015, FR-001, NFR-001]
 slice: media
 routes: ["POST /submissions", "POST /articles/{title}/edits", "GET /media/{id}"]
@@ -162,6 +162,13 @@ Found while building, each settled rather than guessed:
   1056 × 1158 PNG with no EXIF block left, so the phone had sent a PNG, not a camera photo; the
   EXIF orientation still waits for a portrait photo from the camera. The submission was not
   approved, by the human's choice; approval and the article are covered by `ModerationFlowTest`.
+- **Checked again with the camera, 28 Sep**: three 12-megapixel photos taken on the phone and
+  uploaded from its browser. The two taken upright were stored as 3024 × 4032, standing, and the
+  one taken sideways as 4032 × 3024; none kept an EXIF block or a GPS position. The human saw each
+  the right way up on the review screen.
+
+**Accepted by the human on 28 Sep** after those two checks from a phone ("everything works"). The
+requirements' statuses are left for the human to change.
 
 ## Deliberately out of scope
 
