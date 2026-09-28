@@ -67,7 +67,7 @@ routes:
   - methods: [GET]
     path: /media/{id}
     slice: media
-    status: planned
+    status: built
     template: >-
       — (bytes, not a template)
     fields: >-
