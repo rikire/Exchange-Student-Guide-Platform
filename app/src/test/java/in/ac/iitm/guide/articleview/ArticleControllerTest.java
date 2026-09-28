@@ -75,6 +75,17 @@ class ArticleControllerTest {
     }
 
     @Test
+    // trace:FR-030
+    void the_article_page_carries_a_save_as_pdf_control_that_its_script_reveals() throws Exception {
+        publish("Registering with FRRO", "Bring your passport.");
+
+        var page = html(get("/articles/registering-with-frro"));
+
+        assertThat(page).containsPattern("<button[^>]*data-print[^>]*hidden[^>]*>Save as PDF</button>");
+        assertThat(page).contains("src=\"/js/print.js\"");
+    }
+
+    @Test
     // trace:FR-001
     void an_address_that_matches_no_article_does_not_resolve() throws Exception {
         publish("Hostel Life", "Text.");

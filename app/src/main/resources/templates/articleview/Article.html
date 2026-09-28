@@ -15,8 +15,13 @@
            sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
       <div class="article-body" th:utext="${article.bodyHtml}">Body</div>
       <div th:replace="~{media/Attachments :: list(${article.media})}"></div>
-      <p class="article-actions page-actions"><a th:href="@{${article.editPath}}">Propose an edit</a></p>
+      <p class="article-actions page-actions">
+        <a th:href="@{${article.editPath}}">Propose an edit</a>
+        <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->
+        <button class="print-button" type="button" data-print hidden>Save as PDF</button>
+      </p>
     </article>
+    <script th:src="@{/js/print.js}" defer></script>
   </main>
 </body>
 </html>
