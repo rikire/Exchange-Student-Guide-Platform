@@ -56,7 +56,8 @@ failed attempts rate limited and logged at `WARN`.
 
 The deciding factor is proportion. C's only real advantage over B is per-person attribution, and no
 requirement asks for it: no `FR` shows who moderated anything, and CON-004 already rules out the
-diff view that would be the natural place to display it. Paying for registration and password reset
+diff view that would be the natural place to display it (so it did on 10 Sep; the diff of FR-029,
+29 Sep, compares texts and names no moderator either). Paying for registration and password reset
 to get an audit trail nothing reads is the wrong trade at this size.
 
 **What follows from B, rather than being a separate decision:** the password is never in

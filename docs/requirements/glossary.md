@@ -20,7 +20,7 @@ each — both recorded under [One name per concept](#one-name-per-concept) below
 | Pinned article | A published article a moderator has placed at the top of the landing page. Pinning is curation, not a property of the content: FR-009 shows pinned articles before recently added ones, and FR-025 is how the set changes |
 | Published at | When an article was first published. Set once, and never changed by a later edit — this is what FR-009 means by "recently added" |
 | Updated at | When an article's content last changed through an approved edit. Set at publication alongside `published at`, then moved forward by each approved edit |
-| Revision | An article's retained content from before an approved edit changed it. Retained in full, because [CON-004](constraints.md) rules out rendering a diff |
+| Revision | An article's retained content from before an approved edit changed it. Retained in full, because [CON-004](constraints.md) rules out storing a diff; the moderator's comparison (FR-029) is computed when shown |
 
 ## Contribution and moderation
 

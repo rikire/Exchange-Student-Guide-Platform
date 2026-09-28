@@ -15,7 +15,7 @@ than smoothed over.
 | Table | Holds | Decided by |
 |---|---|---|
 | `article` | Published content only | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md) |
-| `revision` | An article's title, summary and body as they stood before an approved edit | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md), and [CON-004](../requirements/constraints.md) — full copies, because there is no diff view |
+| `revision` | An article's title, summary and body as they stood before an approved edit | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md), and [CON-004](../requirements/constraints.md) — full copies, never stored diffs; the moderator's comparison (FR-029) is computed when shown |
 | `tag`, `article_tag` | Free-form labels, normalised on the way in | [ADR-0005](adr/ADR-0005-taxonomy.md) |
 | `article_link` | FR-006's backlinks and FR-004's red links, one row per `[[link]]` found on publish | [ADR-0012](adr/ADR-0012-article-link-storage.md) |
 

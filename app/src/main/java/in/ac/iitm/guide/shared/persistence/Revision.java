@@ -10,8 +10,8 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * An article's title, summary and body as they stood before an approved edit — a full copy, because
- * there is no diff view (ADR-0003, CON-004).
+ * An article's title, summary and body as they stood before an approved edit — a full copy, never a
+ * stored diff (ADR-0003, CON-004); the moderator's comparison is computed when shown (FR-029).
  */
 // trace:FR-020
 @Entity

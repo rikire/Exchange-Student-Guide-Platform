@@ -82,6 +82,9 @@ status lookup (FR-012) without ever being adjacent to published rows.
 field has to be added to all three. Approval is a copy, not a state change, so it is a transaction
 that has to move the media asset's ownership across as well. Full retained copies cost more storage
 than diffs would, which CON-004 accepts as the price of not building a diff view.
+*29 Sep:* CON-004 was narrowed to "no stored diffs" — the moderator now sees a diff computed when the
+review is rendered ([ADR-0015](ADR-0015-showing-an-edit-as-a-diff.md), FR-029); storage in full is
+unchanged.
 
 **Reversal:** collapsing to option A later means merging three tables and adding the status filter to
 every read — cheap in schema terms and expensive in review, because the failure mode of a missed
