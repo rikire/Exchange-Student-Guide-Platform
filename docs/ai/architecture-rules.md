@@ -23,7 +23,8 @@ in.ac.iitm.guide
 ├── moderate/          the queue, approval, rejection
 ├── report/            flagging an article as a problem, and resolving that flag
 ├── media/             upload, storage, delivery
-├── wikilink/          plain Java: the [[link]] parser and backlinks
+├── wikilink/          plain Java: the [[link]] parser and renderer
+├── backlink/          the links between articles, and "what links here" (ADR-0016)
 └── backup/            export and import of the whole knowledge base
 ```
 
