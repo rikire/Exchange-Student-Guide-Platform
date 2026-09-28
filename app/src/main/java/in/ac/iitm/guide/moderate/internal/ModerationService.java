@@ -16,6 +16,7 @@ import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -36,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 // trace:FR-018
 // trace:FR-019
 // trace:FR-020
+// trace:FR-029
 @Service
 public class ModerationService {
 
@@ -76,7 +78,12 @@ public class ModerationService {
         }
     }
 
-    /** A submission as the moderator reads it; {@code status} says whether it can still be decided. */
+    /**
+     * A submission as the moderator reads it; {@code status} says whether it can still be decided.
+     *
+     * @param comparison what an edit changes in its live article (FR-029); {@code null} for a new
+     *     article, which has nothing to compare with
+     */
     public record Review(
             String number,
             SubmissionType type,
@@ -85,12 +92,19 @@ public class ModerationService {
             String body,
             List<String> tags,
             List<MediaItem> media,
-            SubmissionStatus status) {
+            SubmissionStatus status,
+            Comparison comparison) {
 
         public boolean pending() {
             return status == SubmissionStatus.PENDING;
         }
     }
+
+    /** A field an edit changes, as the published value and the proposed one. */
+    public record FieldChange(String field, String before, String after) {}
+
+    /** FR-029: the changed fields, and the body paragraph by paragraph. */
+    public record Comparison(List<FieldChange> fields, TextDiff body) {}
 
     /** @return every pending submission, oldest first (FR-014) */
     @Transactional(readOnly = true)
@@ -115,7 +129,8 @@ public class ModerationService {
                 submission.getBody(),
                 tagNames,
                 media.ofSubmission(submission.getId()),
-                submission.getStatus());
+                submission.getStatus(),
+                comparison(submission, tagNames));
     }
 
     /**
@@ -163,6 +178,39 @@ public class ModerationService {
         submission.setStatus(SubmissionStatus.REJECTED);
         submission.setDecidedAt(OffsetDateTime.now());
         log.info("Rejected submission {}", number);
+    }
+
+    /**
+     * Against the article as it is now, which is what approval replaces. An edit whose article is no
+     * longer live (removal is FR-026's, not built) has nothing to compare with.
+     */
+    private Comparison comparison(Submission submission, List<String> proposedTags) {
+        if (submission.getType() != SubmissionType.EDIT) {
+            return null;
+        }
+        return articles.findWithTagsByIdAndRemovedAtIsNull(submission.getTargetArticleId())
+                .map(article -> {
+                    var publishedTags = article.getTags().stream()
+                            .map(Tag::getName)
+                            .sorted()
+                            .toList();
+                    var fields = new ArrayList<FieldChange>();
+                    changed(fields, "Title", article.getTitle(), submission.getTitle());
+                    changed(fields, "Summary", article.getSummary(), submission.getSummary());
+                    changed(fields, "Tags", listed(publishedTags), listed(proposedTags));
+                    return new Comparison(fields, TextDiff.of(article.getBody(), submission.getBody()));
+                })
+                .orElse(null);
+    }
+
+    private static void changed(List<FieldChange> fields, String field, String before, String after) {
+        if (!before.equals(after)) {
+            fields.add(new FieldChange(field, before, after));
+        }
+    }
+
+    private static String listed(List<String> tagNames) {
+        return tagNames.isEmpty() ? "(no tags)" : String.join(", ", tagNames);
     }
 
     private Submission pendingForDecision(String number) {
