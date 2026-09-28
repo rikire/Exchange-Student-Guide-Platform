@@ -37,6 +37,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
  */
 // trace:FR-002
 // trace:FR-004
+// trace:FR-006
 public class WikiLinkRenderer {
 
     private static final Pattern WIKI_LINK = Pattern.compile("\\[\\[([^\\[\\]]*)]]");
@@ -79,6 +80,20 @@ public class WikiLinkRenderer {
         }
 
         return htmlRenderer.render(document);
+    }
+
+    /**
+     * The titles a body's wiki links name, found by the same parser {@link #render} uses, so a link in
+     * a code span or in an ordinary link's text is not one here either (FR-006, ADR-0016).
+     *
+     * @return each title once, as written
+     */
+    public Set<String> linkedTitles(String markdown) {
+        var runs = new ArrayList<Run>();
+        parser.parse(markdown).accept(new TextRunCollector(runs));
+        var titles = new LinkedHashSet<String>();
+        runs.forEach(run -> run.addTitlesTo(titles));
+        return titles;
     }
 
     /**

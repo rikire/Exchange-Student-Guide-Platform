@@ -352,6 +352,23 @@ class WikiLinkRendererTest {
     }
 
     @Test
+    // trace:FR-006
+    void the_linked_titles_of_a_body_are_the_titles_its_wiki_links_name() {
+        var titles =
+                renderer.linkedTitles("See [[Hostel Life]] and [[Mess Menu|the menu]], then [[Hostel Life]] again.");
+
+        assertThat(titles).containsExactlyInAnyOrder("Hostel Life", "Mess Menu");
+    }
+
+    @Test
+    // trace:FR-006
+    void a_wiki_link_in_a_code_span_is_not_a_linked_title() {
+        var titles = renderer.linkedTitles("Write `[[Hostel Life]]` to link, as in [[Mess Menu]].");
+
+        assertThat(titles).containsExactly("Mess Menu");
+    }
+
+    @Test
     void an_external_link_in_a_body_opens_without_handing_the_page_to_the_target() {
         // docs/architecture/security.md, "Article content": external URLs carry noopener noreferrer.
         var html = renderer.render("[the portal](https://example.org/portal)", NOTHING_EXISTS);
