@@ -2,7 +2,7 @@
 id: FEAT-002
 title: Reading an article
 status: in-progress
-covers: [FR-001, FR-002, FR-004]
+covers: [FR-001, FR-002, FR-004, FR-030]
 slice: articleview
 routes: ["GET /articles/{title}"]
 tables: [article, tag, article_tag]
@@ -12,10 +12,12 @@ code:
   - app/src/main/java/in/ac/iitm/guide/articleview/persistence/ArticleReadRepository.java
   - app/src/main/java/in/ac/iitm/guide/wikilink/ArticleAddress.java
   - app/src/main/resources/templates/articleview/Article.html
+  - app/src/main/resources/static/js/print.js
   - app/src/main/resources/templates/error/404.html
   - app/src/main/resources/db/migration/V5__add_article_slug.sql
 tests:
   - app/src/test/java/in/ac/iitm/guide/articleview/ArticleControllerTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserPrintTest.java
   - app/src/test/java/in/ac/iitm/guide/wikilink/ArticleAddressTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/persistence/SchemaMigrationTest.java
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
@@ -96,6 +98,16 @@ default is safe only while `article` is empty, as it is everywhere today.
       needs the `media` slice, phase 3
 - [x] Fits every width from 320 to 1920 px, with 16-px text, 44-px targets on a phone and no WCAG 2.2
       AA violation found by axe (NFR-007, NFR-008; `BrowserLayoutTest`, added 27 Sep)
+
+**29 Sep, FR-030 (asked for by the human, option A of three):** "Save as PDF" beside "Propose an
+edit" opens the browser's print, and print styles leave out the header, navigation, footer, controls,
+Download links and videos, so saving as a PDF gives the article alone. The browser draws the PDF,
+which keeps Hindi and Tamil shaping that a server-side PDF library would risk; no dependency was added.
+The control is `hidden` until `/js/print.js` runs, so a browser without scripts shows nothing dead.
+Tests: the control and its script on the page (`ArticleControllerTest`), and in Chromium
+(`BrowserPrintTest`) the click reaching `window.print` and the printed page keeping the title and text
+without the site around them; all red before the implementation. Accepted by the human on 29 Sep
+after saving an article as a PDF from a browser; on that acceptance FR-030 is `done`.
 
 ## Deliberately out of scope
 

@@ -870,7 +870,7 @@ THEN its text is shown in full, with no comparison
 
 ### FR-030 — Saving an article as a PDF
 
-**Status:** in-progress
+**Status:** done
 **Priority:** could
 
 When a reader chooses to save a published article, the system shall offer it for printing in a form

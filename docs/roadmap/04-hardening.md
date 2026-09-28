@@ -26,6 +26,11 @@ Make it survive real use and real inputs, and make it something a third person c
       **Built 29 Sep:** [FEAT-012](../features/FEAT-012-looking-up-a-submission.md), `GET
       /submissions/status`, the three criteria and nine more cases in `SubmissionStatusTest`. Accepted by
       the human in a browser the same day.
+- [x] FR-030 — saving an article as a PDF, asked for by the human on 29 Sep; the browser's print with
+      print styles, chosen over a server-side PDF (Hindi and Tamil shaping) and a Markdown download
+      — check: FR-030's two criteria are tests, one of them in a real browser in print media
+      **Built 29 Sep:** [FEAT-002](../features/FEAT-002-article-page.md), `ArticleControllerTest` and
+      `BrowserPrintTest`. Accepted by the human in a browser the same day.
 - [ ] Moved from phase 3, 10 Sep: FR-006 — backlinks on an article, the "what links here" block
       — check: a published article linking to another appears in its backlink list; a link from an
       unapproved or rejected submission does not — three tests
