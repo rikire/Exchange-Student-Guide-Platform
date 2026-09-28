@@ -461,7 +461,7 @@ THEN the system shows that the queue is empty
 
 ### FR-015 — Reviewing a submission
 
-**Status:** in-progress
+**Status:** done
 **Priority:** must
 
 When a moderator opens a submission from the queue, the system shall show its full text and any
