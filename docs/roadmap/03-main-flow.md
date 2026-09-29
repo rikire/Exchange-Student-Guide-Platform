@@ -198,7 +198,8 @@ Where the steps above and this queue compete for the same days, the human orders
    later, and approval status sent by email. Collects an email address but creates no account;
    touches CON-001's reason (personal data), ADR-0008 (which challenge), a mail server, and what OGE
    agrees to store
-   — check: a requirement and an ADR agreed, and the stakeholder's answer recorded
+   — check: a requirement and an ADR agreed; what is stored and the mail server are ours to decide,
+   OGE is not asked (item 10, closed 29 Sep)
 8. [x] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
    Reverses CON-004 ("No diffs"); belongs to the review screen of `moderate` (FR-015)
    — check: CON-004 revised by the human and the requirement written
@@ -209,10 +210,13 @@ Where the steps above and this queue compete for the same days, the human orders
 9. [ ] **Walk through every screen and feature** with the human, and turn what comes out into
    requirements and steps
    — check: the list of changes recorded
-10. [ ] **Questions for OGE**, asked together rather than one meeting each: whether OGE is bound by
+10. [x] **Questions for OGE**, asked together rather than one meeting each: whether OGE is bound by
     GIGW and so by a WCAG level (NFR-007); what OGE agrees to store about contributors and which
     mail server may send from its name (item 7)
     — check: the answers recorded in `docs/stakeholder/` and turned into requirements or constraints
+    **Closed 29 Sep without asking:** the human expects OGE to have no view on these and decided to
+    take the better option ourselves. NFR-007 keeps WCAG 2.2 AA as our own choice; item 7 decides
+    what is stored and which mail server sends when it is taken up.
 
 11. [x] **A route specification that code and tests can read** — raised by the human on 27 Sep.
     `ui-routes.md` is the route contract, and CON-008 rules out OpenAPI because every response is

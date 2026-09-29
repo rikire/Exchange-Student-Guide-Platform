@@ -62,8 +62,9 @@ only a browser renders them.
 - The `browser` profile is not part of the default build or the pre-push hook, like `postgres`: it
   needs a browser download and a running application. It fails when the browser cannot start,
   rather than skipping.
-- The pages it visits are every GET route in `ui-routes.md` that is built, so a new route is checked
-  once it exists, not once someone remembers.
+- The pages it visits are every GET route marked built in `routes.yml`, the route contract whose
+  tables `ui-routes.md` shows (since 27 Sep), so a new route is checked once it exists, not once
+  someone remembers.
 - A design screen shows the phone layout next to the desktop one; a template follows its screen.
 
 ## Consequences

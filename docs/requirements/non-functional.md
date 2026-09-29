@@ -107,8 +107,8 @@ from `SecureRandom` rather than a counter, a timestamp, or a content hash.
 Every screen can be used from the keyboard alone and with a screen reader, with enough contrast and
 text that scales, so that a student with a visual or motor impairment can read, search and
 contribute. Decided with the human on 27 Sep. Whether OGE, as part of a government institute, is
-bound to a national standard (GIGW) that names a level is NOT VERIFIED and is a question for the
-stakeholder; if it is, it becomes a constraint rather than our choice.
+bound to a national standard (GIGW) that names a level was not asked: on 29 Sep the human decided
+not to take such questions to OGE, so WCAG 2.2 AA stands as our own choice rather than a constraint.
 
 **Fit criterion:** WCAG 2.2 level AA on every screen. Verified by an automated accessibility check
 of each template in the build (axe, `BrowserLayoutTest`), and by an automated walk through the demo
