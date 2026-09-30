@@ -168,8 +168,9 @@ the article through `findWithTagsByIdAndRemovedAtIsNull`, which is locked for ap
 review's read-only transaction. PostgreSQL refuses `SELECT ... FOR UPDATE` there, and H2 does not, so
 every test passed on H2. Under `-P postgres`, twelve `ModerationFlowTest` tests were red with that
 error. The review now reads through `readWithTagsByIdAndRemovedAtIsNull`, which takes no lock, and
-all 37 are green; approval still takes the lock, and `ModerateArticleRepositoryTest` is green. Not
-yet checked on the compose stand in a browser.
+all 37 are green; approval still takes the lock, and `ModerateArticleRepositoryTest` is green.
+Checked by the human the same day on the compose stand: an edit's review page opens with its
+comparison.
 
 ## Deliberately out of scope
 
