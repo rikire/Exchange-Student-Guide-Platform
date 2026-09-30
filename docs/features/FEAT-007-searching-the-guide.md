@@ -113,6 +113,12 @@ browser's own language (`required` on the input) is kept as it is, by the human'
 a result were not links yet: browsing by tag is FR-008, the `taxonomy` step (links since 28 Sep,
 FEAT-008). On that acceptance FR-007 is `done`.
 
+**Phase 4 edge cases, 30 Sep** ([edge-cases-and-security.md](../verification/edge-cases-and-security.md)):
+`query_syntax_typed_into_the_search_box_is_searched_as_words_not_obeyed` pins that `acc*` finds
+nothing and `bank -account` still finds "Bank account", because the query is analysed rather than
+parsed. It goes red with `match` swapped for `simpleQueryString`. The bound of 20 results and the
+page's query count have no test: [DEBT-021](../tech-debt.md), marked at `ArticleSearchService.LIMIT`.
+
 ## Deliberately out of scope
 
 - NFR-002 (search latency) and NFR-003 (Hindi and Tamil queries): their own steps.

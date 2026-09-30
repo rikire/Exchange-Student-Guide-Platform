@@ -52,21 +52,43 @@ Make it survive real use and real inputs, and make it something a third person c
       **Built early, 29 Sep:** [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md), the
       Download link on the article page; the three checks are tests in `MediaDeliveryTest`, the
       delivery and access ones from 28 Sep. Accepted by the human in a browser the same day.
-- [ ] Edge cases: empty query, injection attempt, HTML in article text, duplicate titles, a title
-      over 100 characters, circular wiki links, a corrupt import archive, a file whose extension
+- [x] Edge cases: empty query, injection attempt, HTML in article text, duplicate titles, a title
+      over 255 characters, circular wiki links, a corrupt import archive, a file whose extension
       lies about its content, a file over the limit
       — check: each of the nine is a named test, and each fails when its guard is removed — nine
       tests that pass against no implementation would be worse than none
-- [ ] The full list in `docs/ai/security.md`, plus a security review over the diff
-      — check: every item on that list is either a test or a recorded constraint in
-      [constraints.md](../requirements/constraints.md) saying why not; the review's findings are
-      closed or entered in the debt register, never merely discussed
+      **Corrected 30 Sep:** the limit read "100 characters"; FR-010's form and the schema allow 255,
+      and the human kept 255.
+      **Done 30 Sep:** [edge-cases-and-security.md](../verification/edge-cases-and-security.md). Four
+      tests are new (injection in search and in a submission, circular links, a file that is not
+      UTF-8), and eight of the nine went red with their guard removed. Circular links have no guard:
+      nothing follows a link beyond one step. The lying-extension test was green without Tika, because
+      its only case was a photo, which re-encoding refuses anyway; a document case and a video case were
+      added, and they are red without Tika.
+- [x] The full list in [security.md](../architecture/security.md) (moved there from `docs/ai/security.md`
+      on 10 Sep), plus a security review
+      — check: every item on that list is a test, or points to its unbuilt requirement or its debt
+      entry (changed on 30 Sep by the human from "a recorded constraint in
+      [constraints.md](../requirements/constraints.md)", since those items are deferred, not
+      declined); the review's findings are closed or entered in the debt register, never merely
+      discussed
+      **Done 30 Sep:** [edge-cases-and-security.md](../verification/edge-cases-and-security.md). Five
+      tests were added for rules that had none: `th:utext`, the session cookie, no hash no login, and
+      the logging of decisions and of removal. The review covered all of `app/src/main` and found no
+      vulnerability; its three hardening notes are DEBT-018 to DEBT-020. The walk found DEBT-021 (no
+      query-count case or bound test for search) and a missing comment on a `th:utext`, which was
+      added.
 - [ ] Load check: 100 articles of 500 words, search under 2 seconds
       — check: run on the demo stand, not a developer machine, and the number recorded
 - [~] PostgreSQL profile with Testcontainers
       — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
       **Built early, 27 Sep:** `-P postgres` passes all tests locally on PostgreSQL 17.11. Left for
       this step: running it in CI.
+      **30 Sep:** the profile no longer passes. Test classes leave rows that break other classes'
+      cleanup ([DEBT-022](../tech-debt.md)), and running it showed that an edit's review page answered
+      `500` on PostgreSQL. That page is fixed ([FEAT-006](../features/FEAT-006-moderating-a-submission.md)),
+      and DEBT-022 was closed the same day: all 369 tests pass on PostgreSQL 17.11 in one run. Left
+      for this step: running it in CI.
 - [x] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
       — check: media and the index survive `docker compose down` and come back on the next start
       **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the
