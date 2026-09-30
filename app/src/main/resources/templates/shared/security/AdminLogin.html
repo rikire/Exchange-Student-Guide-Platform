@@ -9,8 +9,13 @@
     <h1 class="article-title">OGE moderation</h1>
     <p class="form-note">One shared password for the office. There is no account and no username.</p>
 
+    <p class="form-note" role="status" th:if="${param.logout}">You are logged out.</p>
+
     <div class="form-error" role="alert" th:if="${error}">
       <p>That password is not right. Try again.</p>
+    </div>
+    <div class="form-error" role="alert" th:if="${tooMany}">
+      <p>Too many failed attempts from your network. Please try again in <span th:text="${tooMany}">15 minutes</span>.</p>
     </div>
 
     <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
