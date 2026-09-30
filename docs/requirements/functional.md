@@ -892,3 +892,34 @@ WHEN it is printed
 THEN its title, tags, text and photos are printed
   AND the site's header, navigation, footer and controls are not
 ```
+
+### FR-031 — Tags ordered by visits, with their article counts
+
+**Status:** done
+**Priority:** could
+
+When a reader opens the landing page, the system shall show beside each tag the number of published
+articles carrying it, and list the tags most visited first. A visit is an opening of the tag's page
+(FR-008) that shows articles; with no accounts (CON-001), a repeated visit counts again. Asked for by
+the human on 23 Sep and agreed on 30 Sep, with its schema change in
+[ADR-0017](../architecture/adr/ADR-0017-counting-tag-visits.md).
+
+**Acceptance criteria:**
+
+```
+GIVEN a tag carried by two published articles and one removed article
+WHEN a reader opens the landing page
+THEN the tag is shown with the number 2
+
+GIVEN two tags visited the same number of times and a third visited less
+WHEN a reader opens the landing page
+THEN the two are listed first, in alphabetical order, and the third after them
+
+GIVEN a tag carried by a published article
+WHEN a reader opens the tag's page
+THEN the tag's visit count grows by one
+
+GIVEN a tag carried only by a submission not yet approved
+WHEN a reader opens the tag's address and it answers 404
+THEN the tag's visit count does not change
+```
