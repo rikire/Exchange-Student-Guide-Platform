@@ -12,6 +12,16 @@ guide:
     document-limit: 16KB
     video-limit: 32KB
     volume-limit: 256KB
+  # NFR-005's limits made large, since every test sends from one address and the counters live as long
+  # as the context. RateLimitTest sets the application's own values back for itself.
+  contribute:
+    submission-limit:
+      requests: 1000000
+    preview-limit:
+      requests: 1000000
+  admin:
+    failed-login-limit:
+      requests: 1000000
 
 # Spring keeps every test context alive for reuse, each with its own connection pool. Three
 # connections serve one test at a time; Hikari's default ten times the number of contexts is what

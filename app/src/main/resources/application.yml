@@ -71,3 +71,19 @@ guide:
     # ADR-0009: the BCrypt hash of the office's one shared password, never the password and never in
     # git. Empty means no password logs in (FEAT-006). How to make one: .env.example.
     password-hash: ${GUIDE_ADMIN_PASSWORD_HASH:}
+    # ADR-0009 and ADR-0019: failed logins allowed per client address in each window. Only failures
+    # count; past the limit even the right password waits.
+    failed-login-limit:
+      requests: 10
+      per: 15m
+  contribute:
+    # NFR-005 (ADR-0019): what one client address may send. Submissions count a new article and an
+    # edit together, and only the ones accepted; the preview counts every request. The address is the
+    # connection's own: X-Forwarded-For is not read, so behind a proxy every client shares its address
+    # until the deployment sets server.forward-headers-strategy.
+    submission-limit:
+      requests: 5
+      per: 1h
+    preview-limit:
+      requests: 120
+      per: 1m

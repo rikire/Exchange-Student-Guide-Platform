@@ -1,17 +1,22 @@
 package in.ac.iitm.guide.contribute.web;
 
+import in.ac.iitm.guide.contribute.internal.ArticleNotPublishedException;
 import in.ac.iitm.guide.contribute.internal.ArticleRemovedWhileEditingException;
+import in.ac.iitm.guide.contribute.internal.ContributionLimits;
 import in.ac.iitm.guide.contribute.internal.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
 import in.ac.iitm.guide.contribute.internal.SubmissionService.Draft;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,11 +30,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * The routes of FEAT-005 (docs/architecture/ui-routes.md): the form, its two POSTs, the confirmation;
- * and FEAT-012's status lookup.
+ * and FEAT-012's status lookup. Both POSTs count against NFR-005's one limit per client address, and
+ * only a submission accepted keeps its count.
  */
 // trace:FR-010
 // trace:FR-011
 // trace:FR-012
+// trace:NFR-005
 @Controller
 class SubmissionController {
 
@@ -38,10 +45,12 @@ class SubmissionController {
 
     private final SubmissionService submissions;
     private final MediaAssets media;
+    private final ContributionLimits limits;
 
-    SubmissionController(SubmissionService submissions, MediaAssets media) {
+    SubmissionController(SubmissionService submissions, MediaAssets media, ContributionLimits limits) {
         this.submissions = submissions;
         this.media = media;
+        this.limits = limits;
     }
 
     @GetMapping("/submit")
@@ -57,15 +66,28 @@ class SubmissionController {
             @RequestParam(defaultValue = "") List<String> tags,
             @RequestParam(required = false) MultipartFile attachment,
             Model model,
+            HttpServletRequest request,
             HttpServletResponse response) {
         var draft = new Draft(title, summary, body, filled(tags));
+        var address = request.getRemoteAddr();
+        var wait = limits.takeSubmission(address);
+        if (wait.isPresent()) {
+            return tooMany(model, response, FormPage.forNewArticle(draft), wait.get());
+        }
+        var accepted = false;
         try {
-            return confirmation(submissions.submitNewArticle(draft, chosen(attachment)));
+            var number = submissions.submitNewArticle(draft, chosen(attachment));
+            accepted = true;
+            return confirmation(number);
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(slug -> ArticleAddress.pathOf(slug) + "/edit");
             var page = FormPage.forNewArticle(draft)
                     .refused(e.getMessage(), link.orElse(null), "Propose an edit to the existing article");
             return refused(model, response, page);
+        } finally {
+            if (!accepted) {
+                limits.giveBackSubmission(address);
+            }
         }
     }
 
@@ -85,10 +107,21 @@ class SubmissionController {
             @RequestParam(required = false) MultipartFile attachment,
             @RequestParam(required = false) UUID article,
             Model model,
+            HttpServletRequest request,
             HttpServletResponse response) {
         var draft = new Draft(title, summary, body, filled(tags));
+        // An address no article can have is answered before the limit, which would show its form.
+        ArticleAddress.slugOf(address).orElseThrow(() -> new ArticleNotPublishedException(address));
+        var client = request.getRemoteAddr();
+        var wait = limits.takeSubmission(client);
+        if (wait.isPresent()) {
+            return tooMany(model, response, FormPage.forEdit(address, article, draft), wait.get());
+        }
+        var accepted = false;
         try {
-            return confirmation(submissions.submitEdit(address, article, draft, chosen(attachment)));
+            var number = submissions.submitEdit(address, article, draft, chosen(attachment));
+            accepted = true;
+            return confirmation(number);
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(ArticleAddress::pathOf);
             var page = FormPage.forEdit(address, article, draft)
@@ -104,6 +137,10 @@ class SubmissionController {
                                             + " Your text is still below; copy it if you want to keep it.",
                                     null,
                                     null));
+        } finally {
+            if (!accepted) {
+                limits.giveBackSubmission(client);
+            }
         }
     }
 
@@ -160,6 +197,17 @@ class SubmissionController {
     private String refused(Model model, HttpServletResponse response, FormPage page) {
         response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
         return form(model, page);
+    }
+
+    /** NFR-005's refusal: the form again with what was typed, and when to send it (ADR-0019). */
+    private String tooMany(Model model, HttpServletResponse response, FormPage page, Duration wait) {
+        response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+        var retry = new RetryAfter(wait);
+        response.setHeader(HttpHeaders.RETRY_AFTER, String.valueOf(retry.seconds()));
+        var minutes = retry.minutes();
+        var error = "Too many submissions from your network. Please try again in " + minutes
+                + (minutes == 1 ? " minute." : " minutes.") + " Your text is still below.";
+        return form(model, page.refused(error, null, null));
     }
 
     /** What the form template shows. {@code tags} is padded with empty fields to fill in. */

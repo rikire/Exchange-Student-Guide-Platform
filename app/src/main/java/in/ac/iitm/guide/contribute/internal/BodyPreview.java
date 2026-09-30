@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * The editor's preview (FR-027, ADR-0013): a body rendered by the same renderer and the same
  * live-article rule as the article page, so the contributor sees what would be published. Anonymous
- * and public, so the text is bounded in size; the rate limit waits for NFR-005 (DEBT-017).
+ * and public, so the text is bounded in size here and in rate by NFR-005's limit on its route.
  */
 // trace:FR-027
 @Service
@@ -32,7 +32,6 @@ public class BodyPreview {
     /** @throws PreviewTooLongException when the body is longer than {@link #LONGEST_BODY} */
     @Transactional(readOnly = true)
     public String render(String body) {
-        // TODO(DEBT-017): NFR-005's rate limit, once it exists.
         if (body.length() > LONGEST_BODY) {
             throw new PreviewTooLongException();
         }

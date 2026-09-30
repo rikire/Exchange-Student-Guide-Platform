@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ArticleNotPublishedException extends RuntimeException {
 
-    ArticleNotPublishedException(String address) {
+    public ArticleNotPublishedException(String address) {
         super("No published article to edit at address: " + address);
     }
 }
