@@ -923,3 +923,36 @@ GIVEN a tag carried only by a submission not yet approved
 WHEN a reader opens the tag's address and it answers 404
 THEN the tag's visit count does not change
 ```
+
+### FR-032 — Viewing photos full screen
+
+**Status:** done
+**Priority:** could
+
+When a reader selects a photo on an article page, whether in the article's text or attached to it,
+the system shall show it full screen, let the reader zoom in and out and move about a zoomed photo,
+and page through the other photos on the page in the order they appear. The moderator's review page
+offers the same for a submission's photos. Asked for by the human on 30 Sep; the viewer is decided in
+[ADR-0018](../architecture/adr/ADR-0018-photo-viewer.md).
+
+**Acceptance criteria:**
+
+```
+GIVEN an article with photos in its text and an attached photo
+WHEN a reader selects the first photo
+THEN it is shown full screen
+  AND the reader can go on to each of the others, the attached one included
+
+GIVEN a photo shown full screen
+WHEN the reader uses the zoom control
+THEN the photo is enlarged beyond the size that fits the screen
+
+GIVEN a photo reached with the keyboard
+WHEN the reader presses Enter
+THEN it is shown full screen
+  AND Escape closes it and returns the focus to the photo
+
+GIVEN a submission with an attached photo
+WHEN the moderator selects it on the review page
+THEN it is shown full screen
+```
