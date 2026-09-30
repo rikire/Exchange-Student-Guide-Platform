@@ -229,3 +229,7 @@ p a, .article-body a { text-decoration: underline; }
 .backlinks { margin: var(--space-5) 0; }
 .backlink-list { margin: 0; padding-left: var(--space-5); }
 .backlink-list a { display: inline-flex; align-items: center; min-height: var(--target); }
+
+/* FR-032: a photo opens the viewer (photos.js), so it looks like it can be clicked and shows its focus. */
+.photo-opens { cursor: zoom-in; }
+.photo-opens:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }

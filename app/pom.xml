@@ -60,6 +60,13 @@
       <version>${noto-sans.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- FR-032's photo viewer (ADR-0018): ES modules and a stylesheet, no dependencies of its own. -->
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>photoswipe</artifactId>
+      <version>${photoswipe.version}</version>
+      <scope>runtime</scope>
+    </dependency>
     <!-- The Markdown editor of FR-027 (ADR-0013). dist/easymde.min.js bundles CodeMirror, marked and
          the spell checker, so the WebJars it declares for them, by version range, are left out. -->
     <dependency>

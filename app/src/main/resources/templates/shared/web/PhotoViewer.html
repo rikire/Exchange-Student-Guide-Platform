@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- FR-032's photo viewer (ADR-0018), for a page with photos in its text or attached. PhotoSwipe comes
+       from its WebJar; the version is the root pom's photoswipe.version and has to change with it, here
+       and in photos.js. A module script, never inline: the Content-Security-Policy refuses anything else.
+       Without scripts the photos stay as they are. -->
+  <!-- trace:FR-032 -->
+  <th:block th:fragment="assets">
+    <link rel="stylesheet" th:href="@{/webjars/photoswipe/5.4.3/dist/photoswipe.css}">
+    <script type="module" th:src="@{/js/photos.js}"></script>
+  </th:block>
+</body>
+</html>

@@ -40,6 +40,9 @@
     <noto-sans.version>5.2.6</noto-sans.version>
     <!-- The Markdown editor (ADR-0013); SubmissionForm.html names this version in its paths. -->
     <easymde.version>2.21.0</easymde.version>
+    <!-- The photo viewer (ADR-0018), checked on Maven Central on 30 Sep: npm is at 5.4.4, the WebJar at
+         5.4.3. PhotoViewer.html and photos.js name this version in their paths. -->
+    <photoswipe.version>5.4.3</photoswipe.version>
 
     <!-- Verified against Maven Central on 2026-09-25 (0.30.0, released 2026-08-06); Spring Boot's BOM
          does not manage it. Chosen over flexmark-java (no release since 2023-05); see
