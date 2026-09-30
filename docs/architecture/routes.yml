@@ -120,9 +120,12 @@ routes:
     responses: >-
       `302` to the confirmation route on success; `422` on a title collision (with the offered
       link/rename choice) or a rejected attachment; `413` with the empty form and the error when the
-      request is larger than the container accepts, before any field is read
+      request is larger than the container accepts, before any field is read; `429` re-rendering the
+      form with the text typed and `Retry-After` past NFR-005's limit, 5 accepted submissions an hour
+      per client address, new articles and edits together
+      ([ADR-0019](adr/ADR-0019-rate-limits-per-client-address.md))
     serves: >-
-      FR-010 (UC-010), FR-003 (UC-012)
+      FR-010 (UC-010), FR-003 (UC-012), NFR-005
 
   - methods: [GET]
     path: /articles/{title}/edit
@@ -152,7 +155,7 @@ routes:
       FR-011's "no longer published" is unconditional, so a POST aimed straight at an unknown or
       never-published title is refused the same way the GET is; `422` on a title collision with a
       *different* article, or a rejected attachment; `413` as for `POST /submissions`; `409` re-rendering
-      the form with the text typed when the article the form was opened for was removed (FR-026)
+      the form with the text typed when the article the form was opened for was removed (FR-026); `429` as for `POST /submissions`, the same count
       before this POST
     serves: >-
       FR-011 (UC-011), FR-003 (UC-012)
@@ -169,8 +172,9 @@ routes:
     responses: >-
       `200` with the body rendered as the article page renders it — wiki links resolved against
       published articles, raw HTML escaped; `413` when `body` is longer than 100,000 characters
-      (decided 28 Sep); `403` without the token. Anonymous and not yet rate limited: that waits for
-      NFR-005, [DEBT-017](../tech-debt.md)
+      (decided 28 Sep); `403` without the token; `429` with a short fragment for the pane and
+      `Retry-After` past NFR-005's limit per client address, 120 a minute by default
+      ([ADR-0019](adr/ADR-0019-rate-limits-per-client-address.md))
     serves: >-
       FR-027's preview ([ADR-0013](adr/ADR-0013-markdown-editor-and-front-end-assets.md))
 
@@ -305,10 +309,27 @@ routes:
       CSRF token (hidden, required); `password` (text, required)
     responses: >-
       `200` form; `302` to `/moderate/queue` on success; `401` re-rendering the form on a wrong
-      password. **Not gated** — the one carve-out in the rule above
+      password; `429` re-rendering the form with `Retry-After` once an address has failed 10 times
+      in 15 minutes, even with the right password (NFR-005, ADR-0019). `?logout` adds "You are logged
+      out". **Not gated** — the one carve-out in the rule above
     serves: >-
       Not itself an `FR` — the session gate [ADR-0009](adr/ADR-0009-admin-authentication.md)
       decided, without which every `/moderate/**` row above is unreachable
+
+  - methods: [POST]
+    path: /moderate/logout
+    slice: shared/security
+    status: built
+    template: >-
+      — (Spring Security's logout filter; the "Log out" button is `shared/security/LogOut.html` on
+      the queue and the review pages)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/login?logout`, the session invalidated and the CSRF token cleared; `403`
+      without the token, the session left as it was. Not gated: without a session it only redirects
+    serves: >-
+      Ending ADR-0009's session on a shared office computer (DEBT-019, closed)
 
 # Features whose routes are not designed yet: kept here so the whole contract is in one place.
 deferred:

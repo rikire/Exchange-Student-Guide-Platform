@@ -91,8 +91,11 @@ Decided in [ADR-0008](adr/ADR-0008-abuse-handling-without-accounts.md).
 - CSRF protection on every state-changing form.
 - A CAPTCHA challenge on submission, not a honeypot — the reasoning, and the research that killed
   the honeypot, are in ADR-0008. The specific provider is still an open dependency decision.
-- Rate limiting by IP on submission and on admin login, at
-  [NFR-005](../requirements/non-functional.md)'s configured rate.
+- Rate limiting by client address on submission, on the editor's preview and on failed admin logins,
+  at [NFR-005](../requirements/non-functional.md)'s configured rates
+  ([ADR-0019](adr/ADR-0019-rate-limits-per-client-address.md), FEAT-017). The address is
+  `getRemoteAddr()`; `X-Forwarded-For` is never read, since the client writes it. Past a limit the
+  answer is `429` with `Retry-After`, and a limit reached is logged without the address.
 - A request body size limit at the container level, so an oversized upload is rejected before the
   application allocates for it.
 
@@ -134,10 +137,13 @@ Decided in [ADR-0009](adr/ADR-0009-admin-authentication.md).
   (`.env.example` says how to make one). Never in `application.yml`, never in git. With no hash set,
   no password logs in (`ModeratorLoginWithoutHashTest`). Built with FEAT-006: `shared/security`'s `ModeratorLoginController`, and
   `WebSecurity` sends every `/moderate/**` request without a moderator session to the login page.
-- The session id changes on a successful login, against session fixation. The CSRF token does not
-  yet ([DEBT-013](../tech-debt.md)).
-- Failed login attempts are logged at `WARN`, without the password typed. **Not yet rate limited**
-  — that waits for NFR-005 ([DEBT-011](../tech-debt.md)).
+- The session id changes on a successful login, against session fixation, and the CSRF token is
+  replaced, as `formLogin` would replace it (`ModeratorLoginTest`).
+- Failed login attempts are logged at `WARN`, without the password typed, and limited to 10 in 15
+  minutes per client address. Past that even the right password answers `429`, so a guess cannot
+  learn that it was right.
+- The moderator logs out with `POST /moderate/logout`, Spring Security's logout behind the CSRF
+  token. It invalidates the session and clears the token.
 - Session cookie: `HttpOnly`, `SameSite=Lax` (`SessionCookieTest`, on a real server), and `Secure` whenever the deployment is behind TLS
   (`SERVER_SERVLET_SESSION_COOKIE_SECURE=true`; the first two are set in `application.yml`). The
   stand serves plain HTTP and does not set it yet ([DEBT-014](../tech-debt.md)).
