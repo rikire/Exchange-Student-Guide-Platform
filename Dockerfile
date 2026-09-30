@@ -18,6 +18,7 @@ COPY app/src app/src
 RUN ./mvnw -B -q -pl app -am package -DskipTests
 
 FROM eclipse-temurin:21-jre
+# TODO(DEBT-018): run as an unprivileged user once the media and index volumes are owned by it.
 WORKDIR /app
 COPY --from=build /src/app/target/guide-app.jar guide-app.jar
 EXPOSE 8080

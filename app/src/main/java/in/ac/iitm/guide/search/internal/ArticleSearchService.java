@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleSearchService {
 
     // No paging yet (FEAT-007, out of scope): the first results and the total are shown.
+    // TODO(DEBT-021): no test holds this bound, nor the page's query count.
     static final int LIMIT = 20;
 
     private final EntityManager entityManager;

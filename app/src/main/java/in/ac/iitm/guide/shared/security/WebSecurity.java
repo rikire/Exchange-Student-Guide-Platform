@@ -36,6 +36,7 @@ class WebSecurity {
             + " form-action 'self'; frame-ancestors 'none'";
 
     @Bean
+    // TODO(DEBT-019): a logout route; the session now ends only when it times out.
     SecurityFilterChain publicRoutes(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests.requestMatchers(LOGIN)
                         .permitAll()

@@ -7,6 +7,7 @@ spring:
     # guide.admin.password-hash below.
     exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   thymeleaf:
+    # TODO(DEBT-020): true outside development; off here so an edited template shows on reload.
     cache: false
   servlet:
     multipart:

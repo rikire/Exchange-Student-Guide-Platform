@@ -46,6 +46,80 @@ passes in one run.
 
 **Trigger:** before the PostgreSQL profile runs in CI ([04-hardening.md](roadmap/04-hardening.md)).
 
+### DEBT-021 — The search page has no query-count case and no test of its bound
+
+**Status:** open
+**Created:** 2026-09-30
+**Marker:** `app/src/main/java/in/ac/iitm/guide/search/internal/ArticleSearchService.java` — `LIMIT`
+
+**Cause:** ADR-0010 and security.md ("Reads") say every public page adds its own case to
+`PageQueryCountTest`; only the landing page and the article page have one. The tag page's bound is
+tested (`TagBrowseTest.the_first_fifty_are_listed_with_the_total`), search's `LIMIT` of 20 is not.
+Found while walking security.md on 30 Sep.
+
+**Consequence:** a change that loads each result's tags one query at a time, or drops the limit,
+passes every test; the page gets slower as the guide grows and nothing says so.
+
+**How to fix:** a `PageQueryCountTest` case each for `/search` and `/tags/{tag}` (the same queries for
+two matches and for thirty), and a search test that thirty matches show twenty with the total.
+
+**Trigger:** phase 4's load check ([04-hardening.md](roadmap/04-hardening.md)), which measures search.
+
+### DEBT-020 — Templates are not cached on the stand
+
+**Status:** open
+**Created:** 2026-09-30
+**Marker:** `app/src/main/resources/application.yml` — `spring.thymeleaf.cache`
+
+**Cause:** `cache: false` is set in the one `application.yml`, for reloading templates while they were
+being brought up to the design screens, and there is no production profile to turn it back on.
+Found by the security review of 30 Sep as a hardening note, not a vulnerability.
+
+**Consequence:** every page render re-reads and re-parses its template from the jar on the stand;
+it costs time on every request and nothing else.
+
+**How to fix:** `cache: true` by default, `false` only under a development profile, and the load
+check of phase 4 run with it on.
+
+**Trigger:** phase 4's load check ([04-hardening.md](roadmap/04-hardening.md)), which should measure
+the stand as it will be handed over.
+
+### DEBT-019 — The moderator cannot log out
+
+**Status:** open
+**Created:** 2026-09-30
+**Marker:** `app/src/main/java/in/ac/iitm/guide/shared/security/WebSecurity.java` — `publicRoutes`
+
+**Cause:** the login of ADR-0009 was built with FEAT-006, and no logout route exists beside it.
+Found by the security review of 30 Sep as a hardening note.
+
+**Consequence:** on a computer the OGE office shares, the moderator's session stays open until it
+times out, and whoever sits down next can approve, reject and remove articles.
+
+**How to fix:** `POST /moderate/logout` with CSRF, invalidating the session, a button on the
+moderator's pages, a route in `routes.yml`, and a test that the queue redirects to the login after it.
+
+**Trigger:** before the stakeholder uses the stand without us (phase 5), or earlier if OGE moderates
+from a shared machine.
+
+### DEBT-018 — The application container runs as root
+
+**Status:** open
+**Created:** 2026-09-30
+**Marker:** `Dockerfile` — the runtime stage
+
+**Cause:** the runtime stage has no `USER`, so the JVM runs as root inside the container. Found by
+the security review of 30 Sep as a hardening note: no vulnerability in the code reaches it today.
+
+**Consequence:** a flaw that ever lets a request run code or write a file would do so as root in the
+container, with the media and index volumes writable without restriction.
+
+**How to fix:** create an unprivileged user in the runtime stage, give it ownership of
+`GUIDE_MEDIA_ROOT` and the index directory, and `USER` it; check on the compose stand that an upload
+and a reindex still work on existing volumes.
+
+**Trigger:** the handoff package of phase 5, which is the stand OGE runs.
+
 ### DEBT-017 — The editor's preview is not rate limited
 
 **Status:** open
