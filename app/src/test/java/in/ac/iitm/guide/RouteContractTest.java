@@ -30,6 +30,12 @@ public class RouteContractTest {
     /** Spring Boot's own error endpoint: it serves every route's error page and belongs to none. */
     private static final Set<String> FRAMEWORK = Set.of("/error");
 
+    /**
+     * Routes Spring Security's filters answer before any controller, so no handler mapping lists them.
+     * ModeratorLoginTest checks that each one answers.
+     */
+    private static final Set<String> SECURITY_FILTERS = Set.of("POST /moderate/logout");
+
     @Autowired
     @Qualifier("requestMappingHandlerMapping")
     private RequestMappingHandlerMapping mappings;
@@ -51,6 +57,7 @@ public class RouteContractTest {
             }
         });
 
+        served.addAll(SECURITY_FILTERS);
         var built = builtRoutes();
 
         assertThat(served)

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<!--
+  The moderator's way out (DEBT-019, closed): a form, since Spring Security's logout takes a POST with
+  the CSRF token, which th:action adds. Included by the moderator's pages:
+  <form th:replace="~{shared/security/LogOut :: form}"></form>
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <form th:fragment="form" class="logout-form" method="post" th:action="@{/moderate/logout}">
+    <button class="button-quiet" type="submit">Log out</button>
+  </form>
+</body>
+</html>

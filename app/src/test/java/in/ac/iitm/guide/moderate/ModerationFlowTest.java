@@ -388,6 +388,16 @@ class ModerationFlowTest {
     }
 
     @Test
+    // trace:FR-015
+    void the_review_page_offers_logging_out() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var review = reviewForm(loggedIn(), submission).getResponse().getContentAsString();
+
+        assertThat(review).containsPattern("<form[^>]*action=\"/moderate/logout\"");
+    }
+
+    @Test
     // trace:FR-019
     void a_reason_given_with_the_rejection_is_stored_with_it() throws Exception {
         var submission = pending("Getting a SIM card", MONDAY);

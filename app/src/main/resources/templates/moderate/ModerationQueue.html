@@ -6,6 +6,7 @@
 </head>
 <body>
   <main class="site-main">
+    <form th:replace="~{shared/security/LogOut :: form}"></form>
     <h1 class="article-title">Moderation queue</h1>
 
     <p class="empty-note" th:if="${#lists.isEmpty(entries)}">The queue is empty. Nothing is waiting for a decision.</p>
