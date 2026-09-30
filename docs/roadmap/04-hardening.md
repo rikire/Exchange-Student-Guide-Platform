@@ -78,8 +78,12 @@ Make it survive real use and real inputs, and make it something a third person c
       vulnerability; its three hardening notes are DEBT-018 to DEBT-020. The walk found DEBT-021 (no
       query-count case or bound test for search) and a missing comment on a `th:utext`, which was
       added.
-- [ ] Load check: 100 articles of 500 words, search under 2 seconds
+- [x] Load check: 100 articles of 500 words, search under 2 seconds
       — check: run on the demo stand, not a developer machine, and the number recorded
+      **Done 30 Sep:** `scripts/search-latency.sh` on the compose stand, in a project of its own
+      beside the demo stand: 100 searches, maximum 0.023 s, median 0.009 s
+      ([search-latency.md](../verification/search-latency.md)). The demo stand is compose on the
+      development Mac; OGE's server is not measured, and the script runs there unchanged.
 - [~] PostgreSQL profile with Testcontainers
       — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
       **Built early, 27 Sep:** `-P postgres` passes all tests locally on PostgreSQL 17.11. Left for

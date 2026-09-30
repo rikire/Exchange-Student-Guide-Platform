@@ -2,7 +2,7 @@
 id: FEAT-007
 title: Searching the guide
 status: done
-covers: [FR-007]
+covers: [FR-007, NFR-002]
 slice: search
 routes: ["GET /search"]
 tables: [article, article_tag, tag]
@@ -118,6 +118,11 @@ FEAT-008). On that acceptance FR-007 is `done`.
 nothing and `bank -account` still finds "Bank account", because the query is analysed rather than
 parsed. It goes red with `match` swapped for `simpleQueryString`. The bound of 20 results and the
 page's query count have no test: [DEBT-021](../tech-debt.md), marked at `ArticleSearchService.LIMIT`.
+
+**NFR-002, 30 Sep** ([search-latency.md](../verification/search-latency.md)): `scripts/search-latency.sh`
+measured 100 searches on 100 generated articles of 500 words on the compose stand. The slowest took
+0.023 s and the median 0.009 s, against a limit of 2 s. On that measurement, agreed with the human as
+the check, NFR-002 is `done`.
 
 ## Deliberately out of scope
 

@@ -47,12 +47,16 @@ the whole media volume. Verified by a test asserting each configured limit is en
 
 ### NFR-002 — Search latency
 
-**Status:** planned
+**Status:** done — measured on 30 Sep by `scripts/search-latency.sh` on the compose stand, as agreed
+with the human: 100 searches on 100 articles of 500 words, the slowest in 0.023 s
 
 Search returns results within a bound that keeps browsing usable on a modest corpus.
 
 **Fit criterion:** Search returns results within 2 seconds on a corpus of 100 articles of roughly
 500 words each.
+
+**Verified by:** `scripts/search-latency.sh`, results in
+[search-latency.md](../verification/search-latency.md).
 
 ### NFR-003 — Multilingual content survival
 
