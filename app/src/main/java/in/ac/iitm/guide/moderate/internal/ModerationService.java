@@ -194,7 +194,7 @@ public class ModerationService {
         if (submission.getType() != SubmissionType.EDIT) {
             return null;
         }
-        return articles.findWithTagsByIdAndRemovedAtIsNull(submission.getTargetArticleId())
+        return articles.readWithTagsByIdAndRemovedAtIsNull(submission.getTargetArticleId())
                 .map(article -> {
                     var publishedTags = article.getTags().stream()
                             .map(Tag::getName)

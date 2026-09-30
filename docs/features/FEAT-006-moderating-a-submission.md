@@ -153,6 +153,14 @@ widths: it first found the phone labels under 16 px, now fixed. Accepted by the 
 after proposing an edit and reviewing it in a browser, wide and narrow; on that acceptance FR-029 is
 `done`.
 
+**Fixed 30 Sep: an edit's review page answered `500` on PostgreSQL.** The comparison (FR-029) read
+the article through `findWithTagsByIdAndRemovedAtIsNull`, which is locked for approval, inside the
+review's read-only transaction. PostgreSQL refuses `SELECT ... FOR UPDATE` there, and H2 does not, so
+every test passed on H2. Under `-P postgres`, twelve `ModerationFlowTest` tests were red with that
+error. The review now reads through `readWithTagsByIdAndRemovedAtIsNull`, which takes no lock, and
+all 37 are green; approval still takes the lock, and `ModerateArticleRepositoryTest` is green. Not
+yet checked on the compose stand in a browser.
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).

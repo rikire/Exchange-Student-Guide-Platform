@@ -35,6 +35,14 @@ public interface ModerateArticleRepository extends Repository<Article, UUID> {
     @EntityGraph(attributePaths = "tags")
     Optional<Article> findWithTagsByIdAndRemovedAtIsNull(UUID id);
 
+    /**
+     * The same article unlocked, for the review page's comparison (FR-029). The review runs in a
+     * read-only transaction, where PostgreSQL refuses {@code SELECT ... FOR UPDATE}; H2 allows it,
+     * which is why the locked read passed every test on H2 and failed on the stand's database.
+     */
+    @EntityGraph(attributePaths = "tags")
+    Optional<Article> readWithTagsByIdAndRemovedAtIsNull(UUID id);
+
     /** The review page resolves wiki links as the article page will: one query for all of them. */
     @Query("select a.slug from Article a where a.slug in :slugs and a.removedAt is null")
     Set<String> findLiveSlugs(Collection<String> slugs);
