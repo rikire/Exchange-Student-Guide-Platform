@@ -29,6 +29,8 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/moderate/internal/TextDiffTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepositoryTest.java
+  - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginWithoutHashTest.java
+  - app/src/test/java/in/ac/iitm/guide/shared/security/SessionCookieTest.java
 ---
 
 # FEAT-006 — Moderating a submission
@@ -152,6 +154,14 @@ covers. `BrowserLayoutTest`'s sample submission is now an edit, so the compariso
 widths: it first found the phone labels under 16 px, now fixed. Accepted by the human on 29 Sep
 after proposing an edit and reviewing it in a browser, wide and narrow; on that acceptance FR-029 is
 `done`.
+
+**Security list, 30 Sep** ([edge-cases-and-security.md](../verification/edge-cases-and-security.md)):
+four rules of security.md that this feature holds had no test, and now have one each. With no hash
+set, no password logs in (`ModeratorLoginWithoutHashTest`). The session cookie a login sets is
+`HttpOnly` and `SameSite=Lax` (`SessionCookieTest`, on a real server). Approving and rejecting are
+logged with the submission number (`ModerationFlowTest`). The review page's two `th:utext` now carry
+the comment the article page's has, and `TemplateUnescapedOutputTest` holds both pages to it. No
+behaviour changed. The moderator still has no logout: [DEBT-019](../tech-debt.md).
 
 **Fixed 30 Sep: an edit's review page answered `500` on PostgreSQL.** The comparison (FR-029) read
 the article through `findWithTagsByIdAndRemovedAtIsNull`, which is locked for approval, inside the

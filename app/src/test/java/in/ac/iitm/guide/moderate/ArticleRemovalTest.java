@@ -14,9 +14,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -34,6 +37,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@ExtendWith(OutputCaptureExtension.class)
 class ArticleRemovalTest {
 
     private static final String PASSWORD = "the office's password";
@@ -64,6 +68,17 @@ class ArticleRemovalTest {
         jdbc.execute("DELETE FROM revision");
         jdbc.execute("DELETE FROM article");
         jdbc.execute("DELETE FROM tag");
+    }
+
+    @Test
+    // trace:FR-026
+    void a_removal_is_logged_with_the_articles_address(CapturedOutput output) throws Exception {
+        // security.md: every destructive admin action is logged with what it affected.
+        published("Hostel Life", "Rooms and mess.");
+
+        remove(loggedIn(), "hostel-life");
+
+        assertThat(output).contains("Removed article at address hostel-life");
     }
 
     @Test

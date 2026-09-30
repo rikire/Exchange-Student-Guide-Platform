@@ -77,7 +77,8 @@ chosen over raw HTML precisely so that there is no HTML allowlist to hand-mainta
 - There is therefore **no HTML sanitizer** in this system. If one ever appears, it means raw HTML
   is being accepted somewhere, and ADR-0001 has been reversed without being amended.
 - Templates escape by default; `th:utext` is allowed only for content the converter produced, and
-  carries a comment saying so.
+  carries a comment saying so. `TemplateUnescapedOutputTest` fails on a `th:utext` that shows anything
+  else, or has no such comment before it.
 - Wiki links are resolved to internal routes; an external URL in article text is rendered with
   `rel="noopener noreferrer"`.
 - The application never fetches a URL supplied by a visitor. That closes SSRF by not having the
@@ -131,13 +132,13 @@ Decided in [ADR-0009](adr/ADR-0009-admin-authentication.md).
 
 - One shared password, given to the server only as its BCrypt hash in `GUIDE_ADMIN_PASSWORD_HASH`
   (`.env.example` says how to make one). Never in `application.yml`, never in git. With no hash set,
-  no password logs in. Built with FEAT-006: `shared/security`'s `ModeratorLoginController`, and
+  no password logs in (`ModeratorLoginWithoutHashTest`). Built with FEAT-006: `shared/security`'s `ModeratorLoginController`, and
   `WebSecurity` sends every `/moderate/**` request without a moderator session to the login page.
 - The session id changes on a successful login, against session fixation. The CSRF token does not
   yet ([DEBT-013](../tech-debt.md)).
 - Failed login attempts are logged at `WARN`, without the password typed. **Not yet rate limited**
   — that waits for NFR-005 ([DEBT-011](../tech-debt.md)).
-- Session cookie: `HttpOnly`, `SameSite=Lax`, and `Secure` whenever the deployment is behind TLS
+- Session cookie: `HttpOnly`, `SameSite=Lax` (`SessionCookieTest`, on a real server), and `Secure` whenever the deployment is behind TLS
   (`SERVER_SERVLET_SESSION_COOKIE_SECURE=true`; the first two are set in `application.yml`). The
   stand serves plain HTTP and does not set it yet ([DEBT-014](../tech-debt.md)).
 - Every destructive admin action — delete, bulk import — is logged with what was affected. This log

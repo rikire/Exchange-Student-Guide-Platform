@@ -27,9 +27,12 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
@@ -47,6 +50,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@ExtendWith(OutputCaptureExtension.class)
 class ModerationFlowTest {
 
     private static final String PASSWORD = "the office's password";
@@ -166,6 +170,23 @@ class ModerationFlowTest {
     void a_number_that_was_never_issued_is_not_found() throws Exception {
         mockMvc.perform(get("/moderate/submissions/SUB-0000-0000-0000").session(loggedIn()))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    // trace:FR-017
+    // trace:FR-018
+    void approving_and_rejecting_are_logged_with_the_submission_number(CapturedOutput output) throws Exception {
+        // security.md: with no accounts, this log is the only trace of what the moderator decided.
+        var approved = pending("Getting a SIM card", MONDAY);
+        var rejected = pending("Buying a bicycle", MONDAY);
+        var session = loggedIn();
+
+        approve(session, approved, "Where to buy one.");
+        reject(session, rejected);
+
+        assertThat(output)
+                .contains("Approved submission " + approved.getSubmissionNumber())
+                .contains("Rejected submission " + rejected.getSubmissionNumber());
     }
 
     @Test

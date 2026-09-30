@@ -157,6 +157,9 @@ class MediaAssetsTest {
                 Arguments.of(
                         "word document", "form.docx", MediaTestFiles.zip("[Content_Types].xml", "word/document.xml")),
                 Arguments.of("gif", "anim.gif", concat("GIF89a".getBytes(), new byte[100])),
+                // CON-006 took audio out on 28 Sep; an MP3 is refused like any other type not listed.
+                Arguments.of(
+                        "audio", "voice.mp3", concat("ID3".getBytes(), new byte[] {3, 0, 0, 0, 0, 0}, new byte[100])),
                 Arguments.of("plain text", "notes.txt", "hello".getBytes()),
                 Arguments.of("empty file", "empty.jpg", new byte[0]));
     }
