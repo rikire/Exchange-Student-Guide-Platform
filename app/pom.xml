@@ -164,6 +164,18 @@
       <version>${twelvemonkeys.version}</version>
     </dependency>
 
+    <!-- NFR-005 (ADR-0019): a token bucket per client address, Bucket4j's, held in a Caffeine cache
+         that forgets an address once its window has passed. Caffeine's version is Spring Boot's. -->
+    <dependency>
+      <groupId>com.bucket4j</groupId>
+      <artifactId>bucket4j_jdk17-core</artifactId>
+      <version>${bucket4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
