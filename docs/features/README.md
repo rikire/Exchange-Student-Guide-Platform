@@ -22,3 +22,4 @@ Every feature file with its status, the requirements it covers and the slice it 
 | FEAT-014 | [What links here](FEAT-014-backlinks.md) | done | FR-006 | backlink | GET /articles/{title} | article_link, article |
 | FEAT-015 | [Tags ordered by visits, with their article counts](FEAT-015-tags-by-visits.md) | done | FR-031 | taxonomy | GET /, GET /tags/{tag} | tag, article_tag, article |
 | FEAT-016 | [Viewing photos full screen](FEAT-016-photo-viewer.md) | done | FR-032 | articleview | GET /articles/{title}, GET /moderate/submissions/{number} |  |
+| FEAT-017 | [Rate limits per client address, and the moderator's logout](FEAT-017-rate-limits.md) | done | NFR-005 | contribute | POST /submissions, POST /articles/{title}/edits, POST /contribute/preview, POST /moderate/login, POST /moderate/logout |  |

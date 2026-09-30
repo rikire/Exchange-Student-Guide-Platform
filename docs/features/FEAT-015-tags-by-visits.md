@@ -95,7 +95,8 @@ visits in alphabetical order, and the list at a narrow width. On that acceptance
 ## Deliberately out of scope
 
 - Any window on the count ("most visited this month"): ADR-0017's option B, if it is ever asked for.
-- Protection against a script inflating a tag: waits for NFR-005's rate limit.
+- Protection against a script inflating a tag. NFR-005's limits (FEAT-017) cover the POSTs, not a
+  tag page's `GET`.
 - Showing the number of visits: FR-031 orders by it and shows only the article count.
 
 ## Open questions

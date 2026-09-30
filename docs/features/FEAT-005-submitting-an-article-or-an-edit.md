@@ -138,8 +138,8 @@ Each follows from something already decided; each has a test.
   unpublish an article until FR-026 (phase 4); until then the POST answers `404`:
   [DEBT-009](../tech-debt.md).
 - Publishing, approval, rejection — `moderate`.
-- Looking up a submission's status later (FR-012, `could`), rate limiting and CAPTCHA (FR-013,
-  NFR-005, phase 4).
+- Looking up a submission's status later (FR-012, `could`), and CAPTCHA (FR-013). Rate limiting
+  (NFR-005) came with [FEAT-017](FEAT-017-rate-limits.md).
 
 ## Open questions
 

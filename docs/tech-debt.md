@@ -86,7 +86,8 @@ the stand as it will be handed over.
 
 ### DEBT-019 — The moderator cannot log out
 
-**Status:** open
+**Status:** resolved 2026-09-30 — [FEAT-017](features/FEAT-017-rate-limits.md): Spring Security's logout on
+`POST /moderate/logout`, a "Log out" button on the queue and review pages
 **Created:** 2026-09-30
 **Marker:** `app/src/main/java/in/ac/iitm/guide/shared/security/WebSecurity.java` — `publicRoutes`
 
@@ -122,7 +123,8 @@ and a reindex still work on existing volumes.
 
 ### DEBT-017 — The editor's preview is not rate limited
 
-**Status:** open
+**Status:** resolved 2026-09-30 — [FEAT-017](features/FEAT-017-rate-limits.md): 120 previews a minute per
+client address, `429` past it
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/contribute/internal/BodyPreview.java` — `render`
 
@@ -202,7 +204,8 @@ case before the stand is reachable from outside the machine it runs on.
 
 ### DEBT-013 — The CSRF token is not replaced when the moderator logs in
 
-**Status:** open
+**Status:** resolved 2026-09-30 — [FEAT-017](features/FEAT-017-rate-limits.md): the login calls
+`CsrfAuthenticationStrategy` with the application's token repository
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/shared/security/ModeratorLoginController.java`
 
@@ -248,7 +251,8 @@ time two moderators work the queue at once.
 
 ### DEBT-011 — Failed moderator logins are logged but not rate limited
 
-**Status:** open
+**Status:** resolved 2026-09-30 — [FEAT-017](features/FEAT-017-rate-limits.md): 10 failures in 15 minutes
+per client address, then `429` even for the right password
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/shared/security/ModeratorLoginController.java`
 

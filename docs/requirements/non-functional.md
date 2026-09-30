@@ -82,13 +82,18 @@ readable without running the application.
 
 ### NFR-005 — Submission rate limit
 
-**Status:** planned
+**Status:** done — accepted by the human on 1 Oct on the compose stand, built with
+[FEAT-017](../features/FEAT-017-rate-limits.md)
 
 A contributor's submissions are rate-limited by IP, at a configurable rate that tolerates a shared
 campus network without blocking distinct contributors behind the same address.
 
 **Fit criterion:** by default, 5 submissions per IP per hour, configurable as an application
 setting.
+
+**Verified by:** `RateLimitTest`: the sixth accepted submission in an hour from one address answers
+`429`, and the limit is `guide.contribute.submission-limit` in `application.yml`
+([ADR-0019](../architecture/adr/ADR-0019-rate-limits-per-client-address.md)).
 
 ### NFR-006 — Submission number unguessability
 
