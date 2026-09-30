@@ -78,6 +78,7 @@ class BrowserPrintTest {
         if (playwright != null) {
             playwright.close();
         }
+        jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
     }
 

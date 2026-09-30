@@ -20,6 +20,32 @@ constraint hides it.
 
 ## Register
 
+### DEBT-022 — Test classes leave rows that break other classes' cleanup on PostgreSQL
+
+**Status:** resolved 2026-09-30 — `UploadTooLargeTest` clears what it stores, and the fifteen classes
+delete `article_link` before `article`; `./mvnw -P postgres verify` passes all 369 tests in one run
+on PostgreSQL 17.11.
+**Created:** 2026-09-30
+**Marker:** `app/src/test/java/in/ac/iitm/guide/contribute/UploadTooLargeTest.java` — no `@AfterEach`
+
+**Cause:** `UploadTooLargeTest` stores a submission with a photo and never removes it. Fifteen
+classes delete from `article` without deleting `article_link` first; that table has filled since
+backlinks (FEAT-014, 29 Sep). On H2 each test context has a database of its own. Under `-P postgres`
+every context shares one, so what one class leaves makes the next class's cleanup fail on a foreign
+key.
+
+**Consequence:** `./mvnw -P postgres verify` fails in six classes (`ArticleArchiveTest`,
+`EditorPreviewTest`, `MediaAssetsTest`, `MediaDeliveryTest`, `SubmissionStatusTest`, and until 30 Sep
+`ModerationFlowTest`). Most of those errors come from cleanup, not from the code under test. That
+hides real PostgreSQL faults such as the one fixed on 30 Sep, and it blocks the phase-4 step of
+running the profile in CI.
+
+**How to fix:** give `UploadTooLargeTest` a cleanup, and put `DELETE FROM article_link` before
+`DELETE FROM article` in every class that has the second. Then check that `-P postgres verify`
+passes in one run.
+
+**Trigger:** before the PostgreSQL profile runs in CI ([04-hardening.md](roadmap/04-hardening.md)).
+
 ### DEBT-017 — The editor's preview is not rate limited
 
 **Status:** open

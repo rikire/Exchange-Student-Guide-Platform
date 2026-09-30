@@ -50,6 +50,7 @@ class TagBrowseTest {
         jdbc.execute("DELETE FROM article_tag");
         jdbc.execute("DELETE FROM submission_tag");
         jdbc.execute("DELETE FROM submission");
+        jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
         jdbc.execute("DELETE FROM tag");
     }

@@ -85,6 +85,7 @@ class BrowserKeyboardTest {
         jdbc.execute("DELETE FROM submission_tag");
         jdbc.execute("DELETE FROM submission");
         jdbc.execute("DELETE FROM article_tag");
+        jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
         // The rows went by JDBC, which the index does not see.
         transaction.executeWithoutResult(

@@ -85,6 +85,7 @@ class BrowserEditorTest {
         }
         jdbc.execute("DELETE FROM submission_tag");
         jdbc.execute("DELETE FROM submission");
+        jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
     }
 

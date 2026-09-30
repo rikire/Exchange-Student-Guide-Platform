@@ -72,6 +72,7 @@ class ExportQueryTest {
     @AfterEach
     void clearTheDatabase() {
         jdbc.execute("DELETE FROM article_tag");
+        jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
         jdbc.execute("DELETE FROM tag");
     }

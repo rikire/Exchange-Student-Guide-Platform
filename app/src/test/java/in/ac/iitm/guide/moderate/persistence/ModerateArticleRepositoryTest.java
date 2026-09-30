@@ -42,6 +42,7 @@ class ModerateArticleRepositoryTest {
 
     @AfterEach
     void clearTheDatabase() {
+        jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
     }
 

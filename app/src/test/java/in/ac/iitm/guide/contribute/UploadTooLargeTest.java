@@ -3,9 +3,11 @@ package in.ac.iitm.guide.contribute;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import in.ac.iitm.guide.media.MediaTestFiles;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
@@ -38,6 +41,21 @@ class UploadTooLargeTest {
 
     @Autowired
     private TestRestTemplate http;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    /**
+     * The accepted upload is a real submission with a photo. Under {@code -P postgres} every test
+     * context shares one database, so left here it breaks the next class's cleanup (DEBT-022).
+     */
+    @AfterEach
+    void clearTheDatabaseAndTheMediaRoot() throws IOException {
+        jdbc.execute("DELETE FROM media_asset");
+        jdbc.execute("DELETE FROM submission_tag");
+        jdbc.execute("DELETE FROM submission");
+        MediaTestFiles.empty(MEDIA);
+    }
 
     @Test
     // trace:FR-010
