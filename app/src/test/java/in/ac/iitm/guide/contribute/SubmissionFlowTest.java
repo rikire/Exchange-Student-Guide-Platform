@@ -164,6 +164,24 @@ class SubmissionFlowTest {
 
     @Test
     // trace:FR-010
+    void sql_typed_into_a_submission_is_stored_as_written_and_runs_nothing() throws Exception {
+        // Phase 4 edge case "injection attempt": every value reaches the database as a bound
+        // parameter, never as part of the statement.
+        publish("Hostel Life");
+        var title = "Bank'); DROP TABLE article; --";
+        var body = "x' OR '1'='1";
+
+        var result = submitNew(title, "S.", body);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(302);
+        assertThat(onlySubmission()).containsEntry("TITLE", title).containsEntry("BODY", body);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM article", Integer.class))
+                .as("the article table is still there, with its one row")
+                .isEqualTo(1);
+    }
+
+    @Test
+    // trace:FR-010
     void a_title_of_255_characters_is_accepted_and_one_of_256_is_refused() throws Exception {
         assertThat(submitNew("t".repeat(256), "S.", "B.").getResponse().getStatus())
                 .isEqualTo(422);

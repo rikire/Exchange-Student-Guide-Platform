@@ -2,6 +2,7 @@ package in.ac.iitm.guide.backlink;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import in.ac.iitm.guide.backup.ArticleArchive;
 import in.ac.iitm.guide.moderate.internal.ModerationService;
@@ -161,6 +162,21 @@ class BacklinkFlowTest {
 
     @Test
     // trace:FR-006
+    void two_articles_linking_to_each_other_both_render_and_each_lists_the_other() throws Exception {
+        // Phase 4 edge case "circular wiki links": nothing follows a link beyond one step, so a
+        // cycle must not loop in the renderer or in the backlink list.
+        imported("Hostel Life", "Before arriving, read [[arriving]].");
+        imported("Arriving", "Then read [[hostel life]].");
+
+        var hostel = backlinksOn("/articles/hostel-life");
+        var arriving = backlinksOn("/articles/arriving");
+
+        assertThat(hostel).contains("href=\"/articles/arriving\"").doesNotContain("href=\"/articles/hostel-life\"");
+        assertThat(arriving).contains("href=\"/articles/hostel-life\"").doesNotContain("href=\"/articles/arriving\"");
+    }
+
+    @Test
+    // trace:FR-006
     void an_article_nobody_links_to_shows_no_what_links_here() throws Exception {
         imported("Hostel Life", "Rooms and mess.");
 
@@ -191,6 +207,18 @@ class BacklinkFlowTest {
         submission.setTags(new HashSet<>());
         transaction.executeWithoutResult(tx -> entityManager.persist(submission));
         return submission.getSubmissionNumber();
+    }
+
+    /** The page's "What links here" list alone, so a link in the article's own text is not counted. */
+    private String backlinksOn(String path) throws Exception {
+        var page = mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        assertThat(page).as("the page has a What links here list").contains("class=\"backlink-list\"");
+        var list = page.substring(page.indexOf("class=\"backlink-list\""));
+        return list.substring(0, list.indexOf("</ul>"));
     }
 
     private String page(String path) throws Exception {

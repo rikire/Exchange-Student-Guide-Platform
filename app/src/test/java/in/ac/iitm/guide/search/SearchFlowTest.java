@@ -241,6 +241,17 @@ class SearchFlowTest {
 
     @Test
     // trace:FR-007
+    void query_syntax_typed_into_the_search_box_is_searched_as_words_not_obeyed() throws Exception {
+        // Phase 4 edge case "injection attempt": the query is analysed as text, so Lucene's operators
+        // — a trailing * for a prefix, a leading - to exclude — widen nothing.
+        publish("Bank account", "Open one in the first week.");
+
+        assertThat(search("acc*")).contains("No articles matched");
+        assertThat(search("bank -account")).contains("href=\"/articles/bank-account\"");
+    }
+
+    @Test
+    // trace:FR-007
     void a_query_of_more_than_fifty_words_answers_400() throws Exception {
         // Found by review, 28 Sep: a thousand distinct words, about 4 KB and so a valid URL, took
         // the query past Lucene's limit of 1024 clauses and answered 500.

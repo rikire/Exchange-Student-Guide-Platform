@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -423,6 +424,23 @@ class ArticleArchiveTest {
         Files.writeString(directory.resolve("b.md"), "no front matter here");
 
         assertThatThrownBy(() -> archive.importFrom(directory)).isInstanceOf(ArchiveFormatException.class);
+
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM article", Integer.class))
+                .isZero();
+    }
+
+    @Test
+    // trace:NFR-004
+    void a_file_that_is_not_utf8_text_stops_the_import_rather_than_arriving_with_replaced_characters()
+            throws Exception {
+        // Phase 4 edge case "a corrupt import archive": a Latin-1 é is not UTF-8, and a lenient read
+        // would store the article with U+FFFD in its place, which nobody would notice until a reader did.
+        Files.writeString(directory.resolve("a.md"), article("Arrival", "tags: [visa]", "Text.\n"));
+        Files.write(
+                directory.resolve("b.md"),
+                article("Caf\u00e9", "tags: []", "Text.\n").getBytes(StandardCharsets.ISO_8859_1));
+
+        assertThatThrownBy(() -> archive.importFrom(directory)).isInstanceOf(UncheckedIOException.class);
 
         assertThat(jdbc.queryForObject("SELECT count(*) FROM article", Integer.class))
                 .isZero();

@@ -139,6 +139,14 @@ class MediaAssetsTest {
         return Stream.of(
                 Arguments.of(
                         "html named as a photo", "form.jpg", "<!DOCTYPE html><html><body>hi</body></html>".getBytes()),
+                // Found 30 Sep with Tika's detection switched to the name: the photo above is still
+                // refused by re-encoding, while a document and a video are stored as they came.
+                Arguments.of(
+                        "html named as a document",
+                        "form.pdf",
+                        "<!DOCTYPE html><html><body>hi</body></html>".getBytes()),
+                Arguments.of(
+                        "html named as a video", "clip.mp4", "<!DOCTYPE html><html><body>hi</body></html>".getBytes()),
                 Arguments.of(
                         "svg",
                         "logo.svg",
