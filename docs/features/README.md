@@ -21,3 +21,4 @@ Every feature file with its status, the requirements it covers and the slice it 
 | FEAT-013 | [Removing an article](FEAT-013-removing-an-article.md) | done | FR-026 | moderate | GET /moderate/articles/{title}/remove, POST /moderate/articles/{title}/remove | article |
 | FEAT-014 | [What links here](FEAT-014-backlinks.md) | done | FR-006 | backlink | GET /articles/{title} | article_link, article |
 | FEAT-015 | [Tags ordered by visits, with their article counts](FEAT-015-tags-by-visits.md) | done | FR-031 | taxonomy | GET /, GET /tags/{tag} | tag, article_tag, article |
+| FEAT-016 | [Viewing photos full screen](FEAT-016-photo-viewer.md) | done | FR-032 | articleview | GET /articles/{title}, GET /moderate/submissions/{number} |  |

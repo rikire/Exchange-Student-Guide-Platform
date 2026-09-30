@@ -44,6 +44,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-029 | done | FEAT-006 | ModerationService | ModerationFlowTest, TextDiffTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Seeing what an edit changes |
 | FR-030 | done | FEAT-002 | ArticleController | ArticleControllerTest, BrowserPrintTest |  | GET /articles/{title} | article, article_tag, tag | Saving an article as a PDF |
 | FR-031 | done | FEAT-015 | LandingReadRepository, TagBrowseService, TagController, TagRepository | LandingControllerTest, TagBrowseTest | V7__add_tag_visit_count | GET /, GET /tags/{tag} | article, article_tag, tag | Tags ordered by visits, with their article counts |
+| FR-032 | done | FEAT-016 | PhotoViewer | BrowserPhotoViewerTest |  | GET /articles/{title}, GET /moderate/submissions/{number} |  | Viewing photos full screen |
 
 ## Non-functional requirements
 
