@@ -3,6 +3,7 @@ package in.ac.iitm.guide.taxonomy.internal;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.taxonomy.persistence.TagBrowseRepository;
+import in.ac.iitm.guide.taxonomy.persistence.TagRepository;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -27,9 +28,18 @@ public class TagBrowseService {
     private static final DateTimeFormatter UPDATED = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH);
 
     private final TagBrowseRepository articles;
+    private final TagRepository tags;
 
-    TagBrowseService(TagBrowseRepository articles) {
+    TagBrowseService(TagBrowseRepository articles, TagRepository tags) {
         this.articles = articles;
+        this.tags = tags;
+    }
+
+    /** FR-031: counted only once the page is known to answer, so a {@code 404} counts nothing. */
+    // trace:FR-031
+    @Transactional
+    public void countVisit(TagPage page) {
+        tags.countVisit(page.names());
     }
 
     /**

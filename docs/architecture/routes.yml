@@ -35,7 +35,8 @@ routes:
     responses: >-
       `200` always
     serves: >-
-      FR-009 (UC-007)
+      FR-009 (UC-007); FR-031: the tags are listed most visited first, by name among equals, each
+      with the number of live articles carrying it
 
   - methods: [GET]
     path: /search
@@ -68,7 +69,8 @@ routes:
       address rule (`wikilink`'s `ArticleAddress`), so `visa/frro` and `visa frro` share `/tags/visa-frro`
       and a tag of only symbols has none (decided 28 Sep, FEAT-008)
     serves: >-
-      FR-008 (UC-002)
+      FR-008 (UC-002); FR-031: a `200` adds one visit to every tag behind the address, so this
+      `GET` writes (ADR-0017), and a `404` writes nothing
 
   - methods: [GET]
     path: /media/{id}

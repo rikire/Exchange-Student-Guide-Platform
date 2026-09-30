@@ -6,8 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-/** {@code GET /tags/{tag}}: the published articles carrying a tag, most recently updated first. */
+/**
+ * {@code GET /tags/{tag}}: the published articles carrying a tag, most recently updated first. A page
+ * that answers counts one visit to its tags (FR-031, ADR-0017).
+ */
 // trace:FR-008
+// trace:FR-031
 @Controller
 class TagController {
 
@@ -19,7 +23,9 @@ class TagController {
 
     @GetMapping("/tags/{tag}")
     String browse(@PathVariable String tag, Model model) {
-        model.addAttribute("tagPage", tags.browse(tag).orElseThrow(() -> new TagNotFoundException(tag)));
+        var page = tags.browse(tag).orElseThrow(() -> new TagNotFoundException(tag));
+        tags.countVisit(page);
+        model.addAttribute("tagPage", page);
         return "taxonomy/TagBrowse";
     }
 }

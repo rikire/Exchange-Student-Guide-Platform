@@ -54,6 +54,7 @@ entity "tag" as tag {
   * id : uuid
   --
   * name : text <<unique, trimmed and lower-cased>>
+  * visit_count : bigint <<FR-031, default 0>>
 }
 
 entity "article_tag" as article_tag {

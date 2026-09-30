@@ -37,9 +37,11 @@ public class LandingPageService {
                 articles.findByPinnedAtIsNotNullAndRemovedAtIsNullOrderByPinnedAtDesc(PageRequest.of(0, PINNED_LIMIT));
         var recent =
                 articles.findByPinnedAtIsNullAndRemovedAtIsNullOrderByPublishedAtDesc(PageRequest.of(0, RECENT_LIMIT));
-        var tags = articles.findTagNamesInUse(PageRequest.of(0, TAG_LIMIT));
-        return new LandingPage(
-                cards(pinned), cards(recent), tags.stream().map(TagLink::of).toList());
+        var tags = articles.findTagsInUse(PageRequest.of(0, TAG_LIMIT)).stream()
+                .map(tag -> new LandingPage.ListedTag(
+                        tag.getName(), TagLink.of(tag.getName()).path(), tag.getArticles()))
+                .toList();
+        return new LandingPage(cards(pinned), cards(recent), tags);
     }
 
     private static List<LandingPage.Card> cards(List<Article> articles) {

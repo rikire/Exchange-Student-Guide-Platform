@@ -16,12 +16,18 @@ than smoothed over.
 |---|---|---|
 | `article` | Published content only | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md) |
 | `revision` | An article's title, summary and body as they stood before an approved edit | [ADR-0003](adr/ADR-0003-moderation-and-revision-storage.md), and [CON-004](../requirements/constraints.md) — full copies, never stored diffs; the moderator's comparison (FR-029) is computed when shown |
-| `tag`, `article_tag` | Free-form labels, normalised on the way in | [ADR-0005](adr/ADR-0005-taxonomy.md) |
+| `tag`, `article_tag` | Free-form labels, normalised on the way in; `tag.visit_count` counts openings of the tag's page (FR-031) | [ADR-0005](adr/ADR-0005-taxonomy.md), [ADR-0017](adr/ADR-0017-counting-tag-visits.md) |
 | `article_link` | FR-006's backlinks and FR-004's red links, one row per `[[link]]` found on publish | [ADR-0012](adr/ADR-0012-article-link-storage.md) |
 
 **`article_tag` is indexed on `tag_id`** (`article_tag_tag_id_idx`, added 22 Sep). Its primary key is
 `(article_id, tag_id)`, which does not serve FR-008's tag browse — "which articles carry this
 tag" — reads by `tag_id` alone; without this index that read scanned every `article_tag` row.
+
+**`tag.visit_count` is the one counter in the schema** (V7, 30 Sep, [ADR-0017](adr/ADR-0017-counting-tag-visits.md)).
+It orders the landing page's tags (FR-031). A tag page that answers `200` adds one to it, in a single
+`UPDATE ... SET visit_count = visit_count + 1`, and no code reads it first. It is not exported
+(ADR-0007): it describes use, not content. The number of articles shown beside a tag is not stored.
+It is counted from `article_tag` when the landing page is read.
 
 **`article` holds nothing unpublished.** That is the whole point of the split: FR-001, FR-007 and
 FR-008 each carry a negative criterion — an unapproved or rejected submission must not resolve,

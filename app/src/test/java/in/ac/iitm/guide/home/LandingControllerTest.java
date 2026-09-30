@@ -248,7 +248,51 @@ class LandingControllerTest {
                 .doesNotContain("<script>x");
     }
 
+    @Test
+    // trace:FR-031
+    void each_tag_shows_how_many_published_articles_carry_it() throws Exception {
+        publish("Visa Guide", NOW.minusDays(1), null, "visa");
+        publish("Visa Extension", NOW.minusDays(2), null);
+        publish("Old Visa Rules", NOW.minusDays(3), null);
+        carry("Visa Extension", "visa");
+        carry("Old Visa Rules", "visa");
+        jdbc.update("UPDATE article SET removed_at = ? WHERE title = 'Old Visa Rules'", NOW);
+
+        var tags = tagList(landing());
+
+        assertThat(tags).containsPattern(">visa</span>\\s*<span class=\"chip-count\">2<");
+    }
+
+    @Test
+    // trace:FR-031
+    void tags_are_listed_most_visited_first_and_by_name_when_visits_are_equal() throws Exception {
+        publish("Visa Guide", NOW.minusDays(1), null, "admin", "visa", "hostel");
+        jdbc.update("UPDATE tag SET visit_count = 5 WHERE name IN ('visa', 'hostel')");
+
+        var tags = tagList(landing());
+
+        assertThat(tags.indexOf(">hostel<"))
+                .as("hostel: 5 visits, first by name")
+                .isLessThan(tags.indexOf(">visa<"));
+        assertThat(tags.indexOf(">visa<")).as("visa: 5 visits").isLessThan(tags.indexOf(">admin<"));
+    }
+
     // ---- fixtures ----
+
+    /** The landing page's list of tags alone, not the chips on the article cards. */
+    private static String tagList(String page) {
+        var list = page.substring(page.indexOf("class=\"tag-cloud\""));
+        return list.substring(0, list.indexOf("</ul>"));
+    }
+
+    /** A second article carrying a tag the first one created: ADR-0005 keeps one row per name. */
+    private void carry(String title, String tag) {
+        jdbc.update(
+                "INSERT INTO article_tag (article_id, tag_id)"
+                        + " SELECT a.id, t.id FROM article a, tag t WHERE a.title = ? AND t.name = ?",
+                title,
+                tag);
+    }
 
     private String landing() throws Exception {
         return mockMvc.perform(get("/"))

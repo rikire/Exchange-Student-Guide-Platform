@@ -24,6 +24,10 @@ public class Tag {
     @Column(nullable = false, unique = true)
     private String name;
 
+    /** FR-031: openings of the tag's page, written only by an atomic update (ADR-0017). */
+    @Column(name = "visit_count", nullable = false)
+    private long visitCount;
+
     public UUID getId() {
         return id;
     }
@@ -34,5 +38,9 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getVisitCount() {
+        return visitCount;
     }
 }

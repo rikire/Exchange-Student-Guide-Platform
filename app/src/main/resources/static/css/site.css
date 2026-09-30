@@ -99,6 +99,8 @@ p a, .article-body a { text-decoration: underline; }
 .section-title { font-size: var(--text-lead); font-weight: 700; margin: var(--space-5) 0 var(--space-3); }
 .empty-note { color: var(--ink-soft); }
 .tag-cloud { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+/* FR-031: how many articles carry the tag, quieter than its name. */
+.chip-count { margin-left: var(--space-1); font-weight: 400; color: var(--ink-soft); }
 
 /* FEAT-007: the results page. Its search box sits on paper, not on the maroon hero, so it needs an
    edge of its own (3:1 against the page, WCAG 1.4.11). */

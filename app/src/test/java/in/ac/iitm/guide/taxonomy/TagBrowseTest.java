@@ -236,6 +236,43 @@ class TagBrowseTest {
         assertThat(browse("/articles/registering-with-frro")).contains(">!!!<").doesNotContain("href=\"/tags/");
     }
 
+    @Test
+    // trace:FR-031
+    void opening_a_tags_page_counts_a_visit_each_time() throws Exception {
+        publish("Registering with FRRO", NOW, "visa");
+
+        browse("/tags/visa");
+        browse("/tags/VISA");
+
+        assertThat(visitsOf("visa")).isEqualTo(2);
+    }
+
+    @Test
+    // trace:FR-031
+    void a_tag_page_that_answers_404_counts_no_visit() throws Exception {
+        submit("Kodaikanal trip", SubmissionStatus.PENDING, "trips");
+
+        mockMvc.perform(get("/tags/trips")).andExpect(status().isNotFound());
+
+        assertThat(visitsOf("trips")).isZero();
+    }
+
+    @Test
+    // trace:FR-031
+    void every_tag_behind_one_address_counts_the_visit() throws Exception {
+        publish("Registering with FRRO", NOW, "visa/frro");
+        publish("FRRO office hours", NOW, "visa frro");
+
+        browse("/tags/visa-frro");
+
+        assertThat(visitsOf("visa/frro")).isEqualTo(1);
+        assertThat(visitsOf("visa frro")).isEqualTo(1);
+    }
+
+    private long visitsOf(String tag) {
+        return jdbc.queryForObject("SELECT visit_count FROM tag WHERE name = ?", Long.class, tag);
+    }
+
     private String browse(String path) throws Exception {
         return mockMvc.perform(get(path))
                 .andExpect(status().isOk())
