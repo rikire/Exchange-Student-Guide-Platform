@@ -150,6 +150,15 @@ table; `backup/internal/SeedRunner` then imports the articles while the server a
 - **Check:** after `down -v` and `up`, the first search for "FRRO registration" puts the FRRO article
   first.
 
+**Found on 2 Oct, before the change:** on a fresh stand the server answered at 34.6 s and the seed
+finished at 35.9 s. For that second, search answered *0 results*, then the FRRO article first; the
+wrong article first did not reproduce. The seed's own commit indexes its articles, so reordering the
+two runners alone changes nothing a reader sees: both still ran after the server started. **Done
+instead:** `SeedRunner` and `SearchIndexBuilder` are `SmartLifecycle` beans in phases before Spring
+Boot's web server, seed first. `StartupOrderTest` reads the database and the index at the moment the
+server starts (red first: no articles yet). On a fresh stand: seed 30.39 s, index 30.46 s, server
+30.61 s; 420 searches from the first answer on, none empty, FRRO first in each.
+
 ### 1.7 Small wrong texts (F-26, F-14)
 
 - A tag left with no articles answers the 404 page whose text speaks of "no published article at

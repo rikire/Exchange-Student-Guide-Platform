@@ -280,8 +280,11 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
       — check: "FRRO registration" returns only articles with both words; junk queries return none
       — owner: **Abdirakhim**
-- [ ] [Seed before indexing at start-up (F-1)](../verification/walkthrough-fixes.md#16-search-sees-part-of-the-seed-right-after-a-start-f-1)
+- [x] [Seed before indexing at start-up (F-1)](../verification/walkthrough-fixes.md#16-search-sees-part-of-the-seed-right-after-a-start-f-1)
       — check: after `down -v` and `up`, the first FRRO search is right
+      Built 2 Oct: the seed and the index build run before the web server starts
+      (`StartupOrderTest`, red first); a fresh stand gave 420 searches, none empty. Accepted by the
+      human on 2 Oct.
       — owner: **Abdirakhim**
 - [ ] [A 404 text that fits what was asked for (F-26)](../verification/walkthrough-fixes.md#17-small-wrong-texts-f-26-f-14)
       — check: `/tags/no-such-tag` says it is a tag

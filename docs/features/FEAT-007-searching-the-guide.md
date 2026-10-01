@@ -17,6 +17,7 @@ code:
   - app/src/main/resources/templates/search/SearchResults.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/search/SearchFlowTest.java
+  - app/src/test/java/in/ac/iitm/guide/StartupOrderTest.java
 ---
 
 # FEAT-007 — Searching the guide
@@ -100,6 +101,9 @@ And from the route contract and the decisions above:
 - [x] A removed article (`removed_at` set) does not appear.
 - [x] A query of more than 50 words answers `400`; one of 50 is searched.
 - [x] An empty index is filled from the database at start-up; one that is not empty is left as it is.
+- [x] The seed is imported and indexed before the web server starts, so the first search after a
+      fresh start finds every article (walkthrough fix 1.6, 2 Oct) —
+      `StartupOrderTest.the_seed_is_imported_and_indexed_before_the_web_server_starts`
 - [x] An article the moderator approves is found.
 
 Evidence, 28 Sep: the first thirteen tests of `SearchFlowTest` were red first (`404`, no route),
