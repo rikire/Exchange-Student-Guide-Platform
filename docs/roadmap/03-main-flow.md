@@ -329,8 +329,10 @@ design pass (3) is the largest piece and starts with redrawn screens.
       **FR-025 done 1 Oct:** [FEAT-019](../features/FEAT-019-pinning-articles-in-order.md), FRRO pinned
       first in the seed. The screen's link waits for the moderator's header (2.3).
       — owner: **Mikhail**
-- [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
+- [x] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
       — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark
+      Built 2 Oct: the moderator's header, a message after each decision, the article link, the
+      file mark and the login's way back (FEAT-006). Accepted by the human on 2 Oct.
       — owner: **Abdirakhim**
 - [x] [Clearer submission numbers, a Copy button, title and date on the status page (F-29, F-19)](../verification/walkthrough-fixes.md#24-times-numbers-copying-f-29-f-19) — decided 1 Oct: title and date shown
       — check: tests for the title, the date and the button

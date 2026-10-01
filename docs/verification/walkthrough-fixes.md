@@ -307,6 +307,15 @@ The landing page shows the twelve newest; the other 24 are reachable only by sea
   reached by its address.
 - **Check:** tests for each message and link; the queue's attachment mark.
 
+**Done 2 Oct:** while signed in, every page's header shows Queue, Homepage & articles, The guide and
+Log out (`ModeratorFrame` in `shared/security` tells the shared header), and Log out left the page
+bodies. After Approve the queue says "Published:" with a link to the article, after Reject
+"Rejected", after Remove "Removed", each with the title, once (a flash attribute). A decided
+submission's review links to the article while it is live: an edit's article by its id, a new
+article at its title's address, since the submission keeps no link to it. The queue marks a file as
+"photo", "PDF" or "video", read for the whole queue in one query. The login page has "Back to the
+guide". Eight tests red first, in `ModerationFlowTest`, `ArticleRemovalTest` and `ModeratorLoginTest`.
+
 ### 2.4 Times, numbers, copying (F-29, F-19)
 
 - **Change:** submission numbers in a larger face where 0 and 8 are unmistakable, with more spacing

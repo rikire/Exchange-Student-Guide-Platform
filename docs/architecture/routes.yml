@@ -256,7 +256,10 @@ routes:
     fields: >-
       —
     responses: >-
-      `200` always, including the empty-queue state; `302` to `/moderate/login` unauthenticated
+      `200` always, including the empty-queue state; `302` to `/moderate/login` unauthenticated.
+      After an approval, a rejection or a removal it says once what was done, with the title and,
+      for an approval, a link to the article; each entry marks its files as photo, PDF or video
+      (fix 2.3)
     serves: >-
       FR-014 (UC-014)
 

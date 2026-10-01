@@ -189,6 +189,12 @@ comparison.
 and on the review page, and the Review column stays pinned to the table's right edge on a phone,
 where the table scrolls inside itself (`BrowserLayoutTest.the_queue_keeps_every_review_link_in_view_beside_a_long_title`).
 
+**Fix 2.3, 2 Oct (F-24, F-15):** the moderator's own header on every page while signed in (Queue,
+Homepage & articles, The guide, Log out), a message on the queue after each decision with the title
+and, after an approval, a link to the article; the review of a decided submission links to its live
+article; the queue marks each submission's files by kind in one query; the login page leads back to
+the guide.
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).
