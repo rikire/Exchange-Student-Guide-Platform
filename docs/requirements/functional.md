@@ -49,7 +49,8 @@ other unestablished term.
 
 ### FR-001 — Reading a published article
 
-**Status:** in-progress
+**Status:** done — marked by the human on 2 Oct: each criterion has a test in `ArticleControllerTest`,
+and the article's media, the last part of its content, was accepted with FEAT-009 on 28 Sep
 **Priority:** must
 
 When a reader requests a published article, the system shall show its content, composed as defined
@@ -341,7 +342,8 @@ THEN the submission is rejected
 
 ### FR-011 — Proposing an edit to an existing article
 
-**Status:** in-progress
+**Status:** done — marked by the human on 2 Oct: the five criteria have eight tests in
+`SubmissionFlowTest`, the attachment's size and type among them
 **Priority:** must
 
 When a contributor proposes an edit to a published article — changing its title, its summary, its
