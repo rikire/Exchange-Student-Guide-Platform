@@ -249,6 +249,8 @@ The landing page shows the twelve newest; the other 24 are reachable only by sea
   `GET /articles`, linked from the landing page, which meets the check above. The seed carries
   made-up `views`. Still to do: the moderator's screen to pin, unpin and order (FR-025), and FRRO
   pinned in the seed.
+- **Pinning done 1 Oct:** [FEAT-019](../features/FEAT-019-pinning-articles-in-order.md),
+  `/moderate/articles`, after the HomeAdmin screen. The seed pins FRRO first.
 
 ### 2.3 The moderator's own frame (F-24, F-15)
 
@@ -259,6 +261,9 @@ The landing page shows the twelve newest; the other 24 are reachable only by sea
 - **Change:** a decided submission links to the published article; the queue marks submissions with
   a file (📎 or "photo", "PDF", "video").
 - **Change:** the login page gets a "Back to the guide" link.
+- **Added 1 Oct:** the moderator's header also links to "Homepage & articles", `/moderate/articles`
+  (FR-025, FEAT-019). The human chose this over a temporary link, so until this item the screen is
+  reached by its address.
 - **Check:** tests for each message and link; the queue's attachment mark.
 
 ### 2.4 Times, numbers, copying (F-29, F-19)

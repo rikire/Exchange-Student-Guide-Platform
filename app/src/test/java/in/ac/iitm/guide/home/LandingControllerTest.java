@@ -97,14 +97,15 @@ class LandingControllerTest {
     }
 
     @Test
-    // trace:FR-009
-    void among_the_pinned_the_most_recently_pinned_comes_first() throws Exception {
-        publish("Pinned Earlier", NOW.minusDays(40), NOW.minusDays(10));
-        publish("Pinned Lately", NOW.minusDays(50), NOW.minusDays(1));
+    // trace:FR-025
+    void the_pinned_follow_the_place_the_moderator_set_not_when_they_were_pinned() throws Exception {
+        // Until V8 (1 Oct) the most recently pinned came first; FR-025 now orders them by hand.
+        pinned("Pinned Lately", NOW.minusDays(1), 2);
+        pinned("Pinned Earlier", NOW.minusDays(10), 1);
 
         var page = landing();
 
-        assertThat(page.indexOf("Pinned Lately")).isLessThan(page.indexOf("Pinned Earlier"));
+        assertThat(page.indexOf("Pinned Earlier")).isLessThan(page.indexOf("Pinned Lately"));
     }
 
     @Test
@@ -113,7 +114,7 @@ class LandingControllerTest {
         // Oldest first, so the order the database happens to return rows in is the wrong order.
         for (int i = 14; i >= 0; i--) {
             publish("Recent Number " + (100 + i), NOW.minusDays(i), null);
-            publish("Pinned Number " + (100 + i), NOW.minusDays(50 + i), NOW.minusDays(i));
+            pinned("Pinned Number " + (100 + i), NOW.minusDays(i), i + 1);
         }
 
         var page = landing();
@@ -304,6 +305,13 @@ class LandingControllerTest {
 
     private static int count(String text, String word) {
         return text.split(Pattern.quote(word), -1).length - 1;
+    }
+
+    /** Pinned at {@code place} in FR-025's order, published long before. */
+    private void pinned(String title, OffsetDateTime pinnedAt, int place) {
+        var article = anArticle(title, NOW.minusDays(100), pinnedAt);
+        article.setPinPosition(place);
+        save(article);
     }
 
     private void publish(String title, OffsetDateTime publishedAt, OffsetDateTime pinnedAt, String... tags) {

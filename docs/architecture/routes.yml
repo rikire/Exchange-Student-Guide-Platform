@@ -294,6 +294,78 @@ routes:
       FR-018 (UC-017); FR-019 stores the reason
 
   - methods: [GET]
+    path: /moderate/articles
+    slice: moderate
+    status: built
+    template: >-
+      `moderate/ArticleAdmin.html`
+    fields: >-
+      `page` (optional, from 1)
+    responses: >-
+      `200` with the pinned articles in their order, each with Move up, Move down and Unpin, and the
+      published articles by title, 50 to a page, each with Pin and a link to Remove; `404` for a
+      `page` below 1; `302` unauthenticated
+    serves: >-
+      FR-025 (UC-022), after the HomeAdmin design screen; reached from the moderator's header (fix
+      2.3), with no link elsewhere (the human, 1 Oct)
+
+  - methods: [POST]
+    path: /moderate/articles/{title}/pin
+    slice: moderate
+    status: built
+    template: >-
+      — (redirects)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/articles`; `404` if `{title}` matches no published article; `403` without
+      the token; `302` unauthenticated
+    serves: >-
+      FR-025: pins the article last; one already pinned keeps its place (ADR-0021)
+
+  - methods: [POST]
+    path: /moderate/articles/{title}/unpin
+    slice: moderate
+    status: built
+    template: >-
+      — (redirects)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/articles`; `404` if `{title}` matches no published article; `403` without
+      the token; `302` unauthenticated
+    serves: >-
+      FR-025: takes the article out of the pinned section (ADR-0021)
+
+  - methods: [POST]
+    path: /moderate/articles/{title}/up
+    slice: moderate
+    status: built
+    template: >-
+      — (redirects)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/articles`; `404` if `{title}` matches no published article; `403` without
+      the token; `302` unauthenticated
+    serves: >-
+      FR-025: swaps the article's place with the one before it; the first stays first (ADR-0021)
+
+  - methods: [POST]
+    path: /moderate/articles/{title}/down
+    slice: moderate
+    status: built
+    template: >-
+      — (redirects)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/articles`; `404` if `{title}` matches no published article; `403` without
+      the token; `302` unauthenticated
+    serves: >-
+      FR-025: swaps the article's place with the one after it; the last stays last (ADR-0021)
+
+  - methods: [GET]
     path: /moderate/articles/{title}/remove
     slice: moderate
     status: built
@@ -389,8 +461,3 @@ deferred:
     priority: could
     requirements: >-
       FR-023, FR-024
-  - feature: >-
-      Edit the homepage, including pinned
-    priority: could
-    requirements: >-
-      FR-025

@@ -54,6 +54,15 @@ class SeedRunnerTest {
     }
 
     @Test
+    // trace:FR-025
+    void the_seed_pins_frro_first() {
+        var first = jdbc.queryForObject(
+                "SELECT title FROM article WHERE pin_position = 1 AND pinned_at IS NOT NULL", String.class);
+
+        assertThat(first).isEqualTo("Registering with FRRO");
+    }
+
+    @Test
     // trace:NFR-004
     void running_the_seed_again_adds_nothing() {
         var before = jdbc.queryForObject("SELECT count(*) FROM article", Integer.class);

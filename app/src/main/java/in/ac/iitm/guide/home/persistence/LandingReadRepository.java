@@ -15,7 +15,8 @@ import org.springframework.data.repository.Repository;
 // trace:FR-031
 public interface LandingReadRepository extends Repository<Article, UUID> {
 
-    List<Article> findByPinnedAtIsNotNullAndRemovedAtIsNullOrderByPinnedAtDesc(Pageable page);
+    /** FR-025: in the order the moderator set (V8, ADR-0021). */
+    List<Article> findByPinnedAtIsNotNullAndRemovedAtIsNullOrderByPinPositionAsc(Pageable page);
 
     /** Not pinned: a pinned article is shown in the pinned section and not repeated here. */
     List<Article> findByPinnedAtIsNullAndRemovedAtIsNullOrderByPublishedAtDesc(Pageable page);

@@ -3,9 +3,12 @@ package in.ac.iitm.guide.moderate.persistence;
 import in.ac.iitm.guide.shared.persistence.Article;
 import jakarta.persistence.LockModeType;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +24,12 @@ import org.springframework.data.repository.Repository;
 public interface ModerateArticleRepository extends Repository<Article, UUID> {
 
     Article save(Article article);
+
+    /** FR-025: the pinned articles, in their order. */
+    List<Article> findByPinnedAtIsNotNullAndRemovedAtIsNullOrderByPinPositionAsc();
+
+    /** FR-025's screen: the published articles, a page at a time (ADR-0010). */
+    Page<Article> findByRemovedAtIsNull(Pageable page);
 
     /** Removed articles included: the unique {@code slug} holds across them too. */
     Optional<Article> findBySlug(String slug);

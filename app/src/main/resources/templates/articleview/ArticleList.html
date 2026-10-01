@@ -10,22 +10,28 @@
   <main class="site-main">
     <h1 class="article-title">All articles</h1>
 
-    <nav class="chip-row" aria-label="Order">
-      <span class="field-label">Order:</span>
-      <th:block th:each="order : ${orders}">
-        <a class="chip chip-link" th:if="${!order.current}" th:href="@{${order.href}}" th:text="${order.label}">Most viewed</a>
-        <span class="chip" th:if="${order.current}" aria-current="true" th:text="${order.label}">A–Z</span>
-      </th:block>
+    <nav aria-label="Order">
+      <span class="field-label">Order</span>
+      <ul class="chip-row">
+        <li class="chip" th:each="order : ${orders}" th:classappend="${!order.current} ? 'chip-link'">
+          <a th:if="${!order.current}" th:href="@{${order.href}}" th:text="${order.label}">Most viewed</a>
+          <span th:if="${order.current}" aria-current="true" th:text="${order.label}">A–Z</span>
+        </li>
+      </ul>
     </nav>
 
-    <nav class="chip-row" aria-label="Tag" th:if="${!tags.isEmpty()}">
-      <span class="field-label">Tag:</span>
-      <a class="chip chip-link" th:if="${tag != null}" th:href="@{${allTags}}">All</a>
-      <span class="chip" th:if="${tag == null}" aria-current="true">All</span>
-      <th:block th:each="choice : ${tags}">
-        <a class="chip chip-link" th:if="${!choice.current}" th:href="@{${choice.href}}" th:text="${choice.label}">visa</a>
-        <span class="chip" th:if="${choice.current}" aria-current="true" th:text="${choice.label}">visa</span>
-      </th:block>
+    <nav aria-label="Tag" th:if="${!tags.isEmpty()}">
+      <span class="field-label">Tag</span>
+      <ul class="chip-row">
+        <li class="chip" th:classappend="${tag != null} ? 'chip-link'">
+          <a th:if="${tag != null}" th:href="@{${allTags}}">All</a>
+          <span th:if="${tag == null}" aria-current="true">All</span>
+        </li>
+        <li class="chip" th:each="choice : ${tags}" th:classappend="${!choice.current} ? 'chip-link'">
+          <a th:if="${!choice.current}" th:href="@{${choice.href}}" th:text="${choice.label}">visa</a>
+          <span th:if="${choice.current}" aria-current="true" th:text="${choice.label}">visa</span>
+        </li>
+      </ul>
     </nav>
 
     <p class="empty-note" th:if="${tagUnknown}">No published article carries this tag. <a th:href="@{/articles}">See all articles</a></p>

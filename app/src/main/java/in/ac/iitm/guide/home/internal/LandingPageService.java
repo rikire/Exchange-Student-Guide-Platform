@@ -33,8 +33,8 @@ public class LandingPageService {
     }
 
     public LandingPage build() {
-        var pinned =
-                articles.findByPinnedAtIsNotNullAndRemovedAtIsNullOrderByPinnedAtDesc(PageRequest.of(0, PINNED_LIMIT));
+        var pinned = articles.findByPinnedAtIsNotNullAndRemovedAtIsNullOrderByPinPositionAsc(
+                PageRequest.of(0, PINNED_LIMIT));
         var recent =
                 articles.findByPinnedAtIsNullAndRemovedAtIsNullOrderByPublishedAtDesc(PageRequest.of(0, RECENT_LIMIT));
         var tags = articles.findTagsInUse(PageRequest.of(0, TAG_LIMIT)).stream()

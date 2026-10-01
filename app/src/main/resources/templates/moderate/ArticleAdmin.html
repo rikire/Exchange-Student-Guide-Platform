@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Homepage &amp; published articles — Exchange Student Guide</title>
+</head>
+<body>
+  <!-- FR-025, after docs/design/screens/HomeAdmin.html: pin an article to the landing page, order the
+       pinned ones, or go to removing one (FR-026). Every action is a form: no script is needed. -->
+  <!-- trace:FR-025 -->
+  <main class="site-main">
+    <form th:replace="~{shared/security/LogOut :: form}"></form>
+    <h1 class="article-title">Homepage &amp; published articles</h1>
+    <p>Pin an article to show it above “Recently added”, in the order below, or remove one that no
+      longer belongs on the site.</p>
+
+    <h2 class="section-title">Pinned, in order</h2>
+    <p class="empty-note" th:if="${screen.pinned.isEmpty()}">Nothing is pinned. Pin an article from the list below.</p>
+    <table class="queue-table" tabindex="0" aria-label="Pinned articles, in the order the landing page shows them" th:unless="${screen.pinned.isEmpty()}">
+      <thead>
+        <tr><th scope="col">Place</th><th scope="col">Title</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="line, at : ${screen.pinned}">
+          <td th:text="${at.count}">1</td>
+          <td><a th:href="@{${line.path}}" th:text="${line.title}">Registering with FRRO</a></td>
+          <td>
+            <div class="button-row">
+              <form method="post" th:unless="${at.first}" th:action="@{/moderate/articles/{a}/up(a=${line.address})}">
+                <button class="button-quiet" type="submit" th:aria-label="'Move ' + ${line.title} + ' up'">Move up</button>
+              </form>
+              <form method="post" th:unless="${at.last}" th:action="@{/moderate/articles/{a}/down(a=${line.address})}">
+                <button class="button-quiet" type="submit" th:aria-label="'Move ' + ${line.title} + ' down'">Move down</button>
+              </form>
+              <form method="post" th:action="@{/moderate/articles/{a}/unpin(a=${line.address})}">
+                <button class="button-quiet" type="submit" th:aria-label="'Unpin ' + ${line.title}">Unpin</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Published articles</h2>
+    <p class="empty-note" th:if="${screen.published.isEmpty()}">No articles are published.</p>
+    <table class="queue-table" tabindex="0" aria-label="Published articles" th:unless="${screen.published.isEmpty()}">
+      <thead>
+        <tr><th scope="col">Title</th><th scope="col">Tags</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="line : ${screen.published}">
+          <td><a th:href="@{${line.path}}" th:text="${line.title}">Opening a bank account</a></td>
+          <td th:text="${#strings.listJoin(line.tags, ', ')}">banking</td>
+          <td>
+            <div class="button-row">
+              <span class="chip" th:if="${line.pinned}">Pinned</span>
+              <form method="post" th:unless="${line.pinned}" th:action="@{/moderate/articles/{a}/pin(a=${line.address})}">
+                <button class="button-quiet" type="submit" th:aria-label="'Pin ' + ${line.title}">Pin</button>
+              </form>
+              <a th:href="@{/moderate/articles/{a}/remove(a=${line.address})}" th:aria-label="'Remove ' + ${line.title}">Remove</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav class="button-row" aria-label="Pages" th:if="${screen.pages > 1}">
+      <a th:if="${screen.page > 1}" th:href="@{/moderate/articles(page=${screen.page - 1})}" rel="prev">← Previous</a>
+      <span th:text="'Page ' + ${screen.page} + ' of ' + ${screen.pages}">Page 1 of 2</span>
+      <a th:if="${screen.page < screen.pages}" th:href="@{/moderate/articles(page=${screen.page + 1})}" rel="next">Next →</a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -20,6 +20,7 @@ Make it survive real use and real inputs, and make it something a third person c
       *Registering with FRRO* missing from the landing page — see the step "Every article reachable,
       FRRO first (F-7)" in [03-main-flow.md](03-main-flow.md)
       — check: FR-025's two criteria are two tests, built under that phase-3 step
+      **Built 1 Oct** in phase 3: [FEAT-019](../features/FEAT-019-pinning-articles-in-order.md).
 - [x] Moved from phase 3, 10 Sep: FR-019 — providing a rejection reason
       — check: rejecting with a reason stores it, rejecting without one stores none — two tests
       **Built early, 29 Sep:** [FEAT-006](../features/FEAT-006-moderating-a-submission.md), both

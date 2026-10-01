@@ -5,6 +5,8 @@ tags: [visa, admin, frro, arrival]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-28
+pinned: 2026-10-01
+pin: 1
 views: 412
 ---
 

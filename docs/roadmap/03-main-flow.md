@@ -304,7 +304,7 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
       — check: every page has the three links; a menu at 390 px
       — owner: **Abdirakhim**
-- [ ] [Every article reachable, FRRO first (F-7)](../verification/walkthrough-fixes.md#22-all-articles-not-just-the-newest-twelve-f-7) — decided 1 Oct: an "All articles" page and FR-025 (pinning) built now
+- [x] [Every article reachable, FRRO first (F-7)](../verification/walkthrough-fixes.md#22-all-articles-not-just-the-newest-twelve-f-7) — decided 1 Oct: an "All articles" page and FR-025 (pinning) built now
       — check: every article in two clicks from `/`
       FR-025 (`could`) is taken from phase 4 into this step; recorded in
       [04-hardening.md](04-hardening.md).
@@ -314,7 +314,8 @@ design pass (3) is the largest piece and starts with redrawn screens.
       [ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md), migration V8.
       — check: each criterion of FR-025, FR-033 and FR-034 a test, red first
       **FR-033 and FR-034 done 1 Oct:** [FEAT-018](../features/FEAT-018-every-article-and-its-views.md).
-      FR-025's screen is next.
+      **FR-025 done 1 Oct:** [FEAT-019](../features/FEAT-019-pinning-articles-in-order.md), FRRO pinned
+      first in the seed. The screen's link waits for the moderator's header (2.3).
       — owner: **Mikhail**
 - [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
       — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark

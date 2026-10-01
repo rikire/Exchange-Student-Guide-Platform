@@ -37,7 +37,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-022 | planned |  |  |  |  |  |  | Closing a report |
 | FR-023 | planned |  |  |  |  |  |  | Publishing a new article directly |
 | FR-024 | planned |  |  |  |  |  |  | Editing an article directly |
-| FR-025 | planned |  |  | ArticleArchiveTest | V8__add_article_view_count_and_pin_position |  |  | Editing the homepage's pinned articles |
+| FR-025 | done | FEAT-019 | ArticleAdmin, ArticlePinning, ArticlePinningController | ArticleArchiveTest, LandingControllerTest, PinningTest, SeedRunnerTest | V8__add_article_view_count_and_pin_position | GET /moderate/articles, POST /moderate/articles/{title}/down, POST /moderate/articles/{title}/pin, POST /moderate/articles/{title}/unpin, POST /moderate/articles/{title}/up | article | Editing the homepage's pinned articles |
 | FR-026 | done | FEAT-013 | ArticleController, ArticleRemoval, ArticleRemovalController, ModerateArticleRepository | ArticleRemovalTest, SubmissionFlowTest |  | GET /moderate/articles/{title}/remove, POST /moderate/articles/{title}/remove | article | Removing a published article |
 | FR-027 | done | FEAT-010 | BodyPreview, ContributeArticleRepository, PreviewController, WebSecurity | BrowserEditorTest, ContentSecurityPolicyTest, EditorPreviewTest |  | POST /contribute/preview | article | Writing an article's body |
 | FR-028 | planned |  |  |  |  |  |  | Completing a wiki link while writing |

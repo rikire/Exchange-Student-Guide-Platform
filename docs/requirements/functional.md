@@ -718,7 +718,7 @@ THEN the publication is rejected
 
 ### FR-025 — Editing the homepage's pinned articles
 
-**Status:** planned
+**Status:** done
 **Priority:** could
 
 When a moderator pins an article, the system shall show it on the landing page ahead of the
