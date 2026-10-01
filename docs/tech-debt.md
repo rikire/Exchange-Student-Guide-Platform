@@ -110,7 +110,11 @@ from a shared machine.
 
 ### DEBT-018 — The application container runs as root
 
-**Status:** open
+**Status:** resolved 2026-10-02 — the runtime stage creates the system user `guide`, gives it
+`/var/lib/guide`, and runs as it ([overview.md](architecture/overview.md), Level 2). Checked on the
+compose stand: `id` gives `guide`; the existing volumes handed over once with `chown`; a removed
+index volume was rebuilt from the database by the new user and search found 6 articles; a photo
+submitted through the form was stored as `guide`
 **Created:** 2026-09-30
 **Marker:** `Dockerfile` — the runtime stage
 

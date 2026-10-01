@@ -110,7 +110,6 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
-| DEBT-018 | The application container runs as root | the handoff package of phase 5, which is the stand OGE runs. |
 | DEBT-015 | A file far over the container's limit gets a closed connection, not the page | the first report of an upload ending in a connection error, or phase 4's hardening. |
 | DEBT-014 | The stand's session cookie is not marked `Secure` | the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any |
 | DEBT-010 | An article's old address answers `404` after an edit changes its title | the first renamed article anyone complains about, or the phase 4 edge cases, whichever |
