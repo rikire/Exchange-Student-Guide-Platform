@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Browse tags — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Browse tags</h1>
+    <p class="empty-note" th:if="${index.entries.isEmpty()}">No tags yet. Tags appear here once a published article carries one.</p>
+    <!-- Fix 2.1 (F-6): every tag by name, as an index; the landing page lists the most visited. -->
+    <ul class="tag-cloud" th:unless="${index.entries.isEmpty()}">
+      <li class="chip" th:classappend="${entry.tag.path} ? 'chip-link'" th:each="entry : ${index.entries}"><a th:if="${entry.tag.path}" th:href="@{${entry.tag.path}}"><span th:text="${entry.tag.name}">visa</span> <span class="chip-count" th:text="${entry.articles}">3</span><span class="visually-hidden" th:text="${entry.articles == 1} ? ' article' : ' articles'"> articles</span></a><th:block th:unless="${entry.tag.path}"><span th:text="${entry.tag.name}">visa</span> <span class="chip-count" th:text="${entry.articles}">3</span><span class="visually-hidden" th:text="${entry.articles == 1} ? ' article' : ' articles'"> articles</span></th:block></li>
+    </ul>
+    <p class="results-meta" th:if="${index.more}">Showing the first 500 tags, by name.</p>
+  </main>
+</body>
+</html>

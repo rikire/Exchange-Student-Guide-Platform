@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * {@code GET /tags/{tag}}: the published articles carrying a tag, most recently updated first. A page
+ * {@code GET /tags}: every tag of a live article by name (fix 2.1). {@code GET /tags/{tag}}: the
+ * published articles carrying a tag, most recently updated first. A page
  * that answers counts one visit to its tags (FR-031, ADR-0017).
  */
 // trace:FR-008
@@ -19,6 +20,12 @@ class TagController {
 
     TagController(TagBrowseService tags) {
         this.tags = tags;
+    }
+
+    @GetMapping("/tags")
+    String index(Model model) {
+        model.addAttribute("index", tags.index());
+        return "taxonomy/TagIndex";
     }
 
     @GetMapping("/tags/{tag}")

@@ -76,6 +76,21 @@ routes:
       FR-007 (UC-001)
 
   - methods: [GET]
+    path: /tags
+    slice: taxonomy
+    status: built
+    template: >-
+      `taxonomy/TagIndex.html`
+    fields: >-
+      —
+    responses: >-
+      `200` always: every tag a live article carries, by name, each with its article count and a
+      link to `/tags/{tag}`; at most 500, and the page says when there are more (ADR-0010); "No tags
+      yet" when none. Linked from every page's header (walkthrough fix 2.1, decided 1 Oct)
+    serves: >-
+      FR-008 (UC-002): a way to browse the tags without the landing page
+
+  - methods: [GET]
     path: /tags/{tag}
     slice: taxonomy
     status: built

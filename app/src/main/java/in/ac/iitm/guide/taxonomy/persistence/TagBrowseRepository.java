@@ -30,4 +30,19 @@ public interface TagBrowseRepository extends Repository<Article, UUID> {
 
     @Query("select count(distinct a) from Article a join a.tags t where a.removedAt is null and t.name in :names")
     long countPublishedCarrying(Collection<String> names);
+
+    /**
+     * Fix 2.1 (F-6): every tag a live article carries, by name, each with how many carry it; one
+     * grouped query, bounded by the caller (ADR-0010).
+     */
+    @Query("select t.name as name, count(distinct a.id) as articles from Article a join a.tags t"
+            + " where a.removedAt is null group by t.name order by t.name")
+    List<TagInUse> findTagsInUse(Pageable page);
+
+    /** A tag as the tag index lists it. */
+    interface TagInUse {
+        String getName();
+
+        long getArticles();
+    }
 }

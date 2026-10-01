@@ -291,6 +291,57 @@ class TagBrowseTest {
                 .getContentAsString();
     }
 
+    @Test
+    // trace:FR-008
+    void the_tag_index_lists_every_tag_a_published_article_carries_by_name_with_its_count() throws Exception {
+        publish("Hostel rules", NOW, "visa", "hostel");
+        publish("Visa extension", NOW, "visa");
+        var removed = anArticle("Old shuttle", NOW);
+        removed.setRemovedAt(NOW);
+        save(removed, "shuttle");
+        submit("Snorkelling in Kovalam", SubmissionStatus.PENDING, "snorkelling");
+
+        var page = mockMvc.perform(get("/tags"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page.indexOf("href=\"/tags/hostel\""))
+                .as("hostel before visa")
+                .isPositive()
+                .isLessThan(page.indexOf("href=\"/tags/visa\""));
+        assertThat(page)
+                .containsPattern(
+                        "href=\"/tags/visa\"[^>]*>\\s*<span[^>]*>visa</span>\\s*<span class=\"chip-count\">2</span>")
+                .doesNotContain("/tags/shuttle")
+                .doesNotContain("/tags/snorkelling");
+    }
+
+    @Test
+    // trace:FR-008
+    void the_tag_index_shows_the_first_five_hundred_tags_and_says_there_are_more() throws Exception {
+        publish("Everything", NOW);
+        var article = jdbc.queryForObject("SELECT id FROM article", java.util.UUID.class);
+        for (var i = 0; i < 501; i++) {
+            var tag = java.util.UUID.randomUUID();
+            jdbc.update("INSERT INTO tag (id, name) VALUES (?, ?)", tag, "tag%03d".formatted(i));
+            jdbc.update("INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)", article, tag);
+        }
+
+        var page = mockMvc.perform(get("/tags")).andReturn().getResponse().getContentAsString();
+
+        assertThat(page).contains("href=\"/tags/tag499\"").doesNotContain("href=\"/tags/tag500\"");
+        assertThat(page).contains("Showing the first 500 tags");
+    }
+
+    @Test
+    // trace:FR-008
+    void with_no_published_article_the_tag_index_says_there_are_no_tags_yet() throws Exception {
+        assertThat(mockMvc.perform(get("/tags")).andReturn().getResponse().getContentAsString())
+                .contains("No tags yet");
+    }
+
     private void publish(String title, OffsetDateTime updatedAt, String... tags) {
         save(anArticle(title, updatedAt), tags);
     }

@@ -33,6 +33,19 @@ public class TagBrowseService {
         this.displayTime = displayTime;
     }
 
+    /** ADR-0010's bound on the tag index; more than the guide is expected to hold. */
+    static final int INDEX_LIMIT = 500;
+
+    /** Fix 2.1 (F-6): every tag a live article carries, by name, up to {@link #INDEX_LIMIT}. */
+    public TagIndex index() {
+        var found = articles.findTagsInUse(PageRequest.of(0, INDEX_LIMIT + 1));
+        var entries = found.stream()
+                .limit(INDEX_LIMIT)
+                .map(tag -> new TagIndex.Entry(TagLink.of(tag.getName()), tag.getArticles()))
+                .toList();
+        return new TagIndex(entries, found.size() > INDEX_LIMIT);
+    }
+
     /** FR-031: counted only once the page is known to answer, so a {@code 404} counts nothing. */
     // trace:FR-031
     @Transactional
