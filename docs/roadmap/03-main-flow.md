@@ -92,12 +92,14 @@ the criteria do not reach it.
       **Moved to phase 4, 10 Sep** — it exists only to serve FR-023/FR-024 (direct publish), which
       moved with it. See [01-requirements-design.md](01-requirements-design.md) and
       [04-hardening.md](04-hardening.md).
-- [ ] Templates brought up to the design screens; the landing page brought up to the IITM reference
+- [x] Templates brought up to the design screens; the landing page brought up to the IITM reference
       — check: no literal colour or spacing value in the templates, only tokens; the landing page
       compared against the IITM reference side by side and the differences listed
       **Changed 27 Sep:** not generated from Figma. The human chose to draw layouts, phone ones
       included, directly in the HTML screens of `docs/design/screens/`, and templates follow those
       (ADR-0014).
+      **Closed 2 Oct by fix 3.4:** the landing page follows `Landing.html`, accepted by the human in
+      the browser; the other screens are the design pass items of the walkthrough fixes.
       — owner: **Abdirakhim** (closed by 3.4, the landing page)
 - [x] Content: 30 or more articles in the database
       — check: the count comes from the database after import, and searching "FRRO registration"
@@ -353,12 +355,17 @@ design pass (3) is the largest piece and starts with redrawn screens.
       Built 2 Oct: [Buttons.html](../design/screens/Buttons.html) accepted, then four buttons and a
       maroon focus ring (FEAT-011, `ButtonStylesTest`); axe clean. Accepted by the human on 2 Oct.
       Mikhail's 3.6 can start.
-- [ ] [One card everywhere; tags as a sidebar (F-21, F-8)](../verification/walkthrough-fixes.md#33-one-card-f-21-f-8)
+- [x] [One card everywhere; tags as a sidebar (F-21, F-8)](../verification/walkthrough-fixes.md#33-one-card-f-21-f-8)
       — check: the same card on landing, search and tag pages
       — owner: **Abdirakhim**
-- [ ] [The landing page brought to its design screen (F-2)](../verification/walkthrough-fixes.md#34-the-landing-page-f-2)
+      Built 2 Oct: `shared/web/ArticleCard.html` on the landing, tag and all-articles pages
+      (`ArticleCardTest`); search keeps its own list with the passage, by the human's decision.
+      Accepted by the human on 2 Oct.
+- [x] [The landing page brought to its design screen (F-2)](../verification/walkthrough-fixes.md#34-the-landing-page-f-2)
       — check: side-by-side comparison accepted — closes the open step "Templates brought up to the design screens"
       — owner: **Abdirakhim**
+      Built 2 Oct: full-width hero, two cards across, "Browse by tag" sidebar (FEAT-003). Accepted
+      by the human on 2 Oct.
 - [ ] [The article page: actions at the top, summary, date, sidebar, contents, external links (F-10)](../verification/walkthrough-fixes.md#35-the-article-page-f-10)
       — check: a test per element; 390 px
       — owner: **Abdirakhim**

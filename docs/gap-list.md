@@ -50,6 +50,7 @@ flowchart LR
     contribute --> shared
     contribute --> taxonomy
     contribute --> wikilink
+    home --> shared
     home --> taxonomy
     home --> wikilink
     moderate --> backlink
