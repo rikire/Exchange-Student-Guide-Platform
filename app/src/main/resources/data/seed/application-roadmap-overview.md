@@ -5,6 +5,7 @@ tags: [admission, visa, admin]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 14
 ---
 
 OGE's own brochure lays the whole application out as three phases. If you only read one article

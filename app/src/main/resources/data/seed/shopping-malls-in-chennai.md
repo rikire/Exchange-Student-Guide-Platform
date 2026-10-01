@@ -5,6 +5,7 @@ tags: [shopping, malls, chennai, weekend]
 author: abdirakhim
 created: 2026-09-30
 updated: 2026-09-30
+views: 27
 ---
 
 Chennai's malls are where the city goes to shop, eat, watch films and, in the hot months, simply

@@ -5,6 +5,7 @@ tags: [transport, campus, chennai]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 209
 ---
 
 The campus is large: the hostels and the academic zone are 3.8 km from the main gate. So you will

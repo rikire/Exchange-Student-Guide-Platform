@@ -5,6 +5,7 @@ tags: [emergency, contacts, safety]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 221
 ---
 
 Save these before you need them. The numbers are from OGE's

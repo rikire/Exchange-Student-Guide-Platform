@@ -22,6 +22,8 @@ entity "article" as article {
   * published_at : timestamptz
   * updated_at : timestamptz
   pinned_at : timestamptz
+  pin_position : int <<FR-025>>
+  view_count : bigint <<FR-034, default 0>>
   removed_at : timestamptz
 }
 

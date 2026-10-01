@@ -23,11 +23,17 @@ than smoothed over.
 `(article_id, tag_id)`, which does not serve FR-008's tag browse — "which articles carry this
 tag" — reads by `tag_id` alone; without this index that read scanned every `article_tag` row.
 
-**`tag.visit_count` is the one counter in the schema** (V7, 30 Sep, [ADR-0017](adr/ADR-0017-counting-tag-visits.md)).
+**`tag.visit_count` and `article.view_count` are the schema's two counters.** `tag.visit_count` came
+with V7, 30 Sep ([ADR-0017](adr/ADR-0017-counting-tag-visits.md)).
 It orders the landing page's tags (FR-031). A tag page that answers `200` adds one to it, in a single
 `UPDATE ... SET visit_count = visit_count + 1`, and no code reads it first. It is not exported
 (ADR-0007): it describes use, not content. The number of articles shown beside a tag is not stored.
 It is counted from `article_tag` when the landing page is read.
+
+`article.view_count` came with V8, 1 Oct ([ADR-0021](adr/ADR-0021-article-views-and-pin-order.md)).
+An article page that answers `200` to anyone but the signed-in moderator adds one, the same way
+(FR-034), and it orders FR-033's list. Unlike a tag's, it travels in the export as `views`, so a move
+to another host keeps it (the human, 1 Oct).
 
 **`article` holds nothing unpublished.** That is the whole point of the split: FR-001, FR-007 and
 FR-008 each carry a negative criterion — an unapproved or rejected submission must not resolve,
@@ -93,8 +99,9 @@ phase 4) does — worth revisiting only if that dev/prod gap becomes real, not b
 
 **`pinned_at` and `removed_at` are nullable timestamps, not booleans or a status column.** Decided
 10 Sep, resolving the two open decisions below. `pinned_at` is set when a moderator pins an article
-(FR-025) and cleared when they unpin it; the landing page's pinned section (FR-009) orders by it, so
-two pinned articles never tie. `removed_at` is set when a moderator removes a published article
+(FR-025) and cleared when they unpin it. Since V8 (1 Oct, ADR-0021) the pinned section is ordered by
+`pin_position`, the place the moderator sets: 1, 2, 3 among the pinned articles, null when not pinned.
+`pinned_at` still says when. `removed_at` is set when a moderator removes a published article
 (FR-026) and never cleared — a soft delete. The row stays: `revision` (FR-020), `report.article_id`
 and any `submission.target_article_id` keep resolving, and a wiki link to the removed article keeps
 rendering, now as a red link (FR-004) because every read of `article` filters on `removed_at IS
@@ -111,6 +118,8 @@ file, its metadata as YAML front matter, the body after it. Decided 25 Sep.
 | `created` | `published_at` | yes | a date or a timestamp |
 | `updated` | `updated_at` | yes | a date or a timestamp |
 | `pinned` | `pinned_at` | no | a date or a timestamp; a file without the key is not pinned |
+| `pin` | `pin_position` | with `pinned` | the place in the pinned section, from 1 (FR-025, ADR-0021); an import without it numbers the pinned articles by `pinned` |
+| `views` | `view_count` | no | a whole number; a file without the key starts at 0 (FR-034, ADR-0021) |
 | `author` | nowhere | no | who wrote a seed draft; read and dropped, and never written by an export |
 
 Any other key refuses the file. A removed article (`removed_at`) is not exported, and an import does

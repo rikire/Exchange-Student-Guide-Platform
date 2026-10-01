@@ -5,6 +5,7 @@ tags: [india, culture, food, language]
 author: abdirakhim
 created: 2026-09-30
 updated: 2026-09-30
+views: 49
 ---
 
 India is a country of more than a billion people, dozens of major languages and many religions, so

@@ -5,6 +5,7 @@ tags: [arrival, transport, airport]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 356
 ---
 
 You land at Chennai International Airport (the handbook calls it Anna International Airport). IIT

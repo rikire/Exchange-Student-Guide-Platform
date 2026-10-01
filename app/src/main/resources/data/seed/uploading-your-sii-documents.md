@@ -5,6 +5,7 @@ tags: [visa, admin, sii, documents]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 68
 ---
 
 There are two separate document checklists in this process, and they are not identical. Mixing them

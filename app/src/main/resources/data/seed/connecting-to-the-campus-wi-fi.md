@@ -5,6 +5,7 @@ tags: [internet, campus, it]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 331
 ---
 
 The campus Wi-Fi (WiFi) network is called **`iitmwifi`**. You sign in with your **LDAP username and password**:

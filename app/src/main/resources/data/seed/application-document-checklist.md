@@ -5,6 +5,7 @@ tags: [admission, admin, documents]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 61
 ---
 
 Several other articles in this guide each ask for documents at different points in the process. This

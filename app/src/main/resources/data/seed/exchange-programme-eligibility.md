@@ -5,6 +5,7 @@ tags: [admission, eligibility, admin]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 18
 ---
 
 Before you touch a single form, check that you actually clear the bar the Office of Global

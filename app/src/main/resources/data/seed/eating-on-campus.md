@@ -5,6 +5,7 @@ tags: [food, campus, hostel]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 198
 ---
 
 You will eat most meals at your **mess**. When you want a change, there is a surprising number of

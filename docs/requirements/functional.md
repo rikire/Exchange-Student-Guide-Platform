@@ -972,7 +972,7 @@ THEN it is shown full screen
 
 ### FR-033 — Browsing every article
 
-**Status:** planned
+**Status:** done
 **Priority:** could
 
 When a reader opens the list of all articles, the system shall show every published article, 50 to a
@@ -1004,13 +1004,14 @@ THEN the list says no article carries it, and offers the full list
 
 ### FR-034 — Counting an article's views
 
-**Status:** planned
+**Status:** done
 **Priority:** could
 
 When a reader opens an article's page and it answers 200, the system shall add one to the article's
 view count. With no accounts (CON-001), a repeated view counts again; a signed-in moderator's view
-does not count. The count orders FR-033's list, is not shown on any page, and is not exported: it is
-not content (ADR-0007). Asked for by the human on 1 Oct, with its schema change in
+does not count. The count orders FR-033's list and is not shown on any page. It travels with the
+article in an export and back in an import, so moving the guide to another host does not reset it
+(the human, 1 Oct). Asked for by the human on 1 Oct, with its schema change in
 [ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md).
 
 **Acceptance criteria:**

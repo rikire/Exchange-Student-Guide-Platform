@@ -5,6 +5,7 @@ tags: [fees, admin]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 151
 ---
 
 Once you've joined the Institute, there's one more administrative step before you're fully settled:

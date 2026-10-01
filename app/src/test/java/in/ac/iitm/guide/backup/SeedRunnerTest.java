@@ -45,6 +45,15 @@ class SeedRunnerTest {
     }
 
     @Test
+    // trace:FR-034
+    void the_seed_gives_the_articles_view_counts_frro_most_of_all() {
+        var mostViewed =
+                jdbc.queryForObject("SELECT title FROM article ORDER BY view_count DESC LIMIT 1", String.class);
+
+        assertThat(mostViewed).isEqualTo("Registering with FRRO");
+    }
+
+    @Test
     // trace:NFR-004
     void running_the_seed_again_adds_nothing() {
         var before = jdbc.queryForObject("SELECT count(*) FROM article", Integer.class);

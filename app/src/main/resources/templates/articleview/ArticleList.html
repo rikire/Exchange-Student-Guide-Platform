@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>All articles — Exchange Student Guide</title>
+</head>
+<body>
+  <!-- FR-033: every published article, 50 to a page, in the order and with the tag the address names. -->
+  <!-- trace:FR-033 -->
+  <main class="site-main">
+    <h1 class="article-title">All articles</h1>
+
+    <nav class="chip-row" aria-label="Order">
+      <span class="field-label">Order:</span>
+      <th:block th:each="order : ${orders}">
+        <a class="chip chip-link" th:if="${!order.current}" th:href="@{${order.href}}" th:text="${order.label}">Most viewed</a>
+        <span class="chip" th:if="${order.current}" aria-current="true" th:text="${order.label}">A–Z</span>
+      </th:block>
+    </nav>
+
+    <nav class="chip-row" aria-label="Tag" th:if="${!tags.isEmpty()}">
+      <span class="field-label">Tag:</span>
+      <a class="chip chip-link" th:if="${tag != null}" th:href="@{${allTags}}">All</a>
+      <span class="chip" th:if="${tag == null}" aria-current="true">All</span>
+      <th:block th:each="choice : ${tags}">
+        <a class="chip chip-link" th:if="${!choice.current}" th:href="@{${choice.href}}" th:text="${choice.label}">visa</a>
+        <span class="chip" th:if="${choice.current}" aria-current="true" th:text="${choice.label}">visa</span>
+      </th:block>
+    </nav>
+
+    <p class="empty-note" th:if="${tagUnknown}">No published article carries this tag. <a th:href="@{/articles}">See all articles</a></p>
+    <p class="empty-note" th:if="${!tagUnknown && total == 0}">No articles yet.</p>
+    <p class="results-meta" th:if="${total > 0}" th:text="${total} + (${total} == 1 ? ' article' : ' articles')">36 articles</p>
+
+    <div class="card-grid" th:if="${!cards.isEmpty()}">
+      <article class="article-card" th:each="card : ${cards}">
+        <h2 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Registering with FRRO</a></h2>
+        <p class="article-card-summary" th:text="${card.summary}">Summary</p>
+        <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
+          <li class="chip" th:classappend="${t.path} ? 'chip-link'" th:each="t : ${card.tags}"><a th:if="${t.path}" th:href="@{${t.path}}" th:text="${t.name}">tag</a><th:block th:unless="${t.path}" th:text="${t.name}">tag</th:block></li>
+        </ul>
+        <p class="article-card-meta">Updated <relative-time lang="en-GB" hour-cycle="h23" year="numeric" th:datetime="${card.updatedAt}" th:text="${card.updated}">28 Sep 2026</relative-time></p>
+      </article>
+    </div>
+
+    <nav class="button-row" aria-label="Pages" th:if="${pages > 1}">
+      <a th:if="${previous}" th:href="@{${previous}}" rel="prev">← Previous</a>
+      <span th:text="'Page ' + ${page} + ' of ' + ${pages}">Page 1 of 2</span>
+      <a th:if="${next}" th:href="@{${next}}" rel="next">Next →</a>
+    </nav>
+    <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
+  </main>
+</body>
+</html>

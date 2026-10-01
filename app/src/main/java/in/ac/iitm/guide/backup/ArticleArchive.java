@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,12 +84,30 @@ public class ArticleArchive {
             article.setPublishedAt(parsed.created());
             article.setUpdatedAt(parsed.updated());
             article.setPinnedAt(parsed.pinned());
+            article.setPinPosition(parsed.pin());
+            article.setViewCount(parsed.views());
             article.setTags(tagsNamed(file.getKey(), parsed.tags()));
             articles.save(article);
             events.publishEvent(new ArticleTextChanged(article.getId()));
             imported++;
         }
+        numberThePinned();
         return new ImportReport(imported, List.copyOf(skipped));
+    }
+
+    /**
+     * FR-025: the pinned articles numbered 1, 2, 3 in their order — a place given by {@code pin} first,
+     * then those without one, most recently pinned first, as the landing page ordered them before V8
+     * (ADR-0021). An import may add places that repeat or leave gaps; this closes them.
+     */
+    private void numberThePinned() {
+        // Sorted here: Hibernate does not apply NULLS LAST to a derived query, and the pinned are few.
+        var pinned = articles.findByPinnedAtIsNotNullAndRemovedAtIsNull(Sort.by(Sort.Order.desc("pinnedAt"))).stream()
+                .sorted(Comparator.comparing(Article::getPinPosition, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+        for (var i = 0; i < pinned.size(); i++) {
+            pinned.get(i).setPinPosition(i + 1);
+        }
     }
 
     /**
@@ -148,6 +167,8 @@ public class ArticleArchive {
                 article.getPublishedAt(),
                 article.getUpdatedAt(),
                 article.getPinnedAt(),
+                article.getPinPosition(),
+                article.getViewCount(),
                 article.getBody());
     }
 

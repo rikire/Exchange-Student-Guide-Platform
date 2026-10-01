@@ -5,6 +5,7 @@ tags: [chennai, city, culture, weekend]
 author: abdirakhim
 created: 2026-09-30
 updated: 2026-09-30
+views: 89
 ---
 
 Welcome to Chennai. It is the capital of the state of Tamil Nadu, it sits on the Bay of Bengal, and

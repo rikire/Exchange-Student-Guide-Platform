@@ -5,6 +5,7 @@ tags: [academics, courses, language]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 22
 ---
 
 Alongside the engineering departments and schools in [[Choosing a Department or School]], IIT Madras

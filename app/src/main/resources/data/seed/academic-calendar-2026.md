@@ -5,6 +5,7 @@ tags: [academics, calendar]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 174
 ---
 
 The two semester windows for 2026, exactly as OGE publishes them:

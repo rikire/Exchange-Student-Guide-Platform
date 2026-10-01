@@ -5,6 +5,7 @@ tags: [money, campus, banking]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 262
 ---
 
 You don't have to leave campus for cash: there are **two banks and several ATMs** inside. Locations

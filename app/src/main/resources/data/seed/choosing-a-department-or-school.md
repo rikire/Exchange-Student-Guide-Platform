@@ -5,6 +5,7 @@ tags: [academics, courses]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 9
 ---
 
 Before you go anywhere near [[Selecting Courses on the SSP Portal]], it helps to know the actual

@@ -5,6 +5,7 @@ tags: [academics, courses, ssp]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 140
 ---
 
 Once you're inside [[Selecting Courses on the SSP Portal]], your level of study changes what happens

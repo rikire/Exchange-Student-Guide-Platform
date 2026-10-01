@@ -123,6 +123,20 @@ class PageQueryCountTest {
         assertSelectCount(baseline);
     }
 
+    @Test
+    // trace:FR-033
+    void the_list_of_every_article_runs_the_same_queries_for_two_articles_or_forty() throws Exception {
+        seedLanding(0, 2);
+        var baseline = selectsFor("/articles?sort=views");
+        assertThat(baseline).as("SELECTs of a list of two articles").isPositive();
+
+        clearTheDatabase();
+        seedLanding(0, 40);
+        reset();
+        mockMvc.perform(get("/articles?sort=views")).andExpect(status().isOk());
+        assertSelectCount(baseline);
+    }
+
     private long selectsFor(String path) throws Exception {
         reset();
         mockMvc.perform(get(path)).andExpect(status().isOk());

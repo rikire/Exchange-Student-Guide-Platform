@@ -5,6 +5,7 @@ tags: [academics, attendance]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 121
 ---
 
 Attendance at IIT Madras is graded on its own scale, separate from

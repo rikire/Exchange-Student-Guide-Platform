@@ -5,6 +5,7 @@ tags: [day-trip, heritage, beach, weekend, history]
 author: abdirakhim
 created: 2026-09-30
 updated: 2026-09-30
+views: 33
 ---
 
 If you make one trip out of Chennai during your semester, make it this one. **Mahabalipuram**

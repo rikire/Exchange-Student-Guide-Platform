@@ -5,6 +5,7 @@ tags: [beach, chennai, weekend, outdoors]
 author: abdirakhim
 created: 2026-09-30
 updated: 2026-09-30
+views: 38
 ---
 
 Chennai lies along the Bay of Bengal, and its beaches are where the whole city comes to breathe in

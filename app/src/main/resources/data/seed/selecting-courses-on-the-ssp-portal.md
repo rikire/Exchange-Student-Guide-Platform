@@ -5,6 +5,7 @@ tags: [academics, courses, ssp]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 186
 ---
 
 This is Phase 2 of [[The Application Roadmap, at a Glance]] — choosing and locking in what you'll

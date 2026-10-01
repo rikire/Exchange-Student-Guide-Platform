@@ -5,6 +5,7 @@ tags: [academics, credits]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 104
 ---
 
 Before you finalize anything in [[Selecting Courses on the SSP Portal]], understand what a "credit"

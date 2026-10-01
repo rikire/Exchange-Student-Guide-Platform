@@ -245,6 +245,61 @@ class ArticleArchiveTest {
         assertThat(Files.readString(directory.resolve("departure.md"))).doesNotContain("pinned");
     }
 
+    @Test
+    // trace:FR-034
+    void a_views_key_gives_the_article_that_many_views_and_a_file_without_one_none() {
+        archive.importFiles(Map.of(
+                "a.md",
+                article("Arrival", "tags: []", "Text.\n")
+                        .replace("updated: 2026-09-21\n", "updated: 2026-09-21\nviews: 128\n"),
+                "b.md",
+                article("Departure", "tags: []", "Text.\n")));
+
+        assertThat(views("arrival")).isEqualTo(128);
+        assertThat(views("departure")).isZero();
+    }
+
+    @Test
+    // trace:FR-034
+    void an_article_with_views_is_exported_with_them_and_one_without_is_not() throws Exception {
+        archive.importFiles(Map.of(
+                "a.md",
+                article("Arrival", "tags: []", "Text.\n")
+                        .replace("updated: 2026-09-21\n", "updated: 2026-09-21\nviews: 128\n"),
+                "b.md",
+                article("Departure", "tags: []", "Text.\n")));
+
+        archive.exportTo(directory);
+
+        assertThat(Files.readString(directory.resolve("arrival.md"))).contains("views: 128\n");
+        assertThat(Files.readString(directory.resolve("departure.md"))).doesNotContain("views");
+    }
+
+    @Test
+    // trace:FR-025
+    void pin_keys_set_the_pinned_order_and_a_pinned_file_without_one_goes_after_them() {
+        archive.importFiles(Map.of(
+                "a.md", pinned("Arrival", "2026-09-22", "pin: 2\n"),
+                "b.md", pinned("Banks", "2026-09-23", "pin: 1\n"),
+                "c.md", pinned("Campus", "2026-09-24", "")));
+
+        assertThat(jdbc.queryForList(
+                        "SELECT slug FROM article WHERE pinned_at IS NOT NULL ORDER BY pin_position", String.class))
+                .containsExactly("banks", "arrival", "campus");
+        assertThat(jdbc.queryForList("SELECT pin_position FROM article ORDER BY pin_position", Integer.class))
+                .containsExactly(1, 2, 3);
+    }
+
+    @Test
+    // trace:FR-025
+    void a_pinned_article_is_exported_with_its_place() throws Exception {
+        archive.importFiles(Map.of("a.md", pinned("Arrival", "2026-09-22", "pin: 1\n")));
+
+        archive.exportTo(directory);
+
+        assertThat(Files.readString(directory.resolve("arrival.md"))).contains("pin: 1\n");
+    }
+
     @ParameterizedTest(name = "{0}")
     @MethodSource("filesThatCannotBecomeArticles")
     // trace:NFR-004
@@ -286,6 +341,21 @@ class ArticleArchiveTest {
                 Arguments.of("tags that are not a list", article("Arrival", "tags: visa", "Text.\n"), "tags"),
                 Arguments.of("an empty tag", article("Arrival", "tags: [\" \"]", "Text.\n"), "tag is empty"),
                 Arguments.of("an empty body", article("Arrival", "tags: []", ""), "body"),
+                Arguments.of(
+                        "a views count that is not a whole number",
+                        article("Arrival", "tags: []", "Text.\n")
+                                .replace("updated: 2026-09-21\n", "updated: 2026-09-21\nviews: many\n"),
+                        "views"),
+                Arguments.of(
+                        "a negative views count",
+                        article("Arrival", "tags: []", "Text.\n")
+                                .replace("updated: 2026-09-21\n", "updated: 2026-09-21\nviews: -1\n"),
+                        "views"),
+                Arguments.of(
+                        "a place in the pinned order on an article that is not pinned",
+                        article("Arrival", "tags: []", "Text.\n")
+                                .replace("updated: 2026-09-21\n", "updated: 2026-09-21\npin: 1\n"),
+                        "pin"),
                 Arguments.of(
                         "a pinned time that is not a date",
                         article("Arrival", "tags: []", "Text.\n")
@@ -389,7 +459,9 @@ class ArticleArchiveTest {
         files.put(
                 "pinned.md",
                 full("Pinned Guide", "Pinned to the landing page.", "[]", "2026-09-29", "Text.\n")
-                        .replace("updated: 2026-09-29\n", "updated: 2026-09-29\npinned: 2026-09-30T09:30:00.500Z\n"));
+                        .replace(
+                                "updated: 2026-09-29\n",
+                                "updated: 2026-09-29\npinned: 2026-09-30T09:30:00.500Z\npin: 1\nviews: 42\n"));
         files.put("yes.md", full("Yes", "A title YAML would read as a boolean.", "[]", "2026-09-27", "Text.\n"));
         archive.importFiles(files);
         var before = snapshot();
@@ -467,8 +539,8 @@ class ArticleArchiveTest {
                         .computeIfAbsent(row.getString(1), slug -> new ArrayList<>())
                         .add(row.getString(2)));
         return jdbc.query(
-                "SELECT a.title, a.slug, a.summary, a.body, a.published_at, a.updated_at, a.pinned_at"
-                        + " FROM article a ORDER BY a.slug",
+                "SELECT a.title, a.slug, a.summary, a.body, a.published_at, a.updated_at, a.pinned_at,"
+                        + " a.pin_position, a.view_count FROM article a ORDER BY a.slug",
                 (row, i) -> String.join(
                         "|",
                         row.getString(1),
@@ -481,7 +553,18 @@ class ArticleArchiveTest {
                                 row.getObject(7, OffsetDateTime.class) == null
                                         ? "not pinned"
                                         : row.getObject(7, OffsetDateTime.class).toInstant()),
+                        String.valueOf(row.getObject(8)),
+                        String.valueOf(row.getLong(9)),
                         String.join(",", tagsBySlug.getOrDefault(row.getString(2), List.of()))));
+    }
+
+    private long views(String slug) {
+        return jdbc.queryForObject("SELECT view_count FROM article WHERE slug = ?", Long.class, slug);
+    }
+
+    private static String pinned(String title, String date, String pinLine) {
+        return article(title, "tags: []", "Text.\n")
+                .replace("updated: 2026-09-21\n", "updated: 2026-09-21\npinned: " + date + "\n" + pinLine);
     }
 
     private static String article(String title, String tagsLine, String body) {

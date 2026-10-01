@@ -240,6 +240,15 @@ The landing page shows the twelve newest; the other 24 are reachable only by sea
   FR-025 built: a moderator's screen to pin and unpin articles, so OGE puts *Registering with FRRO*
   first. FR-025 is a `could` planned for phase 4; building it now moves it, which the roadmap records.
 - **Check:** every published article is reachable in two clicks from `/`.
+- **Widened 1 Oct by the human:**
+  - FR-033: the list ordered by title, update or views, and narrowed to a tag.
+  - FR-034: each article's views.
+  - FR-025: the pinned order set by hand.
+  - V8, under ADR-0021.
+- **List and views done 1 Oct:** [FEAT-018](../features/FEAT-018-every-article-and-its-views.md),
+  `GET /articles`, linked from the landing page, which meets the check above. The seed carries
+  made-up `views`. Still to do: the moderator's screen to pin, unpin and order (FR-025), and FRRO
+  pinned in the seed.
 
 ### 2.3 The moderator's own frame (F-24, F-15)
 

@@ -1,10 +1,12 @@
 package in.ac.iitm.guide.backup.persistence;
 
 import in.ac.iitm.guide.shared.persistence.Article;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.Repository;
 
 /**
@@ -20,4 +22,7 @@ public interface ArchiveArticleRepository extends Repository<Article, UUID> {
     Article save(Article article);
 
     Slice<Article> findByRemovedAtIsNull(Pageable page);
+
+    /** FR-025: the live pinned articles, in the order the caller's {@link Sort} sets. */
+    List<Article> findByPinnedAtIsNotNullAndRemovedAtIsNull(Sort sort);
 }

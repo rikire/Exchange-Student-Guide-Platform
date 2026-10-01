@@ -5,6 +5,7 @@ tags: [campus, orientation]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 132
 ---
 
 IIT Madras covers **632 acres (250 hectares)** of forest, with a lake, and people give directions by

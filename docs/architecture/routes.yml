@@ -5,6 +5,23 @@
 
 routes:
   - methods: [GET]
+    path: /articles
+    slice: articleview
+    status: built
+    template: >-
+      `articleview/ArticleList.html`
+    fields: >-
+      `sort` (optional: `title`, the default, `updated` or `views`); `tag` (optional, a tag's address
+      as on `/tags/{tag}`); `page` (optional, from 1)
+    responses: >-
+      `200` with up to 50 published articles in that order, and with a tag no published article
+      carries a note and a link to the full list; `400` for any other `sort` or a `page` below 1;
+      `404` for a page past the last; the landing page links here
+    serves: >-
+      FR-033: every article, not only the landing page's newest twelve (walkthrough F-7); `views`
+      orders by FR-034's count
+
+  - methods: [GET]
     path: /articles/{title}
     slice: articleview
     status: built
@@ -22,7 +39,8 @@ routes:
       PDF" control, which `/js/print.js` turns into the browser's print, and print styles leave the
       site out; `ArticleController` serves it, so the anchor is there. A signed-in moderator also
       sees "Remove this article", leading to FR-026's confirmation. FR-006: below the text, "What
-      links here" lists up to 50 live articles linking to this one, from `backlink` (ADR-0016). FR-032: every photo on the page, in the text or attached, opens full screen in PhotoSwipe (ADR-0018)
+      links here" lists up to 50 live articles linking to this one, from `backlink` (ADR-0016). FR-034:
+      a `200` to anyone but the signed-in moderator adds one view, so this `GET` writes (ADR-0021). FR-032: every photo on the page, in the text or attached, opens full screen in PhotoSwipe (ADR-0018)
 
   - methods: [GET]
     path: /

@@ -64,6 +64,17 @@ public class Article {
     @Column(name = "removed_at")
     private OffsetDateTime removedAt;
 
+    /** FR-025: the place in the pinned section, from 1; null when not pinned (V8, ADR-0021). */
+    @Column(name = "pin_position")
+    private Integer pinPosition;
+
+    /**
+     * FR-034: set when an article is created (by the import, from {@code views}) and afterwards only by
+     * an atomic update; not updatable through the entity, so saving an article never overwrites a count.
+     */
+    @Column(name = "view_count", nullable = false, updatable = false)
+    private long viewCount;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "article_tag",
@@ -137,6 +148,23 @@ public class Article {
 
     public void setRemovedAt(OffsetDateTime removedAt) {
         this.removedAt = removedAt;
+    }
+
+    public Integer getPinPosition() {
+        return pinPosition;
+    }
+
+    public void setPinPosition(Integer pinPosition) {
+        this.pinPosition = pinPosition;
+    }
+
+    public long getViewCount() {
+        return viewCount;
+    }
+
+    /** Takes effect only before the article is first saved: the column is not updatable. */
+    public void setViewCount(long viewCount) {
+        this.viewCount = viewCount;
     }
 
     public Set<Tag> getTags() {

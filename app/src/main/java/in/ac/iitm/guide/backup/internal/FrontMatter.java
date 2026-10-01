@@ -29,7 +29,7 @@ public final class FrontMatter {
      * and dropped rather than rejected — the seed files carry it and the archive does not.
      */
     private static final Set<String> KEYS =
-            Set.of("title", "summary", "tags", "author", "created", "updated", "pinned");
+            Set.of("title", "summary", "tags", "author", "created", "updated", "pinned", "pin", "views");
 
     private static final Pattern FILE =
             Pattern.compile("\\A---\\R(?<yaml>.*?)\\R---(?:\\R|\\z)(?<rest>.*)\\z", Pattern.DOTALL);
@@ -58,13 +58,24 @@ public final class FrontMatter {
         if (body.isBlank()) {
             throw new ArchiveFormatException(fileName + ": the body is empty");
         }
+        var pinned = fields.get("pinned") == null ? null : date(fileName, fields, "pinned");
+        Integer pin = null;
+        if (fields.get("pin") != null) {
+            if (pinned == null) {
+                throw new ArchiveFormatException(
+                        fileName + ": \"pin\" is a place among pinned articles, and this one has no \"pinned\"");
+            }
+            pin = (int) whole(fileName, fields, "pin", 1);
+        }
         return new ArchivedArticle(
                 title,
                 text(fileName, fields, "summary"),
                 tags(fileName, fields.get("tags")),
                 date(fileName, fields, "created"),
                 date(fileName, fields, "updated"),
-                fields.get("pinned") == null ? null : date(fileName, fields, "pinned"),
+                pinned,
+                pin,
+                fields.get("views") == null ? 0 : whole(fileName, fields, "views", 0),
                 body);
     }
 
@@ -81,6 +92,12 @@ public final class FrontMatter {
         fields.put("updated", Date.from(article.updated().toInstant()));
         if (article.pinned() != null) {
             fields.put("pinned", Date.from(article.pinned().toInstant()));
+        }
+        if (article.pin() != null) {
+            fields.put("pin", article.pin());
+        }
+        if (article.views() > 0) {
+            fields.put("views", article.views());
         }
         var options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -136,6 +153,15 @@ public final class FrontMatter {
             tags.add(tag);
         }
         return tags;
+    }
+
+    private static long whole(String fileName, Map<String, Object> fields, String key, long least) {
+        var value = fields.get(key);
+        if (!(value instanceof Integer || value instanceof Long) || ((Number) value).longValue() < least) {
+            throw new ArchiveFormatException(
+                    fileName + ": \"" + key + "\" must be a whole number of at least " + least + ", not " + value);
+        }
+        return ((Number) value).longValue();
     }
 
     private static OffsetDateTime date(String fileName, Map<String, Object> fields, String key) {

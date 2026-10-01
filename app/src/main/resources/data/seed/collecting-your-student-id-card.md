@@ -5,6 +5,7 @@ tags: [admin, arrival, id-card]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 240
 ---
 
 Your student ID card is not a formality — it's what gets you past the gate, into the library, and

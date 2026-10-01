@@ -5,6 +5,7 @@ tags: [visa, admin, sii]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 113
 ---
 
 Study in India (SII) is the Government of India's national portal for foreign students — run by the

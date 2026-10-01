@@ -1,6 +1,7 @@
 package in.ac.iitm.guide.articleview.web;
 
 import in.ac.iitm.guide.articleview.persistence.ArticleReadRepository;
+import in.ac.iitm.guide.articleview.persistence.ArticleViewRepository;
 import in.ac.iitm.guide.backlink.Backlinks;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.MediaItem;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 // trace:FR-030
 // trace:FR-026
 // trace:FR-006
+// trace:FR-034
 @Controller
 class ArticleController {
 
@@ -33,13 +35,16 @@ class ArticleController {
     private static final String MODERATOR = "MODERATOR";
 
     private final ArticleReadRepository articles;
+    private final ArticleViewRepository views;
     private final MediaAssets media;
     private final Backlinks backlinks;
 
     private final WikiLinkRenderer renderer = new WikiLinkRenderer();
 
-    ArticleController(ArticleReadRepository articles, MediaAssets media, Backlinks backlinks) {
+    ArticleController(
+            ArticleReadRepository articles, ArticleViewRepository views, MediaAssets media, Backlinks backlinks) {
         this.articles = articles;
+        this.views = views;
         this.media = media;
         this.backlinks = backlinks;
     }
@@ -65,6 +70,10 @@ class ArticleController {
                                 ? "/moderate/articles/" + article.getSlug() + "/remove"
                                 : null));
         model.addAttribute("backlinks", backlinks.linkingTo(article.getId()));
+        // FR-034: the office checking its own guide is not a reader.
+        if (!request.isUserInRole(MODERATOR)) {
+            views.countView(article.getId());
+        }
         return "articleview/Article";
     }
 

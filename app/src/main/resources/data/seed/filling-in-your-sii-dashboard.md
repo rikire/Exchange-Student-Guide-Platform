@@ -5,6 +5,7 @@ tags: [visa, admin, sii]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 55
 ---
 
 Once you're logged in after [[Registering on the SII Portal]], the dashboard shows your Application

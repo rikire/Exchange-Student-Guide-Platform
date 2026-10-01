@@ -5,6 +5,7 @@ tags: [festivals, culture, india, chennai, holidays]
 author: abdirakhim
 created: 2026-09-30
 updated: 2026-09-30
+views: 43
 ---
 
 India has a festival for almost every season, and in Chennai you are likely to be invited into at

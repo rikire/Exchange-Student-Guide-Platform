@@ -12,9 +12,9 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 
 ```mermaid
 pie showData title Requirements by status
-    "done" : 28
+    "done" : 30
     "in-progress" : 3
-    "planned" : 11
+    "planned" : 9
 ```
 
 Each slice with the requirements its features cover: green when all are done, amber when
@@ -23,7 +23,7 @@ The arrows are the dependencies Spring Modulith read from the code (`app/target/
 
 ```mermaid
 flowchart LR
-    articleview["articleview · 4/5 done"]:::partial
+    articleview["articleview · 6/7 done"]:::partial
     backlink["backlink · 1/1 done"]:::done
     backup["backup · 1/2 done"]:::partial
     contribute["contribute · 7/8 done"]:::partial
@@ -34,9 +34,10 @@ flowchart LR
     shared["shared · 2/2 done"]:::done
     taxonomy["taxonomy · 2/2 done"]:::done
     wikilink["wikilink · 2/2 done"]:::done
-    unmapped["no feature yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, FR-033, FR-034, NFR-003"]:::unmapped
+    unmapped["no feature yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, NFR-003"]:::unmapped
     articleview --> backlink
     articleview --> media
+    articleview --> shared
     articleview --> taxonomy
     articleview --> wikilink
     backlink --> shared
@@ -68,7 +69,7 @@ flowchart LR
 
 | Slice | Requirements covered | Done | State |
 |---|---|---|---|
-| articleview | 5 | 4 | partial |
+| articleview | 7 | 6 | partial |
 | backlink | 1 | 1 | done |
 | backup | 2 | 1 | partial |
 | contribute | 8 | 7 | partial |
@@ -80,7 +81,7 @@ flowchart LR
 | taxonomy | 2 | 2 | done |
 | wikilink | 2 | 2 | done |
 
-No feature covers yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, FR-033, FR-034, NFR-003.
+No feature covers yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, NFR-003.
 
 ## Requirements not done
 
@@ -97,10 +98,8 @@ real figure can only be higher.
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
 | FR-024 | planned | could | Editing an article directly | 4 | 0 | 4 |
-| FR-025 | planned | could | Editing the homepage's pinned articles | 4 | 0 | 4 |
+| FR-025 | planned | could | Editing the homepage's pinned articles | 4 | 2 | 2 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
-| FR-033 | planned | could | Browsing every article | 4 | 0 | 4 |
-| FR-034 | planned | could | Counting an article's views | 3 | 0 | 3 |
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
 | NFR-004 | in-progress |  | Exportability | 0 | 26 | 0 |
 

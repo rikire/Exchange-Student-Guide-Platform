@@ -5,6 +5,7 @@ tags: [admission, visa, admin]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 75
 ---
 
 This is Phase 1 of [[The Application Roadmap, at a Glance]], and nothing else in the process starts

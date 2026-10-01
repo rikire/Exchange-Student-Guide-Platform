@@ -313,6 +313,8 @@ design pass (3) is the largest piece and starts with redrawn screens.
       and FR-034 (an article's views, counted except the moderator's). Schema in
       [ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md), migration V8.
       — check: each criterion of FR-025, FR-033 and FR-034 a test, red first
+      **FR-033 and FR-034 done 1 Oct:** [FEAT-018](../features/FEAT-018-every-article-and-its-views.md).
+      FR-025's screen is next.
       — owner: **Mikhail**
 - [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
       — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark

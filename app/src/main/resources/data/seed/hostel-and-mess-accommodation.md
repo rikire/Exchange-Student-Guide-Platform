@@ -5,6 +5,7 @@ tags: [hostel, admin, accommodation]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 304
 ---
 
 OGE's brochure is direct about accommodation, in a way worth quoting rather than softening: **"Hostel

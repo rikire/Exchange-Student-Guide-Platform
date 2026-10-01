@@ -5,6 +5,7 @@ tags: [health, wellness, insurance]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 163
 ---
 
 Before you need them, know two places on campus: the **Institute Hospital** for physical health and

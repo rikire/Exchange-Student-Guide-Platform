@@ -5,6 +5,7 @@ tags: [safety, wellness, contacts]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 82
 ---
 
 You should never need this article, but you should know it exists. Everything here is from OGE's

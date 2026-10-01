@@ -5,6 +5,7 @@ tags: [visa, admin, frro, arrival]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-28
+views: 412
 ---
 
 If you're reading this because you just landed in Chennai: the clock is already running. You have

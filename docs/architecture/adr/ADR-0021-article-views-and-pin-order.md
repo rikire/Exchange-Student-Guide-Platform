@@ -38,7 +38,12 @@ What counts as a view, and why:
 - **Every `200` of the article page counts, except the signed-in moderator's.** There are no
   accounts (CON-001), so one reader cannot be told from another. Bots and reloads count too; for
   ordering a guide's own list that is good enough, and nothing public shows the number.
-- **Neither column is exported or imported.** Neither is content (ADR-0007).
+- **Both travel in the export and the import**, as `views` and `pin` in front matter (the human,
+  1 Oct). ADR-0007 keeps the export to the knowledge base rather than the database, and tag visits
+  stayed out on that ground. But an export is also how OGE would move the guide to another host, and
+  a move that resets the "most viewed" order and the pinned order loses what the office set up. A
+  file without the keys has no views and is not pinned. The seed uses `views` to give a fresh stand an
+  order to show.
 
 ## Consequences
 
@@ -50,8 +55,9 @@ What counts as a view, and why:
 **Bad:**
 - Every article read becomes a write. It is one row update, and it is only the article page.
 - A crawler can lift an article up the "most viewed" order.
-- A restore from an export starts every count at zero, and numbers the pinned articles by their
-  `pinned` dates.
+- The view count changes with every read, so two exports a day apart differ in the files of every
+  article read in between, even with no text changed.
+- Tag visits (ADR-0017) still do not travel: a tag has no file of its own.
 
 **Reversal:** drop the two columns in a migration. The list then offers only title and updated
 order, and the pinned section goes back to `pinned_at` order. Reconsider the counting if the order

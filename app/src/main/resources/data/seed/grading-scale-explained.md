@@ -5,6 +5,7 @@ tags: [academics, grading]
 author: abdirakhim
 created: 2026-09-21
 updated: 2026-09-21
+views: 96
 ---
 
 IIT Madras uses a letter-grade system, not a simple percentage or a US-style A–F scale. Here's the

@@ -5,6 +5,7 @@ tags: [arrival, admin, frro, onboarding]
 author: abdirakhim
 created: 2026-09-28
 updated: 2026-09-28
+views: 388
 ---
 
 Arriving on campus starts a short chain of formalities. Most of them are immigration paperwork that
