@@ -59,6 +59,12 @@ is UTC. A submission sent at 17:28 in Chennai shows "11:58".
   queue (`1 Oct 2026, 17:28 IST`) and the tag page's dates; `guide.time-zone` in `application.yml`,
   `GUIDE_TIMEZONE` in `docker-compose.yml` and `.env.example`. The status page (2.4) and the article
   page (3.5) use it when they show a date.
+- **Changed 1 Oct by the human: each reader sees their own zone**
+  ([ADR-0020](../architecture/adr/ADR-0020-times-in-the-readers-own-zone.md)). The queue and the tag
+  page wrap each time in `<relative-time>` (GitHub's element, from a WebJar deployed for it on 1 Oct,
+  through `shared/web/LocalTime.html`). The queue reads "2 hours ago"; "Updated" is relative within
+  30 days and a date after; the full local time is on hover. `DisplayTime`'s IST text stays inside as
+  the fallback without scripts. `BrowserLocalTimeTest` checks it in Moscow with a stopped clock.
 
 ### 1.4 A real MP4 refused (F-28)
 

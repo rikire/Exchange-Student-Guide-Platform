@@ -17,6 +17,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/RejectionRefusedException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/TextDiff.java
   - app/src/main/java/in/ac/iitm/guide/shared/web/DisplayTime.java
+  - app/src/main/resources/templates/shared/web/LocalTime.html
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateSubmissionRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/RevisionRepository.java
@@ -29,6 +30,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/internal/TextDiffTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/web/DisplayTimeTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLocalTimeTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepositoryTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginWithoutHashTest.java
@@ -88,6 +90,9 @@ Confirmed by the human on 28 Sep with the contract for this step (prompt journal
 - **The queue shows when a submission was sent in the office's time zone**, with its label
   (`1 Oct 2026, 17:28 IST`), from the `guide.time-zone` setting through `shared/web/DisplayTime`
   (walkthrough F-23, 1 Oct; it showed the stored UTC until then).
+  In a browser with scripts the reader sees it in their own zone, relative while recent, the full
+  local time on hover; the IST text is the fallback
+  ([ADR-0020](../architecture/adr/ADR-0020-times-in-the-readers-own-zone.md), 1 Oct).
 - **The approval keeps the contributor's limits**: a summary over 300 characters
   (`Article.LONGEST_SUMMARY`) or more than 10 tags is refused with `422` on the review page (1 Oct,
   walkthrough F-32 and F-33).

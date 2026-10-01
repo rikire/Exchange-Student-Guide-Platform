@@ -73,6 +73,7 @@ public class TagBrowseService {
                 article.getTitle(),
                 article.getSummary(),
                 ArticleAddress.pathOf(article.getSlug()),
+                article.getUpdatedAt(),
                 displayTime.date(article.getUpdatedAt()));
     }
 }

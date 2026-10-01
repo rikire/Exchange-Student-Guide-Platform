@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- ADR-0020: a page that shows a time wraps it in <relative-time lang="en-GB" datetime="…">, with
+       DisplayTime's text inside as the fallback, and includes this. The element comes from its WebJar;
+       the version is the root pom's relative-time-element.version and has to change with it. A module
+       script, never inline: the Content-Security-Policy refuses anything else. -->
+  <th:block th:fragment="assets">
+    <script type="module" th:src="@{/webjars/github__relative-time-element/5.3.1/dist/bundle.js}"></script>
+  </th:block>
+</body>
+</html>

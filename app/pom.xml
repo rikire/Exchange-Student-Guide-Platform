@@ -67,6 +67,14 @@
       <version>${photoswipe.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- Times in the reader's own zone (ADR-0020): one ES module that registers <relative-time>, no
+         dependencies of its own. The WebJar was deployed from webjars.org on 1 Oct. -->
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>github__relative-time-element</artifactId>
+      <version>${relative-time-element.version}</version>
+      <scope>runtime</scope>
+    </dependency>
     <!-- The Markdown editor of FR-027 (ADR-0013). dist/easymde.min.js bundles CodeMirror, marked and
          the spell checker, so the WebJars it declares for them, by version range, are left out. -->
     <dependency>

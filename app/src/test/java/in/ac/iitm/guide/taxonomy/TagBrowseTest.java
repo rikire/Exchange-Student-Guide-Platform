@@ -193,7 +193,7 @@ class TagBrowseTest {
 
         var page = mockMvc.perform(get("/tags/visa")).andReturn().getResponse().getContentAsString();
 
-        assertThat(page).contains("Updated 1 Oct 2026");
+        assertThat(page).contains(">1 Oct 2026</relative-time>");
     }
 
     @Test
@@ -207,7 +207,7 @@ class TagBrowseTest {
                 .getResponse()
                 .getContentAsString();
 
-        assertThat(page).contains("Updated 28 Sep 2026");
+        assertThat(page).contains(">28 Sep 2026</relative-time>");
     }
 
     @Test

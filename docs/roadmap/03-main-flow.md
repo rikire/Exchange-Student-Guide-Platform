@@ -267,6 +267,9 @@ design pass (3) is the largest piece and starts with redrawn screens.
       **Done 1 Oct:** `shared/web/DisplayTime` (`shared` grown by the human's choice over a copy per
       slice) formats the queue's time and the tag page's date from `guide.time-zone`; red first in
       `ModerationFlowTest`, `TagBrowseTest` and `DisplayTimeTest`.
+      **Changed the same day by the human:** each reader sees their own zone, IST as the fallback
+      ([ADR-0020](../architecture/adr/ADR-0020-times-in-the-readers-own-zone.md), accepted),
+      `BrowserLocalTimeTest`.
 - [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: the common formats (MP4, MOV, WebM, MKV, AVI, 3GP, MPEG, OGG, WMV) as uploaded, no conversion; play on the site where the browser can, a download card otherwise; warn about location metadata
       — check: tests with `isom`, `mp42` and `qt` files
       — owner: **Mikhail**

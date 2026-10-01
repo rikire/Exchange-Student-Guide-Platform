@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.taxonomy.internal;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -9,6 +10,10 @@ import java.util.List;
  */
 public record TagPage(List<String> names, long total, List<Entry> entries) {
 
-    /** One article: enough to choose it, never its body. {@code updated} is already formatted. */
-    public record Entry(String title, String summary, String path, String updated) {}
+    /**
+     * One article: enough to choose it, never its body.
+     *
+     * @param updated {@code updatedAt} already formatted, the fallback a browser without scripts shows
+     */
+    public record Entry(String title, String summary, String path, OffsetDateTime updatedAt, String updated) {}
 }

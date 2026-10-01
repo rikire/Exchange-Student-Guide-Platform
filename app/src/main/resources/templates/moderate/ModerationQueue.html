@@ -20,11 +20,12 @@
           <td class="queue-number" th:text="${entry.number}">SUB-7QM2-K9XP-4TVB</td>
           <td><span class="chip" th:text="${entry.type.name() == 'EDIT'} ? 'Edit' : 'New article'">New article</span></td>
           <td th:text="${entry.title}">Getting a local SIM card</td>
-          <td><time th:datetime="${entry.submittedAt}" th:text="${entry.submitted}">28 Sep 2026, 10:00</time></td>
+          <td><relative-time lang="en-GB" hour-cycle="h23" th:datetime="${entry.submittedAt}" th:text="${entry.submitted}">28 Sep 2026, 10:00 IST</relative-time></td>
           <td><a th:href="@{/moderate/submissions/{number}(number=${entry.number})}">Review →</a></td>
         </tr>
       </tbody>
     </table>
+    <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
   </main>
 </body>
 </html>

@@ -14,6 +14,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/taxonomy/internal/TagBrowseService.java
   - app/src/main/java/in/ac/iitm/guide/taxonomy/internal/TagPage.java
   - app/src/main/java/in/ac/iitm/guide/shared/web/DisplayTime.java
+  - app/src/main/resources/templates/shared/web/LocalTime.html
   - app/src/main/java/in/ac/iitm/guide/taxonomy/persistence/TagBrowseRepository.java
   - app/src/main/resources/templates/taxonomy/TagBrowse.html
   - app/src/main/resources/templates/home/Landing.html
@@ -21,6 +22,7 @@ code:
   - app/src/main/resources/templates/search/SearchResults.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/taxonomy/TagBrowseTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLocalTimeTest.java
 ---
 
 # FEAT-008 — Browsing by tag
@@ -72,6 +74,9 @@ Confirmed by the human on 28 Sep (prompt journal, 28 Sep).
 - **Most recently updated first**, with the date; the first 50 and the total, no paging (ADR-0010's
   bounded page). The date is the day in the office's time zone (`shared/web/DisplayTime`, 1 Oct,
   walkthrough F-23), not the stored UTC one.
+  In a browser with scripts the reader sees it in their own zone, relative while recent, the full
+  local time on hover; the IST text is the fallback
+  ([ADR-0020](../architecture/adr/ADR-0020-times-in-the-readers-own-zone.md), 1 Oct).
 - **Every tag chip is a link**: on the landing page, on an article and on a search result.
 
 ## Acceptance criteria
