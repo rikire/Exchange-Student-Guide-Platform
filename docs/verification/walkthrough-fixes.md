@@ -28,6 +28,10 @@ students" — open questions for the authors, shown to every reader, *Registerin
 - **Check:** `grep -l "Needs checking" app/src/main/resources/data/seed/*.md` finds nothing; the stand
   is reset (`docker compose down -v`) so the published copies change too, since the seed skips
   articles that already exist.
+- **Done 1 Oct:** removed from 30 articles, the `## Photos` sections of six kept; the questions are
+  in [open-questions.md](../content/open-questions.md). `SeedRunnerTest`'s
+  `no_seeded_article_publishes_the_authors_open_questions` keeps it out of the seed. The stand reset
+  waits for section 4.
 
 ### 1.2 The wiki-link hint eaten by Thymeleaf (F-5)
 

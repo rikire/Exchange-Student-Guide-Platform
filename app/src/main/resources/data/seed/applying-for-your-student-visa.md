@@ -45,8 +45,3 @@ the portal separates these into distinct application paths.
 Getting the visa isn't the end — once you land, [[Registering with FRRO]] has its own 14-day clock,
 and you'll also need to [[Collecting Your Student ID Card|collect your student ID card]] within the
 window IIT Madras sets.
-
-## Needs checking with OGE before this goes in front of students
-
-- Typical visa processing time once the SII ID and final approval are in place, so students can plan
-  travel dates realistically.

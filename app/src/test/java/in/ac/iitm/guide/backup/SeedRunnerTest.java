@@ -39,6 +39,13 @@ class SeedRunnerTest {
 
     @Test
     // trace:NFR-004
+    void no_seeded_article_publishes_the_authors_open_questions() {
+        assertThat(jdbc.queryForList("SELECT title FROM article WHERE body LIKE '%## Needs checking%'", String.class))
+                .isEmpty();
+    }
+
+    @Test
+    // trace:NFR-004
     void running_the_seed_again_adds_nothing() {
         var before = jdbc.queryForObject("SELECT count(*) FROM article", Integer.class);
 

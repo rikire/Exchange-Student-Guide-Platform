@@ -61,12 +61,6 @@ slope, and a favourite spot for photographs.
 - **Stone carvers:** the town still has working sculptors, and you can watch them in their
   workshops along the main streets.
 
-## Needs checking before this goes in front of students
-
-- The current ASI ticket fee for foreign nationals, and whether one ticket covers both sites.
-- The time and fare by cab from campus.
-- Whether any bus from near campus runs to Mahabalipuram directly.
-
 ## Photos
 
 From Wikimedia Commons, under the licences named; resized for this guide.

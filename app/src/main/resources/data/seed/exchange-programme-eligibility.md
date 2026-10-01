@@ -28,10 +28,3 @@ This is the eligibility bar for the exchange programme as a whole. It does **not
 prerequisites — those are checked later, when your department reviews your course selections on the
 [[Selecting Courses on the SSP Portal|SSP portal]]. Clearing eligibility gets you into the process; it
 doesn't guarantee every course you want is open to you.
-
-## Needs checking with OGE before this goes in front of students
-
-- What "official partner institution" means precisely — is there a published list, and where does a
-  prospective student check it?
-- Whether there's a minimum GPA or standardised language-test score, or whether "meets the
-  requirements" is decided case-by-case by the receiving department.

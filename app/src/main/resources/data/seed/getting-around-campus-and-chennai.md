@@ -47,10 +47,3 @@ Route and timetable information:
 Auto-rickshaws and taxis are everywhere in Chennai. The apps **Ola, Uber and Namma Yatri** all work.
 They are also how most students get from the airport, see
 [[Getting from Chennai Airport to IIT Madras]].
-
-## Needs checking with OGE before this goes in front of students
-
-- The handbook gives the bus hours as 6:15 am–9:30 pm but also a last bus at 10:00 pm. Is the 10 pm
-  bus a separate late run?
-- Whether the campus bus is free, or needs the student ID card.
-- Whether the 15-minute interval holds at weekends and during vacations.

@@ -52,9 +52,3 @@ the main gate, Delhi Avenue and Bonn Avenue both lead here.
 - **Manohar C Watsa Stadium:** on Delhi Avenue.
 
 For moving between these, see [[Getting Around Campus and Chennai]].
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether OGE gives new students a campus map, and where to get one. The handbook describes places
-  but includes no map.
-- Which "registration" the handbook means at SAC, and whether exchange students attend it.

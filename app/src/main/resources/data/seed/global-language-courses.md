@@ -32,8 +32,3 @@ or to keep a language you've already started from lapsing. Note also
 you're admitted under*, not
 to these elective language courses — taking Japanese as an elective doesn't require you to already
 know Japanese.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether these courses have their own prerequisite levels (beginner vs. intermediate sections), and
-  how a student self-places into the right one.

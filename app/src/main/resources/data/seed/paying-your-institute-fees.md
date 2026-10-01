@@ -29,12 +29,3 @@ receipt in hand than by trying to recall a bank transaction.
 "Applicable semester and hostel fees" ties this directly to [[Hostel and Mess Accommodation]] — if
 you've been allotted a hostel room, its fee is paid through this same portal alongside your semester
 fee, not separately.
-
-## Needs checking with OGE before this goes in front of students
-
-- The actual fee amounts for semester and hostel charges — none are published in the source material
-  this guide was written from, and a specific number should come from OGE directly rather than be
-  estimated here.
-- The exact URL or name of the fee portal, and whether it's the same login as the SII or SSP systems
-  or a separate IIT Madras–only system.
-- Accepted payment methods (international card, wire transfer, etc.) for students paying from abroad.

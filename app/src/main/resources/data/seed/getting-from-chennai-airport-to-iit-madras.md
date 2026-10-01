@@ -48,11 +48,3 @@ luggage, so ask the cab to take you all the way in. The campus bus is described 
 [[Getting Around Campus and Chennai]].
 
 For where things are once you are inside, see [[Campus Landmarks You Need to Know]].
-
-## Needs checking with OGE before this goes in front of students
-
-- Which fare in the handbook's ₹400 / ₹550 / ₹600 figures belongs to which app. The handbook
-  shows the three numbers without saying.
-- Whether outside cabs may drive through the IN gate to the hostel zone, or whether students have
-  to change to the campus bus at the gate.
-- Whether OGE arranges any airport pickup for exchange students. The handbook mentions none.

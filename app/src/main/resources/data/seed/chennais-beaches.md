@@ -60,11 +60,6 @@ school with instructors on the ECR is the right place to do it.
   (fritters) by the sea is a Chennai ritual.
 - To get there and back: [[Getting Around Campus and Chennai]].
 
-## Needs checking before this goes in front of students
-
-- The time and fare from campus to Besant Nagar by auto and by cab.
-- Which surf schools on the ECR are established, and what a first lesson costs.
-
 ## Photos
 
 From Wikimedia Commons, under the licences named; resized for this guide.

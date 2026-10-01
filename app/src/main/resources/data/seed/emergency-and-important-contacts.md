@@ -52,10 +52,3 @@ The full campus directory is at [iitm.ac.in/directory](https://www.iitm.ac.in/di
 
 For health and counselling helplines, see [[Health Care and Wellness Support]]. For harassment or
 ragging, see [[Safety, Anti-Ragging and Making a Complaint]].
-
-## Needs checking with OGE before this goes in front of students
-
-- That the full numbers are right: the handbook gives only extensions plus the "044-2257-XXXX" rule.
-- Why these four hostels are listed: are they the ones international students are usually placed
-  in?
-- Whether there is an out-of-hours number for OGE or the International Student Advisor.

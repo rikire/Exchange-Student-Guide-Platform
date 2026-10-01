@@ -72,11 +72,6 @@ art form, and at festivals the kolams become large and brilliantly coloured.
 Festivals are the best way to see all of this at once: [[Festivals of India You May See During Your Semester]].
 And for the city itself: [[Chennai: A First Look at Your New City]].
 
-## Needs checking before this goes in front of students
-
-- Whether OGE or the language courses offer an introduction to spoken Tamil; see
-  [[Global Language Courses]].
-
 ## Photos
 
 From Wikimedia Commons, under the licences named; resized for this guide.

@@ -26,8 +26,3 @@ The two semester windows for 2026, exactly as OGE publishes them:
 - Work backward from your semester's start date for the rest of the roadmap:
   [[The Application Roadmap, at a Glance]], [[Getting Your IIT Madras Invitation Letter]], and
   [[Applying for Your Student Visa]] all need real lead time before day one of class.
-
-## Needs checking with OGE before this goes in front of students
-
-- The equivalent ID-card-collection window and any other date specific to the Semester 2 (July–
-  November) intake — the source material only gives a concrete date for Semester 1.

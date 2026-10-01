@@ -62,12 +62,6 @@ neighbourhoods.
 
 If you have had enough of air-conditioning, the sea is waiting: [[Chennai's Beaches]].
 
-## Needs checking before this goes in front of students
-
-- The time and fare from campus to Phoenix Marketcity by auto, by cab and by bus.
-- Whether a foreign card works for UPI, or only an Indian bank account.
-- Opening hours, which each mall publishes on its own site.
-
 ## Photos
 
 From Wikimedia Commons, under the licences named; resized for this guide.

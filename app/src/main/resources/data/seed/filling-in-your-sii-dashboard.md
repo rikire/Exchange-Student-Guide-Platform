@@ -42,12 +42,3 @@ None of this is optional busywork: your SII ID and this profile are what get che
 [[Applying for Your Student Visa|apply for your student visa]], and the portal says explicitly that
 your application "will be verified during issuance of your Student Visa" — so incomplete or
 inconsistent details here can hold up your visa later, not just the SII step itself.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether IIT Madras exchange students still need to use the **Explore Courses / Apply** flow that
-  the generic SII deck describes (which is built around students choosing from 8,000+ courses across
-  900+ institutes) once IIT Madras has already accepted them via the invitation-letter route in
-  [[Registering on the SII Portal]]. The two source documents describe two different intended
-  audiences and this guide does not resolve which parts of the generic flow an already-nominated
-  exchange student can skip.

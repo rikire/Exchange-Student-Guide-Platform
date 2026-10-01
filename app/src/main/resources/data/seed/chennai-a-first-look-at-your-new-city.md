@@ -63,12 +63,6 @@ is one of the most memorable things you can do here.
 - For shopping, cinema and air-conditioning on a hot afternoon: [[Shopping Malls in Chennai]].
 - To get around: [[Getting Around Campus and Chennai]].
 
-## Needs checking before this goes in front of students
-
-- Whether Fort St George's museum is open to visitors now, its days and the fee for foreign
-  nationals.
-- The dates of this year's December season, which each sabha publishes in November.
-
 ## Photos
 
 From Wikimedia Commons, under the licences named; resized for this guide.

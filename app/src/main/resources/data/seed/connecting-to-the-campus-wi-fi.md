@@ -50,9 +50,3 @@ Windows usually fails if it already has an old `iitmwifi` profile, so remove tha
 
 You need an LDAP account first. Until you have one, use mobile data. See
 [[Your First Days on Campus: Onboarding Steps]] for the registration that comes first.
-
-## Needs checking with OGE before this goes in front of students
-
-- How and when an exchange student receives their LDAP username and password, and from which office.
-  The handbook says to use it but not where it comes from.
-- Who to contact when the connection fails. The handbook names no IT helpdesk.

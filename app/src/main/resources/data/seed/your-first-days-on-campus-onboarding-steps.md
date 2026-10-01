@@ -42,10 +42,3 @@ The handbook stresses that Form C (with your hostel manager) and Form S (with OG
 If you miss the FRRO deadline, you pay **penalty charges** and have to write a letter explaining the
 delay (handbook, page 5). The clock starts when you land in India, not when you reach campus. If you
 travel in India first, you have less time than you think.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether semester exchange students go through exactly this sequence, or a shortened one. The
-  handbook covers all international students.
-- Whether Form S is filled in on paper at OGE or online.
-- How OGE communicates the time for step 3: by email before arrival, or on arrival.

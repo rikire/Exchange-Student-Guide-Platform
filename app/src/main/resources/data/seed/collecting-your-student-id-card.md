@@ -32,9 +32,3 @@ just a description of having received one.
 Without the card, day-to-day campus access is harder than it needs to be — building entry, hostel
 access, and library use all check for it. If you land outside the stated collection window, don't
 assume you're out of luck; ask the Academic Courses Section directly rather than waiting.
-
-## Needs checking with OGE before this goes in front of students
-
-- The collection window for the July–November semester intake.
-- What to do if you arrive before 20 January or well after the window closes.
-- Whether a passport-size photo or any other document is needed on top of the invitation letter.

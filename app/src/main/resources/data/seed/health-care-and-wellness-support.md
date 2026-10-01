@@ -43,11 +43,3 @@ Website: [wellnessiitm.com](https://www.wellnessiitm.com/)
 
 Moving to a new country for a semester is hard, even when everything goes well. You don't need a
 crisis to talk to someone.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether the fee circular's insurance rule, written for degree students, applies to semester
-  exchange students in the same way, and whether a home-country policy is accepted or an Indian one
-  is required.
-- Whether exchange students pay for visits to the Institute Hospital, and whether it is open 24/7.
-- Which nearby hospital students are referred to for anything the Institute Hospital can't treat.

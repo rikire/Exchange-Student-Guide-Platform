@@ -13,6 +13,7 @@ Project overview: [README.md](../README.md). Rules for the AI agent: [CLAUDE.md]
 | `app/src/main/resources/templates/` | Thymeleaf templates | human + AI |
 | `app/src/main/resources/db/migration/` | Flyway migrations | human + AI |
 | `app/src/main/resources/data/seed/` | Starter articles, in the export format | human |
+| `docs/content/` | What the seed articles' authors still need checked with OGE; never imported | human + AI |
 | `tools/` | `ai-tools.jar`: the journal, the hooks, `docs-check`, the commit-message gate, the generators for traceability, ownership, the gap list and the weekly log, and the gate that runs them | human + AI |
 | `docs/requirements/` | Requirements and constraints — `FR`, `NFR`, `CON` | human |
 | `docs/architecture/` | C4, data model, route contract, security architecture, ADRs | human |

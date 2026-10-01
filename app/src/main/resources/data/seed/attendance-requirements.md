@@ -29,8 +29,3 @@ A single semester gives you less room to recover from a bad early stretch — a 
 adjusting to [[Understanding the IIT Madras Credit System|the workload]] or the city can put a dent in
 attendance that's hard to claw back before the term ends. Track it yourself from week one rather than
 finding out your percentage late in the semester.
-
-## Needs checking with OGE before this goes in front of students
-
-- What consequence, if any, follows from landing in the "Poor" (< 75%) band — is it a grade penalty,
-  a bar from the final exam, or something department-specific?

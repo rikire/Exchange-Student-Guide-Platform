@@ -39,8 +39,3 @@ in both digital and printed form, for the rest of the process.
 With the invitation letter issued, you move to Phase 3 of the roadmap — registering on the SII portal
 and applying for your visa. Course selection (Phase 2, [[Selecting Courses on the SSP Portal]]) can
 happen in parallel; it isn't blocked by the letters.
-
-## Needs checking with OGE before this goes in front of students
-
-- Typical turnaround time between nomination and letter issuance.
-- Who to contact if the letters haven't arrived and the visa deadline is approaching.

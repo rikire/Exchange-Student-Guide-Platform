@@ -49,9 +49,3 @@ faculty. Serious offences go to the police for prosecution under Indian law.
 The handbook also lists [Saathi](https://www.saathi.iitm.ac.in), [Mitr](https://www.mitr.iitm.ac.in)
 and [Behappy](https://behappy.iitm.ac.in) as student support services, and the **Office of Global
 Engagement** is there for any international student with a problem, academic or not.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether exchange students are assigned a Saathi mentor like first-year students, and how they
-  find out who it is.
-- What Mitr and Behappy each do. The handbook only lists their addresses.

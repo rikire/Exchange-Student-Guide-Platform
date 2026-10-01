@@ -40,12 +40,3 @@ trips in person.
 
 Institute and hostel fees are paid online on the fee portal, not at these branches. See
 [[Paying Your Institute Fees]].
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether an exchange student can open an account at either campus branch, and which documents the
-  bank asks for (passport, visa, FRRO registration, an OGE letter?). The handbook doesn't say, and
-  this is one of the first questions students ask.
-- Opening hours of both branches and of the post office.
-- Which bank the ATMs near the Office of Hostel Management and near Nilgiri belong to.
-- Whether the ATMs accept foreign cards.

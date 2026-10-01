@@ -100,7 +100,7 @@ real figure can only be higher.
 | FR-025 | planned | could | Editing the homepage's pinned articles | 2 | 0 | 2 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
-| NFR-004 | in-progress |  | Exportability | 0 | 25 | 0 |
+| NFR-004 | in-progress |  | Exportability | 0 | 26 | 0 |
 
 ## Done, with criteria that no test is anchored to
 

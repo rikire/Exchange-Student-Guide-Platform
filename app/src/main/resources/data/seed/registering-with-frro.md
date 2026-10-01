@@ -67,14 +67,3 @@ registration, and anyone offering that is not legitimate.
 Registering late costs you **penalty charges**, and you have to give a **letter explaining the
 reason for the delay**. The 14 days count from the day you land in India, not from the day you reach
 campus. If you travel first, start early.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether semester exchange students need exactly the UG/PG document list, and what an exchange
-  student gives as the "offer letter / admission letter" and the "sponsorship letter" if they have
-  no sponsor.
-- Typical processing time at the Chennai FRRO.
-- Whether a short exchange changes the requirement. Some Indian sources tie compulsory registration
-  to visas longer than 180 days, and the handbook doesn't mention this.
-- The Study in India slides give the deadline once as 14 days and once as 15. The handbook says 14,
-  and this article follows the handbook.

@@ -44,13 +44,3 @@ you don't only eat at the mess.
 Centre on Delhi Avenue, next to Canara Bank. See [[Banks, ATMs and the Post Office on Campus]].
 
 For finding these places, see [[Campus Landmarks You Need to Know]].
-
-## Needs checking with OGE before this goes in front of students
-
-- Mess costs and how they are paid: in advance per semester, or monthly. The fee circular says
-  advance mess charges depend on the mess tender.
-- How an exchange student is assigned to a mess, and whether there are vegetarian, non-vegetarian
-  or other options.
-- Opening hours of the food joints, and what "HFC" and "NSFC" stand for.
-- Whether the handbook's pairing of shops and locations is right. The table is printed as two
-  separate columns, and this article matches them in the order they appear.

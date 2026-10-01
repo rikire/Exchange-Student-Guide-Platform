@@ -76,12 +76,6 @@ with.
 For the customs that help at a family celebration, see
 [[India in Your First Weeks: Greetings, Food and Everyday Customs]].
 
-## Needs checking before this goes in front of students
-
-- Whether IIT Madras follows every state holiday listed here, or has its own list; see
-  [[Academic Calendar 2026]].
-- The dates of Holi and Pongal in 2027, for students arriving in January.
-
 ## Photos
 
 From Wikimedia Commons, under the licences named; resized for this guide.

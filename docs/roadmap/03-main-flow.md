@@ -250,9 +250,12 @@ linked from its row to the package that fixes it. What to change, where and how 
 settled before that item starts. Order: section 1 and 2.1 before the mid-demo of 9 October; the
 design pass (3) is the largest piece and starts with redrawn screens.
 
-- [ ] [Take the author notes out of 30 seed articles (F-4)](../verification/walkthrough-fixes.md#11-author-notes-published-in-the-articles-f-4) — decided 1 Oct: removed from the text, kept in `docs/content/open-questions.md`
+- [x] [Take the author notes out of 30 seed articles (F-4)](../verification/walkthrough-fixes.md#11-author-notes-published-in-the-articles-f-4) — decided 1 Oct: removed from the text, kept in `docs/content/open-questions.md`
       — check: `grep "Needs checking"` over the seed finds nothing, and the reset stand shows none
       — owner: **Mikhail**
+      **Done 1 Oct:** the sections of 30 articles moved verbatim to
+      [open-questions.md](../content/open-questions.md); `SeedRunnerTest` asserts no seeded article
+      publishes one, red before the change. The reset stand is section 4's.
 - [ ] [Show `[[Title]]` in the editor's hint (F-5)](../verification/walkthrough-fixes.md#12-the-wiki-link-hint-eaten-by-thymeleaf-f-5)
       — check: a test finds `[[Title]]` on `/submit`, red first
       — owner: **Mikhail**

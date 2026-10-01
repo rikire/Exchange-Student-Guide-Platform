@@ -48,8 +48,3 @@ it is not a guarantee that every listed department accepts exchange students int
 -check specifics against [[Course Selection Rules for UG and PG Students]] once you know your level,
 and against [[Understanding the IIT Madras Credit System]] once you're estimating how many courses you
 can actually carry.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether every department and school listed here is open to semester-exchange students specifically,
-  or whether some are outgoing-only or research-only.

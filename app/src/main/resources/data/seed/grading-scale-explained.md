@@ -33,8 +33,3 @@ This scale is separate from [[Attendance Requirements]], which is graded on its 
 and can affect your standing in a course independently of how well you actually performed
 academically. A strong grade on the S-to-E scale does not protect you from an attendance problem, and
 vice versa.
-
-## Needs checking with OGE before this goes in front of students
-
-- How this scale is expected to convert into ECTS or other home-institution credit/grade systems for
-  exchange-student transcripts specifically.

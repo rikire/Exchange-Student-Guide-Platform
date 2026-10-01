@@ -27,12 +27,3 @@ Because availability isn't guaranteed, the practical move is to raise your accom
 early as your [[The Application Roadmap, at a Glance|application timeline]] allows, rather than
 waiting until after your visa is confirmed. The exact channel and deadline for requesting a hostel
 room is not covered in the source material this article was written from — see below.
-
-## Needs checking with OGE before this goes in front of students
-
-- The actual process and deadline to request a hostel room, and who handles it (the same Academic
-  Courses Section as [[Collecting Your Student ID Card|ID card collection]], or a separate hostel
-  office).
-- What the fallback options are for a student who is not allotted campus accommodation.
-- Approximate hostel and mess costs — the brochure gives none, and a wrong number here is worse than
-  no number.

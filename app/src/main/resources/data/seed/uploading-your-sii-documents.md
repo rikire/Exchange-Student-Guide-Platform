@@ -44,8 +44,3 @@ you're uploading into.
 Compress scans before you start — a phone-camera photo of a passport page easily exceeds 2 MB
 unedited. Keep both a full-resolution original and a compressed copy, since you may need the same
 document for both checklists above.
-
-## Needs checking with OGE before this goes in front of students
-
-- Whether the two document sets above are genuinely separate submissions, or whether IIT Madras's own
-  set is simply a pre-check before the same files go into the SII portal.
