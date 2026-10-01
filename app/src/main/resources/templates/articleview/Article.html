@@ -6,27 +6,33 @@
 </head>
 <body>
   <main class="site-main">
-    <article>
-      <ul class="chip-row" th:if="${!article.tags.isEmpty()}">
-        <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${article.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
-      </ul>
-      <h1 class="article-title" th:text="${article.title}">Title</h1>
-      <!-- th:utext: bodyHtml is WikiLinkRenderer's output. The converter escapes raw HTML and
-           sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
-      <div class="article-body" th:utext="${article.bodyHtml}">Body</div>
-      <div th:replace="~{media/Attachments :: list(${article.media})}"></div>
-      <section class="backlinks" th:unless="${backlinks.isEmpty()}" aria-labelledby="backlinks-heading">
-        <h2 class="section-title" id="backlinks-heading">What links here</h2>
-        <ul class="backlink-list">
-          <li th:each="link : ${backlinks}"><a th:href="@{${link.path}}" th:text="${link.title}">Arriving</a></li>
+    <!-- Fix 3.5's layout, as docs/design/screens/Article.html draws it: the text, and a sidebar of
+         cards beside it on a wide screen and after it on a phone. -->
+    <article class="article-layout">
+      <div class="article-main">
+        <ul class="chip-row" th:if="${!article.tags.isEmpty()}">
+          <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${article.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
         </ul>
-      </section>
-      <p class="article-actions page-actions">
-        <a th:href="@{${article.editPath}}">Propose an edit</a>
-        <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->
-        <button class="print-button" type="button" data-print hidden>Save as PDF</button>
-        <a th:if="${article.removePath}" th:href="@{${article.removePath}}">Remove this article</a>
-      </p>
+        <h1 class="article-title" th:text="${article.title}">Title</h1>
+        <!-- th:utext: bodyHtml is WikiLinkRenderer's output. The converter escapes raw HTML and
+             sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
+        <div class="article-body" th:utext="${article.bodyHtml}">Body</div>
+        <div th:replace="~{media/Attachments :: list(${article.media})}"></div>
+      </div>
+      <aside class="article-side" aria-label="About this article">
+        <div class="side-card article-actions">
+          <a class="button-primary" th:href="@{${article.editPath}}">Propose an edit</a>
+          <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->
+          <button class="button-secondary" type="button" data-print hidden>Save as PDF</button>
+          <a class="button-danger" th:if="${article.removePath}" th:href="@{${article.removePath}}">Remove this article</a>
+        </div>
+        <section class="side-card backlinks" th:unless="${backlinks.isEmpty()}" aria-labelledby="backlinks-heading">
+          <h2 class="side-title" id="backlinks-heading">What links here</h2>
+          <ul class="backlink-list">
+            <li th:each="link : ${backlinks}"><a th:href="@{${link.path}}" th:text="${link.title}">Arriving</a></li>
+          </ul>
+        </section>
+      </aside>
     </article>
     <script th:src="@{/js/print.js}" defer></script>
     <th:block th:replace="~{shared/web/PhotoViewer :: assets}"></th:block>

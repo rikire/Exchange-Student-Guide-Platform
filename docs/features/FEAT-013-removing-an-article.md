@@ -81,6 +81,8 @@ behind the login, and guards that.
 moderator, Cancel, Remove, and the article then answering "not found" and absent from search. On that
 acceptance FR-026 is `done`.
 
+**Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Remove" danger and "Cancel" quiet.
+
 ## Deliberately out of scope
 
 - Restoring a removed article, or listing removed ones — no requirement asks for it.

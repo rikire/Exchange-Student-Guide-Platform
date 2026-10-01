@@ -195,6 +195,8 @@ FR-016. The link test was red before the template changed; `BrowserLayoutTest` m
 four widths, 44 px on a phone. Accepted by the human on 29 Sep after downloading an attached file from
 an approved edit in a browser; on that acceptance FR-016 is `done`.
 
+**Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Download" is a secondary button.
+
 ## Deliberately out of scope
 
 - Assets in the export archive (ADR-0007) — the backup slice's work.

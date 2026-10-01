@@ -111,6 +111,10 @@ Tests: the control and its script on the page (`ArticleControllerTest`), and in 
 without the site around them; all red before the implementation. Accepted by the human on 29 Sep
 after saving an article as a PDF from a browser; on that acceptance FR-030 is `done`.
 
+**Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Propose an edit" primary, "Save as PDF" secondary, "Remove this article" danger.
+
+**Fix 3.5's layout, 2 Oct** (as [Article.html](../design/screens/Article.html) draws it, confirmed by the human): the text at its 46-rem measure and a 260-px sidebar beside it, the pair centred in the frame; the sidebar holds a card of actions (Propose an edit, Save as PDF, Remove for the moderator) and the What links here card. Below 1024 px one column, the sidebar after the text. No Report card: reporting is not built. `BrowserLayoutTest.on_a_wide_screen_the_article_has_its_sidebar_beside_the_text_as_its_design_screen_draws` and `on_a_phone_the_article_sidebar_follows_the_text` were red first. The rest of 3.5 (summary, date, contents, external links) is its own step.
+
 ## Deliberately out of scope
 
 - The summary is not shown on the article page (the design does not show it; it appears on cards).

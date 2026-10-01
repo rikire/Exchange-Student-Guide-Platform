@@ -32,7 +32,7 @@
         </div>
       </div>
       <p class="media-download-row">
-        <a class="media-download" th:href="@{${item.href()}}" th:download="${item.originalName()}"
+        <a class="media-download button-secondary" th:href="@{${item.href()}}" th:download="${item.originalName()}"
            th:aria-label="'Download ' + ${item.originalName()}">Download</a>
       </p>
     </th:block>

@@ -16,6 +16,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
   - app/src/test/java/in/ac/iitm/guide/BrowserKeyboardTest.java
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
+  - app/src/test/java/in/ac/iitm/guide/ButtonStylesTest.java
 ---
 
 # FEAT-011 — A layout for any screen width and for the keyboard
@@ -52,12 +53,37 @@ None.
 - [x] The demo scenario can be done from the keyboard alone with the focus always visible —
   `BrowserKeyboardTest.the_demo_scenario_can_be_done_from_the_keyboard_alone_with_the_focus_always_visible`
 - [x] Templates carry tokens, never a literal colour or length — `TemplateTokensTest`
+- [x] At 1280 and 1920 px the main content is at least 60 % of the window (walkthrough fix 3.1) —
+  `BrowserLayoutTest`, on every page
+- [x] Every action is one of the four buttons of
+  [Buttons.html](../design/screens/Buttons.html) (fix 3.2) — `ButtonStylesTest`, 18 actions
+- [x] The focus ring is the site's maroon, not the browser's blue (fix 3.2, F-21) —
+  `BrowserLayoutTest.the_focus_ring_is_the_sites_maroon_not_the_browsers_blue`
 
 ## What closing it found (28 Sep)
 
 - `BrowserLayoutTest` measured the login page in place of the moderator's pages. Signed in, the queue
   was 541 px wide at 320 px, and the Review link and the Reject button were under 44 px.
 - `BrowserKeyboardTest` found the editor trapping Tab and drawing no focus ring (FEAT-010).
+
+## Width and buttons (walkthrough fixes 3.1 and 3.2, 2 Oct)
+
+Drawn first as [Buttons.html](../design/screens/Buttons.html) and accepted by the human on 2 Oct,
+with three decisions: the frame grows to 1440 px (`--page-width`, was 1100, 57 % of a 1920 px
+window); Cancel and Back are quiet links with an arrow, as walkthrough-fixes.md says, not the grey
+ghost button of the older screens; Approve stays maroon rather than the screens' olive.
+
+- Four buttons in `site.css`: primary (filled maroon), secondary (maroon outline), quiet (text, with
+  an arrow when it goes back: `button-back`), danger (red outline). 44 px high, a 4-px corner
+  (`--radius-control`), 12 px apart in a row; on a phone a form's buttons stand in a column. They
+  replace `button-reject`, `print-button`, the outlined `button-quiet` and the bare action links.
+- The search button stays gold: it is part of the search box.
+- A 3-px maroon ring at `:focus-visible` on everything the keyboard reaches.
+- Running text keeps its 46-rem measure; what fills the wider frame is the sidebars and the wide
+  editor of fixes 3.4–3.6. Until those land an article has space beside it.
+- Red first: `ButtonStylesTest` 14 of 18; `BrowserLayoutTest` 17 pages at 1920 px ("1100 px, under
+  60 %") and the focus ring.
+- The 404 page's inline "Back to the guide" is left for fix 3.8, which rebuilds that page.
 
 ## Deliberately out of scope
 

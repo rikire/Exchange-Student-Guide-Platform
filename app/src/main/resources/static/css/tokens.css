@@ -32,6 +32,8 @@
 
   --radius-card: 6px;
   --radius-pill: 999px;
+  /* A button's corner, as the design screens draw it (fix 3.2). */
+  --radius-control: 4px;
 
   --text-small: 12px;
   --text-body: 16px;
@@ -41,7 +43,8 @@
 
   /* Noto Sans from its WebJar (Latin and Devanagari); Tamil falls back to the system font. */
   --font-body: 'Noto Sans', system-ui, -apple-system, sans-serif;
-  --page-width: 1100px;
+  /* Up to 1440 px, three quarters of a 1920 px window (fix 3.1); running text keeps its own measure. */
+  --page-width: 1440px;
   /* Page edges: 16 px on a phone, growing to 40 px (NFR-008). */
   --gutter: clamp(16px, 4vw, 40px);
   /* The smallest button, control or navigation link on a phone or tablet (NFR-008). */

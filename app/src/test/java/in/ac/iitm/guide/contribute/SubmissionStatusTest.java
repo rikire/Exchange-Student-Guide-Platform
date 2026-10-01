@@ -189,7 +189,7 @@ class SubmissionStatusTest {
                 .getResponse()
                 .getContentAsString();
 
-        assertThat(page).containsPattern("<button[^>]*class=\"button-quiet copy-number\"[^>]*hidden");
+        assertThat(page).containsPattern("<button[^>]*class=\"button-secondary copy-number\"[^>]*hidden");
         assertThat(page).contains("aria-label=\"Copy the submission number\"");
     }
 

@@ -222,6 +222,14 @@ class BrowserLayoutTest {
                 problems.addAll(stringList(page.evaluate(SMALL_TEXT)));
                 problems.addAll(stringList(page.evaluate(SMALL_TARGETS)));
             }
+            if (width >= 1280) {
+                // Fix 3.1 (F-17): the page frame uses the width of a wide window.
+                var mainWidth = ((Number) page.evaluate("document.querySelector('main').getBoundingClientRect().width"))
+                        .doubleValue();
+                if (mainWidth < 0.6 * width) {
+                    problems.add("the main content is " + Math.round(mainWidth) + " px, under 60 % of the window");
+                }
+            }
             if (width == 1280 && !Boolean.TRUE.equals(page.evaluate(FONT_LOADED))) {
                 problems.add("the Noto Sans typeface did not load");
             }
@@ -289,6 +297,52 @@ class BrowserLayoutTest {
                         .as("review links past the edge at %d px", width)
                         .isZero();
             }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
+    void on_a_wide_screen_the_article_has_its_sidebar_beside_the_text_as_its_design_screen_draws() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/articles/registering-with-frro");
+            var text = page.locator(".article-main").boundingBox();
+            var side = page.locator(".article-side").boundingBox();
+
+            assertThat(side.x).as("the sidebar starts right of the text").isGreaterThanOrEqualTo(text.x + text.width);
+            assertThat(side.y).as("and level with it").isEqualTo(text.y);
+            assertThat(page.locator(".article-side .button-primary").textContent())
+                    .isEqualTo("Propose an edit");
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
+    void on_a_phone_the_article_sidebar_follows_the_text() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(390, 844))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/articles/registering-with-frro");
+            var text = page.locator(".article-main").boundingBox();
+            var side = page.locator(".article-side").boundingBox();
+
+            assertThat(side.y).isGreaterThanOrEqualTo(text.y + text.height);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-007
+    void the_focus_ring_is_the_sites_maroon_not_the_browsers_blue() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/submit");
+            page.locator("button[type=submit]").focus();
+            page.keyboard().press("Shift+Tab");
+            page.keyboard().press("Tab");
+
+            var ring = page.evaluate("() => { const s = getComputedStyle(document.activeElement);"
+                    + " return s.outlineStyle + ' ' + s.outlineWidth + ' ' + s.outlineColor; }");
+
+            assertThat(ring).isEqualTo("solid 3px rgb(120, 31, 25)");
         }
     }
 

@@ -26,13 +26,13 @@
           <td>
             <div class="button-row">
               <form method="post" th:unless="${at.first}" th:action="@{/moderate/articles/{a}/up(a=${line.address})}">
-                <button class="button-quiet" type="submit" th:aria-label="'Move ' + ${line.title} + ' up'">Move up</button>
+                <button class="button-secondary" type="submit" th:aria-label="'Move ' + ${line.title} + ' up'">Move up</button>
               </form>
               <form method="post" th:unless="${at.last}" th:action="@{/moderate/articles/{a}/down(a=${line.address})}">
-                <button class="button-quiet" type="submit" th:aria-label="'Move ' + ${line.title} + ' down'">Move down</button>
+                <button class="button-secondary" type="submit" th:aria-label="'Move ' + ${line.title} + ' down'">Move down</button>
               </form>
               <form method="post" th:action="@{/moderate/articles/{a}/unpin(a=${line.address})}">
-                <button class="button-quiet" type="submit" th:aria-label="'Unpin ' + ${line.title}">Unpin</button>
+                <button class="button-secondary" type="submit" th:aria-label="'Unpin ' + ${line.title}">Unpin</button>
               </form>
             </div>
           </td>
@@ -54,7 +54,7 @@
             <div class="button-row">
               <span class="chip" th:if="${line.pinned}">Pinned</span>
               <form method="post" th:unless="${line.pinned}" th:action="@{/moderate/articles/{a}/pin(a=${line.address})}">
-                <button class="button-quiet" type="submit" th:aria-label="'Pin ' + ${line.title}">Pin</button>
+                <button class="button-secondary" type="submit" th:aria-label="'Pin ' + ${line.title}">Pin</button>
               </form>
               <a th:href="@{/moderate/articles/{a}/remove(a=${line.address})}" th:aria-label="'Remove ' + ${line.title}">Remove</a>
             </div>

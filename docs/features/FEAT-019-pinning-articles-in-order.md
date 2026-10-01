@@ -69,6 +69,8 @@ added with FEAT-018. `pinned_at` still records when an article was pinned.
       `404`.
 - [x] `BrowserLayoutTest` passes the screen at all four widths.
 
+**Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Pin", "Unpin", "Move up" and "Move down" secondary.
+
 ## Deliberately out of scope
 
 - Dragging to reorder, which would need a script.

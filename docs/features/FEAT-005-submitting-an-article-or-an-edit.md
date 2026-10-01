@@ -135,6 +135,8 @@ Each follows from something already decided; each has a test.
 - [x] Fits every width from 320 to 1920 px, with 16-px text, 44-px targets on a phone and no WCAG 2.2
       AA violation found by axe (NFR-007, NFR-008; `BrowserLayoutTest`, added 27 Sep)
 
+**Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Submit for review" primary and "Cancel" quiet on the form; "Check its status" and "Copy" secondary and "Back to the guide" quiet on the confirmation.
+
 ## Deliberately out of scope
 
 - **The attachment** — FR-010 and FR-011's two media criteria (size, type). They arrive with the

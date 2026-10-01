@@ -12,11 +12,11 @@
       <p class="number-row">
         <span id="submission-number" th:replace="~{shared/web/SubmissionNumber :: number(${number}, 'submission-number')}">SUB-K7M2-QX9P-4TVB</span>
         <!-- Shown by copy-number.js; without scripts there is nothing to press (fix 2.4). -->
-        <button class="button-quiet copy-number" type="button" hidden aria-label="Copy the submission number">Copy</button>
+        <button class="button-secondary copy-number" type="button" hidden aria-label="Copy the submission number">Copy</button>
         <span class="copy-result" role="status" aria-live="polite"></span>
       </p>
       <p>OGE will review it before it is published. <strong>This number is your only way to check on it later</strong>: there is no account to save it to, so keep it somewhere safe.</p>
-      <p class="page-actions"><a th:href="@{/submissions/status(number=${number})}">Check its status</a> · <a th:href="@{/}">Back to the guide</a></p>
+      <p class="page-actions button-row"><a class="button-secondary" th:href="@{/submissions/status(number=${number})}">Check its status</a> <a class="button-quiet button-back" th:href="@{/}">Back to the guide</a></p>
     </div>
     <!-- Clears the draft the form kept in this browser, now that the submission succeeded (FR-027). -->
     <script th:src="@{/js/draft-sent.js}" defer></script>

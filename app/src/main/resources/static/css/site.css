@@ -136,10 +136,35 @@ p a, .article-body a { text-decoration: underline; }
 .field-help { font-size: var(--text-small); color: var(--ink-soft); }
 .tag-fields { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .tag-fields .field-input { width: 10rem; }
-.button-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
-.button-row a { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-2); }
-.button-primary { font: inherit; min-height: var(--target); font-weight: 600; padding: var(--space-2) var(--space-4); border: none; border-radius: var(--radius-card); background: var(--maroon); color: var(--paper); cursor: pointer; }
-.button-primary:hover { background: var(--maroon-dark); }
+.button-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.button-row a:not([class]) { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-2); }
+/* Fix 3.2 (F-27): the four buttons of docs/design/screens/Buttons.html, and the only ones a page uses.
+   Primary for the action a page is for, secondary beside it, quiet for a way back, danger for what
+   removes or refuses. */
+.button-primary, .button-secondary, .button-quiet, .button-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--target); padding: 0 var(--space-5);
+  border: 1.5px solid transparent; border-radius: var(--radius-control);
+  font: inherit; font-weight: 600; text-decoration: none; cursor: pointer;
+}
+.button-primary[hidden], .button-secondary[hidden], .button-quiet[hidden], .button-danger[hidden] { display: none; }
+.button-primary { background: var(--maroon); color: var(--paper); }
+.button-primary:hover { background: var(--maroon-dark); color: var(--paper); text-decoration: none; }
+.button-secondary { background: var(--paper); color: var(--maroon); border-color: var(--maroon); }
+.button-secondary:hover { background: var(--sand-raised); text-decoration: none; }
+.button-quiet { background: none; color: var(--maroon); padding: 0 var(--space-2); }
+.button-quiet:hover { text-decoration: underline; }
+.button-danger { background: var(--paper); color: var(--red); border-color: var(--red); }
+.button-danger:hover { background: var(--red); color: var(--paper); text-decoration: none; }
+/* The quiet way back carries its arrow; the alternative text after the slash keeps a screen reader
+   from reading it, and a browser without that syntax keeps the first declaration. */
+.button-back::before { content: "\2190"; content: "\2190" / ""; }
+/* The site's focus ring instead of the browser's blue (F-21), on everything the keyboard reaches. */
+:focus-visible { outline: 3px solid var(--maroon); outline-offset: 2px; }
+/* On a phone a form's buttons stand in a column, each the full width, as the screens draw them. */
+@media (max-width: 600px) {
+  form .button-row { flex-direction: column; align-items: stretch; }
+}
 .result-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); max-width: 46rem; }
 .number-label { margin: 0; font-size: var(--text-small); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
 /* Fix 2.4 (F-29): the site's own face, larger, digits of one width, each group set apart, so a 0 is
@@ -174,9 +199,6 @@ p a, .article-body a { text-decoration: underline; }
 .review-side { display: flex; flex-direction: column; gap: var(--space-4); }
 /* The moderator's "Log out" (DEBT-019), in their header since fix 2.3; quiet beside the links. */
 .logout-form { display: flex; margin: 0; }
-.button-quiet { font: inherit; min-height: var(--target); padding: var(--space-2) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); color: var(--ink); cursor: pointer; }
-.button-quiet:hover { border-color: var(--ink-soft); }
-.button-reject { font: inherit; font-weight: 600; min-height: var(--target); padding: var(--space-2) var(--space-4); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); color: var(--red); cursor: pointer; }
 @media (min-width: 60rem) {
   .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 }
@@ -242,14 +264,12 @@ p a, .article-body a { text-decoration: underline; }
 
 /* FR-016: the Download link under each file, a 44-px target on a phone (NFR-008). */
 .media-download-row { margin: 0 0 var(--space-4); }
-.media-download { display: inline-flex; align-items: center; min-height: var(--target); font-weight: 600; }
 
 /* FR-030: "Save as PDF" beside "Propose an edit", and the page as it prints — the article alone. */
-.article-actions { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
-.print-button { font: inherit; font-weight: 600; min-height: var(--target); padding: var(--space-2) var(--space-4); border: 1px solid var(--maroon); border-radius: var(--radius-card); background: var(--paper); color: var(--maroon); cursor: pointer; }
-.print-button[hidden] { display: none; }
+.article-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
 @media print {
-  .site-header, .site-nav, .site-footer, .article-actions, .media-download-row, .media-video, .backlinks { display: none; }
+  .site-header, .site-nav, .site-footer, .article-side, .article-actions, .media-download-row, .media-video, .backlinks { display: none; }
+  .article-layout { display: block; }
   body, .site-main { background: var(--paper); color: var(--ink); }
   .site-main { max-width: none; padding: 0; margin: 0; }
   .article-body { max-width: none; }
@@ -276,3 +296,19 @@ p a, .article-body a { text-decoration: underline; }
 /* On a phone the queue's five columns are wider than the screen and the table scrolls inside itself;
    the last column, "Review", stays pinned to its right edge so the way into a submission is always in view. */
 .queue-table td:last-child, .queue-table th:last-child { position: sticky; right: 0; background: var(--sand); }
+
+/* Fix 3.5's layout, as docs/design/screens/Article.html draws it: the text at its measure and a 260-px
+   sidebar of cards beside it, the pair centred in the frame. Below 1024 px one column, the sidebar
+   after the text: beside it on a tablet the text would be left too narrow to read. */
+.article-layout { display: grid; grid-template-columns: minmax(0, 46rem) 260px; gap: var(--space-6); justify-content: center; align-items: start; }
+.article-side { display: flex; flex-direction: column; gap: var(--space-5); }
+.side-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); padding: var(--space-4); }
+.side-title { font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin: 0 0 var(--space-2); }
+.article-side .article-actions { flex-direction: column; align-items: stretch; margin: 0; }
+.article-side .backlinks { margin: 0; }
+.article-side .backlink-list { list-style: none; padding: 0; }
+.article-side .backlink-list li + li { border-top: 1px solid var(--line); }
+@media (max-width: 1023px) {
+  .article-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .side-title { font-size: var(--text-body); }
+}

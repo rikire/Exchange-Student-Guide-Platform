@@ -195,6 +195,8 @@ and, after an approval, a link to the article; the review of a decided submissio
 article; the queue marks each submission's files by kind in one query; the login page leads back to
 the guide.
 
+**Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Approve & publish" and "Sign in" primary, "Reject" danger, "Back to the guide" quiet.
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).
