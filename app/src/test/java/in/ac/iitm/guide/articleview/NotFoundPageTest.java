@@ -37,4 +37,36 @@ class NotFoundPageTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).contains("We could not find that page").contains("href=\"/css/site.css\"");
     }
+
+    @Test
+    // trace:FR-001
+    void an_unknown_article_is_named_as_an_article() {
+        assertThat(notFound("/articles/no-such-article")).contains("There is no published article at this address");
+    }
+
+    @Test
+    // trace:FR-008
+    void an_unknown_tag_is_named_as_a_tag() {
+        assertThat(notFound("/tags/no-such-tag"))
+                .contains("We could not find that tag")
+                .contains("No published article carries this tag")
+                .doesNotContain("no published article at this address");
+    }
+
+    @Test
+    // trace:FR-001
+    void any_other_unknown_address_is_named_as_a_page() {
+        assertThat(notFound("/no-such-page"))
+                .contains("There is no page at this address")
+                .doesNotContain("published article");
+    }
+
+    private String notFound(String path) {
+        var headers = new HttpHeaders();
+        headers.setAccept(java.util.List.of(MediaType.TEXT_HTML));
+        var response =
+                http.exchange(path, org.springframework.http.HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        return response.getBody();
+    }
 }
