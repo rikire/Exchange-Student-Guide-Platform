@@ -727,6 +727,11 @@ recently added articles.
 When a moderator unpins an article, the system shall remove it from the landing page's pinned
 section.
 
+The pinned section keeps the order the moderator sets: a newly pinned article goes last, and the
+moderator can move a pinned article up or down. Taken into phase 3 and the order added by the human
+on 1 Oct (walkthrough F-7), with its schema change in
+[ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md).
+
 **Acceptance criteria:**
 
 ```
@@ -737,6 +742,14 @@ THEN it appears in the landing page's pinned section
 GIVEN a pinned article
 WHEN a moderator unpins it
 THEN it no longer appears in the landing page's pinned section
+
+GIVEN three pinned articles A, B, C in that order
+WHEN the moderator moves C up
+THEN the landing page shows them A, C, B
+
+GIVEN two pinned articles
+WHEN the moderator pins a third
+THEN it is shown after the two
 ```
 
 ### FR-026 — Removing a published article
@@ -955,4 +968,63 @@ THEN it is shown full screen
 GIVEN a submission with an attached photo
 WHEN the moderator selects it on the review page
 THEN it is shown full screen
+```
+
+### FR-033 — Browsing every article
+
+**Status:** planned
+**Priority:** could
+
+When a reader opens the list of all articles, the system shall show every published article, 50 to a
+page, ordered by title by default, and let the reader order it instead by most recently updated or
+most viewed (FR-034), and narrow it to the articles carrying one tag. The order and the tag are part
+of the address, so a list can be linked to. The landing page links to it. Asked for by the human on
+1 Oct after the walkthrough found most articles reachable only by search or tag (F-7).
+
+**Acceptance criteria:**
+
+```
+GIVEN 51 published articles, one pending submission and one removed article
+WHEN a reader opens the list of all articles
+THEN the first page shows 50 published articles by title, and the second page the 51st
+  AND neither shows the submission or the removed article
+
+GIVEN three published articles viewed 5, 0 and 2 times
+WHEN a reader orders the list by most viewed
+THEN they are listed 5, 2, 0
+
+GIVEN two published articles, one carrying the tag "visa"
+WHEN a reader narrows the list to "visa"
+THEN only that article is listed
+
+GIVEN a tag no published article carries
+WHEN a reader narrows the list to it
+THEN the list says no article carries it, and offers the full list
+```
+
+### FR-034 — Counting an article's views
+
+**Status:** planned
+**Priority:** could
+
+When a reader opens an article's page and it answers 200, the system shall add one to the article's
+view count. With no accounts (CON-001), a repeated view counts again; a signed-in moderator's view
+does not count. The count orders FR-033's list, is not shown on any page, and is not exported: it is
+not content (ADR-0007). Asked for by the human on 1 Oct, with its schema change in
+[ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md).
+
+**Acceptance criteria:**
+
+```
+GIVEN a published article
+WHEN a reader opens its page
+THEN its view count grows by one
+
+GIVEN a published article
+WHEN the signed-in moderator opens its page
+THEN its view count does not change
+
+GIVEN an address that matches no published article
+WHEN a reader opens it and it answers 404
+THEN no view count changes
 ```

@@ -308,6 +308,11 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — check: every article in two clicks from `/`
       FR-025 (`could`) is taken from phase 4 into this step; recorded in
       [04-hardening.md](04-hardening.md).
+      **Widened 1 Oct by the human:** FR-025 gains a manual order, and two requirements join it —
+      FR-033 (every article, 50 a page, by title, recently updated or most viewed, narrowed to a tag)
+      and FR-034 (an article's views, counted except the moderator's). Schema in
+      [ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md), migration V8.
+      — check: each criterion of FR-025, FR-033 and FR-034 a test, red first
       — owner: **Mikhail**
 - [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
       — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark

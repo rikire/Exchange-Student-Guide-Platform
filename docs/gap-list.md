@@ -14,7 +14,7 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 pie showData title Requirements by status
     "done" : 28
     "in-progress" : 3
-    "planned" : 9
+    "planned" : 11
 ```
 
 Each slice with the requirements its features cover: green when all are done, amber when
@@ -34,7 +34,7 @@ flowchart LR
     shared["shared · 2/2 done"]:::done
     taxonomy["taxonomy · 2/2 done"]:::done
     wikilink["wikilink · 2/2 done"]:::done
-    unmapped["no feature yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, NFR-003"]:::unmapped
+    unmapped["no feature yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, FR-033, FR-034, NFR-003"]:::unmapped
     articleview --> backlink
     articleview --> media
     articleview --> taxonomy
@@ -80,7 +80,7 @@ flowchart LR
 | taxonomy | 2 | 2 | done |
 | wikilink | 2 | 2 | done |
 
-No feature covers yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, NFR-003.
+No feature covers yet: FR-005, FR-013, FR-021, FR-022, FR-023, FR-024, FR-025, FR-028, FR-033, FR-034, NFR-003.
 
 ## Requirements not done
 
@@ -97,8 +97,10 @@ real figure can only be higher.
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
 | FR-024 | planned | could | Editing an article directly | 4 | 0 | 4 |
-| FR-025 | planned | could | Editing the homepage's pinned articles | 2 | 0 | 2 |
+| FR-025 | planned | could | Editing the homepage's pinned articles | 4 | 0 | 4 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
+| FR-033 | planned | could | Browsing every article | 4 | 0 | 4 |
+| FR-034 | planned | could | Counting an article's views | 3 | 0 | 3 |
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
 | NFR-004 | in-progress |  | Exportability | 0 | 26 | 0 |
 
