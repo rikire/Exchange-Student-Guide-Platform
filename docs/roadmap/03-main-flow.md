@@ -278,6 +278,9 @@ design pass (3) is the largest piece and starts with redrawn screens.
       from audio). **Showing done 1 Oct:** a player, a card when the browser cannot decode it, AVI
       and MPEG as a card only, the metadata warning. Left: the human's iPhone `.mov` and Android
       `.mp4` on the stand, which closes this item.
+      **iPhone checked 2 Oct** by the human on the stand: the video uploaded from the phone, reached
+      the moderator and played on the published article; full screen fixed to a black ground the
+      same day (FEAT-009). Left: an Android `.mp4`.
       — owner: **Mikhail**
 - [x] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
       — check: "FRRO registration" returns only articles with both words; the markup query returns

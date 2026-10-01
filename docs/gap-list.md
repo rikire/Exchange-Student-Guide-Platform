@@ -93,7 +93,7 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-001 | in-progress | must | Reading a published article | 3 | 52 | 0 |
+| FR-001 | in-progress | must | Reading a published article | 3 | 53 | 0 |
 | FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
 | FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 9 | 0 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
