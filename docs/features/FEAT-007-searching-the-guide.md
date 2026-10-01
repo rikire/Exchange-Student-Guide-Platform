@@ -156,6 +156,10 @@ measured 100 searches on 100 generated articles of 500 words on the compose stan
 0.023 s and the median 0.009 s, against a limit of 2 s. On that measurement, agreed with the human as
 the check, NFR-002 is `done`.
 
+**Fix 1.8, 2 Oct:** the result list's classes are `search-hit*`, since `.result-card` is the forms'
+boxed panel and styled the results too; the "Best match" badge is body size on a phone and a tablet,
+like the other secondary text (NFR-008), which `BrowserLayoutTest` found once two articles matched.
+
 ## Deliberately out of scope
 
 - NFR-002 (search latency) and NFR-003 (Hindi and Tamil queries): their own steps.

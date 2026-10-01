@@ -185,6 +185,10 @@ all 37 are green; approval still takes the lock, and `ModerateArticleRepositoryT
 Checked by the human the same day on the compose stand: an edit's review page opens with its
 comparison.
 
+**Fix 1.8, 2 Oct:** a long title in the queue is shortened with an ellipsis and shown whole on hover
+and on the review page, and the Review column stays pinned to the table's right edge on a phone,
+where the table scrolls inside itself (`BrowserLayoutTest.the_queue_keeps_every_review_link_in_view_beside_a_long_title`).
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).

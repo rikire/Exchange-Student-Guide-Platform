@@ -201,7 +201,18 @@ pushes the queue's "Review" link off screen; a summary and the list of tags have
   and the moderator's approval, the body's 100,000 (`BodyPreview.LONGEST_BODY`) by the submission,
   10 distinct tags by `Tags.named` for every path that writes tags; `maxlength` on the summary and
   body fields. A boundary pair for each in `SubmissionFlowTest`, `ModerationFlowTest` and `TagsTest`,
-  red first. The layout half is open.
+  red first.
+- **Layout done 2 Oct (Abdirakhim's half):** `BrowserLayoutTest` gained an article and a pending
+  submission with a 255-character unbroken title and a summary holding a long unbroken word, and
+  measures its article page too; 18 page-and-width cases scrolled sideways first (landing, all
+  articles, the tag page, the article page). `site.css` now breaks a too-long word anywhere in titles,
+  cards and the article body, gives grid cards `min-width: 0`, clamps a card's summary to three lines,
+  shortens a long title in the queue with an ellipsis (whole on hover and on the review page), and
+  pins the queue's Review column to the table's right edge, where a phone scrolls the table inside
+  itself; `the_queue_keeps_every_review_link_in_view_beside_a_long_title` was red at 320 px first.
+  On the way: the search page's "Best match" badge from fix 1.5 was under 16 px on a phone (fixed
+  with the other secondary text), and its classes collided with the forms' `.result-card`, so they
+  are `search-hit*` now.
 
 ### 1.9 Larger uploads, and what they leave behind
 
