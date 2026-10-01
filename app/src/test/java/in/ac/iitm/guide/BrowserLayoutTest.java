@@ -330,6 +330,41 @@ class BrowserLayoutTest {
     }
 
     @org.junit.jupiter.api.Test
+    // trace:FR-009
+    void on_a_wide_screen_the_landing_page_has_a_full_width_hero_and_the_tags_beside_the_cards() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/");
+            var hero = page.locator(".hero").boundingBox();
+            var cards = page.locator(".landing-main").boundingBox();
+            var tags = page.locator(".landing-side").boundingBox();
+            var window = ((Number) page.evaluate("document.documentElement.clientWidth")).doubleValue();
+
+            assertThat(hero.x).as("the hero starts at the window's edge").isZero();
+            assertThat(hero.width).as("and spans it").isEqualTo(window);
+            assertThat(tags.x).as("the tags right of the cards").isGreaterThanOrEqualTo(cards.x + cards.width);
+            assertThat(page.locator(".landing-main .card-grid")
+                            .first()
+                            .evaluate("e => getComputedStyle(e).gridTemplateColumns.split(' ').length"))
+                    .as("two cards across")
+                    .isEqualTo(2);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-009
+    void on_a_phone_the_landing_pages_tags_follow_the_cards() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(390, 844))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/");
+            var cards = page.locator(".landing-main").boundingBox();
+            var tags = page.locator(".landing-side").boundingBox();
+
+            assertThat(tags.y).isGreaterThanOrEqualTo(cards.y + cards.height);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
     // trace:NFR-007
     void the_focus_ring_is_the_sites_maroon_not_the_browsers_blue() {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {

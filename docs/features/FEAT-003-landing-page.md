@@ -75,6 +75,9 @@ The requirement fixes neither the numbers nor the overlap; these are ours, each 
 
 ## Acceptance criteria
 
+- [x] On a wide screen the hero spans the window and the tags stand beside two cards across; on a
+      phone the tags follow the cards (fix 3.4) — `BrowserLayoutTest.on_a_wide_screen_the_landing_page_has_a_full_width_hero_and_the_tags_beside_the_cards`,
+      `on_a_phone_the_landing_pages_tags_follow_the_cards`
 - [x] With a pinned article: it is shown before the recent ones, a tag list and a search entry point
       are shown (FR-009)
 - [x] Without one: the most recently added are shown, with the tag list and the search entry point

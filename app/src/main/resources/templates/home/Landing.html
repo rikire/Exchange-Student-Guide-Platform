@@ -5,55 +5,50 @@
   <title>Exchange Student Guide — IIT Madras</title>
 </head>
 <body>
-  <main class="site-main">
+  <!-- Fix 3.4 (F-2), as docs/design/screens/Landing.html draws it: a hero the width of the window,
+       then the cards and a sidebar of tags beside them; one column on a phone. -->
+  <main class="site-main landing">
     <section class="hero">
       <div class="hero-inner">
         <h1>Everything you need to settle in at IIT Madras</h1>
         <p>Written and kept up to date by exchange students, checked by the Office of Global Engagement.</p>
-        <form class="search-form" th:action="@{/search}" method="get" role="search">
+        <form class="search-form search-box" th:action="@{/search}" method="get" role="search">
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input class="search-input" type="search" name="q" required placeholder="Search for FRRO, hostel, bank account..." aria-label="Search the guide">
           <button class="search-button" type="submit">Search</button>
         </form>
       </div>
     </section>
 
-    <section th:if="${!landing.pinned.isEmpty()}">
-      <h2 class="section-title">Pinned</h2>
-      <div class="card-grid">
-        <article class="article-card" th:each="card : ${landing.pinned}">
-          <span class="pinned-badge">Pinned</span>
-          <h3 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
-          <p class="article-card-summary" th:text="${card.summary}">Summary</p>
-          <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
-            <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${card.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
-          </ul>
-        </article>
-      </div>
-    </section>
+    <div class="landing-body">
+      <div class="landing-main">
+        <section th:if="${!landing.pinned.isEmpty()}">
+          <h2 class="section-title">Pinned</h2>
+          <div class="card-grid">
+            <th:block th:each="card : ${landing.pinned}"><article th:replace="~{shared/web/ArticleCard :: card(${card}, 3, true)}"></article></th:block>
+          </div>
+        </section>
 
-    <section>
-      <h2 class="section-title">Recently added</h2>
-      <p class="empty-note" th:if="${landing.pinned.isEmpty() && landing.recent.isEmpty()}">No articles yet.</p>
-      <div class="card-grid" th:if="${!landing.recent.isEmpty()}">
-        <article class="article-card" th:each="card : ${landing.recent}">
-          <h3 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
-          <p class="article-card-summary" th:text="${card.summary}">Summary</p>
-          <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
-            <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${card.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
-          </ul>
-        </article>
+        <section>
+          <h2 class="section-title">Recently added</h2>
+          <p class="empty-note" th:if="${landing.pinned.isEmpty() && landing.recent.isEmpty()}">No articles yet.</p>
+          <div class="card-grid" th:if="${!landing.recent.isEmpty()}">
+            <th:block th:each="card : ${landing.recent}"><article th:replace="~{shared/web/ArticleCard :: card(${card}, 3, false)}"></article></th:block>
+          </div>
+          <!-- FR-033: every article, not only the newest twelve (walkthrough F-7). -->
+          <p class="page-actions"><a th:href="@{/articles}">All articles →</a></p>
+        </section>
       </div>
-      <!-- FR-033: every article, not only the newest twelve (walkthrough F-7). -->
-      <p class="page-actions"><a th:href="@{/articles}">All articles →</a></p>
-    </section>
 
-    <section id="tags" th:if="${!landing.tags.isEmpty()}">
-      <h2 class="section-title">Tags</h2>
-      <ul class="tag-cloud">
-        <!-- FR-031: most visited first; the number is how many articles carry the tag. -->
-        <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${landing.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}"><span th:text="${tag.name}">tag</span> <span class="chip-count" th:text="${tag.articles}">3</span><span class="visually-hidden" th:text="${tag.articles == 1} ? ' article' : ' articles'"> articles</span></a><th:block th:unless="${tag.path}"><span th:text="${tag.name}">tag</span> <span class="chip-count" th:text="${tag.articles}">3</span><span class="visually-hidden" th:text="${tag.articles == 1} ? ' article' : ' articles'"> articles</span></th:block></li>
-      </ul>
-    </section>
+      <aside class="landing-side side-card" id="tags" th:if="${!landing.tags.isEmpty()}" aria-labelledby="tags-heading">
+        <h2 class="section-title" id="tags-heading">Browse by tag</h2>
+        <ul class="tag-cloud">
+          <!-- FR-031: most visited first; the number is how many articles carry the tag. -->
+          <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${landing.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}"><span th:text="${tag.name}">tag</span> <span class="chip-count" th:text="${tag.articles}">3</span><span class="visually-hidden" th:text="${tag.articles == 1} ? ' article' : ' articles'"> articles</span></a><th:block th:unless="${tag.path}"><span th:text="${tag.name}">tag</span> <span class="chip-count" th:text="${tag.articles}">3</span><span class="visually-hidden" th:text="${tag.articles == 1} ? ' article' : ' articles'"> articles</span></th:block></li>
+        </ul>
+      </aside>
+    </div>
+    <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
   </main>
 </body>
 </html>
