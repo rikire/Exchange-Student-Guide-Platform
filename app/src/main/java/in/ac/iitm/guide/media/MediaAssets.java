@@ -32,7 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MediaAssets {
 
     private static final String NOT_ACCEPTED =
-            "The attachment is not an accepted type. Attach a photo (JPEG, PNG or WebP), a PDF or an MP4 video.";
+            "The attachment is not an accepted type. Attach a photo (JPEG, PNG or WebP), a PDF or a video"
+                    + " (MP4, MOV, WebM, MKV, 3GP, AVI or MPEG).";
 
     /** The detector only, from {@code tika-core}; none of Tika's parsers is on the class path. */
     private final Tika tika = new Tika();
@@ -99,7 +100,8 @@ public class MediaAssets {
     public String accepted() {
         return "One photo (JPEG, PNG or WebP) up to " + MediaSettings.spoken(settings.photoLimit())
                 + ", a PDF up to " + MediaSettings.spoken(settings.documentLimit())
-                + " or an MP4 video up to " + MediaSettings.spoken(settings.videoLimit()) + ".";
+                + " or a video (MP4, MOV, WebM, MKV, 3GP, AVI or MPEG) up to "
+                + MediaSettings.spoken(settings.videoLimit()) + ".";
     }
 
     /** Moves every asset of an approved submission to the article it became or changed. */
@@ -127,14 +129,21 @@ public class MediaAssets {
 
     private AcceptedType typeOf(Upload upload) throws IOException {
         String detected;
+        byte[] header;
         try (var in = upload.content().getInputStream()) {
             // Only the bytes: the name and the declared type are the contributor's to choose.
             detected = tika.detect(in);
+        }
+        try (var in = upload.content().getInputStream()) {
+            header = in.readNBytes(12);
         }
         if (detected.equals("image/heic") || detected.equals("image/heif")) {
             throw new MediaRejectedException(
                     "HEIC photos cannot be accepted. Save the photo as JPEG (on an iPhone: Settings, Camera,"
                             + " Formats, Most Compatible) and attach it again.");
+        }
+        if (detected.equals("video/quicktime")) {
+            return AcceptedType.ofQuickTimeBrand(header);
         }
         return AcceptedType.detectedAs(detected).orElseThrow(() -> new MediaRejectedException(NOT_ACCEPTED));
     }

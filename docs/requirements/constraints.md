@@ -88,6 +88,11 @@ size limit. The one use found for it, the pronunciation of Tamil or Hindi phrase
 link in the article's text. Each accepted type is more to detect, test and serve safely, so audio
 returns only when OGE asks for it.
 
+**Video widened 1 October by the human** (walkthrough F-28: a phone's MP4 was refused). Accepted
+are the common formats as uploaded, with no conversion: MP4, MOV, M4V, 3GP, WebM, MKV, AVI, MPEG.
+Ogg and WMV are not: the type detector reads them the same whether they carry a picture or only
+sound, and audio stays out.
+
 ### CON-008 — No machine-facing API, and so no OpenAPI specification
 
 **Rationale:** Every response the application produces is HTML for a person in a browser. There is

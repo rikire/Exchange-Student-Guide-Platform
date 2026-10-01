@@ -106,6 +106,15 @@ phone will be refused.
     from the list or brought back to the human;
   - a browser test: an MP4 plays inline, an unplayable file shows the download card;
   - the human uploads an iPhone `.mov` and an Android `.mp4` on the stand.
+- **Accepting done 1 Oct (1.4a).** tika-core 3.3.2 probed with hand-made headers:
+  - `isom`, `avc1` and `dash` MP4s, and a MOV with or without `ftyp`, are all `video/quicktime`, so the
+    `ftyp` brand decides between MP4 and MOV;
+  - WebM and MKV are both `application/x-matroska` and are stored as `video/webm`;
+  - Ogg is `application/ogg` and WMV `video/x-ms-asf` with or without a picture, so both were dropped
+    by the human.
+
+  `MediaAssetsTest` has a test per format, red first. Playing, the download card and the metadata
+  warning are 1.4b.
 
 ### 1.5 Search results are noise (F-9)
 

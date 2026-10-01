@@ -82,7 +82,11 @@ on Wikipedia and the libraries on Maven Central:
 - **Accepted formats**, from content, never from the name or the declared type:
   - photo: JPEG, PNG, WebP — each re-encoded, and turned upright by its EXIF orientation first;
   - document: PDF;
-  - video: MP4.
+  - video: MP4 (**widened 1 Oct by the human**, walkthrough F-28) — MP4, MOV, M4V, 3GP, WebM, MKV,
+    AVI and MPEG, stored as uploaded. Tika 3.3.2 reads an MP4 of brand `isom` as QuickTime, so
+    `AcceptedType.ofQuickTimeBrand` reads the `ftyp` brand; WebM and MKV it cannot tell apart, so
+    both are stored as `video/webm`. Ogg and WMV are refused: Tika reads them the same without a
+    picture, and CON-006 has no audio.
 
   **DOCX dropped on 28 Sep by the human**, after the check it needed failed: `tika-core` reports a
   Word document, a macro-enabled one (DOCM) and a spreadsheet (XLSX) alike as

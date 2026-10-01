@@ -113,7 +113,8 @@ routes:
       CSRF token (hidden, required); `title` (text, required, unique among published titles
       case-insensitively); `summary` (text, required); `body` (markdown textarea, required — may
       contain `[[Title]]`, stored unchanged per FR-003); `attachment` (file, optional — one photo
-      (JPEG, PNG, WebP), document (PDF) or video (MP4), the type read from the content;
+      (JPEG, PNG, WebP), document (PDF) or video (MP4, MOV, M4V, 3GP, WebM, MKV, AVI, MPEG), the type
+      read from the content;
       NFR-001's size limits; [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md));
       `tags` (repeatable text, optional; the form shows at least five fields and ignores the empty
       ones). Sent as `multipart/form-data`

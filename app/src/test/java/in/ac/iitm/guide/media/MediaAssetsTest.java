@@ -135,6 +135,40 @@ class MediaAssetsTest {
         assertThat(row(item.id()).get("CONTENT_TYPE")).isEqualTo("video/mp4");
     }
 
+    static Stream<Arguments> videos() {
+        return Stream.of(
+                Arguments.of(
+                        "an MP4 of brand mp42", "walk.mp4", MediaTestFiles.isoMedia("mp42", 2_000), "video/mp4", "mp4"),
+                // Walkthrough F-28: what ffmpeg and many Android phones write; Tika says quicktime.
+                Arguments.of(
+                        "an MP4 of brand isom", "walk.mp4", MediaTestFiles.isoMedia("isom", 2_000), "video/mp4", "mp4"),
+                Arguments.of("a MOV", "walk.mov", MediaTestFiles.isoMedia("qt  ", 2_000), "video/quicktime", "mov"),
+                Arguments.of(
+                        "a MOV with no brand",
+                        "old.mov",
+                        MediaTestFiles.quickTimeWithoutBrand(2_000),
+                        "video/quicktime",
+                        "mov"),
+                Arguments.of("an M4V", "walk.m4v", MediaTestFiles.isoMedia("M4V ", 2_000), "video/mp4", "m4v"),
+                Arguments.of("a 3GP", "walk.3gp", MediaTestFiles.isoMedia("3gp4", 2_000), "video/3gpp", "3gp"),
+                Arguments.of("a WebM", "walk.webm", MediaTestFiles.matroska("webm", 2_000), "video/webm", "webm"),
+                Arguments.of("an MKV", "walk.mkv", MediaTestFiles.matroska("matroska", 2_000), "video/webm", "webm"),
+                Arguments.of("an AVI", "walk.avi", MediaTestFiles.avi(2_000), "video/x-msvideo", "avi"),
+                Arguments.of("an MPEG", "walk.mpg", MediaTestFiles.mpeg(2_000), "video/mpeg", "mpg"));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("videos")
+    // trace:FR-010
+    void a_common_video_format_is_stored_as_a_video_under_the_type_read_from_its_bytes(
+            String what, String name, byte[] bytes, String storedType, String extension) {
+        var item = media.attach(pending(), upload(name, bytes));
+
+        assertThat(item.kind()).isEqualTo(MediaKind.VIDEO);
+        assertThat(row(item.id()).get("CONTENT_TYPE")).isEqualTo(storedType);
+        assertThat((String) row(item.id()).get("STORED_NAME")).endsWith("." + extension);
+    }
+
     static Stream<Arguments> refused() {
         return Stream.of(
                 Arguments.of(
@@ -160,6 +194,10 @@ class MediaAssetsTest {
                 // CON-006 took audio out on 28 Sep; an MP3 is refused like any other type not listed.
                 Arguments.of(
                         "audio", "voice.mp3", concat("ID3".getBytes(), new byte[] {3, 0, 0, 0, 0, 0}, new byte[100])),
+                // CON-006 has no audio, and Tika reads an Ogg or an ASF file the same with or without
+                // a picture, so neither is accepted (the human, 1 Oct).
+                Arguments.of("ogg", "clip.ogv", MediaTestFiles.ogg(200)),
+                Arguments.of("wmv", "clip.wmv", MediaTestFiles.asf(200)),
                 Arguments.of("plain text", "notes.txt", "hello".getBytes()),
                 Arguments.of("empty file", "empty.jpg", new byte[0]));
     }
