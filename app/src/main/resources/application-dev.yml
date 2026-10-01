@@ -1,0 +1,5 @@
+# The dev profile: ./mvnw -pl app spring-boot:run -Dspring-boot.run.profiles=dev,seed
+# An edited template shows on the next reload instead of after a restart (DEBT-020).
+spring:
+  thymeleaf:
+    cache: false
