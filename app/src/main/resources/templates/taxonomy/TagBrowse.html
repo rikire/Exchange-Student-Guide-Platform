@@ -13,11 +13,7 @@
     <p class="results-meta" th:text="${tagPage.total} + (${tagPage.total} == 1 ? ' article' : ' articles')">3 articles</p>
 
     <div class="card-grid">
-      <article class="article-card" th:each="entry : ${tagPage.entries}">
-        <h2 class="article-card-title"><a th:href="@{${entry.path}}" th:text="${entry.title}">Registering with FRRO</a></h2>
-        <p class="article-card-summary" th:text="${entry.summary}">Summary</p>
-        <p class="article-card-meta">Updated <relative-time lang="en-GB" hour-cycle="h23" year="numeric" th:datetime="${entry.updatedAt}" th:text="${entry.updated}">28 Sep 2026</relative-time></p>
-      </article>
+      <th:block th:each="entry : ${tagPage.entries}"><article th:replace="~{shared/web/ArticleCard :: card(${entry}, 2, false)}"></article></th:block>
     </div>
     <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
   </main>

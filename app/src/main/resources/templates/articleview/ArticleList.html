@@ -39,14 +39,7 @@
     <p class="results-meta" th:if="${total > 0}" th:text="${total} + (${total} == 1 ? ' article' : ' articles')">36 articles</p>
 
     <div class="card-grid" th:if="${!cards.isEmpty()}">
-      <article class="article-card" th:each="card : ${cards}">
-        <h2 class="article-card-title"><a th:href="@{${card.path}}" th:text="${card.title}">Registering with FRRO</a></h2>
-        <p class="article-card-summary" th:text="${card.summary}">Summary</p>
-        <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
-          <li class="chip" th:classappend="${t.path} ? 'chip-link'" th:each="t : ${card.tags}"><a th:if="${t.path}" th:href="@{${t.path}}" th:text="${t.name}">tag</a><th:block th:unless="${t.path}" th:text="${t.name}">tag</th:block></li>
-        </ul>
-        <p class="article-card-meta">Updated <relative-time lang="en-GB" hour-cycle="h23" year="numeric" th:datetime="${card.updatedAt}" th:text="${card.updated}">28 Sep 2026</relative-time></p>
-      </article>
+      <th:block th:each="card : ${cards}"><article th:replace="~{shared/web/ArticleCard :: card(${card}, 2, false)}"></article></th:block>
     </div>
 
     <nav class="button-row" aria-label="Pages" th:if="${pages > 1}">

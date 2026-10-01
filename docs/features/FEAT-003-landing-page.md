@@ -12,6 +12,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/home/internal/LandingPage.java
   - app/src/main/java/in/ac/iitm/guide/home/persistence/LandingReadRepository.java
   - app/src/main/resources/templates/home/Landing.html
+  - app/src/main/resources/templates/shared/web/ArticleCard.html
   - app/src/main/resources/templates/shared/web/Layout.html
   - app/src/main/resources/static/css/tokens.css
   - app/src/main/resources/static/css/site.css
@@ -20,6 +21,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/TemplateTokensTest.java
   - app/src/test/java/in/ac/iitm/guide/PageQueryCountTest.java
   - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
+  - app/src/test/java/in/ac/iitm/guide/ArticleCardTest.java
 ---
 
 # FEAT-003 — Landing page
@@ -86,6 +88,16 @@ The requirement fixes neither the numbers nor the overlap; these are ours, each 
 - [x] The number of queries does not grow with the number of articles: `PageQueryCountTest`
 - [x] Fits every width from 320 to 1920 px, with 16-px text, 44-px targets on a phone and no WCAG 2.2
       AA violation found by axe (NFR-007, NFR-008; `BrowserLayoutTest`, added 27 Sep)
+
+**Fixes 3.3 and 3.4, 2 Oct** (confirmed by the human): the landing page as
+[Landing.html](../design/screens/Landing.html) draws it — the maroon hero the width of the window,
+its search box white with a search icon inside (the gold Search button kept, as Buttons.html
+decided); below it Pinned and Recently added, two cards across, and "Browse by tag" in a 260-px
+sidebar; one column below 1024 px, the tags after the cards. Every card is one fragment,
+`shared/web/ArticleCard.html`, also on the tag page (FEAT-008) and the all-articles page (FEAT-018):
+the Pinned badge, the tags, the title, the summary, "Updated …". Search keeps its own result list,
+and every card says "Updated", not the screen's "Added" (human, 2 Oct). Red first:
+`ArticleCardTest` 4 of 4 and the two landing tests of `BrowserLayoutTest`.
 
 ## Deliberately out of scope
 

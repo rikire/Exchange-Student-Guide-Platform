@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--
+  Fix 3.3 (F-21, F-8): one card for an article in a list, as docs/design/screens/Landing.html draws
+  it: the Pinned badge when it is pinned, its tags, the title, the summary and when it was updated.
+  The landing, tag and all-articles pages use it; search keeps its own result list, which shows a
+  passage instead of the summary (FEAT-007). A card is any value with title, summary, path, tags,
+  updatedAt and updated. heading is the title's level, 2 or 3, as the page's outline needs.
+  A page that uses it includes shared/web/LocalTime :: assets once.
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <article class="article-card" th:fragment="card(card, heading, pinned)">
+    <span class="pinned-badge" th:if="${pinned}">Pinned</span>
+    <ul class="chip-row" th:if="${!card.tags.isEmpty()}">
+      <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${card.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
+    </ul>
+    <h2 class="article-card-title" th:if="${heading == 2}"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h2>
+    <h3 class="article-card-title" th:unless="${heading == 2}"><a th:href="@{${card.path}}" th:text="${card.title}">Title</a></h3>
+    <p class="article-card-summary" th:text="${card.summary}">Summary</p>
+    <p class="article-card-meta">Updated <relative-time lang="en-GB" hour-cycle="h23" year="numeric" th:datetime="${card.updatedAt}" th:text="${card.updated}">28 Sep 2026</relative-time></p>
+  </article>
+</body>
+</html>

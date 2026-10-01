@@ -127,6 +127,8 @@ the template until fix 3.4 redraws it. Tests, red first: three in `TagBrowseTest
 over six pages, two in `BrowserLayoutTest`. The "browse the tags" links of the search and 404 pages
 now go to `/tags`.
 
+**Fix 3.3, 2 Oct:** the tag page's articles are the shared card (FEAT-003), with all their tags above the title; `ArticleCardTest`.
+
 ## Deliberately out of scope
 
 - Paging past the first 50.

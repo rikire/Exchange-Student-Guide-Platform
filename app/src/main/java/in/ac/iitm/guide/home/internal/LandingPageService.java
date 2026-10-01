@@ -3,6 +3,7 @@ package in.ac.iitm.guide.home.internal;
 import in.ac.iitm.guide.home.persistence.LandingReadRepository;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.util.List;
@@ -27,9 +28,11 @@ public class LandingPageService {
     static final int TAG_LIMIT = 50;
 
     private final LandingReadRepository articles;
+    private final DisplayTime displayTime;
 
-    LandingPageService(LandingReadRepository articles) {
+    LandingPageService(LandingReadRepository articles, DisplayTime displayTime) {
         this.articles = articles;
+        this.displayTime = displayTime;
     }
 
     public LandingPage build() {
@@ -44,14 +47,20 @@ public class LandingPageService {
         return new LandingPage(cards(pinned), cards(recent), tags);
     }
 
-    private static List<LandingPage.Card> cards(List<Article> articles) {
-        return articles.stream().map(LandingPageService::card).toList();
+    private List<LandingPage.Card> cards(List<Article> articles) {
+        return articles.stream().map(this::card).toList();
     }
 
-    private static LandingPage.Card card(Article article) {
+    private LandingPage.Card card(Article article) {
         // A title with no letters or digits has no address and could not have been published.
         var path = ArticleAddress.pathOf(article.getSlug());
         var tags = TagLink.of(article.getTags().stream().map(Tag::getName).toList());
-        return new LandingPage.Card(article.getTitle(), article.getSummary(), path, tags);
+        return new LandingPage.Card(
+                article.getTitle(),
+                article.getSummary(),
+                path,
+                tags,
+                article.getUpdatedAt(),
+                displayTime.date(article.getUpdatedAt()));
     }
 }

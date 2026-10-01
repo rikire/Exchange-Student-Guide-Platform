@@ -1,6 +1,7 @@
 package in.ac.iitm.guide.taxonomy.internal;
 
 import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.taxonomy.persistence.TagBrowseRepository;
@@ -86,6 +87,7 @@ public class TagBrowseService {
                 article.getTitle(),
                 article.getSummary(),
                 ArticleAddress.pathOf(article.getSlug()),
+                TagLink.of(article.getTags().stream().map(Tag::getName).toList()),
                 article.getUpdatedAt(),
                 displayTime.date(article.getUpdatedAt()));
     }
