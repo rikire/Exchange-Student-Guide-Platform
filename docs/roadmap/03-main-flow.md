@@ -366,9 +366,12 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — owner: **Abdirakhim**
       Built 2 Oct: full-width hero, two cards across, "Browse by tag" sidebar (FEAT-003). Accepted
       by the human on 2 Oct.
-- [ ] [The article page: actions at the top, summary, date, sidebar, contents, external links (F-10)](../verification/walkthrough-fixes.md#35-the-article-page-f-10)
+- [x] [The article page: actions at the top, summary, date, sidebar, contents, external links (F-10)](../verification/walkthrough-fixes.md#35-the-article-page-f-10)
       — check: a test per element; 390 px
       — owner: **Abdirakhim**
+      Built 2 Oct: the sidebar of its design screen, the summary and date under the title, a
+      contents list, external links in a new tab, the actions under the title on a phone (FEAT-002).
+      Accepted by the human on 2 Oct.
 - [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — decided 1 Oct: Tom Select for tags, FilePond with image previews for the file, by a new ADR
       — check: `SubmissionFlowTest` unchanged and green; the human tries the form on desktop and phone
       — owner: **Mikhail**
