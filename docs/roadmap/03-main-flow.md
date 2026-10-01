@@ -207,9 +207,12 @@ Where the steps above and this queue compete for the same days, the human orders
    [ADR-0015](../architecture/adr/ADR-0015-showing-an-edit-as-a-diff.md) — two columns chosen by the
    human over three alternatives, stacked on a phone, java-diff-utils 4.17. Built in
    [FEAT-006](../features/FEAT-006-moderating-a-submission.md).
-9. [ ] **Walk through every screen and feature** with the human, and turn what comes out into
+9. [x] **Walk through every screen and feature** with the human, and turn what comes out into
    requirements and steps
    — check: the list of changes recorded
+   **Done 1 Oct:** walked in Chrome by the assistant while the human walked the same screens —
+   [manual-walkthrough.md](../verification/manual-walkthrough.md), 30 findings; the fixes are the
+   section "Fixes from the screen walkthrough of 1 October" below.
 10. [x] **Questions for OGE**, asked together rather than one meeting each: whether OGE is bound by
     GIGW and so by a WCAG level (NFR-007); what OGE agrees to store about contributors and which
     mail server may send from its name (item 7)
@@ -231,6 +234,59 @@ Where the steps above and this queue compete for the same days, the human orders
     it, byte for byte the tables it replaced, and `routes --check` in `check.sh` fails when they are
     stale; `RouteContractTest` compares the `built` routes with Spring's mappings in both directions,
     shown red each way.
+
+## Fixes from the screen walkthrough of 1 October
+
+Found by the [walkthrough](../verification/manual-walkthrough.md) (queue item 9): 33 findings, each
+linked from its row to the package that fixes it. What to change, where and how to check it is in
+[walkthrough-fixes.md](../verification/walkthrough-fixes.md); a **decision** is the human's and is
+settled before that item starts. Order: section 1 and 2.1 before the mid-demo of 9 October; the
+design pass (3) is the largest piece and starts with redrawn screens.
+
+- [ ] [Take the author notes out of 30 seed articles (F-4)](../verification/walkthrough-fixes.md#11-author-notes-published-in-the-articles-f-4) — decided 1 Oct: removed from the text, kept in `docs/content/open-questions.md`
+      — check: `grep "Needs checking"` over the seed finds nothing, and the reset stand shows none
+- [ ] [Show `[[Title]]` in the editor's hint (F-5)](../verification/walkthrough-fixes.md#12-the-wiki-link-hint-eaten-by-thymeleaf-f-5)
+      — check: a test finds `[[Title]]` on `/submit`, red first
+- [ ] [Show times in IST from one setting (F-23)](../verification/walkthrough-fixes.md#13-moderation-times-in-utc-f-23)
+      — check: a test with a UTC time expects the IST time and label
+- [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: a fixed list, no conversion of every upload; **open:** the list and `.mov`
+      — check: tests with `isom`, `mp42` and `qt` files
+- [ ] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
+      — check: "FRRO registration" returns only articles with both words; junk queries return none
+- [ ] [Seed before indexing at start-up (F-1)](../verification/walkthrough-fixes.md#16-search-sees-part-of-the-seed-right-after-a-start-f-1)
+      — check: after `down -v` and `up`, the first FRRO search is right
+- [ ] [A 404 text that fits what was asked for (F-26)](../verification/walkthrough-fixes.md#17-small-wrong-texts-f-26-f-14)
+      — check: `/tags/no-such-tag` says it is a tag
+- [ ] [Long input must not break the layout; limits for summary, tags and body (F-31, F-32, F-33)](../verification/walkthrough-fixes.md#18-long-input-breaks-the-layout-and-some-input-has-no-limit-f-31-f-32-f-33) — decided 1 Oct: summary 300, 10 tags, body 100,000
+      — check: a fixture with a 255-character unbroken title scrolls no page sideways; a test per limit
+- [ ] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
+      — check: every page has the three links; a menu at 390 px
+- [ ] [Every article reachable, FRRO first (F-7)](../verification/walkthrough-fixes.md#22-all-articles-not-just-the-newest-twelve-f-7) — decided 1 Oct: an "All articles" page and FR-025 (pinning) built now
+      — check: every article in two clicks from `/`
+- [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
+      — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark
+- [ ] [Clearer submission numbers, a Copy button, title and date on the status page (F-29, F-19)](../verification/walkthrough-fixes.md#24-times-numbers-copying-f-29-f-19) — decided 1 Oct: title and date shown
+      — check: tests for the title, the date and the button
+- [ ] [Design pass over every screen, against the design screens (F-22)](../verification/walkthrough-fixes.md#3-a-design-pass-over-every-screen-f-22) — screens redrawn and accepted by the human before templates change
+      — check: each screen compared with its design screen, differences accepted
+- [ ] [Use the width of the window (F-17)](../verification/walkthrough-fixes.md#31-use-the-width-f-17)
+      — check: `BrowserLayoutTest`: main content at least 60 % of a 1280 and 1920 px window
+- [ ] [One set of buttons, a focus ring in the site's colours (F-27, F-21, F-26)](../verification/walkthrough-fixes.md#32-one-set-of-buttons-f-27)
+      — check: a design screen with every button, accepted; axe clean
+- [ ] [One card everywhere; tags as a sidebar (F-21, F-8)](../verification/walkthrough-fixes.md#33-one-card-f-21-f-8)
+      — check: the same card on landing, search and tag pages
+- [ ] [The landing page brought to its design screen (F-2)](../verification/walkthrough-fixes.md#34-the-landing-page-f-2)
+      — check: side-by-side comparison accepted — closes the open step "Templates brought up to the design screens"
+- [ ] [The article page: actions at the top, summary, date, sidebar, contents, external links (F-10)](../verification/walkthrough-fixes.md#35-the-article-page-f-10)
+      — check: a test per element; 390 px
+- [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — **open:** Tom Select for tags (recommended), the drop zone ours or FilePond — see the comparison
+      — check: `SubmissionFlowTest` unchanged and green; the human tries the form on desktop and phone
+- [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
+      — check: tests for the toggle and the textarea
+- [ ] [The 404, tracking and login pages made helpful (F-14, F-15, F-19)](../verification/walkthrough-fixes.md#38-the-small-pages-f-14-f-15-f-19)
+      — check: each page has its explanation and a way back
+- [ ] [The stand before the demo: commit F-3, drop the raised limit, change the password, reset](../verification/walkthrough-fixes.md#4-the-stand-before-the-demo)
+      — check: `.env` has no raised limit; `down -v` and `up` give 36 clean articles
 
 ## Readiness criterion
 
