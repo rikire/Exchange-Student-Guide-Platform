@@ -120,6 +120,8 @@ itself, from the imports between slices, and rendered beside the designed one:
 since 28 September, `moderate` also use `taxonomy`'s `Tags`, the only way a tag reaches the table
 (ADR-0005). Since 29 September `articleview` asks `backlink` for what links here, `moderate` and
 `backup` publish its `ArticleTextChanged`, and `backlink` uses `wikilink`'s parser (ADR-0016).
+Since 2 October `articleview` asks `search`'s `SimilarTitles`, its first published type, for titles
+close to an article address that answers nothing (walkthrough fix 3.8, F-14).
 `ModularityTest` writes that diagram and checks
 those eight arrows are in it, so it cannot drift from the code without a test failing.
 

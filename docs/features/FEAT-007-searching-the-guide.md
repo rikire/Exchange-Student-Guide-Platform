@@ -7,6 +7,7 @@ slice: search
 routes: ["GET /search"]
 tables: [article, article_tag, tag]
 code:
+  - app/src/main/java/in/ac/iitm/guide/search/SimilarTitles.java
   - app/src/main/java/in/ac/iitm/guide/search/package-info.java
   - app/src/main/java/in/ac/iitm/guide/search/web/SearchController.java
   - app/src/main/java/in/ac/iitm/guide/search/internal/ArticleSearchService.java
@@ -159,6 +160,8 @@ the check, NFR-002 is `done`.
 **Fix 1.8, 2 Oct:** the result list's classes are `search-hit*`, since `.result-card` is the forms'
 boxed panel and styled the results too; the "Best match" badge is body size on a phone and a tablet,
 like the other secondary text (NFR-008), which `BrowserLayoutTest` found once two articles matched.
+
+**Fix 3.8, 2 Oct:** `SimilarTitles`, the slice's first published type, gives the not-found page up to five live titles with a word within two edits of a word of the missing address (`ArticleSearchService.titledCloseTo`: any word, fuzzy, unlike the search itself). `NotFoundPageTest.a_missing_article_suggests_published_titles_close_to_its_address` was red first.
 
 ## Deliberately out of scope
 

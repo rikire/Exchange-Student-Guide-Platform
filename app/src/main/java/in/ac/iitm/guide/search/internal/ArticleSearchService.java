@@ -89,6 +89,34 @@ public class ArticleSearchService {
         return new SearchResults(query, result.total().hitCount(), hits);
     }
 
+    /**
+     * Fix 3.8 (F-14): live articles with a title word within two edits of any of these words, Lucene's
+     * scoring first. Unlike {@link #search}, any word will do: an address that answers nothing is
+     * usually a typo or a renamed title, and one word in common is a fair guess.
+     */
+    public List<Article> titledCloseTo(String words, int limit) {
+        var terms = termsOf(words);
+        if (terms.isEmpty()) {
+            return List.of();
+        }
+        return Search.session(entityManager)
+                .search(Article.class)
+                .where(f -> {
+                    var close = f.bool();
+                    for (var term : terms) {
+                        close = close.should(f.match()
+                                .field(ArticleSearchMapping.TITLE)
+                                .matching(term)
+                                .skipAnalysis()
+                                .fuzzy(2));
+                    }
+                    return f.bool()
+                            .mustNot(f.exists().field(ArticleSearchMapping.REMOVED_AT))
+                            .must(close);
+                })
+                .fetchHits(limit);
+    }
+
     /** One hit as the query returns it: the article, its title marked, and its body's passage. */
     private record Found(Article article, List<String> title, String passage) {}
 
