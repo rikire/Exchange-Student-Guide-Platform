@@ -34,6 +34,8 @@
   --radius-pill: 999px;
   /* A button's corner, as the design screens draw it (fix 3.2). */
   --radius-control: 4px;
+  /* Behind a video: what shows where the picture does not reach, in full screen above all. */
+  --video-ground: #000000;
 
   --text-small: 12px;
   --text-body: 16px;

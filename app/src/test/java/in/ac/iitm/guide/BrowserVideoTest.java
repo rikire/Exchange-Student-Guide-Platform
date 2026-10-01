@@ -115,6 +115,20 @@ class BrowserVideoTest {
 
     @Test
     // trace:FR-001
+    void a_video_in_full_screen_fills_it_with_no_light_edge() {
+        var page = open("/articles/playable");
+        page.waitForFunction("() => document.querySelector('video.media-video').readyState >= 1");
+
+        page.evaluate("() => document.querySelector('video.media-video').requestFullscreen()");
+        page.waitForFunction("() => document.fullscreenElement !== null");
+        var style = page.evaluate("() => { const s = getComputedStyle(document.fullscreenElement);"
+                + " return [s.backgroundColor, s.borderTopWidth, s.borderTopLeftRadius, s.objectFit].join(' '); }");
+
+        assertThat(style).isEqualTo("rgb(0, 0, 0) 0px 0px contain");
+    }
+
+    @Test
+    // trace:FR-001
     void a_video_the_browser_cannot_decode_becomes_a_card_to_download() {
         var page = open("/articles/unplayable");
 

@@ -197,6 +197,8 @@ an approved edit in a browser; on that acceptance FR-016 is `done`.
 
 **Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Download" is a secondary button.
 
+**Found on the human's phone, 2 Oct:** a video in full screen kept the page's white ground, border and corner as light edges. A video's ground is now black (`--video-ground`), and in full screen it has no border or corner and keeps its shape (`object-fit: contain`); `BrowserVideoTest.a_video_in_full_screen_fills_it_with_no_light_edge` was red first. The human's iPhone video uploaded, showed to the moderator and played on the published article (fix 1.4).
+
 ## Deliberately out of scope
 
 - Assets in the export archive (ADR-0007) — the backup slice's work.
