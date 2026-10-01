@@ -67,6 +67,8 @@ p a, .article-body a { text-decoration: underline; }
 .media-photo { margin: 0; }
 .media-photo img, .media-video { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
 .media-block { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
+/* videos.js swaps a video for its card with the hidden attribute, which the display rules here would override. */
+.media-list [hidden] { display: none; }
 .media-name { display: inline-block; min-height: var(--target); line-height: var(--target); font-weight: 600; overflow-wrap: anywhere; }
 .media-meta { color: var(--ink-soft); }
 

@@ -66,6 +66,16 @@ public enum AcceptedType {
         return new String(header, 8, 4, StandardCharsets.ISO_8859_1).equals(QUICKTIME_BRAND) ? MOV : MP4;
     }
 
+    /**
+     * AVI and MPEG are offered only as a download: no current browser plays them in a page (the
+     * human, 1 Oct). Every other video gets a player, and a card if the browser cannot decode it.
+     *
+     * @return whether a page offers a stored asset of this type in a player
+     */
+    public static boolean playsInPage(String storedType) {
+        return !storedType.equals(AVI.stored) && !storedType.equals(MPEG.stored);
+    }
+
     /** @return the kind of a stored asset, from the type it was stored as */
     public static MediaKind kindOfStored(String storedType) {
         return Arrays.stream(values())

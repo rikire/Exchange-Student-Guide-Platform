@@ -115,6 +115,15 @@ phone will be refused.
 
   `MediaAssetsTest` has a test per format, red first. Playing, the download card and the metadata
   warning are 1.4b.
+- **Showing done 1 Oct (1.4b).**
+  - A player for every video but AVI and MPEG, which get only the card.
+  - `videos.js` turns a player the browser cannot decode into the card.
+  - The metadata warning on the form and the review page.
+  - Delivery needed no change: every video was already sent with `Content-Disposition: attachment`,
+    which a `<video>` ignores.
+  - Tests: `MediaDeliveryTest`, `EditorPreviewTest` and `BrowserVideoTest`, the playable sample being
+    `webm.webm` from github.com/mathiasbynens/small (no copyright).
+  - Left to the human: an iPhone `.mov` and an Android `.mp4` on the stand.
 
 ### 1.5 Search results are noise (F-9)
 

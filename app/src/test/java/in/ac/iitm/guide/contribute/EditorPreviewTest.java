@@ -57,6 +57,15 @@ class EditorPreviewTest {
     }
 
     @Test
+    // trace:FR-010
+    void the_form_warns_that_a_video_may_say_where_it_was_filmed() throws Exception {
+        // Walkthrough fix 1.4 (the human, 1 Oct): photos lose their metadata when re-encoded, videos do not.
+        var form = mockMvc.perform(get("/submit")).andReturn().getResponse().getContentAsString();
+
+        assertThat(form).contains("A video keeps what the camera recorded, which can include where it was filmed.");
+    }
+
+    @Test
     // trace:FR-027
     void the_form_shows_the_wiki_link_syntax_with_its_brackets() throws Exception {
         // Walkthrough F-5: Thymeleaf read [[Title]] in the hint as its own inline expression.

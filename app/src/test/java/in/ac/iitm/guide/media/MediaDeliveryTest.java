@@ -132,6 +132,51 @@ class MediaDeliveryTest {
 
     @Test
     // trace:FR-001
+    void a_video_a_browser_can_play_has_a_player_and_a_hidden_card_for_one_that_cannot() throws Exception {
+        var article = article();
+        var video = publishedTo(article, "walk.mp4", MediaTestFiles.isoMedia("isom", 2_000));
+
+        var page = articlePage(article);
+
+        assertThat(page).containsPattern("<video[^>]*src=\"" + video.href() + "\"");
+        assertThat(page).containsPattern("<div[^>]*class=\"media-block media-video-card\"[^>]*hidden");
+        assertThat(page).contains("This video can’t play in your browser. Download it to watch.");
+    }
+
+    @Test
+    // trace:FR-001
+    void an_avi_or_an_mpeg_is_shown_as_a_card_to_download_rather_than_a_player() throws Exception {
+        // Walkthrough fix 1.4 (the human, 1 Oct): browsers do not play these, so no player is offered.
+        var article = article();
+        var avi = publishedTo(article, "lecture.avi", MediaTestFiles.avi(2_000));
+        var mpeg = publishedTo(article, "tour.mpg", MediaTestFiles.mpeg(2_000));
+
+        var page = articlePage(article);
+
+        assertThat(page).doesNotContain("<video");
+        assertThat(page).contains("lecture.avi", "tour.mpg");
+        assertThat(page).contains("This video plays after you download it.");
+        assertThat(page).containsPattern("href=\"" + avi.href() + "\"").containsPattern("href=\"" + mpeg.href() + "\"");
+    }
+
+    @Test
+    // trace:FR-015
+    void the_review_of_a_submission_with_a_video_warns_that_it_may_say_where_it_was_filmed() throws Exception {
+        var submission = pending();
+        attach(submission, "walk.mov", MediaTestFiles.isoMedia("qt  ", 2_000));
+        var number =
+                jdbc.queryForObject("SELECT submission_number FROM submission WHERE id = ?", String.class, submission);
+
+        var review = mockMvc.perform(get("/moderate/submissions/" + number).session(loggedIn()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(review).contains("A video keeps what the camera recorded, which can include where it was filmed.");
+    }
+
+    @Test
+    // trace:FR-001
     void an_asset_on_a_removed_article_answers_404() throws Exception {
         var item = published("form.jpg", MediaTestFiles.jpeg(10, 10));
         jdbc.update("UPDATE article SET removed_at = CURRENT_TIMESTAMP");
@@ -197,6 +242,13 @@ class MediaDeliveryTest {
         var item = attach(submission, name, bytes);
         media.moveToArticle(submission, article);
         return item;
+    }
+
+    private String articlePage(UUID article) throws Exception {
+        return mockMvc.perform(get("/articles/" + slugOf(article)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
     }
 
     private String slugOf(UUID article) {

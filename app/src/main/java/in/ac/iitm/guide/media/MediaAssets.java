@@ -161,6 +161,7 @@ public class MediaAssets {
                 asset.getId(),
                 asset.getOriginalName(),
                 AcceptedType.kindOfStored(asset.getContentType()),
-                asset.getSizeBytes());
+                asset.getSizeBytes(),
+                AcceptedType.playsInPage(asset.getContentType()));
     }
 }

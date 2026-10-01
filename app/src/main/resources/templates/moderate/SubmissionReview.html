@@ -54,6 +54,8 @@
         </details>
         <div class="article-body" th:unless="${review.comparison}" th:utext="${bodyHtml}">The submission's text.</div>
         <div th:replace="~{media/Attachments :: list(${review.media})}"></div>
+        <!-- Walkthrough fix 1.4 (the human, 1 Oct): videos are published as they came, metadata and all. -->
+        <p class="field-help" th:if="${review.media.?[kind().name() == 'VIDEO'].size() > 0}">A video keeps what the camera recorded, which can include where it was filmed. Watch it before you approve.</p>
       </div>
 
       <div class="review-side" th:if="${review.pending()}">

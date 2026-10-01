@@ -26,6 +26,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java
   - app/src/main/java/in/ac/iitm/guide/articleview/web/ArticleController.java
   - app/src/main/resources/templates/media/Attachments.html
+  - app/src/main/resources/static/js/videos.js
   - app/src/main/resources/templates/contribute/SubmissionForm.html
   - app/src/main/resources/templates/moderate/SubmissionReview.html
   - app/src/main/resources/templates/articleview/Article.html
@@ -33,6 +34,7 @@ code:
 tests:
   - app/src/test/java/in/ac/iitm/guide/media/MediaAssetsTest.java
   - app/src/test/java/in/ac/iitm/guide/media/MediaDeliveryTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserVideoTest.java
   - app/src/test/java/in/ac/iitm/guide/contribute/SubmissionFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/contribute/UploadTooLargeTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
@@ -87,6 +89,11 @@ on Wikipedia and the libraries on Maven Central:
     `AcceptedType.ofQuickTimeBrand` reads the `ftyp` brand; WebM and MKV it cannot tell apart, so
     both are stored as `video/webm`. Ogg and WMV are refused: Tika reads them the same without a
     picture, and CON-006 has no audio.
+  - **Shown (1 Oct):** every video but AVI and MPEG gets a player; if the browser cannot decode it,
+    `static/js/videos.js` swaps the player for a card saying to download it. AVI and MPEG, which no
+    current browser plays, are only that card. `BrowserVideoTest` checks both; that an MP4 plays in
+    Chrome and Safari is the human's check on the stand, since Playwright's Chromium has no H.264.
+    The form and the review page say a video keeps where it was filmed.
 
   **DOCX dropped on 28 Sep by the human**, after the check it needed failed: `tika-core` reports a
   Word document, a macro-enabled one (DOCM) and a spreadsheet (XLSX) alike as

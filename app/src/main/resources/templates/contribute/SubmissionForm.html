@@ -38,6 +38,8 @@
         <!-- accept= only narrows the file picker; the type is read from the content (FEAT-009). -->
         <input class="field-input" type="file" name="attachment" accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/x-m4v,video/3gpp,video/3gpp2,video/webm,video/x-matroska,video/x-msvideo,video/mpeg,.mkv,.m4v,.3gp,.avi,.mpg,.mpeg">
         <span class="field-help" th:text="${accepted}">One photo up to 10 MB, a PDF up to 20 MB or an MP4 video up to 200 MB.</span>
+        <!-- Walkthrough fix 1.4 (the human, 1 Oct): a photo is re-encoded and loses its metadata, a video is stored as it came. -->
+        <span class="field-help">A video keeps what the camera recorded, which can include where it was filmed.</span>
       </label>
       <fieldset class="field">
         <legend class="field-label">Suggested tags</legend>
