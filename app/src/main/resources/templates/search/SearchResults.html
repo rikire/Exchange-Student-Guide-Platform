@@ -29,12 +29,12 @@
       <!-- The search result of docs/design/screens/SearchResults.html (FR-007): the title and a passage
            of the text with the query's words marked, each piece printed escaped; the summary when only
            the title or the tags matched. The one card shared by every list is fix 3.3. -->
-      <ol class="result-list" th:unless="${#lists.isEmpty(results.hits)}">
-        <li class="result-card" th:each="hit, row : ${results.hits}">
+      <ol class="search-hits" th:unless="${#lists.isEmpty(results.hits)}">
+        <li class="search-hit" th:each="hit, row : ${results.hits}">
           <span class="rank-badge" th:if="${row.first && results.total > 1}">Best match</span>
-          <h2 class="result-title"><a th:href="@{${hit.path}}"><th:block th:each="piece : ${hit.title.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">Registering with </th:block></th:block></a></h2>
-          <p class="result-snippet" th:unless="${hit.passage.isEmpty()}">…<th:block th:each="piece : ${hit.passage.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">visit the</th:block></th:block>…</p>
-          <p class="result-snippet" th:if="${hit.passage.isEmpty()}" th:text="${hit.summary}">Summary</p>
+          <h2 class="search-hit-title"><a th:href="@{${hit.path}}"><th:block th:each="piece : ${hit.title.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">Registering with </th:block></th:block></a></h2>
+          <p class="search-hit-passage" th:unless="${hit.passage.isEmpty()}">…<th:block th:each="piece : ${hit.passage.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">visit the</th:block></th:block>…</p>
+          <p class="search-hit-passage" th:if="${hit.passage.isEmpty()}" th:text="${hit.summary}">Summary</p>
           <ul class="chip-row" th:if="${!hit.tags.isEmpty()}">
             <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${hit.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
           </ul>

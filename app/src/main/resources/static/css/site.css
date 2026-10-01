@@ -110,13 +110,13 @@ p a, .article-body a { text-decoration: underline; }
 .search-form-page .search-input { border: 1px solid var(--ink-soft); }
 .results-meta { color: var(--ink-soft); margin: 0 0 var(--space-4); }
 /* FR-007's results as docs/design/screens/SearchResults.html draws them: a list, the query's words marked. */
-.result-list { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
-.result-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
-.result-card:first-child { padding-top: 0; }
-.result-title { font-size: var(--text-lead); font-weight: 700; margin: 0; overflow-wrap: anywhere; }
-.result-title a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--maroon); }
-.result-snippet { margin: 0; color: var(--ink-soft); line-height: 1.5; overflow-wrap: anywhere; }
-.result-card mark { background: var(--sand-raised); color: var(--ink); padding: 0 2px; }
+.search-hits { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
+.search-hit { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+.search-hit:first-child { padding-top: 0; }
+.search-hit-title { font-size: var(--text-lead); font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+.search-hit-title a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--maroon); }
+.search-hit-passage { margin: 0; color: var(--ink-soft); line-height: 1.5; overflow-wrap: anywhere; }
+.search-hit mark { background: var(--sand-raised); color: var(--ink); padding: 0 2px; }
 .rank-badge { font-size: var(--text-small); font-weight: 700; color: var(--maroon-dark); text-transform: uppercase; }
 
 /* FEAT-005: the submission form and its confirmation. */
@@ -198,7 +198,7 @@ p a, .article-body a { text-decoration: underline; }
 
 /* Secondary text is small only on a wide screen; on a phone or tablet it is read at body size (NFR-008). */
 @media (max-width: 1023px) {
-  .field-help, .site-footer, .number-label { font-size: var(--text-body); }
+  .field-help, .site-footer, .number-label, .rank-badge { font-size: var(--text-body); }
 }
 
 /* FR-029: what an edit changes, published on the left and proposed on the right; one column on a
@@ -253,3 +253,14 @@ p a, .article-body a { text-decoration: underline; }
 /* FR-032: a photo opens the viewer (photos.js), so it looks like it can be clicked and shows its focus. */
 .photo-opens { cursor: zoom-in; }
 .photo-opens:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* Fix 1.8 (F-31): what a contributor typed never widens a page. A word longer than its box breaks
+   anywhere; a card's summary stops at three lines; the queue shortens a long title, whole on hover
+   and on the review page, so "Review" stays in view. */
+.article-title, .article-card, .article-card-title, .article-card-summary, .article-body, .number-label { overflow-wrap: anywhere; }
+.card-grid > * { min-width: 0; }
+.article-card-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.queue-title { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* On a phone the queue's five columns are wider than the screen and the table scrolls inside itself;
+   the last column, "Review", stays pinned to its right edge so the way into a submission is always in view. */
+.queue-table td:last-child, .queue-table th:last-child { position: sticky; right: 0; background: var(--sand); }
