@@ -4,7 +4,7 @@ title: Browsing by tag
 status: done
 covers: [FR-008]
 slice: taxonomy
-routes: ["GET /tags/{tag}"]
+routes: ["GET /tags", "GET /tags/{tag}"]
 tables: [article, article_tag, tag]
 code:
   - app/src/main/java/in/ac/iitm/guide/taxonomy/package-info.java
@@ -13,6 +13,9 @@ code:
   - app/src/main/java/in/ac/iitm/guide/taxonomy/web/TagNotFoundException.java
   - app/src/main/java/in/ac/iitm/guide/taxonomy/internal/TagBrowseService.java
   - app/src/main/java/in/ac/iitm/guide/taxonomy/internal/TagPage.java
+  - app/src/main/java/in/ac/iitm/guide/taxonomy/internal/TagIndex.java
+  - app/src/main/resources/templates/taxonomy/TagIndex.html
+  - app/src/main/resources/templates/shared/web/Layout.html
   - app/src/main/java/in/ac/iitm/guide/shared/web/DisplayTime.java
   - app/src/main/resources/templates/shared/web/LocalTime.html
   - app/src/main/java/in/ac/iitm/guide/taxonomy/persistence/TagBrowseRepository.java
@@ -23,6 +26,7 @@ code:
 tests:
   - app/src/test/java/in/ac/iitm/guide/taxonomy/TagBrowseTest.java
   - app/src/test/java/in/ac/iitm/guide/BrowserLocalTimeTest.java
+  - app/src/test/java/in/ac/iitm/guide/SiteHeaderTest.java
 ---
 
 # FEAT-008 — Browsing by tag
@@ -43,6 +47,7 @@ summary and the date it was updated, as `docs/design/screens/TagBrowse.html` dra
 
 | Method and path | Purpose | Template |
 |---|---|---|
+| `GET /tags` | Every tag of a live article by name, with its count (fix 2.1) | `taxonomy/TagIndex.html` |
 | `GET /tags/{tag}` | The published articles carrying a tag with this address | `taxonomy/TagBrowse.html` |
 
 Codes as in [ui-routes.md](../architecture/ui-routes.md).
@@ -113,10 +118,18 @@ English (the human asked on 28 Sep that everything be in English).
 chips from the landing page, an article and a search result, an address in capitals, and an unknown
 tag answering "not found". On that acceptance FR-008 is `done`.
 
+**Walkthrough fix 2.1, 2 Oct (F-6):** `GET /tags` lists every tag a live article carries, by name,
+with its article count, up to 500 (ADR-0010), and says when there are more. Every page's header
+links to it, to all articles, to the tracking page and to the form; on a phone and a tablet the four
+fold into a native `<details>` menu, each a 44 px target. Four links and the menu were decided by
+the human on 2 Oct; the landing design screen draws three links in a row, so the screen is behind
+the template until fix 3.4 redraws it. Tests, red first: three in `TagBrowseTest`, `SiteHeaderTest`
+over six pages, two in `BrowserLayoutTest`. The "browse the tags" links of the search and 404 pages
+now go to `/tags`.
+
 ## Deliberately out of scope
 
 - Paging past the first 50.
-- A list of all tags on its own page: the landing page already lists the tags in use (FR-009).
 - A display label for a tag (`FRRO` shown as `frro`): ADR-0005's accepted loss.
 
 ## Open questions

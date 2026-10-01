@@ -268,6 +268,10 @@ there is no way to browse tags.
   route in `routes.yml`, a template, a test).
 - **Check:** every page has the three links; at 390 px they are in the menu and each is 44 px.
 
+**Done 2 Oct:** four links, "All articles" added on Mikhail's note of 1 Oct, by the human's choice
+over the screen's three; `GET /tags` by name with counts, up to 500; a `<details>` menu below
+1024 px. Recorded in FEAT-008.
+
 ### 2.2 All articles, not just the newest twelve (F-7)
 
 The landing page shows the twelve newest; the other 24 are reachable only by search or tag, and

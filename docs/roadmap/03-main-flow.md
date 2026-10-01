@@ -311,8 +311,10 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — owner: **Mikhail**
       **Done 1 Oct:** `guide.time-zone` and `guide.media.rejected-kept-for`, each with a default, an
       `.env.example` line and a test at another value.
-- [ ] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
+- [x] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
       — check: every page has the three links; a menu at 390 px
+      Built 2 Oct: four header links, a menu on phones, `GET /tags` (FEAT-008). Accepted by the
+      human on 2 Oct.
       — owner: **Abdirakhim**
 - [x] [Every article reachable, FRRO first (F-7)](../verification/walkthrough-fixes.md#22-all-articles-not-just-the-newest-twelve-f-7) — decided 1 Oct: an "All articles" page and FR-025 (pinning) built now
       — check: every article in two clicks from `/`
