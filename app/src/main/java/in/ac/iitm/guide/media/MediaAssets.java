@@ -11,7 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
@@ -156,6 +160,24 @@ public class MediaAssets {
         return assets.findBySubmissionIdOrderByUploadedAtAsc(submissionId).stream()
                 .map(MediaAssets::item)
                 .toList();
+    }
+
+    /**
+     * The kinds of file each of several submissions carries, in one query (fix 2.3, ADR-0010).
+     *
+     * @return by submission id; a submission with no file is absent
+     */
+    @Transactional(readOnly = true)
+    public Map<UUID, List<MediaKind>> kindsOfSubmissions(Collection<UUID> submissionIds) {
+        if (submissionIds.isEmpty()) {
+            return Map.of();
+        }
+        var kinds = new LinkedHashMap<UUID, List<MediaKind>>();
+        for (var asset : assets.findBySubmissionIdIn(submissionIds)) {
+            kinds.computeIfAbsent(asset.getSubmissionId(), id -> new ArrayList<>())
+                    .add(AcceptedType.kindOfStored(asset.getContentType()));
+        }
+        return kinds;
     }
 
     /** @return the assets of an article, oldest first */

@@ -2,6 +2,7 @@ package in.ac.iitm.guide.media.persistence;
 
 import in.ac.iitm.guide.shared.persistence.MediaAsset;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,4 +40,8 @@ public interface MediaAssetRepository extends JpaRepository<MediaAsset, UUID> {
     @Modifying(flushAutomatically = true)
     @Query("UPDATE MediaAsset m SET m.articleId = :article, m.submissionId = NULL WHERE m.submissionId = :submission")
     int moveToArticle(@Param("submission") UUID submissionId, @Param("article") UUID articleId);
+
+    /** The files of several submissions in one query, for the queue's file marks (fix 2.3, ADR-0010). */
+    @Query("SELECT m FROM MediaAsset m WHERE m.submissionId IN :submissions ORDER BY m.uploadedAt")
+    List<MediaAsset> findBySubmissionIdIn(@Param("submissions") Collection<UUID> submissions);
 }
