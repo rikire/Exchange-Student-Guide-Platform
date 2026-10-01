@@ -22,8 +22,8 @@
 
       <div class="empty-note" th:if="${#lists.isEmpty(results.hits)}">
         <h2 class="section-title">No articles matched</h2>
-        <p th:if="${words > 1}">No article holds all of these words. Try fewer words, or <a th:href="@{/#tags}">browse the tags</a>.</p>
-        <p th:unless="${words > 1}">Try a different word, or <a th:href="@{/#tags}">browse the tags</a>.</p>
+        <p th:if="${words > 1}">No article holds all of these words. Try fewer words, or <a th:href="@{/tags}">browse the tags</a>.</p>
+        <p th:unless="${words > 1}">Try a different word, or <a th:href="@{/tags}">browse the tags</a>.</p>
       </div>
 
       <!-- The search result of docs/design/screens/SearchResults.html (FR-007): the title and a passage

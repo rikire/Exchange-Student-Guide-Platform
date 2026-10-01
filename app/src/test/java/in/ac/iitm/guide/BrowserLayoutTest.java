@@ -240,6 +240,41 @@ class BrowserLayoutTest {
 
     @org.junit.jupiter.api.Test
     // trace:NFR-008
+    void on_a_phone_the_header_links_open_from_a_menu_each_a_44_px_target() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(390, 844))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/");
+            var links = page.locator(".site-menu a");
+            assertThat(links.first().isVisible())
+                    .as("the links are folded away at first")
+                    .isFalse();
+
+            page.click(".site-menu summary");
+
+            assertThat(links.count()).isEqualTo(4);
+            for (var i = 0; i < links.count(); i++) {
+                assertThat(links.nth(i).isVisible()).isTrue();
+                assertThat(links.nth(i).boundingBox().height).isGreaterThanOrEqualTo(44);
+            }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
+    void on_a_wide_screen_the_header_links_are_shown_without_a_menu() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/");
+
+            assertThat(page.locator(".site-nav > .site-links a").count()).isEqualTo(4);
+            assertThat(page.locator(".site-nav > .site-links a").first().isVisible())
+                    .isTrue();
+            assertThat(page.locator(".site-menu").isVisible()).isFalse();
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
     void the_queue_keeps_every_review_link_in_view_beside_a_long_title() {
         for (var width : WIDTHS) {
             try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {

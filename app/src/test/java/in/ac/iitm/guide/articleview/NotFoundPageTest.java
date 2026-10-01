@@ -50,6 +50,7 @@ class NotFoundPageTest {
         assertThat(notFound("/tags/no-such-tag"))
                 .contains("We could not find that tag")
                 .contains("No published article carries this tag")
+                .contains("href=\"/tags\"")
                 .doesNotContain("no published article at this address");
     }
 

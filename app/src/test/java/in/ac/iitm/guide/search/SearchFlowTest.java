@@ -144,7 +144,7 @@ class SearchFlowTest {
         assertThat(page)
                 .contains("No article holds all of these words")
                 .doesNotContain("/articles/hostel-mess")
-                .contains("href=\"/#tags\"");
+                .contains("href=\"/tags\"");
     }
 
     @Test
@@ -351,7 +351,7 @@ class SearchFlowTest {
 
     /** The first result's passage, as the page shows it. */
     private static String passage(String page) {
-        var matcher = Pattern.compile("<p class=\"result-snippet\">(.*?)</p>", Pattern.DOTALL)
+        var matcher = Pattern.compile("<p class=\"search-hit-passage\">(.*?)</p>", Pattern.DOTALL)
                 .matcher(page);
         assertThat(matcher.find()).as("the result shows a passage").isTrue();
         return matcher.group(1);

@@ -14,7 +14,7 @@
                                    tag=${path != null && #strings.startsWith(path, '/tags/')}">
     <h1 class="article-title" th:text="${tag} ? 'We could not find that tag' : 'We could not find that page'">We could not find that page</h1>
     <p th:if="${article}">There is no published article at this address. <a th:href="@{/}">Back to the guide</a></p>
-    <p th:if="${tag}">No published article carries this tag. <a th:href="@{/#tags}">Browse the tags</a> or <a th:href="@{/}">go back to the guide</a>.</p>
+    <p th:if="${tag}">No published article carries this tag. <a th:href="@{/tags}">Browse the tags</a> or <a th:href="@{/}">go back to the guide</a>.</p>
     <p th:unless="${article || tag}">There is no page at this address. <a th:href="@{/}">Back to the guide</a></p>
   </main>
 </body>
