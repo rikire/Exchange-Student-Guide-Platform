@@ -9,15 +9,6 @@ spring:
   thymeleaf:
     # TODO(DEBT-020): true outside development; off here so an edited template shows on reload.
     cache: false
-  servlet:
-    multipart:
-      # The container's ceiling, above which a form is refused unread (413, FEAT-009): the largest
-      # of NFR-001's limits, the video's, for the file, and room for the text beside it. The limit
-      # of each kind is media's, in guide.media below. Tomcat's defaults, 1 MB and 10 MB, would
-      # refuse a 10 MB photo.
-      # TODO(DEBT-015): more than 2 MB over this, Tomcat closes the connection instead of answering.
-      max-file-size: 200MB
-      max-request-size: 210MB
   jpa:
     # Off so a page cannot lazily load through the view: every association a page shows is fetched
     # by the query that names it (ADR-0010), and a forgotten one fails a test instead of hiding.
@@ -61,12 +52,14 @@ logging:
 guide:
   media:
     # ADR-0006: the bytes live here, under names the system generates; the stand mounts a volume
-    # (GUIDE_MEDIA_ROOT). NFR-001's limits, which are settings rather than constants.
+    # (GUIDE_MEDIA_ROOT). NFR-001's limits, which are settings rather than constants; the container's
+    # multipart ceiling is derived from them (MediaConfiguration), so it is not set here. On the
+    # stand each is GUIDE_MEDIA_PHOTOLIMIT, _DOCUMENTLIMIT, _VIDEOLIMIT or _VOLUMELIMIT in .env.
     root: ${GUIDE_MEDIA_ROOT:target/media}
     photo-limit: 10MB
     document-limit: 20MB
-    video-limit: 200MB
-    volume-limit: 20GB
+    video-limit: 500MB
+    volume-limit: 100GB
   admin:
     # ADR-0009: the BCrypt hash of the office's one shared password, never the password and never in
     # git. Empty means no password logs in (FEAT-006). How to make one: .env.example.

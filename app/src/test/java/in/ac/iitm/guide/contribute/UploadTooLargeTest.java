@@ -24,8 +24,9 @@ import org.springframework.util.LinkedMultiValueMap;
 
 /**
  * Through a real server, not MockMvc: the container refuses a request over its multipart limit while
- * reading it, before any controller or filter has the form, and MockMvc has no container. The limit
- * is made small here so a test file crosses it.
+ * reading it, before any controller or filter has the form, and MockMvc has no container. The
+ * container's limit is set only through NFR-001's {@code guide.media} limits, made small here so a
+ * test file crosses it: that they reach the container is part of what is tested.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UploadTooLargeTest {
@@ -34,9 +35,10 @@ class UploadTooLargeTest {
     private static final Path MEDIA = MediaTestFiles.ROOT;
 
     @DynamicPropertySource
-    static void smallContainerLimit(DynamicPropertyRegistry registry) {
-        registry.add("spring.servlet.multipart.max-file-size", () -> "4KB");
-        registry.add("spring.servlet.multipart.max-request-size", () -> "8KB");
+    static void smallMediaLimits(DynamicPropertyRegistry registry) {
+        registry.add("guide.media.photo-limit", () -> "4KB");
+        registry.add("guide.media.document-limit", () -> "4KB");
+        registry.add("guide.media.video-limit", () -> "4KB");
     }
 
     @Autowired
