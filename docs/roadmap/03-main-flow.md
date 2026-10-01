@@ -342,12 +342,17 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [Design pass over every screen, against the design screens (F-22)](../verification/walkthrough-fixes.md#3-a-design-pass-over-every-screen-f-22) — screens redrawn and accepted by the human before templates change
       — check: each screen compared with its design screen, differences accepted
       — owner: **Abdirakhim**, except 3.6 and 3.7
-- [ ] [Use the width of the window (F-17)](../verification/walkthrough-fixes.md#31-use-the-width-f-17)
+- [x] [Use the width of the window (F-17)](../verification/walkthrough-fixes.md#31-use-the-width-f-17)
       — check: `BrowserLayoutTest`: main content at least 60 % of a 1280 and 1920 px window
       — owner: **Abdirakhim**
-- [ ] [One set of buttons, a focus ring in the site's colours (F-27, F-21, F-26)](../verification/walkthrough-fixes.md#32-one-set-of-buttons-f-27)
+      Built 2 Oct: `--page-width` 1440 px, and the article page as its design screen draws it (text
+      and a 260-px sidebar, the layout half of 3.5). Accepted by the human on 2 Oct.
+- [x] [One set of buttons, a focus ring in the site's colours (F-27, F-21, F-26)](../verification/walkthrough-fixes.md#32-one-set-of-buttons-f-27)
       — check: a design screen with every button, accepted; axe clean
       — owner: **Abdirakhim**
+      Built 2 Oct: [Buttons.html](../design/screens/Buttons.html) accepted, then four buttons and a
+      maroon focus ring (FEAT-011, `ButtonStylesTest`); axe clean. Accepted by the human on 2 Oct.
+      Mikhail's 3.6 can start.
 - [ ] [One card everywhere; tags as a sidebar (F-21, F-8)](../verification/walkthrough-fixes.md#33-one-card-f-21-f-8)
       — check: the same card on landing, search and tag pages
       — owner: **Abdirakhim**

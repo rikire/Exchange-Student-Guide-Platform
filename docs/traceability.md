@@ -58,7 +58,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | NFR-004 | in-progress | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest, StartupOrderTest |  |  | article, article_tag, tag | Exportability |
 | NFR-005 | done | FEAT-017 | ContributionLimitSettings, ContributionLimits, ModeratorLoginController, PreviewController, SubmissionController | RateLimitTest |  | POST /articles/{title}/edits, POST /contribute/preview, POST /moderate/login, POST /moderate/logout, POST /submissions |  | Submission rate limit |
 | NFR-006 | done | FEAT-005 | SubmissionNumber, SubmissionNumbers | SubmissionNumbersTest |  | GET /articles/{title}/edit, GET /submissions/{number}/confirmation, GET /submit, POST /articles/{title}/edits, POST /submissions | article, submission, submission_tag, tag | Submission number unguessability |
-| NFR-007 | done | FEAT-011 | Layout | BrowserKeyboardTest, BrowserLayoutTest |  |  |  | Accessibility |
+| NFR-007 | done | FEAT-011 | Layout | BrowserKeyboardTest, BrowserLayoutTest, ButtonStylesTest |  |  |  | Accessibility |
 | NFR-008 | done | FEAT-011 | Layout | BrowserLayoutTest |  |  |  | Usable at any screen width |
 
 ## Constraints
