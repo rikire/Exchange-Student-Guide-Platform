@@ -36,13 +36,17 @@ public class ArticleRemoval {
         return new Candidate(article.getTitle(), ArticleAddress.pathOf(article.getSlug()));
     }
 
-    /** @throws ArticleNotLiveException if no published article is at the address */
+    /**
+     * @return the removed article's title
+     * @throws ArticleNotLiveException if no published article is at the address
+     */
     @Transactional
-    public void remove(String address) {
+    public String remove(String address) {
         var article = live(address);
         article.setRemovedAt(OffsetDateTime.now());
         articles.save(article);
         log.info("Removed article at address {}", article.getSlug());
+        return article.getTitle();
     }
 
     private Article live(String address) {

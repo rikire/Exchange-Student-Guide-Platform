@@ -411,6 +411,84 @@ class ModerationFlowTest {
     }
 
     @Test
+    // trace:FR-017
+    void after_an_approval_the_queue_says_published_with_a_link_to_the_article() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var session = loggedIn();
+
+        var approved = approve(session, submission, "Airtel and Jio on campus.");
+
+        assertThat(afterwards(session, approved))
+                .contains("Published:")
+                .containsPattern("<a href=\"/articles/getting-a-sim-card\">Getting a SIM card</a>");
+    }
+
+    @Test
+    // trace:FR-018
+    void after_a_rejection_the_queue_says_rejected() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var session = loggedIn();
+
+        var rejected = reject(session, submission);
+
+        assertThat(afterwards(session, rejected)).contains("Rejected").contains("Getting a SIM card");
+    }
+
+    @Test
+    // trace:FR-017
+    void the_review_of_an_approved_new_article_links_to_the_article() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var session = loggedIn();
+        approve(session, submission, "Airtel and Jio on campus.");
+
+        var review = page(session, reviewPath(submission));
+
+        assertThat(review).contains("href=\"/articles/getting-a-sim-card\"");
+    }
+
+    @Test
+    // trace:FR-017
+    void the_review_of_an_approved_edit_links_to_its_article() throws Exception {
+        var article = published("Hostel Life", "Rooms are shared.");
+        var edit = pendingEdit(article, "Hostel Life", "Rooms are shared by two.");
+        var session = loggedIn();
+        approve(session, edit, "Rooms and mess.");
+
+        assertThat(page(session, reviewPath(edit))).contains("href=\"/articles/hostel-life\"");
+    }
+
+    @Test
+    // trace:FR-014
+    void the_queue_marks_a_submission_with_a_file_by_its_kind() throws Exception {
+        var withPhoto = pending("Getting a SIM card", MONDAY);
+        attach(withPhoto, "sim-booth.jpg", MediaTestFiles.jpeg(30, 20));
+        var withNothing = pending("Campus map", MONDAY.plusHours(1));
+
+        var queue = page(loggedIn(), "/moderate/queue");
+
+        var photoRow = row(queue, withPhoto.getSubmissionNumber());
+        assertThat(photoRow).contains("photo");
+        assertThat(row(queue, withNothing.getSubmissionNumber())).doesNotContain("photo");
+    }
+
+    @Test
+    // trace:FR-014
+    void a_signed_in_moderator_sees_the_moderators_header_on_every_page() throws Exception {
+        var session = loggedIn();
+
+        for (var path : List.of("/moderate/queue", "/")) {
+            var header = header(page(session, path));
+
+            assertThat(header)
+                    .as(path)
+                    .contains("href=\"/moderate/queue\"")
+                    .contains("href=\"/moderate/articles\"")
+                    .containsPattern("<form[^>]*action=\"/moderate/logout\"")
+                    .doesNotContain("Submit an article");
+        }
+    }
+
+    @Test
     // trace:FR-015
     void the_review_page_offers_logging_out() throws Exception {
         var submission = pending("Getting a SIM card", MONDAY);
@@ -758,6 +836,25 @@ class ModerationFlowTest {
             request.cookie(cookies);
         }
         return mockMvc.perform(request).andReturn();
+    }
+
+    /** The queue the redirect after a decision leads to, with the message it was given. */
+    private String afterwards(MockHttpSession session, MvcResult decision) throws Exception {
+        assertThat(decision.getResponse().getRedirectedUrl()).isEqualTo("/moderate/queue");
+        return mockMvc.perform(get("/moderate/queue").session(session).flashAttrs(decision.getFlashMap()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    private static String row(String queue, String number) {
+        var at = queue.indexOf(number);
+        assertThat(at).as("the queue lists %s", number).isPositive();
+        return queue.substring(queue.lastIndexOf("<tr", at), queue.indexOf("</tr>", at));
+    }
+
+    private static String header(String page) {
+        return page.substring(page.indexOf("<header"), page.indexOf("</header>"));
     }
 
     private String page(MockHttpSession session, String path) throws Exception {

@@ -183,6 +183,19 @@ class ModeratorLoginTest {
                 .isEqualTo(403);
     }
 
+    @Test
+    // trace:FR-014
+    void the_login_page_leads_back_to_the_guide() throws Exception {
+        var page = mockMvc.perform(get("/moderate/login"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page.substring(page.indexOf("<main")))
+                .contains("Back to the guide")
+                .contains("href=\"/\"");
+    }
+
     private MvcResult logIn(MockHttpSession session, String password) throws Exception {
         var form = mockMvc.perform(get("/moderate/login").session(session)).andReturn();
         assertThat(form.getResponse().getStatus()).isEqualTo(200);

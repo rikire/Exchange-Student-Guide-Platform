@@ -6,8 +6,10 @@
 </head>
 <body>
   <main class="site-main">
-    <form th:replace="~{shared/security/LogOut :: form}"></form>
     <h1 class="article-title">Moderation queue</h1>
+
+    <!-- Fix 2.3 (F-24): what the last decision did, once. -->
+    <p class="flash" role="status" th:if="${done}"><span th:text="${done.what}">Published:</span> <a th:if="${done.path}" th:href="@{${done.path}}" th:text="${done.title}">Getting a SIM card</a><span th:unless="${done.path}" th:text="${done.title}">Getting a SIM card</span></p>
 
     <p class="empty-note" th:if="${#lists.isEmpty(entries)}">The queue is empty. Nothing is waiting for a decision.</p>
 
@@ -18,7 +20,7 @@
       <tbody>
         <tr th:each="entry : ${entries}">
           <td><span th:replace="~{shared/web/SubmissionNumber :: number(${entry.number}, 'queue-number')}">SUB-7QM2-K9XP-4TVB</span></td>
-          <td><span class="chip" th:text="${entry.type.name() == 'EDIT'} ? 'Edit' : 'New article'">New article</span></td>
+          <td><span class="chip" th:text="${entry.type.name() == 'EDIT'} ? 'Edit' : 'New article'">New article</span><span class="file-mark" th:each="file : ${entry.files}" th:text="${file}">photo</span></td>
           <td class="queue-title" th:text="${entry.title}" th:title="${entry.title}">Getting a local SIM card</td>
           <td><relative-time lang="en-GB" hour-cycle="h23" th:datetime="${entry.submittedAt}" th:text="${entry.submitted}">28 Sep 2026, 10:00 IST</relative-time></td>
           <td><a th:href="@{/moderate/submissions/{number}(number=${entry.number})}">Review →</a></td>

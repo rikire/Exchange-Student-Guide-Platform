@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /** The routes of FEAT-006 (docs/architecture/ui-routes.md), all behind the moderator login. */
 // trace:FR-014
@@ -66,10 +67,12 @@ class ModerationController {
             @RequestParam(defaultValue = "") String summary,
             @RequestParam(defaultValue = "") List<String> tags,
             Model model,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            RedirectAttributes redirect) {
         var filled = tags.stream().filter(tag -> !tag.isBlank()).toList();
         try {
-            moderation.approve(number, summary, filled);
+            var published = moderation.approve(number, summary, filled);
+            redirect.addFlashAttribute(Done.ATTRIBUTE, new Done("Published:", published.title(), published.path()));
             return "redirect:/moderate/queue";
         } catch (AlreadyDecidedException e) {
             response.setStatus(HttpStatus.CONFLICT.value());
@@ -88,9 +91,11 @@ class ModerationController {
             @PathVariable String number,
             @RequestParam(required = false) String reason,
             Model model,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            RedirectAttributes redirect) {
         try {
-            moderation.reject(number, reason);
+            var title = moderation.reject(number, reason);
+            redirect.addFlashAttribute(Done.ATTRIBUTE, new Done("Rejected", title, null));
             return "redirect:/moderate/queue";
         } catch (AlreadyDecidedException e) {
             response.setStatus(HttpStatus.CONFLICT.value());

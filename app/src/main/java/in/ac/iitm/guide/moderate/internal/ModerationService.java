@@ -3,6 +3,7 @@ package in.ac.iitm.guide.moderate.internal;
 import in.ac.iitm.guide.backlink.ArticleTextChanged;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.MediaItem;
+import in.ac.iitm.guide.media.MediaKind;
 import in.ac.iitm.guide.moderate.persistence.ModerateArticleRepository;
 import in.ac.iitm.guide.moderate.persistence.ModerateSubmissionRepository;
 import in.ac.iitm.guide.moderate.persistence.RevisionRepository;
@@ -79,7 +80,15 @@ public class ModerationService {
      * @param submitted {@code submittedAt} as the queue shows it, in the office's time zone
      */
     public record QueueEntry(
-            String number, SubmissionType type, String title, OffsetDateTime submittedAt, String submitted) {}
+            String number,
+            SubmissionType type,
+            String title,
+            OffsetDateTime submittedAt,
+            String submitted,
+            List<String> files) {}
+
+    /** What an approval published: the article's title and where it is (fix 2.3). */
+    public record Published(String title, String path) {}
 
     /**
      * A submission as the moderator reads it; {@code status} says whether it can still be decided.
@@ -96,7 +105,8 @@ public class ModerationService {
             List<String> tags,
             List<MediaItem> media,
             SubmissionStatus status,
-            Comparison comparison) {
+            Comparison comparison,
+            String articlePath) {
 
         public boolean pending() {
             return status == SubmissionStatus.PENDING;
@@ -112,13 +122,20 @@ public class ModerationService {
     /** @return every pending submission, oldest first (FR-014) */
     @Transactional(readOnly = true)
     public List<QueueEntry> queue() {
-        return submissions.findByStatusOrderBySubmittedAtAsc(SubmissionStatus.PENDING).stream()
+        var pending = submissions.findByStatusOrderBySubmittedAtAsc(SubmissionStatus.PENDING);
+        var files =
+                media.kindsOfSubmissions(pending.stream().map(Submission::getId).toList());
+        return pending.stream()
                 .map(s -> new QueueEntry(
                         s.getSubmissionNumber(),
                         s.getType(),
                         s.getTitle(),
                         s.getSubmittedAt(),
-                        displayTime.dateTime(s.getSubmittedAt())))
+                        displayTime.dateTime(s.getSubmittedAt()),
+                        files.getOrDefault(s.getId(), List.of()).stream()
+                                .map(ModerationService::fileLabel)
+                                .distinct()
+                                .toList()))
                 .toList();
     }
 
@@ -138,7 +155,32 @@ public class ModerationService {
                 tagNames,
                 media.ofSubmission(submission.getId()),
                 submission.getStatus(),
-                comparison(submission, tagNames));
+                comparison(submission, tagNames),
+                publishedPath(submission));
+    }
+
+    /** How the queue names a kind of file (fix 2.3). */
+    private static String fileLabel(MediaKind kind) {
+        return switch (kind) {
+            case PHOTO -> "photo";
+            case DOCUMENT -> "PDF";
+            case VIDEO -> "video";
+        };
+    }
+
+    /**
+     * Where an approved submission's article is, while it is live (fix 2.3). An edit names its article;
+     * a new article is found at its title's address, since the submission keeps no link to it, so one
+     * renamed since has none.
+     */
+    private String publishedPath(Submission submission) {
+        if (submission.getStatus() != SubmissionStatus.APPROVED) {
+            return null;
+        }
+        var article = submission.getType() == SubmissionType.EDIT
+                ? articles.readWithTagsByIdAndRemovedAtIsNull(submission.getTargetArticleId())
+                : ArticleAddress.slugOf(submission.getTitle()).flatMap(articles::findBySlugAndRemovedAtIsNull);
+        return article.map(found -> ArticleAddress.pathOf(found.getSlug())).orElse(null);
     }
 
     /**
@@ -151,7 +193,7 @@ public class ModerationService {
      * @throws ApprovalConflictException if the title's address was taken while the submission waited
      */
     @Transactional
-    public void approve(String number, String summary, List<String> tagNames) {
+    public Published approve(String number, String summary, List<String> tagNames) {
         var submission = pendingForDecision(number);
         if (summary.isBlank()) {
             throw new ApprovalRefusedException("Give the article a summary.");
@@ -163,14 +205,13 @@ public class ModerationService {
         var chosenTags = tagsOf(tagNames);
         var now = OffsetDateTime.now();
 
-        if (submission.getType() == SubmissionType.NEW_ARTICLE) {
-            publish(submission, summary.strip(), chosenTags, now);
-        } else {
-            applyEdit(submission, summary.strip(), chosenTags, now);
-        }
+        var article = submission.getType() == SubmissionType.NEW_ARTICLE
+                ? publish(submission, summary.strip(), chosenTags, now)
+                : applyEdit(submission, summary.strip(), chosenTags, now);
         submission.setStatus(SubmissionStatus.APPROVED);
         submission.setDecidedAt(now);
         log.info("Approved submission {}", number);
+        return new Published(article.getTitle(), ArticleAddress.pathOf(article.getSlug()));
     }
 
     /**
@@ -178,9 +219,10 @@ public class ModerationService {
      * @throws SubmissionNotFoundException if the number was never issued
      * @throws AlreadyDecidedException if it is no longer pending
      * @throws RejectionRefusedException if the reason is longer than {@link #REASON_LIMIT}
+     * @return the rejected submission's title
      */
     @Transactional
-    public void reject(String number, String reason) {
+    public String reject(String number, String reason) {
         var submission = pendingForDecision(number);
         var stored = reason == null || reason.isBlank() ? null : reason.strip();
         if (stored != null && stored.length() > REASON_LIMIT) {
@@ -190,6 +232,7 @@ public class ModerationService {
         submission.setStatus(SubmissionStatus.REJECTED);
         submission.setDecidedAt(OffsetDateTime.now());
         log.info("Rejected submission {}", number);
+        return submission.getTitle();
     }
 
     /**
@@ -243,7 +286,7 @@ public class ModerationService {
         }
     }
 
-    private void publish(Submission submission, String summary, Set<Tag> chosenTags, OffsetDateTime now) {
+    private Article publish(Submission submission, String summary, Set<Tag> chosenTags, OffsetDateTime now) {
         var slug = freeSlug(submission.getTitle(), null);
         var article = new Article();
         article.setTitle(submission.getTitle());
@@ -256,9 +299,10 @@ public class ModerationService {
         articles.save(article);
         media.moveToArticle(submission.getId(), article.getId());
         events.publishEvent(new ArticleTextChanged(article.getId()));
+        return article;
     }
 
-    private void applyEdit(Submission submission, String summary, Set<Tag> chosenTags, OffsetDateTime now) {
+    private Article applyEdit(Submission submission, String summary, Set<Tag> chosenTags, OffsetDateTime now) {
         var article = articles.findWithTagsByIdAndRemovedAtIsNull(submission.getTargetArticleId())
                 .orElseThrow(
                         () -> new ApprovalConflictException("The article this edit is for is no longer published."));
@@ -280,6 +324,7 @@ public class ModerationService {
         article.setTags(chosenTags);
         media.moveToArticle(submission.getId(), article.getId());
         events.publishEvent(new ArticleTextChanged(article.getId()));
+        return article;
     }
 
     /**

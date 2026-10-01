@@ -6,7 +6,6 @@
 </head>
 <body>
   <main class="site-main">
-    <form th:replace="~{shared/security/LogOut :: form}"></form>
     <p class="number-label">
       Submission <span th:replace="~{shared/web/SubmissionNumber :: number(${review.number}, 'queue-number')}">SUB-7QM2-K9XP-4TVB</span> —
       <span th:text="${review.type.name() == 'EDIT'} ? 'edit' : 'new article'">new article</span>
@@ -14,7 +13,8 @@
     <h1 class="article-title" th:text="${review.title}">Getting a local SIM card</h1>
 
     <div class="form-error" role="alert" th:unless="${review.pending()}">
-      <p>This submission is no longer pending: it was <span th:text="${#strings.toLowerCase(review.status)}">approved</span>.</p>
+      <p>This submission is no longer pending: it was <span th:text="${#strings.toLowerCase(review.status)}">approved</span>.
+        <a th:if="${review.articlePath}" th:href="@{${review.articlePath}}">Open the published article</a></p>
       <p><a th:href="@{/moderate/queue}">Back to the queue</a></p>
     </div>
     <div class="form-error" role="alert" th:if="${error}">

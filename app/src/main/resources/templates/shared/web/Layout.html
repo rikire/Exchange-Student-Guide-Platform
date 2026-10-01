@@ -29,10 +29,19 @@
          tablet folds it into a native <details> menu, which needs no script under the CSP. -->
     <nav class="site-nav" aria-label="Site">
       <ul class="site-links" th:fragment="links">
-        <li><a th:href="@{/articles}">All articles</a></li>
-        <li><a th:href="@{/tags}">Browse tags</a></li>
-        <li><a th:href="@{/submissions/status}">Track a submission</a></li>
-        <li><a th:href="@{/submit}">Submit an article</a></li>
+        <!-- Fix 2.3 (F-24): a signed-in moderator gets their own links, Log out among them. -->
+        <th:block th:if="${moderator}">
+          <li><a th:href="@{/moderate/queue}">Queue</a></li>
+          <li><a th:href="@{/moderate/articles}">Homepage &amp; articles</a></li>
+          <li><a th:href="@{/}">The guide</a></li>
+          <li><form th:replace="~{shared/security/LogOut :: form}"></form></li>
+        </th:block>
+        <th:block th:unless="${moderator}">
+          <li><a th:href="@{/articles}">All articles</a></li>
+          <li><a th:href="@{/tags}">Browse tags</a></li>
+          <li><a th:href="@{/submissions/status}">Track a submission</a></li>
+          <li><a th:href="@{/submit}">Submit an article</a></li>
+        </th:block>
       </ul>
       <details class="site-menu">
         <summary>Menu</summary>

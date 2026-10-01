@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /** FR-026's two routes, behind the moderator login like all of {@code /moderate/**}: ask, then remove. */
 // trace:FR-026
@@ -30,8 +31,9 @@ class ArticleRemovalController {
     }
 
     @PostMapping("/moderate/articles/{address}/remove")
-    String remove(@PathVariable String address) {
-        removal.remove(address);
+    String remove(@PathVariable String address, RedirectAttributes redirect) {
+        var title = removal.remove(address);
+        redirect.addFlashAttribute(Done.ATTRIBUTE, new Done("Removed", title, null));
         return "redirect:/moderate/queue";
     }
 

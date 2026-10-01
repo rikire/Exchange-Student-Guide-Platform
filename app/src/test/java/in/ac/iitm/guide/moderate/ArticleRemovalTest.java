@@ -199,6 +199,21 @@ class ArticleRemovalTest {
         assertThat(result.getResponse().getRedirectedUrl()).isEqualTo("/moderate/queue");
     }
 
+    @Test
+    // trace:FR-026
+    void after_a_removal_the_queue_says_removed() throws Exception {
+        published("Hostel Life", "Rooms and mess.");
+        var session = loggedIn();
+
+        var result = remove(session, "hostel-life");
+
+        var queue = mockMvc.perform(get("/moderate/queue").session(session).flashAttrs(result.getFlashMap()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        assertThat(queue).contains("Removed").contains("Hostel Life");
+    }
+
     private MvcResult remove(MockHttpSession session, String address) throws Exception {
         var confirmation =
                 mockMvc.perform(get(removePath(address)).session(session)).andReturn();
