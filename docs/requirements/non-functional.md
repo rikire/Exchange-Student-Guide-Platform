@@ -65,7 +65,10 @@ Search returns results within a bound that keeps browsing usable on a modest cor
 
 ### NFR-003 — Multilingual content survival
 
-**Status:** planned
+**Status:** done — marked by the human on 2 Oct: `SearchFlowTest` stores a body mixing English,
+Hindi and Tamil and reads it back unchanged, and finds it by Hindi and Tamil words and phrases, on
+H2 and on PostgreSQL. Words are matched as written: the stemmer is English, so a Hindi or Tamil
+word in another form is not found
 
 Article content mixing English with Hindi, Tamil and other non-Latin scripts is stored and searched
 without corruption or loss.
