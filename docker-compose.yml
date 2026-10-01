@@ -42,6 +42,9 @@ services:
       # Empty keeps the moderator login closed rather than failing the start: the stand serves
       # readers without it.
       GUIDE_ADMIN_PASSWORD_HASH: ${GUIDE_ADMIN_PASSWORD_HASH:-}
+      # NFR-005's submissions per client address per hour (guide.contribute.submission-limit),
+      # raised in .env for a manual walk where one tester sends many; 5 otherwise.
+      GUIDE_CONTRIBUTE_SUBMISSIONLIMIT_REQUESTS: ${GUIDE_CONTRIBUTE_SUBMISSIONLIMIT_REQUESTS:-5}
       GUIDE_INDEX_TYPE: local-filesystem
       GUIDE_INDEX_DIR: /var/lib/guide/index
       GUIDE_MEDIA_ROOT: /var/lib/guide/media
