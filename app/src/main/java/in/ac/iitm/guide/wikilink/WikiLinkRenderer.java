@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TableBlock;
@@ -21,6 +22,8 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.NodeRenderer;
 import org.commonmark.renderer.html.HtmlNodeRendererContext;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.commonmark.renderer.text.TextContentNodeRendererContext;
+import org.commonmark.renderer.text.TextContentRenderer;
 
 /**
  * Turns an article body written in Markdown into HTML, with {@code [[Title]]} and {@code
@@ -57,6 +60,13 @@ public class WikiLinkRenderer {
             .attributeProviderFactory(context -> WikiLinkRenderer::markExternalLink)
             .attributeProviderFactory(context -> WikiLinkRenderer::makeTableFocusable)
             .nodeRendererFactory(WikiLinkHtml::new)
+            .build();
+
+    // A link and an image as their words alone: the library's own text renderer adds the address.
+    private final TextContentRenderer textRenderer = TextContentRenderer.builder()
+            .extensions(EXTENSIONS)
+            .stripNewlines(true)
+            .nodeRendererFactory(WordsOnly::new)
             .build();
 
     /**
@@ -145,6 +155,35 @@ public class WikiLinkRenderer {
 
         @Override
         public void visit(Image image) {}
+    }
+
+    /**
+     * The body as a reader reads it, for search to index and quote (FR-007): Markdown's marks gone, a
+     * link or an image as its words, a wiki link as the words it shows, all on one line. Raw HTML in
+     * the body stays as text; whoever shows the result escapes it.
+     */
+    public String plainText(String markdown) {
+        var text = textRenderer.render(parser.parse(markdown));
+        return WIKI_LINK.matcher(text).replaceAll(match -> {
+            var occurrence = Occurrence.parse(match.group(1));
+            return Matcher.quoteReplacement(occurrence == null ? match.group() : occurrence.words());
+        });
+    }
+
+    /** Renders a link or an image in plain text as its words, without the address. */
+    private record WordsOnly(TextContentNodeRendererContext context) implements NodeRenderer {
+
+        @Override
+        public Set<Class<? extends Node>> getNodeTypes() {
+            return Set.of(Link.class, Image.class);
+        }
+
+        @Override
+        public void render(Node node) {
+            for (var child = node.getFirstChild(); child != null; child = child.getNext()) {
+                context.render(child);
+            }
+        }
     }
 
     /** One stretch of a text node: words to keep as they are, or a wiki link to resolve. */

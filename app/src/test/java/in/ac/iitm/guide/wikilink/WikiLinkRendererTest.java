@@ -392,4 +392,23 @@ class WikiLinkRendererTest {
 
         assertThat(html).contains(">X</a>").doesNotContain("\" onmouseover=\"");
     }
+
+    @Test
+    // trace:FR-007
+    void plain_text_drops_markdown_and_keeps_the_words_of_links_images_and_wiki_links() {
+        var markdown = "# Arrival\n\n**Bring** the [[Registering with FRRO|FRRO form]], see [[Hostel Life]],"
+                + " [the office](https://frro.gov.in) and ![a photo of the gate](/img/gate.jpg).\n\n- one\n- two";
+
+        var text = new WikiLinkRenderer().plainText(markdown);
+
+        assertThat(text)
+                .isEqualTo(
+                        "Arrival: Bring the FRRO form, see Hostel Life, the office and a photo of the gate. one two");
+    }
+
+    @Test
+    // trace:FR-007
+    void plain_text_keeps_raw_html_as_text_for_the_caller_to_escape() {
+        assertThat(new WikiLinkRenderer().plainText("A <b>bold</b> claim.")).isEqualTo("A <b>bold</b> claim.");
+    }
 }
