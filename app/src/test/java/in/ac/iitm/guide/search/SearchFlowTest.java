@@ -103,16 +103,85 @@ class SearchFlowTest {
 
     @Test
     // trace:FR-007
-    void a_published_article_matching_more_of_the_query_words_appears_higher() throws Exception {
-        publish("Hostel mess timings", "Breakfast is served from seven.");
-        publish("Hostel laundry and mess", "The laundry opens at nine.");
+    void only_articles_holding_every_word_of_the_query_appear() throws Exception {
+        publish("Registering with FRRO", "Registration takes fourteen days.");
+        publish("Connecting to the campus Wi-Fi", "Registration of your laptop comes first.");
+        publish("Banks and ATMs", "Bring your FRRO papers.");
 
-        var page = search("hostel laundry");
+        var page = search("FRRO registration");
 
-        assertThat(page.indexOf("/articles/hostel-laundry-and-mess"))
-                .as("the article with both words comes before the one with one")
-                .isPositive()
-                .isLessThan(page.indexOf("/articles/hostel-mess-timings"));
+        assertThat(page)
+                .contains("href=\"/articles/registering-with-frro\"")
+                .doesNotContain("/articles/connecting-to-the-campus-wi-fi")
+                .doesNotContain("/articles/banks-and-atms");
+    }
+
+    @Test
+    // trace:FR-007
+    void the_words_may_be_spread_over_the_title_the_text_and_the_tags() throws Exception {
+        publish("Hostel rules", "Lights out at eleven.", "laundry");
+
+        assertThat(search("hostel eleven laundry")).contains("href=\"/articles/hostel-rules\"");
+    }
+
+    @Test
+    // trace:FR-007
+    void markup_and_query_syntax_typed_into_the_box_find_nothing() throws Exception {
+        publish("Hostel life", "The hostel has a siren for fire drills.");
+        publish("Hostel mess", "The mess opens at seven.");
+
+        assertThat(search("<script>alert(1)</script>")).contains("No article holds all of these words");
+        assertThat(search("hostel\" OR 1=1 --")).contains("No article holds all of these words");
+    }
+
+    @Test
+    // trace:FR-007
+    void when_no_article_holds_every_word_the_page_says_so_and_links_to_the_tags() throws Exception {
+        publish("Hostel mess", "The mess opens at seven.");
+
+        var page = search("hostel snorkelling");
+
+        assertThat(page)
+                .contains("No article holds all of these words")
+                .doesNotContain("/articles/hostel-mess")
+                .contains("href=\"/#tags\"");
+    }
+
+    @Test
+    // trace:FR-007
+    void a_result_shows_a_passage_of_the_text_with_the_words_marked() throws Exception {
+        publish("Your first week", "Open a bank account, then visit the FRRO office before Friday.");
+
+        assertThat(search("frro office")).contains("visit the <mark>FRRO</mark> <mark>office</mark> before Friday");
+    }
+
+    @Test
+    // trace:FR-007
+    void the_passage_is_plain_text_without_markdown_or_wiki_link_brackets() throws Exception {
+        publish(
+                "Your first week",
+                "**Visit** the [[Registering with FRRO|FRRO]] page and [the office](https://frro.gov.in).");
+
+        var page = search("visit office");
+
+        assertThat(passage(page)).doesNotContain("**").doesNotContain("[[").doesNotContain("](");
+        assertThat(passage(page)).contains("<mark>Visit</mark>").contains("the <mark>office</mark>");
+    }
+
+    @Test
+    // trace:FR-007
+    void html_in_the_text_is_escaped_in_the_passage() throws Exception {
+        publish("Odd article", "Mention of <script>alert('x')</script> and the canteen.");
+
+        assertThat(passage(search("canteen"))).contains("&lt;script&gt;").doesNotContain("<script>");
+    }
+
+    @Test
+    // trace:FR-007
+    void the_words_are_marked_in_the_title_too() throws Exception {
+        publish("Registering with FRRO", "Fourteen days.");
+
+        assertThat(search("frro")).contains("Registering with <mark>FRRO</mark>");
     }
 
     @Test
@@ -159,10 +228,10 @@ class SearchFlowTest {
 
     @Test
     // trace:FR-007
-    void a_result_shows_the_summary_and_the_tags() throws Exception {
+    void a_result_matched_only_in_its_title_or_tags_shows_its_summary_and_its_tags() throws Exception {
         publish("Getting a SIM card", "Airtel and Jio both have shops on campus.", "phone");
 
-        assertThat(search("jio")).contains("A summary of Getting a SIM card.").contains(">phone<");
+        assertThat(search("phone")).contains("A summary of Getting a SIM card.").contains(">phone<");
     }
 
     @Test
@@ -271,13 +340,21 @@ class SearchFlowTest {
     void a_query_of_fifty_words_is_searched() throws Exception {
         publish("Campus map", "Where the buildings are.");
 
-        assertThat(search(words(49) + " buildings")).contains("href=\"/articles/campus-map\"");
+        mockMvc.perform(get("/search").param("q", words(49) + " buildings")).andExpect(status().isOk());
     }
 
     @Test
     // trace:FR-007
     void a_query_of_fifty_one_words_answers_400() throws Exception {
         mockMvc.perform(get("/search").param("q", words(51))).andExpect(status().isBadRequest());
+    }
+
+    /** The first result's passage, as the page shows it. */
+    private static String passage(String page) {
+        var matcher = Pattern.compile("<p class=\"result-snippet\">(.*?)</p>", Pattern.DOTALL)
+                .matcher(page);
+        assertThat(matcher.find()).as("the result shows a passage").isTrue();
+        return matcher.group(1);
     }
 
     /** Distinct three-letter words, so no two of them reduce to one term. */

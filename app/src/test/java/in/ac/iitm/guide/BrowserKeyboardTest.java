@@ -69,7 +69,7 @@ class BrowserKeyboardTest {
     void startTheBrowserAndPublishTwoLinkedArticles() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch();
-        publish("Registering with FRRO", "Register within 14 days. Bring your [[Hostel Life]] papers.");
+        publish("Registering with FRRO", "FRRO registration is due within 14 days. Bring your [[Hostel Life]] papers.");
         publish("Hostel Life", "Rooms are shared.");
     }
 

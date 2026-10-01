@@ -36,7 +36,10 @@ class SearchController {
             return "search/SearchResults";
         }
         model.addAttribute("query", query);
-        if (search.wordsIn(query) > MAX_WORDS) {
+        var words = search.wordsIn(query);
+        // More than one word changes what an empty result means: none holds all of them (FR-007).
+        model.addAttribute("words", words);
+        if (words > MAX_WORDS) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             model.addAttribute("tooLong", true);
             return "search/SearchResults";

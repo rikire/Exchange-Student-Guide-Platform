@@ -109,6 +109,15 @@ p a, .article-body a { text-decoration: underline; }
 .search-form-page { margin: 0 0 var(--space-4); }
 .search-form-page .search-input { border: 1px solid var(--ink-soft); }
 .results-meta { color: var(--ink-soft); margin: 0 0 var(--space-4); }
+/* FR-007's results as docs/design/screens/SearchResults.html draws them: a list, the query's words marked. */
+.result-list { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
+.result-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+.result-card:first-child { padding-top: 0; }
+.result-title { font-size: var(--text-lead); font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+.result-title a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--maroon); }
+.result-snippet { margin: 0; color: var(--ink-soft); line-height: 1.5; overflow-wrap: anywhere; }
+.result-card mark { background: var(--sand-raised); color: var(--ink); padding: 0 2px; }
+.rank-badge { font-size: var(--text-small); font-weight: 700; color: var(--maroon-dark); text-transform: uppercase; }
 
 /* FEAT-005: the submission form and its confirmation. */
 .form-note { color: var(--ink-soft); margin: 0 0 var(--space-5); }

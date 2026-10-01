@@ -2,6 +2,8 @@ package in.ac.iitm.guide.search.internal;
 
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import java.util.List;
+import org.hibernate.search.engine.backend.types.Highlightable;
 import org.hibernate.search.mapper.orm.mapping.HibernateOrmMappingConfigurationContext;
 import org.hibernate.search.mapper.orm.mapping.HibernateOrmSearchMappingConfigurer;
 import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
@@ -25,8 +27,16 @@ public class ArticleSearchMapping implements HibernateOrmSearchMappingConfigurer
 
         var article = mapping.type(Article.class);
         article.indexed();
-        article.property(TITLE).fullTextField().analyzer(EnglishAnalysis.ENGLISH);
-        article.property(BODY).fullTextField().analyzer(EnglishAnalysis.ENGLISH);
+        // Highlightable, so a result marks the query's words in its title and quotes its body (FR-007).
+        article.property(TITLE)
+                .fullTextField()
+                .analyzer(EnglishAnalysis.ENGLISH)
+                .highlightable(List.of(Highlightable.ANY));
+        article.property(BODY)
+                .fullTextField()
+                .analyzer(EnglishAnalysis.ENGLISH)
+                .valueBridge(new BodyAsText())
+                .highlightable(List.of(Highlightable.ANY));
         article.property(REMOVED_AT).genericField();
         // A tag's name never changes once stored (ADR-0005), and Tag has no link back to its
         // articles, so only a change to an article's own tag set re-indexes it.
