@@ -120,13 +120,16 @@ links to articles and `/articles/registering-with-frro` returned 200.
 
 ## Open questions
 
-1. **Values the database cannot hold.** A title of about a hundred Devanagari letters gives a file
-   name over 255 bytes and the export fails with an `UncheckedIOException`; a title over 255
+1. **Values the database cannot hold.** ~~A title of about a hundred Devanagari letters gives a file
+   name over 255 bytes and the export fails~~ — fixed 2 Oct: `ArticleArchive.fileNameOf` cuts such
+   an address at a whole character and adds eight hex digits of its SHA-256;
+   `an_article_whose_address_is_longer_than_a_file_name_may_be_is_exported_and_comes_back` was red
+   first (303 bytes). A title over 255
    characters reaches the database and fails as a `DataIntegrityViolationException` instead of an
    `ArchiveFormatException` (a tag over 64 is refused by `taxonomy` since 27 Sep). The import still rolls back. Not met by any article today.
 2. **A file saved with a byte-order mark**, or with spaces after the closing `---`, is refused as
    having no front matter, which names the wrong fault. Not met by any seed file.
 3. **Article links.** The importer writes no `article_link` rows, because the extractor does not
    exist: DEBT-006.
-4. **NFR-004's status** is `planned` and stays so until the human changes it; the fit criterion is
-   met for published articles, without media.
+4. ~~**NFR-004's status**~~ — `done`, marked by the human on 2 Oct; the fit criterion names
+   published articles and their metadata, and media are not exported.

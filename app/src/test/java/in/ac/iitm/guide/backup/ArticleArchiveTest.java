@@ -402,6 +402,31 @@ class ArticleArchiveTest {
 
     @Test
     // trace:NFR-004
+    void an_article_whose_address_is_longer_than_a_file_name_may_be_is_exported_and_comes_back() throws Exception {
+        // A hundred Devanagari letters: 300 bytes in UTF-8, past the 255 a file system allows a name.
+        var long1 = "छ".repeat(100);
+        var long2 = "छ".repeat(99) + "त";
+        archive.importFiles(Map.of(
+                "a.md", article(long1, "tags: []", "First.\n"), "b.md", article(long2, "tags: []", "Second.\n")));
+
+        assertThat(archive.exportTo(directory)).isEqualTo(2);
+        try (var files = Files.list(directory)) {
+            assertThat(files.map(file -> file.getFileName().toString()))
+                    .hasSize(2)
+                    .allSatisfy(name -> assertThat(name.getBytes(StandardCharsets.UTF_8).length)
+                            .isLessThanOrEqualTo(255)
+                            .isGreaterThan(200));
+        }
+        jdbc.execute("DELETE FROM article");
+        var report = archive.importFrom(directory);
+
+        assertThat(report.imported()).isEqualTo(2);
+        assertThat(jdbc.queryForList("SELECT title FROM article", String.class))
+                .containsExactlyInAnyOrder(long1, long2);
+    }
+
+    @Test
+    // trace:NFR-004
     void an_export_of_more_articles_than_one_page_holds_every_one() throws Exception {
         var files = new LinkedHashMap<String, String>();
         IntStream.range(0, 205)

@@ -15,8 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -150,7 +153,7 @@ public class ArticleArchive {
         do {
             page = articles.findByRemovedAtIsNull(pageable);
             for (var article : page) {
-                write(directory.resolve(article.getSlug() + ".md"), archived(article));
+                write(directory.resolve(fileNameOf(article.getSlug())), archived(article));
                 written++;
             }
             pageable = page.nextPageable();
@@ -186,6 +189,45 @@ public class ArticleArchive {
             return tags.named(names);
         } catch (TagRejectedException e) {
             throw new ArchiveFormatException(fileName + ": " + e.getMessage());
+        }
+    }
+
+    /** What most file systems allow a name, in bytes; ext4, the stand's, among them. */
+    private static final int NAME_BYTES = 255;
+
+    private static final String EXTENSION = ".md";
+
+    /**
+     * The article's address as a file name. An address longer than a file name may be — a hundred
+     * Devanagari letters are 300 bytes — is cut at a whole character and given the first eight hex
+     * digits of its SHA-256, so two long addresses sharing a beginning stay two files. The import
+     * reads the title from the front matter, never the name, so a cut name loses nothing.
+     */
+    static String fileNameOf(String slug) {
+        if (slug.getBytes(StandardCharsets.UTF_8).length + EXTENSION.length() <= NAME_BYTES) {
+            return slug + EXTENSION;
+        }
+        var suffix = "-" + HexFormat.of().formatHex(sha256(slug), 0, 4) + EXTENSION;
+        var room = NAME_BYTES - suffix.length();
+        var cut = new StringBuilder();
+        var used = 0;
+        for (var point : slug.codePoints().toArray()) {
+            var bytes = new String(Character.toChars(point)).getBytes(StandardCharsets.UTF_8).length;
+            if (used + bytes > room) {
+                break;
+            }
+            cut.appendCodePoint(point);
+            used += bytes;
+        }
+        return cut + suffix;
+    }
+
+    private static byte[] sha256(String text) {
+        try {
+            return MessageDigest.getInstance("SHA-256").digest(text.getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException e) {
+            // Every Java platform must provide SHA-256 (MessageDigest's documentation).
+            throw new IllegalStateException(e);
         }
     }
 }
