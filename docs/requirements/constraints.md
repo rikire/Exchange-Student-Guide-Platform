@@ -120,3 +120,13 @@ refuses the second write, that approval rolls back, and its submission stays pen
 try, which then gets the ordinary `409`. Handling it would take a test that forces the race and code
 that translates the database's refusal. The human judged that not worth it on 28 Sep, so it was
 closed as DEBT-012.
+
+### CON-010 — No CAPTCHA on the forms
+
+**Rationale:** FR-013 asked for a CAPTCHA with its provider undecided. Every hosted one (reCAPTCHA,
+hCaptcha, Turnstile) runs a script from another domain in the page, which the Content-Security-Policy
+(`script-src 'self'`, ADR-0013) refuses, and sends each contributor's browser data to that company,
+which the guide has avoided everywhere else. The abuse it stops is already bounded: five
+submissions an hour from one address (NFR-005), every submission seen by OGE before it is public,
+and the moderator's rejection. Decided by the human on 2 Oct; FR-013 keeps its rate-limit half,
+which is done. Revisit if OGE reports spam the limit does not hold.
