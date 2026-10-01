@@ -21,10 +21,9 @@ import org.hibernate.search.mapper.orm.Search;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -64,7 +63,7 @@ class SearchFlowTest {
     private JdbcTemplate jdbc;
 
     @Autowired
-    private List<ApplicationRunner> runners;
+    private List<SmartLifecycle> lifecycles;
 
     @AfterEach
     void clearTheDatabaseAndTheIndex() {
@@ -294,9 +293,9 @@ class SearchFlowTest {
     }
 
     private void startUp() throws Exception {
-        for (var runner : runners) {
-            if (runner.getClass().getPackageName().startsWith(SearchFlowTest.class.getPackageName())) {
-                runner.run(new DefaultApplicationArguments());
+        for (var lifecycle : lifecycles) {
+            if (lifecycle.getClass().getPackageName().startsWith(SearchFlowTest.class.getPackageName())) {
+                lifecycle.start();
             }
         }
     }

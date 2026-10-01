@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import in.ac.iitm.guide.backup.internal.SeedRunner;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -67,7 +66,7 @@ class SeedRunnerTest {
     void running_the_seed_again_adds_nothing() {
         var before = jdbc.queryForObject("SELECT count(*) FROM article", Integer.class);
 
-        runner.run(new DefaultApplicationArguments());
+        runner.seed();
 
         assertThat(jdbc.queryForObject("SELECT count(*) FROM article", Integer.class))
                 .isEqualTo(before);
