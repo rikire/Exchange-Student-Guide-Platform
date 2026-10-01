@@ -80,6 +80,11 @@ Each follows from something already decided; each has a test.
 - **Title, summary and body are required**; blank after trimming is empty. The title is at most 255
   characters (the column). Blank tag fields are ignored; a tag longer than 64 characters (the column)
   is refused with `422` by `taxonomy`.
+- **The summary is at most 300 characters, the body 100,000, and at most 10 distinct tags**, each
+  refused with `422` (the human, 1 Oct, walkthrough F-32 and F-33). The summary's 300 is
+  `Article.LONGEST_SUMMARY`, shared with the moderator's approval; the body's is the preview's
+  `BodyPreview.LONGEST_BODY`; the tag count is `Tags`', counted after trimming and lower-casing. The
+  form's `maxlength` carries the first two, the domain refuses all three.
 - **FR-008 is covered only for storing a tag** — `Tags`, the one way a tag reaches the table. Browsing
   by tag is the `taxonomy` step of phase 3 and a feature of its own.
 - **Tags go through `taxonomy`**, which trims and lower-cases them and creates the missing ones

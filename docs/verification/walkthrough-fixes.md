@@ -147,6 +147,11 @@ pushes the queue's "Review" link off screen; a summary and the list of tags have
 - **Change, test:** `BrowserLayoutTest` gains a fixture article with a 255-character unbroken title
   and a long summary, so this cannot come back unseen.
 - **Check:** with that fixture, no page scrolls sideways at any width; tests for each new limit.
+- **Limits done 1 Oct (Mikhail's half):** `Article.LONGEST_SUMMARY` (300) checked by the submission
+  and the moderator's approval, the body's 100,000 (`BodyPreview.LONGEST_BODY`) by the submission,
+  10 distinct tags by `Tags.named` for every path that writes tags; `maxlength` on the summary and
+  body fields. A boundary pair for each in `SubmissionFlowTest`, `ModerationFlowTest` and `TagsTest`,
+  red first. The layout half is open.
 
 ### 1.9 Larger uploads, and what they leave behind
 

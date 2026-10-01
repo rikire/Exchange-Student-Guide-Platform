@@ -123,7 +123,8 @@ And ADR-0013's conditions:
 
 - FR-028 (`[[` completion) — its own contract, by the human's decision of 28 Sep.
 - The preview's rate limit — NFR-005; [DEBT-017](../tech-debt.md) until then.
-- A body length limit on the submission itself: the 100,000 characters bound the preview only.
+- ~~A body length limit on the submission itself~~ — built 1 Oct with walkthrough fix 1.8: the
+  submission refuses a body over the same 100,000 characters (FEAT-005).
 
 ## Open questions
 

@@ -13,10 +13,12 @@ import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -186,6 +188,63 @@ class SubmissionFlowTest {
         assertThat(submitNew("t".repeat(256), "S.", "B.").getResponse().getStatus())
                 .isEqualTo(422);
         assertThat(submitNew("t".repeat(255), "S.", "B.").getResponse().getStatus())
+                .isEqualTo(302);
+    }
+
+    @Test
+    // trace:FR-010
+    void the_form_stops_typing_at_the_summary_and_body_limits() throws Exception {
+        var form = page("/submit");
+
+        assertThat(form).containsPattern("name=\"summary\"[^>]*maxlength=\"300\"");
+        assertThat(form).containsPattern("name=\"body\"[^>]*maxlength=\"100000\"");
+    }
+
+    @Test
+    // trace:FR-010
+    void a_summary_of_300_characters_is_accepted_and_one_of_301_is_refused() throws Exception {
+        // Walkthrough F-32: a summary had no limit. 300 decided by the human on 1 Oct.
+        var refused = submitNew("Refused", "s".repeat(301), "B.");
+
+        assertThat(refused.getResponse().getStatus()).isEqualTo(422);
+        assertThat(refused.getResponse().getContentAsString()).contains("The summary is longer than 300 characters.");
+        assertThat(submitNew("Accepted", "s".repeat(300), "B.").getResponse().getStatus())
+                .isEqualTo(302);
+    }
+
+    @Test
+    // trace:FR-010
+    void a_body_of_100000_characters_is_accepted_and_one_of_100001_is_refused() throws Exception {
+        var refused = submitNew("Refused", "S.", "b".repeat(100_001));
+
+        assertThat(refused.getResponse().getStatus()).isEqualTo(422);
+        assertThat(refused.getResponse().getContentAsString()).contains("The text is longer than 100000 characters.");
+        assertThat(submitNew("Accepted", "S.", "b".repeat(100_000))
+                        .getResponse()
+                        .getStatus())
+                .isEqualTo(302);
+    }
+
+    @Test
+    // trace:FR-010
+    void ten_tags_are_accepted_and_eleven_are_refused() throws Exception {
+        var refused = submitNew("Refused", "S.", "B.", numbered(11));
+
+        assertThat(refused.getResponse().getStatus()).isEqualTo(422);
+        assertThat(refused.getResponse().getContentAsString()).contains("More than 10 tags.");
+        assertThat(submitNew("Accepted", "S.", "B.", numbered(10)).getResponse().getStatus())
+                .isEqualTo(302);
+    }
+
+    @Test
+    // trace:FR-010
+    void tags_that_differ_only_in_case_count_once() throws Exception {
+        var tags = new ArrayList<>(List.of(numbered(10)));
+        tags.add("TAG-1");
+
+        assertThat(submitNew("Ten tags after all", "S.", "B.", tags.toArray(String[]::new))
+                        .getResponse()
+                        .getStatus())
                 .isEqualTo(302);
     }
 
@@ -513,6 +572,10 @@ class SubmissionFlowTest {
 
     private Map<String, Object> onlyAsset() {
         return jdbc.queryForMap("SELECT * FROM media_asset");
+    }
+
+    private static String[] numbered(int count) {
+        return IntStream.rangeClosed(1, count).mapToObj(i -> "tag-" + i).toArray(String[]::new);
     }
 
     private MvcResult submitNew(String title, String summary, String body, String... tags) throws Exception {

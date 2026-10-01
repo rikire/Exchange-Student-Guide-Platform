@@ -2,12 +2,14 @@ package in.ac.iitm.guide.contribute.web;
 
 import in.ac.iitm.guide.contribute.internal.ArticleNotPublishedException;
 import in.ac.iitm.guide.contribute.internal.ArticleRemovedWhileEditingException;
+import in.ac.iitm.guide.contribute.internal.BodyPreview;
 import in.ac.iitm.guide.contribute.internal.ContributionLimits;
 import in.ac.iitm.guide.contribute.internal.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
 import in.ac.iitm.guide.contribute.internal.SubmissionService.Draft;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.Upload;
+import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -191,6 +193,8 @@ class SubmissionController {
     private String form(Model model, FormPage page) {
         model.addAttribute("form", page);
         model.addAttribute("accepted", media.accepted());
+        model.addAttribute("summaryLimit", Article.LONGEST_SUMMARY);
+        model.addAttribute("bodyLimit", BodyPreview.LONGEST_BODY);
         return "contribute/SubmissionForm";
     }
 

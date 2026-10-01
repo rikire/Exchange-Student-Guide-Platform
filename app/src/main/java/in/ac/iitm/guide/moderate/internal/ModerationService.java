@@ -156,6 +156,10 @@ public class ModerationService {
         if (summary.isBlank()) {
             throw new ApprovalRefusedException("Give the article a summary.");
         }
+        if (summary.strip().length() > Article.LONGEST_SUMMARY) {
+            throw new ApprovalRefusedException(
+                    "The summary is longer than " + Article.LONGEST_SUMMARY + " characters.");
+        }
         var chosenTags = tagsOf(tagNames);
         var now = OffsetDateTime.now();
 

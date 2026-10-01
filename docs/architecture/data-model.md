@@ -42,7 +42,8 @@ made FR-009 silently mean "recently changed".
 **`summary` is stored, not derived.** It is written by the contributor (FR-010, FR-011) and
 adjustable by the moderator (FR-017), and it appears wherever articles are listed rather than read.
 The ellipsed extract in search results is a different thing — computed around the match at query
-time and stored nowhere.
+time and stored nowhere. At most 300 characters (`Article.LONGEST_SUMMARY`, the human, 1 Oct): the
+column is `TEXT`, so the limit is the application's, checked on submission and on approval.
 
 **`slug` is the article's address, stored, unique and indexed** ([V5](../../app/src/main/resources/db/migration/V5__add_article_slug.sql),
 25 Sep). It is the title lower-cased, in composed Unicode, with each run of characters that are not

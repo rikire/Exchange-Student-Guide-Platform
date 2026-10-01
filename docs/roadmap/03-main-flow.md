@@ -282,6 +282,8 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [Long input must not break the layout; limits for summary, tags and body (F-31, F-32, F-33)](../verification/walkthrough-fixes.md#18-long-input-breaks-the-layout-and-some-input-has-no-limit-f-31-f-32-f-33) — decided 1 Oct: summary 300, 10 tags, body 100,000
       — check: a fixture with a 255-character unbroken title scrolls no page sideways; a test per limit
       — owner: **Abdirakhim** the layout and the `BrowserLayoutTest` fixture; **Mikhail** the three limits
+      **Limits done 1 Oct** (summary, body, tag count, in the domain and the form's `maxlength`);
+      the layout half is still to do.
 - [ ] [Larger uploads: 500 MB a video, 100 GB in all, from `.env`; sweep rejected files (DEBT-014)](../verification/walkthrough-fixes.md#19-larger-uploads-and-what-they-leave-behind) — decided 1 Oct; the limits done 1 Oct, the sweep to do
       — check: `MediaConfigurationTest`, `UploadTooLargeTest`; a sweep test that never touches a published asset
       — owner: **Mikhail**

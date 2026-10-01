@@ -26,6 +26,12 @@ public class Tags {
      */
     private static final int LONGEST = 64;
 
+    /**
+     * Distinct tags on one article or submission, counted after normalising (the human, 1 Oct,
+     * walkthrough F-33); every path that writes tags comes through here.
+     */
+    static final int MOST = 10;
+
     private final TagRepository tags;
 
     Tags(TagRepository tags) {
@@ -35,13 +41,17 @@ public class Tags {
     /**
      * @param names tags as someone typed them
      * @return the stored tag for each distinct name, created when missing; empty for no names
-     * @throws TagRejectedException if a name is empty after trimming or longer than 64 characters
+     * @throws TagRejectedException if a name is empty after trimming or longer than 64 characters, or
+     *     there are more than {@value #MOST} distinct names
      */
     @Transactional
     public Set<Tag> named(Collection<String> names) {
         var normalised = new LinkedHashSet<String>();
         for (var name : names) {
             normalised.add(normalise(name));
+        }
+        if (normalised.size() > MOST) {
+            throw new TagRejectedException("More than " + MOST + " tags");
         }
         if (normalised.isEmpty()) {
             return Set.of();

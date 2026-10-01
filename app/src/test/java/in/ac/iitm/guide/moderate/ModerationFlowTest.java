@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -512,6 +513,43 @@ class ModerationFlowTest {
         assertThat(result.getResponse().getContentAsString())
                 .contains("Give the article a summary.")
                 .contains("value=\"telecom\"");
+        assertThat(articleCount()).isZero();
+        assertThat(statusOf(submission)).isEqualTo("PENDING");
+    }
+
+    @Test
+    // trace:FR-017
+    void the_review_stops_typing_at_the_summary_limit() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var review = page(loggedIn(), reviewPath(submission));
+
+        assertThat(review).containsPattern("name=\"summary\"[^>]*maxlength=\"300\"");
+    }
+
+    @Test
+    // trace:FR-017
+    void an_approval_with_a_summary_over_300_characters_is_refused_on_the_review() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+
+        var result = approve(loggedIn(), submission, "s".repeat(301), "telecom");
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+        assertThat(result.getResponse().getContentAsString()).contains("The summary is longer than 300 characters.");
+        assertThat(articleCount()).isZero();
+        assertThat(statusOf(submission)).isEqualTo("PENDING");
+    }
+
+    @Test
+    // trace:FR-017
+    void an_approval_with_eleven_tags_is_refused_on_the_review() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var eleven = IntStream.rangeClosed(1, 11).mapToObj(i -> "tag-" + i).toArray(String[]::new);
+
+        var result = approve(loggedIn(), submission, "Summary.", eleven);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+        assertThat(result.getResponse().getContentAsString()).contains("More than 10 tags.");
         assertThat(articleCount()).isZero();
         assertThat(statusOf(submission)).isEqualTo("PENDING");
     }

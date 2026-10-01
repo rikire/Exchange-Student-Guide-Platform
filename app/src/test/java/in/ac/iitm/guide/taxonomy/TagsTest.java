@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import in.ac.iitm.guide.shared.persistence.Tag;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +86,21 @@ class TagsTest {
         assertThatThrownBy(() -> tags.named(List.of("a".repeat(65))))
                 .isInstanceOf(TagRejectedException.class)
                 .hasMessageContaining("64");
+    }
+
+    @Test
+    // trace:FR-008
+    void ten_tags_are_kept_and_eleven_are_refused_counted_after_normalising() {
+        var ten = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag-" + i).toList();
+        var elevenSpellingsOfTen = new ArrayList<>(ten);
+        elevenSpellingsOfTen.add(" TAG-1 ");
+        var eleven = new ArrayList<>(ten);
+        eleven.add("tag-11");
+
+        assertThat(tags.named(elevenSpellingsOfTen)).hasSize(10);
+        assertThatThrownBy(() -> tags.named(eleven))
+                .isInstanceOf(TagRejectedException.class)
+                .hasMessage("More than 10 tags");
     }
 
     @Test

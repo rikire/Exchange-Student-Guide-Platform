@@ -61,7 +61,7 @@
               th:action="@{/moderate/submissions/{number}/approve(number=${review.number})}">
           <label class="field">
             <span class="field-label">Summary (adjust before publishing)</span>
-            <input class="field-input" type="text" name="summary" required th:value="${summary}">
+            <input class="field-input" type="text" name="summary" required th:maxlength="${summaryLimit}" th:value="${summary}">
           </label>
           <fieldset class="field">
             <legend class="field-label">Tags (suggested by the contributor — adjust before publishing)</legend>

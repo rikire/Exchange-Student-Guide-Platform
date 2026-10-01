@@ -88,6 +88,9 @@ Confirmed by the human on 28 Sep with the contract for this step (prompt journal
 - **The queue shows when a submission was sent in the office's time zone**, with its label
   (`1 Oct 2026, 17:28 IST`), from the `guide.time-zone` setting through `shared/web/DisplayTime`
   (walkthrough F-23, 1 Oct; it showed the stored UTC until then).
+- **The approval keeps the contributor's limits**: a summary over 300 characters
+  (`Article.LONGEST_SUMMARY`) or more than 10 tags is refused with `422` on the review page (1 Oct,
+  walkthrough F-32 and F-33).
 
 ## Acceptance criteria
 

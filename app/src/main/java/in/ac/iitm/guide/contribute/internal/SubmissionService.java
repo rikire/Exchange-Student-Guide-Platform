@@ -191,8 +191,16 @@ public class SubmissionService {
         if (draft.summary().isBlank()) {
             throw new SubmissionRejectedException("Give the article a summary.");
         }
+        if (draft.summary().strip().length() > Article.LONGEST_SUMMARY) {
+            throw new SubmissionRejectedException(
+                    "The summary is longer than " + Article.LONGEST_SUMMARY + " characters.");
+        }
         if (draft.body().isBlank()) {
             throw new SubmissionRejectedException("The article has no text.");
+        }
+        if (draft.body().length() > BodyPreview.LONGEST_BODY) {
+            throw new SubmissionRejectedException(
+                    "The text is longer than " + BodyPreview.LONGEST_BODY + " characters.");
         }
         return ArticleAddress.slugOf(title)
                 .orElseThrow(() -> new SubmissionRejectedException("The title needs at least one letter or digit."));

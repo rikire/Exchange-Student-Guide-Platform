@@ -8,6 +8,7 @@ import in.ac.iitm.guide.moderate.internal.ModerationService.Review;
 import in.ac.iitm.guide.moderate.internal.RejectionRefusedException;
 import in.ac.iitm.guide.moderate.internal.SubmissionNotFoundException;
 import in.ac.iitm.guide.moderate.persistence.ModerateArticleRepository;
+import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
 import jakarta.servlet.http.HttpServletResponse;
@@ -123,6 +124,7 @@ class ModerationController {
         model.addAttribute("tagFields", fields);
         model.addAttribute("error", error);
         model.addAttribute("reasonLimit", ModerationService.REASON_LIMIT);
+        model.addAttribute("summaryLimit", Article.LONGEST_SUMMARY);
         return "moderate/SubmissionReview";
     }
 

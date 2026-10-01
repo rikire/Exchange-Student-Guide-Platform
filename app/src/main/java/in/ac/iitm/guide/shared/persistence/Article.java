@@ -24,6 +24,13 @@ import java.util.UUID;
 @Table(name = "article")
 public class Article {
 
+    /**
+     * The longest summary, in {@link String#length()} units like the title's 255: a product rule the
+     * human set on 1 Oct (walkthrough F-32), checked wherever a summary is written — the contributor's
+     * form and the moderator's approval. The column is {@code TEXT}, so the database does not hold it.
+     */
+    public static final int LONGEST_SUMMARY = 300;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

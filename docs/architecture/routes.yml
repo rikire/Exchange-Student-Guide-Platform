@@ -119,7 +119,8 @@ routes:
       ones). Sent as `multipart/form-data`
     responses: >-
       `302` to the confirmation route on success; `422` on a title collision (with the offered
-      link/rename choice) or a rejected attachment; `413` with the empty form and the error when the
+      link/rename choice), a rejected attachment, or a field over its limit (title 255, summary 300,
+      body 100,000 characters, at most 10 tags, decided 1 Oct); `413` with the empty form and the error when the
       request is larger than the container accepts, before any field is read; `429` re-rendering the
       form with the text typed and `Retry-After` past NFR-005's limit, 5 accepted submissions an hour
       per client address, new articles and edits together
@@ -154,7 +155,7 @@ routes:
       `302` to the confirmation route on success; `404` if `{title}` matches no published article —
       FR-011's "no longer published" is unconditional, so a POST aimed straight at an unknown or
       never-published title is refused the same way the GET is; `422` on a title collision with a
-      *different* article, or a rejected attachment; `413` as for `POST /submissions`; `409` re-rendering
+      *different* article, a rejected attachment, or a field over its limit as for `POST /submissions`; `413` as for `POST /submissions`; `409` re-rendering
       the form with the text typed when the article the form was opened for was removed (FR-026); `429` as for `POST /submissions`, the same count
       before this POST
     serves: >-
@@ -251,7 +252,8 @@ routes:
     responses: >-
       `302` to `/moderate/queue` on success; `409` if already decided, or if the title's address
       was taken by another article while the submission waited (it stays pending, decided 28 Sep,
-      FEAT-006); `422` re-rendering the review for a blank summary or a tag too long to store;
+      FEAT-006); `422` re-rendering the review for a blank summary, a summary over 300 characters, a tag too long
+      to store or more than 10 tags;
       `302` unauthenticated
     serves: >-
       FR-017 (UC-016); FR-020's revision is written by the same POST when the submission is an edit
