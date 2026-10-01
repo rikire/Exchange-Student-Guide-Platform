@@ -8,7 +8,7 @@
   <main class="site-main">
     <form th:replace="~{shared/security/LogOut :: form}"></form>
     <p class="number-label">
-      Submission <span th:text="${review.number}">SUB-7QM2-K9XP-4TVB</span> —
+      Submission <span th:replace="~{shared/web/SubmissionNumber :: number(${review.number}, 'queue-number')}">SUB-7QM2-K9XP-4TVB</span> —
       <span th:text="${review.type.name() == 'EDIT'} ? 'edit' : 'new article'">new article</span>
     </p>
     <h1 class="article-title" th:text="${review.title}">Getting a local SIM card</h1>

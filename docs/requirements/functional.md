@@ -410,7 +410,14 @@ THEN the reason is also shown
 GIVEN a submission number that does not exist
 WHEN a contributor looks it up
 THEN the system shows that no such submission was found
+
+GIVEN a submission
+WHEN a contributor looks it up
+THEN its title and when it was sent are shown
 ```
+
+The title and the time were added by the human on 1 Oct (walkthrough F-19), so that someone with
+several submissions can tell them apart; the number is already the authorisation (ADR-0011).
 
 ### FR-013 — Abuse handling without accounts
 

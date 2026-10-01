@@ -18,7 +18,11 @@
     </div>
 
     <div class="result-card" th:if="${found}">
-      <p class="number-label">Submission <span th:text="${found.number}">SUB-B2WH-4RSD-7NKF</span></p>
+      <p class="number-label">Submission</p>
+      <p th:replace="~{shared/web/SubmissionNumber :: number(${found.number}, 'submission-number')}">SUB-B2WH-4RSD-7NKF</p>
+      <!-- FR-012, added 1 Oct (F-19): which submission this is, for someone with several. -->
+      <p class="article-card-title" th:text="${found.title}">Getting a SIM card</p>
+      <p class="article-card-meta">Sent <relative-time lang="en-GB" hour-cycle="h23" year="numeric" th:datetime="${found.submittedAt}" th:text="${found.submitted}">28 Sep 2026, 10:00 IST</relative-time></p>
       <p th:switch="${found.status.name()}">
         <span th:case="'PENDING'" class="status-pill status-pending">Pending — waiting for OGE to review it</span>
         <span th:case="'APPROVED'" class="status-pill status-approved">Approved</span>
@@ -30,6 +34,7 @@
         <p th:text="${found.rejectionReason}">The reason.</p>
       </div>
     </div>
+    <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
   </main>
 </body>
 </html>

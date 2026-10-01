@@ -165,7 +165,47 @@ class SubmissionStatusTest {
         var response = lookUp(typed);
 
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getContentAsString()).contains(submission.getSubmissionNumber());
+        // The number is shown in its groups (fix 2.4), so it is read as text, without the markup.
+        assertThat(response.getContentAsString().replaceAll("<[^>]+>", "")).contains(submission.getSubmissionNumber());
+    }
+
+    @Test
+    // trace:FR-012
+    void the_status_shows_the_submissions_title_and_when_it_was_sent() throws Exception {
+        var submission = saved(SubmissionType.NEW_ARTICLE, null, "Getting a SIM card", SubmissionStatus.PENDING, null);
+
+        var page = lookUp(submission.getSubmissionNumber()).getContentAsString();
+
+        assertThat(page).contains("Getting a SIM card").contains("28 Sep 2026, 10:00 IST");
+    }
+
+    @Test
+    // trace:FR-012
+    void the_confirmation_offers_a_labelled_copy_button_that_its_script_reveals() throws Exception {
+        var submission = saved(SubmissionType.NEW_ARTICLE, null, "Getting a SIM card", SubmissionStatus.PENDING, null);
+
+        var page = mockMvc.perform(get("/submissions/" + submission.getSubmissionNumber() + "/confirmation"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page).containsPattern("<button[^>]*class=\"button-quiet copy-number\"[^>]*hidden");
+        assertThat(page).contains("aria-label=\"Copy the submission number\"");
+    }
+
+    @Test
+    // trace:FR-012
+    void the_number_is_shown_in_its_groups() throws Exception {
+        var submission = saved(SubmissionType.NEW_ARTICLE, null, "Getting a SIM card", SubmissionStatus.PENDING, null);
+
+        var page = mockMvc.perform(get("/submissions/" + submission.getSubmissionNumber() + "/confirmation"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page)
+                .contains("<span class=\"number-group\">SUB</span>")
+                .contains("<span class=\"number-group\">TEST</span>");
     }
 
     @Test

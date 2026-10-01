@@ -320,9 +320,11 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
       — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark
       — owner: **Abdirakhim**
-- [ ] [Clearer submission numbers, a Copy button, title and date on the status page (F-29, F-19)](../verification/walkthrough-fixes.md#24-times-numbers-copying-f-29-f-19) — decided 1 Oct: title and date shown
+- [x] [Clearer submission numbers, a Copy button, title and date on the status page (F-29, F-19)](../verification/walkthrough-fixes.md#24-times-numbers-copying-f-29-f-19) — decided 1 Oct: title and date shown
       — check: tests for the title, the date and the button
       — owner: **Mikhail**
+      **Done 1 Oct:** FEAT-012; FR-012 gained the title-and-date criterion. The human looks at the
+      numbers in a browser to judge 0 against 8.
 - [ ] [Design pass over every screen, against the design screens (F-22)](../verification/walkthrough-fixes.md#3-a-design-pass-over-every-screen-f-22) — screens redrawn and accepted by the human before templates change
       — check: each screen compared with its design screen, differences accepted
       — owner: **Abdirakhim**, except 3.6 and 3.7

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- Walkthrough F-29 (fix 2.4): a submission number in its groups, spaced apart, so a 0 is not read
+       as an 8 when it is copied by hand. The hyphens stay in the text, so selecting and copying it gives
+       the number as issued. -->
+  <!-- trace:NFR-006 -->
+  <span th:fragment="number(value, style)" th:class="${style}"><th:block th:each="part, at : ${#strings.arraySplit(value, '-')}"><span class="number-group" th:text="${part}">K7M2</span><span class="number-dash" th:unless="${at.last}">-</span></th:block></span>
+</body>
+</html>

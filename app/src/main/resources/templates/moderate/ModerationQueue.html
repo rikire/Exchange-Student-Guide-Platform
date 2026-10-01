@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <tr th:each="entry : ${entries}">
-          <td class="queue-number" th:text="${entry.number}">SUB-7QM2-K9XP-4TVB</td>
+          <td><span th:replace="~{shared/web/SubmissionNumber :: number(${entry.number}, 'queue-number')}">SUB-7QM2-K9XP-4TVB</span></td>
           <td><span class="chip" th:text="${entry.type.name() == 'EDIT'} ? 'Edit' : 'New article'">New article</span></td>
           <td th:text="${entry.title}">Getting a local SIM card</td>
           <td><relative-time lang="en-GB" hour-cycle="h23" th:datetime="${entry.submittedAt}" th:text="${entry.submitted}">28 Sep 2026, 10:00 IST</relative-time></td>

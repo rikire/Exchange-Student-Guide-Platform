@@ -140,6 +140,17 @@ class ModerationFlowTest {
 
     @Test
     // trace:FR-014
+    void the_queue_shows_each_number_in_its_groups() throws Exception {
+        // Walkthrough F-29: a 0 read as an 8 in a number copied by hand from the queue.
+        pending("Getting a SIM card", MONDAY);
+
+        var queue = page(loggedIn(), "/moderate/queue");
+
+        assertThat(queue).contains("<span class=\"number-group\">SUB</span>");
+    }
+
+    @Test
+    // trace:FR-014
     void with_nothing_pending_the_queue_says_it_is_empty() throws Exception {
         var rejected = pending("Already turned down", MONDAY);
         decide(rejected, SubmissionStatus.REJECTED);

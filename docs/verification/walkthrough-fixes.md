@@ -275,6 +275,13 @@ The landing page shows the twelve newest; the other 24 are reachable only by sea
 - **Decided 1 Oct by the human:** show the title and the date; the number is the authorisation
   already (ADR-0011).
 - **Check:** tests for the title and date; the copy button is present and labelled.
+- **Done 1 Oct:** [FEAT-012](../features/FEAT-012-looking-up-a-submission.md).
+  - FR-012 gained the title-and-date criterion.
+  - The number is in its groups on all four pages, in the site's face (no new font).
+  - Copy uses the Clipboard API, falling back to selecting the number where the API is missing (the
+    plain-HTTP stand).
+  - Tests: `SubmissionStatusTest`, `ModerationFlowTest`, `BrowserCopyNumberTest`.
+  - Whether 0 and 8 now read apart is the human's look in a browser.
 
 ## 3. A design pass over every screen (F-22)
 

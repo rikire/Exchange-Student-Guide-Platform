@@ -10,6 +10,7 @@ import in.ac.iitm.guide.shared.persistence.Submission;
 import in.ac.iitm.guide.shared.persistence.SubmissionStatus;
 import in.ac.iitm.guide.shared.persistence.SubmissionType;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagRejectedException;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
@@ -42,18 +43,21 @@ public class SubmissionService {
     private final SubmissionNumbers numbers;
     private final Tags tags;
     private final MediaAssets media;
+    private final DisplayTime displayTime;
 
     SubmissionService(
             ContributeArticleRepository articles,
             SubmissionRepository submissions,
             SubmissionNumbers numbers,
             Tags tags,
-            MediaAssets media) {
+            MediaAssets media,
+            DisplayTime displayTime) {
         this.articles = articles;
         this.submissions = submissions;
         this.numbers = numbers;
         this.tags = tags;
         this.media = media;
+        this.displayTime = displayTime;
     }
 
     /** What a contributor typed. The body is kept exactly as written (FR-003). */
@@ -129,7 +133,14 @@ public class SubmissionService {
      *
      * @param articlePath the article's page while it is live at its address, else {@code null}
      */
-    public record Status(String number, SubmissionStatus status, String rejectionReason, String articlePath) {}
+    public record Status(
+            String number,
+            String title,
+            OffsetDateTime submittedAt,
+            String submitted,
+            SubmissionStatus status,
+            String rejectionReason,
+            String articlePath) {}
 
     /** @return the status of the submission a typed number names, when it was ever issued */
     @Transactional(readOnly = true)
@@ -138,6 +149,9 @@ public class SubmissionService {
                 .flatMap(submissions::findBySubmissionNumber)
                 .map(submission -> new Status(
                         submission.getSubmissionNumber(),
+                        submission.getTitle(),
+                        submission.getSubmittedAt(),
+                        displayTime.dateTime(submission.getSubmittedAt()),
                         submission.getStatus(),
                         submission.getRejectionReason(),
                         submission.getStatus() == SubmissionStatus.APPROVED

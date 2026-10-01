@@ -13,8 +13,11 @@ code:
   - app/src/main/java/in/ac/iitm/guide/contribute/persistence/ContributeArticleRepository.java
   - app/src/main/resources/templates/contribute/SubmissionStatus.html
   - app/src/main/resources/templates/contribute/SubmissionConfirmation.html
+  - app/src/main/resources/static/js/copy-number.js
+  - app/src/main/resources/templates/shared/web/SubmissionNumber.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/contribute/SubmissionStatusTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserCopyNumberTest.java
 ---
 
 # FEAT-012 — Looking up a submission's status
@@ -60,6 +63,17 @@ Confirmed by the human on 29 Sep with the contract for this step (prompt journal
 - **A blank number shows the form alone** (`200`); a number never issued, or text that cannot be one,
   answers `404` with the form and the message — the two look the same from outside, as on the
   confirmation page.
+- **Added 1 Oct (walkthrough fix 2.4):**
+  - The status shows the submission's title and when it was sent (FR-012's fourth criterion; the
+    number is the authorisation already, ADR-0011). The time is in the reader's zone (ADR-0020),
+    with IST as the fallback.
+  - Every submission number — confirmation, status, queue, review — is set in its groups
+    (`shared/web/SubmissionNumber.html`): the site's face, larger, digits of one width, with space
+    around the hyphens. No new font: the only monospace WebJar with a clear zero, JetBrains Mono, is
+    stuck at 4.5.11 from 2022.
+  - The confirmation has a Copy button (`/js/copy-number.js`, the Clipboard API, no library). It is
+    shown only when the script runs. Where the API is missing, as on the plain-HTTP stand, the button
+    selects the number and says to press Ctrl+C.
 
 ## Acceptance criteria
 

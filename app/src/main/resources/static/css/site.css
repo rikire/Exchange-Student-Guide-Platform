@@ -130,7 +130,12 @@ p a, .article-body a { text-decoration: underline; }
 .button-primary:hover { background: var(--maroon-dark); }
 .result-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); max-width: 46rem; }
 .number-label { margin: 0; font-size: var(--text-small); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
-.submission-number { margin: var(--space-1) 0 var(--space-4); overflow-wrap: anywhere; font-size: var(--text-title); font-weight: 700; font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
+/* Fix 2.4 (F-29): the site's own face, larger, digits of one width, each group set apart, so a 0 is
+   not read as an 8 in a number copied by hand. */
+.submission-number { display: inline-block; margin: var(--space-1) 0; font-size: var(--text-title); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+.number-group { white-space: nowrap; }
+.number-dash { margin: 0 0.3em; color: var(--ink-soft); }
+.number-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: 0 0 var(--space-4); }
 .site-nav { display: flex; flex-wrap: wrap; gap: var(--space-4); }
 .site-nav a { display: inline-flex; align-items: center; min-height: var(--target); }
 .article-actions { margin: var(--space-5) 0 0; }
@@ -142,7 +147,7 @@ p a, .article-body a { text-decoration: underline; }
 .queue-table { position: relative; display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
 .queue-table td a { display: inline-flex; align-items: center; min-height: var(--target); }
 .queue-table th, .queue-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-.queue-number { font-family: ui-monospace, monospace; white-space: nowrap; }
+.queue-number { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; white-space: nowrap; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .review-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
 .review-side { display: flex; flex-direction: column; gap: var(--space-4); }
