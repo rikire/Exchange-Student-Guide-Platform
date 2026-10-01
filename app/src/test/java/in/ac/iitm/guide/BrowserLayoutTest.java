@@ -58,6 +58,19 @@ class BrowserLayoutTest {
     private static final String NUMBER = "SUB-K7M2-QX9P-4TVB";
     private static final String PASSWORD = "the office's password";
 
+    /**
+     * Fix 1.8 (F-31): the longest title the guide takes, with no space to break at, and a summary at
+     * its limit with a long unbroken word in it. Shown on every list, so no page can scroll sideways
+     * because of what a contributor typed.
+     */
+    private static final String LONG_TITLE =
+            "Registeringwiththeforeignersregionalregistrationoffice".repeat(5).substring(0, 255);
+
+    private static final String LONG_SUMMARY = ("Bring "
+                    + "passportvisaadmissionletterphotographsandproofofaddresstotheofficeonthefirstfloor".repeat(2)
+                    + " and wait for your number to be called at the counter.")
+            .substring(0, 220);
+
     @DynamicPropertySource
     static void password(DynamicPropertyRegistry registry) {
         registry.add("guide.admin.password-hash", () -> new BCryptPasswordEncoder(4).encode(PASSWORD));
@@ -105,6 +118,26 @@ class BrowserLayoutTest {
             article.setTags(Set.of(tag));
             entityManager.persist(article);
         });
+        transaction.executeWithoutResult(status -> {
+            var now = OffsetDateTime.now();
+            var article = new Article();
+            article.setTitle(LONG_TITLE);
+            article.setSlug(ArticleAddress.slugOf(LONG_TITLE).orElseThrow());
+            article.setSummary(LONG_SUMMARY);
+            article.setBody("All about FRRO, with a title no one should write.");
+            article.setPublishedAt(now.minusDays(1));
+            article.setUpdatedAt(now.minusDays(1));
+            article.setTags(Set.of(entityManager
+                    .createQuery("SELECT t FROM Tag t WHERE t.name = 'visa'", Tag.class)
+                    .getSingleResult()));
+            entityManager.persist(article);
+        });
+        jdbc.update(
+                "INSERT INTO submission (id, submission_number, type, title, summary, body, status, submitted_at)"
+                        + " VALUES (?, 'SUB-LONG-TITL-E000', 'NEW_ARTICLE', ?, ?, 'b', 'PENDING', CURRENT_TIMESTAMP)",
+                UUID.randomUUID(),
+                LONG_TITLE,
+                LONG_SUMMARY);
         attachToTheArticle("form.jpg", MediaTestFiles.jpeg(1600, 1200));
         attachToTheArticle(
                 "FRRO checklist with a long file name for a narrow phone screen.pdf", MediaTestFiles.pdf(2_000));
@@ -115,7 +148,7 @@ class BrowserLayoutTest {
                         + " status, submitted_at) VALUES (?, ?, 'EDIT', ?, ?, ?, ?, 'PENDING', CURRENT_TIMESTAMP)",
                 UUID.randomUUID(),
                 NUMBER,
-                jdbc.queryForObject("SELECT id FROM article", UUID.class),
+                registering(),
                 "Registering with the FRRO online",
                 "Register on the e-FRRO portal within 14 days of arriving in India.",
                 "## Before you go\n\nBring your passport, visa, admission letter and [[Hostel Life]] papers.\n\n"
@@ -132,7 +165,11 @@ class BrowserLayoutTest {
                 submission,
                 "SUB-MEDI-A000-%04d".formatted(++attached));
         media.attach(submission, new Upload(name, bytes.length, new ByteArrayResource(bytes)));
-        media.moveToArticle(submission, jdbc.queryForObject("SELECT id FROM article", UUID.class));
+        media.moveToArticle(submission, registering());
+    }
+
+    private UUID registering() {
+        return jdbc.queryForObject("SELECT id FROM article WHERE slug = 'registering-with-frro'", UUID.class);
     }
 
     private int attached;
@@ -201,6 +238,25 @@ class BrowserLayoutTest {
         }
     }
 
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
+    void the_queue_keeps_every_review_link_in_view_beside_a_long_title() {
+        for (var width : WIDTHS) {
+            try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {
+                var page = context.newPage();
+                signIn(page);
+                page.navigate("http://localhost:" + port + "/moderate/queue");
+
+                var outside = page.evaluate("() => [...document.querySelectorAll('.queue-table a')]"
+                        + ".filter(a => a.getBoundingClientRect().right > window.innerWidth + 1).length");
+
+                assertThat(((Number) outside).intValue())
+                        .as("review links past the edge at %d px", width)
+                        .isZero();
+            }
+        }
+    }
+
     private void signIn(Page page) {
         page.navigate("http://localhost:" + port + "/moderate/login");
         page.fill("input[name=password]", PASSWORD);
@@ -236,6 +292,7 @@ class BrowserLayoutTest {
             pages.add(path);
         }
         pages.add("/articles/no-such-article");
+        pages.add("/articles/" + ArticleAddress.slugOf(LONG_TITLE).orElseThrow());
         return pages;
     }
 
