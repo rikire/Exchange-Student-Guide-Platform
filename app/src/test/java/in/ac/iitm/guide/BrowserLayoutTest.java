@@ -306,11 +306,12 @@ class BrowserLayoutTest {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
             var page = context.newPage();
             page.navigate("http://localhost:" + port + "/articles/registering-with-frro");
+            var head = page.locator(".article-head").boundingBox();
             var text = page.locator(".article-main").boundingBox();
             var side = page.locator(".article-side").boundingBox();
 
             assertThat(side.x).as("the sidebar starts right of the text").isGreaterThanOrEqualTo(text.x + text.width);
-            assertThat(side.y).as("and level with it").isEqualTo(text.y);
+            assertThat(side.y).as("level with the title").isEqualTo(head.y);
             assertThat(page.locator(".article-side .button-primary").textContent())
                     .isEqualTo("Propose an edit");
         }
@@ -318,14 +319,16 @@ class BrowserLayoutTest {
 
     @org.junit.jupiter.api.Test
     // trace:NFR-008
-    void on_a_phone_the_article_sidebar_follows_the_text() {
+    void on_a_phone_the_articles_actions_come_under_its_title_before_the_text() {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(390, 844))) {
             var page = context.newPage();
             page.navigate("http://localhost:" + port + "/articles/registering-with-frro");
+            var head = page.locator(".article-head").boundingBox();
+            var actions = page.locator(".article-actions").boundingBox();
             var text = page.locator(".article-main").boundingBox();
-            var side = page.locator(".article-side").boundingBox();
 
-            assertThat(side.y).isGreaterThanOrEqualTo(text.y + text.height);
+            assertThat(actions.y).as("under the title").isGreaterThanOrEqualTo(head.y + head.height);
+            assertThat(text.y).as("before the text").isGreaterThanOrEqualTo(actions.y + actions.height);
         }
     }
 

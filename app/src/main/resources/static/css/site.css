@@ -289,7 +289,7 @@ p a, .article-body a { text-decoration: underline; }
 /* Fix 1.8 (F-31): what a contributor typed never widens a page. A word longer than its box breaks
    anywhere; a card's summary stops at three lines; the queue shortens a long title, whole on hover
    and on the review page, so "Review" stays in view. */
-.article-title, .article-card, .article-card-title, .article-card-summary, .article-body, .number-label { overflow-wrap: anywhere; }
+.article-title, .article-summary, .contents-list, .article-card, .article-card-title, .article-card-summary, .article-body, .number-label { overflow-wrap: anywhere; }
 .card-grid > * { min-width: 0; }
 .article-card-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
 .queue-title { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -297,19 +297,42 @@ p a, .article-body a { text-decoration: underline; }
    the last column, "Review", stays pinned to its right edge so the way into a submission is always in view. */
 .queue-table td:last-child, .queue-table th:last-child { position: sticky; right: 0; background: var(--sand); }
 
-/* Fix 3.5's layout, as docs/design/screens/Article.html draws it: the text at its measure and a 260-px
-   sidebar of cards beside it, the pair centred in the frame. Below 1024 px one column, the sidebar
-   after the text: beside it on a tablet the text would be left too narrow to read. */
-.article-layout { display: grid; grid-template-columns: minmax(0, 46rem) 260px; gap: var(--space-6); justify-content: center; align-items: start; }
-.article-side { display: flex; flex-direction: column; gap: var(--space-5); }
+/* Fix 3.5's layout, as docs/design/screens/Article.html draws it: the title and the text at their
+   measure, a 260-px sidebar of cards beside them from the title down, the whole centred in the frame.
+   Below 1024 px one column: the sidebar's box dissolves (display: contents), so its cards take their
+   own places — the actions and the contents under the title, What links here after the text. Beside
+   the text on a tablet the text would be left too narrow to read. */
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 46rem) 260px;
+  grid-template-areas: "head side" "main side";
+  grid-template-rows: auto 1fr;
+  column-gap: var(--space-6);
+  justify-content: center;
+  align-items: start;
+}
+.article-head { grid-area: head; }
+.article-main { grid-area: main; }
+.article-side { grid-area: side; display: flex; flex-direction: column; gap: var(--space-5); }
+.article-summary { margin: calc(-1 * var(--space-3)) 0 var(--space-2); font-size: var(--text-lead); color: var(--ink-soft); }
+.article-meta { margin: 0 0 var(--space-5); color: var(--ink-soft); }
 .side-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); padding: var(--space-4); }
 .side-title { font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin: 0 0 var(--space-2); }
 .article-side .article-actions { flex-direction: column; align-items: stretch; margin: 0; }
 .article-side .backlinks { margin: 0; }
-.article-side .backlink-list { list-style: none; padding: 0; }
-.article-side .backlink-list li + li { border-top: 1px solid var(--line); }
+.article-side .backlink-list, .contents-list { list-style: none; margin: 0; padding: 0; }
+.article-side .backlink-list li + li, .contents-list li + li { border-top: 1px solid var(--line); }
+.contents-list a { display: flex; align-items: center; min-height: var(--target); }
+.contents-list .contents-sub { padding-left: var(--space-4); }
+/* An external link opens in a new tab (WikiLinkRenderer), and says so: an arrow, read as words. */
+.article-body a[target="_blank"]::after { content: " \2197"; content: " \2197" / " (opens in a new tab)"; }
 @media (max-width: 1023px) {
-  .article-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .article-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "actions" "contents" "main" "links"; grid-template-rows: none; row-gap: var(--space-5); }
+  .article-side { display: contents; }
+  .article-side .article-actions { grid-area: actions; }
+  .article-side .article-contents { grid-area: contents; }
+  .article-side .backlinks { grid-area: links; }
+  .article-meta { margin-bottom: 0; }
   .side-title { font-size: var(--text-body); }
 }
 

@@ -115,6 +115,16 @@ after saving an article as a PDF from a browser; on that acceptance FR-030 is `d
 
 **Fix 3.5's layout, 2 Oct** (as [Article.html](../design/screens/Article.html) draws it, confirmed by the human): the text at its 46-rem measure and a 260-px sidebar beside it, the pair centred in the frame; the sidebar holds a card of actions (Propose an edit, Save as PDF, Remove for the moderator) and the What links here card. Below 1024 px one column, the sidebar after the text. No Report card: reporting is not built. `BrowserLayoutTest.on_a_wide_screen_the_article_has_its_sidebar_beside_the_text_as_its_design_screen_draws` and `on_a_phone_the_article_sidebar_follows_the_text` were red first. The rest of 3.5 (summary, date, contents, external links) is its own step.
 
+**Fix 3.5, the rest, 2 Oct** (confirmed by the human): under the title the summary (the glossary's
+"Summary" changed to say so) and "Updated …" as Mikhail's fix 1.3 shows times (`<relative-time>`,
+ADR-0020); a Contents card in the sidebar for three or more headings (`ArticleController.CONTENTS_FROM`),
+its links to ids `commonmark-ext-heading-anchor` puts on the headings, prefixed `section-`
+(`WikiLinkRenderer.renderBody`); an external link opens in a new tab with "↗", read as "(opens in a
+new tab)". Below 1024 px the actions and the contents come under the title and the backlinks after
+the text — F-10's complaint was the actions at the very end. Tags stay above the title, as the
+design screen draws them. Red first: `WikiLinkRendererTest` 3, `ArticleControllerTest` 2 and
+`BrowserLayoutTest.on_a_phone_the_articles_actions_come_under_its_title_before_the_text`.
+
 ## Deliberately out of scope
 
 - The summary is not shown on the article page (the design does not show it; it appears on cards).

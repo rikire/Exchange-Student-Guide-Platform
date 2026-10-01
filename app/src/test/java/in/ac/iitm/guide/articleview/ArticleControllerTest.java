@@ -87,6 +87,44 @@ class ArticleControllerTest {
 
     @Test
     // trace:FR-001
+    void the_summary_and_when_it_was_updated_stand_under_the_title() throws Exception {
+        publish("Registering with FRRO", "Bring your passport.");
+        jdbc.update("UPDATE article SET updated_at = TIMESTAMP WITH TIME ZONE '2026-09-21 10:00:00+05:30'");
+
+        var page = html(get("/articles/registering-with-frro"));
+
+        assertThat(page)
+                .containsPattern(
+                        "(?s)</h1>\\s*<p class=\"article-summary\">A summary.</p>\\s*"
+                                + "<p class=\"article-meta\">Updated <relative-time[^>]*datetime=\"2026-09-21T[^>]*>21 Sep 2026</relative-time>");
+    }
+
+    @Test
+    // trace:FR-001
+    void an_article_with_three_headings_lists_them_as_its_contents() throws Exception {
+        publish("Registering with FRRO", "## Before you go\n\nA.\n\n## At the office\n\nB.\n\n## After\n\nC.");
+
+        var page = html(get("/articles/registering-with-frro"));
+
+        assertThat(page)
+                .contains("id=\"contents-heading\"")
+                .contains("<a href=\"#section-before-you-go\">Before you go</a>")
+                .contains("<a href=\"#section-at-the-office\">At the office</a>")
+                .contains("<a href=\"#section-after\">After</a>");
+    }
+
+    @Test
+    // trace:FR-001
+    void an_article_with_two_headings_has_no_contents_list() throws Exception {
+        publish("Registering with FRRO", "## Before you go\n\nA.\n\n## After\n\nC.");
+
+        var page = html(get("/articles/registering-with-frro"));
+
+        assertThat(page).doesNotContain("contents-heading");
+    }
+
+    @Test
+    // trace:FR-001
     void an_address_that_matches_no_article_does_not_resolve() throws Exception {
         publish("Hostel Life", "Text.");
 

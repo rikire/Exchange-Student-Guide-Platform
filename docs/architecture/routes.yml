@@ -38,8 +38,10 @@ routes:
       links styled inline; neither has a route of its own. And FR-030: the page carries the "Save as
       PDF" control, which `/js/print.js` turns into the browser's print, and print styles leave the
       site out; `ArticleController` serves it, so the anchor is there. A signed-in moderator also
-      sees "Remove this article", leading to FR-026's confirmation. FR-006: below the text, "What
-      links here" lists up to 50 live articles linking to this one, from `backlink` (ADR-0016). FR-034:
+      sees "Remove this article", leading to FR-026's confirmation. FR-006: in the sidebar (after the
+      text on a phone), "What links here" lists up to 50 live articles linking to this one, from
+      `backlink` (ADR-0016). Fix 3.5: the summary and "Updated" under the title, a contents list for
+      three or more headings, external links opening in a new tab. FR-034:
       a `200` to anyone but the signed-in moderator adds one view, so this `GET` writes (ADR-0021). FR-032: every photo on the page, in the text or attached, opens full screen in PhotoSwipe (ADR-0018)
 
   - methods: [GET]
