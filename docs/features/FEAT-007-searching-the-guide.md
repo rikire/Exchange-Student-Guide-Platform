@@ -2,7 +2,7 @@
 id: FEAT-007
 title: Searching the guide
 status: done
-covers: [FR-007, NFR-002]
+covers: [FR-007, NFR-002, NFR-003]
 slice: search
 routes: ["GET /search"]
 tables: [article, article_tag, tag]
@@ -163,9 +163,14 @@ like the other secondary text (NFR-008), which `BrowserLayoutTest` found once tw
 
 **Fix 3.8, 2 Oct:** `SimilarTitles`, the slice's first published type, gives the not-found page up to five live titles with a word within two edits of a word of the missing address (`ArticleSearchService.titledCloseTo`: any word, fuzzy, unlike the search itself). `NotFoundPageTest.a_missing_article_suggests_published_titles_close_to_its_address` was red first.
 
+**NFR-003, 2 Oct:** the standard tokenizer splits Devanagari and Tamil into words, signs and nukta
+kept, and nothing after it changes them; `an_article_mixing_english_hindi_and_tamil_is_stored_and_read_back_unchanged`
+and `a_query_in_hindi_or_tamil_finds_the_article_holding_those_words` (four queries) pass on H2 and
+with `-P postgres`. They were green at once: they hold behaviour the slice already had.
+
 ## Deliberately out of scope
 
-- NFR-002 (search latency) and NFR-003 (Hindi and Tamil queries): their own steps.
+- ~~NFR-002 and NFR-003: their own steps~~ — both done, see below. Word forms in Hindi and Tamil: the stemmer is English.
 - **A query mixing word forms the stemmer keeps apart.** English Porter reduces "registration" to
   `registr` and "registering" to `regist`, so with every word required "FRRO registration" does not
   find an article that only says "registering". Found by `BrowserKeyboardTest` on 2 Oct, whose

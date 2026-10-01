@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import org.hibernate.search.mapper.orm.Search;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,6 +77,41 @@ class SearchFlowTest {
         jdbc.execute("DELETE FROM tag");
         // The rows went by JDBC, which the index does not see.
         purgeTheIndex();
+    }
+
+    /** English, Hindi and Tamil in one body, with combining signs and a nukta (NFR-003). */
+    private static final String THREE_SCRIPTS =
+            "Register at the hostel office. छात्रावास कार्यालय में पंजीकरण ज़रूरी है। விடுதி அலுவலகத்தில் பதிவு செய்யவும்.";
+
+    @Test
+    // trace:NFR-003
+    void an_article_mixing_english_hindi_and_tamil_is_stored_and_read_back_unchanged() throws Exception {
+        publish("Hostel registration", THREE_SCRIPTS);
+
+        assertThat(jdbc.queryForObject("SELECT body FROM article", String.class))
+                .isEqualTo(THREE_SCRIPTS);
+        assertThat(mockMvc.perform(get("/articles/hostel-registration"))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString())
+                .contains("छात्रावास कार्यालय में पंजीकरण ज़रूरी है।")
+                .contains("விடுதி அலுவலகத்தில் பதிவு செய்யவும்.");
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @ValueSource(strings = {"पंजीकरण", "छात्रावास कार्यालय", "அலுவலகத்தில்", "விடுதி பதிவு"})
+    // trace:NFR-003
+    void a_query_in_hindi_or_tamil_finds_the_article_holding_those_words(String query) throws Exception {
+        publish("Hostel registration", THREE_SCRIPTS);
+        publish("Bank account", "Open an account at the campus branch.");
+
+        var page = mockMvc.perform(get("/search").param("q", query))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page).contains("1 result for").contains(">Hostel registration<");
     }
 
     @Test
