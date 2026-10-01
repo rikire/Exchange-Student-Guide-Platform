@@ -14,7 +14,7 @@ each — both recorded under [One name per concept](#one-name-per-concept) below
 | Term | Meaning |
 |---|---|
 | Article | A published page in the knowledge base: a title (unique among published articles, case-insensitively), a summary, a body of text written in Markdown (which may contain `[[wiki link]]` markup — not raw HTML, see [ADR-0001](../architecture/adr/ADR-0001-article-body-format.md)), a set of tags, and zero or more attached media assets. Content that is not yet approved is a **submission**, not an article |
-| Summary | A short description of an article, written by the contributor and adjustable by the moderator. Shown under the title where articles are listed rather than read — tag browse, the landing page. Distinct from the ellipsed body extract search results show around a match, which is derived at query time and stored nowhere |
+| Summary | A short description of an article, written by the contributor and adjustable by the moderator. Shown under the title where articles are listed — tag browse, the landing page — and under the article's own title when it is read (human, 2 Oct, walkthrough fix 3.5). Distinct from the ellipsed body extract search results show around a match, which is derived at query time and stored nowhere |
 | Tag | A free-form label on an article; an article may carry several |
 | Media asset | An uploaded file attached to an article. Its accepted types are fixed by [CON-006](constraints.md) and its size by [NFR-001](non-functional.md) |
 | Pinned article | A published article a moderator has placed at the top of the landing page. Pinning is curation, not a property of the content: FR-009 shows pinned articles before recently added ones, and FR-025 is how the set changes |
