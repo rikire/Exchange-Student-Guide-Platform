@@ -18,3 +18,8 @@ MIT.
 `scripts/diagrams.sh` renders it beside `c4-component`, which is the designed one. Run `./mvnw test`
 before the script, which stops with a message when the file is missing. The two are meant to be
 compared: a dashed box or arrow in `c4-component` is designed and not built yet.
+
+**Progress is not drawn here.** How much of each slice is done, and the requirements by status, are
+Mermaid diagrams at the top of [`docs/gap-list.md`](../../gap-list.md), written by `ai-tools gaps`
+from the requirements, the features and the same Modulith file. The forge renders them from the text,
+so `gaps --check` in CI covers the picture as well; no image is committed for them.

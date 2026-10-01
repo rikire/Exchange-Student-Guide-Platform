@@ -25,7 +25,9 @@ import java.util.List;
  *   trace --check          fail on a gap in the chain or on a generated file that is out of date
  *   trace --docs-sync &lt;ref&gt;  fail when a change since ref touches the schema, the routes or a slice
  *                          boundary and the document describing it did not change
- *   gaps                   write docs/gap-list.md: what is not done, open debt, criteria with no test
+ *   gaps                   write docs/gap-list.md: progress diagrams, what is not done, open debt,
+ *                          criteria with no test
+ *   gaps --check           fail when docs/gap-list.md is out of date
  *   routes                 write the route tables of docs/architecture/ui-routes.md from routes.yml
  *   routes --check         fail when those tables differ from routes.yml
  *   ownership              write docs/team/ownership.md from git history, the hook's commits apart
@@ -66,10 +68,7 @@ public final class Main {
                 case "authors" -> authors();
                 case "count" -> count();
                 case "trace" -> trace(Arrays.copyOfRange(args, 1, args.length));
-                case "gaps" -> {
-                    Gaps.write(Repo.find(null));
-                    System.out.println("wrote docs/gap-list.md");
-                }
+                case "gaps" -> gaps(Arrays.copyOfRange(args, 1, args.length));
                 case "routes" -> routes(Arrays.copyOfRange(args, 1, args.length));
                 case "ownership" -> {
                     Ownership.write(Repo.find(null));
@@ -113,6 +112,23 @@ public final class Main {
         System.out.println("non-functional requirements: " + counts.nonFunctional());
         System.out.println("constraints:                 " + counts.constraints());
         System.out.println("use cases:                   " + counts.useCases());
+    }
+
+    private static void gaps(String[] args) throws Exception {
+        Repo repo = Repo.find(null);
+        if (args.length == 1 && args[0].equals("--check")) {
+            List<String> problems = Gaps.check(repo);
+            if (problems.isEmpty()) {
+                return;
+            }
+            problems.forEach(problem -> System.err.println("ai-tools: " + problem));
+            System.exit(1);
+        }
+        if (args.length != 0) {
+            throw new IllegalArgumentException("usage: ai-tools gaps [--check]");
+        }
+        Gaps.write(repo);
+        System.out.println("wrote docs/gap-list.md");
     }
 
     private static void routes(String[] args) throws Exception {

@@ -2,6 +2,7 @@ package in.ac.iitm.guide.tools;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -30,6 +31,37 @@ class GapsTest {
     void setUp() throws IOException {
         Files.createDirectories(repoRoot.resolve(".git"));
         repo = Repo.find(repoRoot.toString());
+        modules("Home");
+    }
+
+    /** What ModularityTest leaves under app/target: the modules, and an arrow per dependency. */
+    private void modules(String... lines) throws IOException {
+        StringBuilder text = new StringBuilder("@startuml\nContainer_Boundary(\"G.G_boundary\", \"G\") {\n");
+        for (String line : lines) {
+            if (line.contains("->")) {
+                continue;
+            }
+            text.append("  Component(G.G.")
+                    .append(line)
+                    .append(", \"")
+                    .append(line)
+                    .append("\", $techn=\"Module\", $descr=\"\", $tags=\"\", $link=\"\")\n");
+        }
+        text.append("}\n\n");
+        for (String line : lines) {
+            if (!line.contains("->")) {
+                continue;
+            }
+            String[] ends = line.split("->");
+            text.append("Rel(G.G.")
+                    .append(ends[0])
+                    .append(", G.G.")
+                    .append(ends[1])
+                    .append(", \"depends on\", $techn=\"\", $tags=\"\", $link=\"\")\n");
+        }
+        write(
+                "app/target/spring-modulith-docs/components.puml",
+                text.append("@enduml\n").toString());
     }
 
     private void write(String relative, String content) throws IOException {
@@ -55,10 +87,14 @@ class GapsTest {
     }
 
     private void feature(String id, String covers) throws IOException {
+        featureIn(id, "home", covers);
+    }
+
+    private void featureIn(String id, String slice, String covers) throws IOException {
         write(
                 "docs/features/" + id + "-thing.md",
-                "---\nid: " + id + "\ntitle: A thing\nstatus: in-progress\ncovers: [" + covers
-                        + "]\nslice: home\nroutes: []\ntables: []\ncode: []\ntests: []\n---\n");
+                "---\nid: " + id + "\ntitle: A thing\nstatus: in-progress\ncovers: [" + covers + "]\nslice: " + slice
+                        + "\nroutes: []\ntables: []\ncode: []\ntests: []\n---\n");
     }
 
     private void testAnchoredFor(String name, String... ids) throws IOException {
@@ -216,6 +252,84 @@ class GapsTest {
     @Test
     void a_repository_with_nothing_in_it_still_gives_a_list() throws IOException {
         assertTrue(list().startsWith("# Gap list"), list());
+    }
+
+    // --- progress ---
+
+    @Test
+    void a_slice_is_done_partial_or_not_started_by_the_status_of_what_its_features_cover() throws IOException {
+        requirements(
+                block("FR-001", "done", 1),
+                block("FR-002", "in-progress", 1),
+                block("FR-003", "planned", 1),
+                block("FR-004", "planned", 1));
+        featureIn("FEAT-001", "home", "FR-001");
+        featureIn("FEAT-002", "search", "FR-002, FR-003");
+        featureIn("FEAT-003", "media", "FR-004");
+
+        String text = list();
+
+        assertTrue(text.contains("home[\"home · 1/1 done\"]:::done"), text);
+        assertTrue(text.contains("search[\"search · 0/2 done\"]:::partial"), text);
+        assertTrue(text.contains("media[\"media · 0/1 done\"]:::none"), text);
+    }
+
+    @Test
+    void a_requirement_no_feature_covers_is_in_the_unmapped_node_and_counted_in_no_slice() throws IOException {
+        requirements(block("FR-001", "done", 1), block("FR-005", "planned", 1));
+        featureIn("FEAT-001", "home", "FR-001");
+
+        String text = list();
+
+        assertTrue(text.contains("unmapped[\"no feature yet: FR-005\"]:::unmapped"), text);
+        assertTrue(text.contains("home[\"home · 1/1 done\"]:::done"), text);
+    }
+
+    @Test
+    void the_arrows_and_the_modules_come_from_what_modulith_read_from_the_code() throws IOException {
+        modules("Home", "Contribute", "Media", "Contribute->Media");
+
+        String text = list();
+
+        assertTrue(text.contains("contribute --> media"), text);
+        assertTrue(text.contains("media[\"media · no feature\"]:::none"), text);
+    }
+
+    @Test
+    void without_modulith_output_the_list_is_refused_rather_than_drawn_without_arrows() throws IOException {
+        Files.delete(repo.resolve("app/target/spring-modulith-docs/components.puml"));
+
+        IllegalStateException refused = assertThrows(IllegalStateException.class, () -> Gaps.build(repo));
+
+        assertTrue(refused.getMessage().contains("./mvnw test"), refused.getMessage());
+    }
+
+    @Test
+    void the_pie_counts_requirements_by_status_and_not_the_format_example() throws IOException {
+        requirements(
+                block("FR-001", "done", 1),
+                block("FR-002", "in-progress", 1),
+                block("FR-003", "planned", 1),
+                block("FR-004", "planned", 1));
+
+        String text = list();
+
+        assertTrue(text.contains("\"done\" : 1\n"), text);
+        assertTrue(text.contains("\"in-progress\" : 1\n"), text);
+        assertTrue(text.contains("\"planned\" : 2\n"), text);
+    }
+
+    @Test
+    void check_reports_a_list_that_no_longer_matches_and_nothing_once_it_is_rewritten() throws IOException {
+        requirements(block("FR-001", "planned", 1));
+
+        assertEquals(
+                List.of("docs/gap-list.md is out of date; run `java -jar tools/target/ai-tools.jar gaps`"),
+                Gaps.check(repo));
+
+        Gaps.write(repo);
+
+        assertEquals(List.of(), Gaps.check(repo));
     }
 
     // --- the file ---

@@ -49,6 +49,11 @@ echo "==> build, tests and formatting"
 echo "==> traceability: no gap in the chain, generated files current"
 java -jar tools/target/ai-tools.jar trace --check
 
+# The gap list draws its progress diagrams from the requirements, the features and the slice
+# dependencies Spring Modulith wrote during the app's verify above, so it runs after that.
+echo "==> gap list current"
+java -jar tools/target/ai-tools.jar gaps --check
+
 # The route tables in ui-routes.md are written from routes.yml, the route contract; the app's
 # RouteContractTest holds that file to the controllers.
 echo "==> route tables current with routes.yml"
