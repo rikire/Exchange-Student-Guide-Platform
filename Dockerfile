@@ -18,8 +18,15 @@ COPY app/src app/src
 RUN ./mvnw -B -q -pl app -am package -DskipTests
 
 FROM eclipse-temurin:21-jre
-# TODO(DEBT-018): run as an unprivileged user once the media and index volumes are owned by it.
+# DEBT-018: the JVM runs as an unprivileged user, the owner of the media and index directories. A
+# named volume mounted there for the first time takes this ownership; one created by an earlier,
+# root-run image needs it once (docs/architecture/deployment.md).
+RUN groupadd --system guide \
+    && useradd --system --gid guide --no-create-home --shell /usr/sbin/nologin guide \
+    && mkdir -p /var/lib/guide/index /var/lib/guide/media \
+    && chown -R guide:guide /var/lib/guide
 WORKDIR /app
 COPY --from=build /src/app/target/guide-app.jar guide-app.jar
+USER guide
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "guide-app.jar"]

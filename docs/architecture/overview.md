@@ -42,6 +42,11 @@ The consequence is operational and belongs in [docs/handoff/](../handoff/): a ba
 only the database restores an application whose search returns nothing and whose downloads are
 broken. Both extra stores were chosen with that cost named in their ADRs.
 
+**The application container runs as the unprivileged user `guide`** since 2 October (DEBT-018),
+the owner of `/var/lib/guide/index` and `/var/lib/guide/media` in the image. A new volume mounted
+there takes that ownership; a volume created by an earlier image, which ran as root, is handed over
+once with `docker compose run --rm --user root --entrypoint chown app -R guide:guide /var/lib/guide`.
+
 H2 in development and PostgreSQL in production is a standing constraint on every decision at this
 level — it is what ruled out PostgreSQL full-text search, because the tests would then run against
 an engine the product does not ship on.
