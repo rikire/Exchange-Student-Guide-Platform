@@ -58,6 +58,15 @@ class EditorPreviewTest {
 
     @Test
     // trace:FR-027
+    void the_form_shows_the_wiki_link_syntax_with_its_brackets() throws Exception {
+        // Walkthrough F-5: Thymeleaf read [[Title]] in the hint as its own inline expression.
+        var form = mockMvc.perform(get("/submit")).andReturn().getResponse().getContentAsString();
+
+        assertThat(form).contains("Link to another article with [[Title]].");
+    }
+
+    @Test
+    // trace:FR-027
     void the_preview_shows_the_servers_rendering_with_wiki_links_resolved() throws Exception {
         publish("Hostel Life");
 

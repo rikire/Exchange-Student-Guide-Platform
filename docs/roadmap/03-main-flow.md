@@ -256,9 +256,11 @@ design pass (3) is the largest piece and starts with redrawn screens.
       **Done 1 Oct:** the sections of 30 articles moved verbatim to
       [open-questions.md](../content/open-questions.md); `SeedRunnerTest` asserts no seeded article
       publishes one, red before the change. The reset stand is section 4's.
-- [ ] [Show `[[Title]]` in the editor's hint (F-5)](../verification/walkthrough-fixes.md#12-the-wiki-link-hint-eaten-by-thymeleaf-f-5)
+- [x] [Show `[[Title]]` in the editor's hint (F-5)](../verification/walkthrough-fixes.md#12-the-wiki-link-hint-eaten-by-thymeleaf-f-5)
       — check: a test finds `[[Title]]` on `/submit`, red first
       — owner: **Mikhail**
+      **Done 1 Oct:** `th:inline="none"` on the hint; `EditorPreviewTest` red first. No other `[[` in
+      the templates.
 - [x] [Show times in IST from one setting (F-23)](../verification/walkthrough-fixes.md#13-moderation-times-in-utc-f-23)
       — check: a test with a UTC time expects the IST time and label
       — owner: **Mikhail**

@@ -41,6 +41,8 @@ students" — open questions for the authors, shown to every reader, *Registerin
 - **Change:** turn off inlining for that element (`th:inline="none"`) or write the brackets as
   `&#91;&#91;Title&#93;&#93;`. Look for any other `[[` in templates while there.
 - **Check:** a test that renders `/submit` and finds `[[Title]]` in the page; red before the change.
+- **Done 1 Oct:** `th:inline="none"` on the hint, the only `[[` in the templates;
+  `EditorPreviewTest`'s `the_form_shows_the_wiki_link_syntax_with_its_brackets`, red first.
 
 ### 1.3 Moderation times in UTC (F-23)
 
