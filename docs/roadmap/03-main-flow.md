@@ -98,6 +98,7 @@ the criteria do not reach it.
       **Changed 27 Sep:** not generated from Figma. The human chose to draw layouts, phone ones
       included, directly in the HTML screens of `docs/design/screens/`, and templates follow those
       (ADR-0014).
+      — owner: **Abdirakhim** (closed by 3.4, the landing page)
 - [x] Content: 30 or more articles in the database
       — check: the count comes from the database after import, and searching "FRRO registration"
       returns a relevant article — that is the first step of the demo scenario
@@ -110,9 +111,11 @@ the criteria do not reach it.
 - [ ] `ai-tools`: the gap list and rubric generators; the first honest gap list
       — check: `ai-tools gaps` (phase 3) produces a non-empty list containing at least one item
       neither of us would have volunteered
+      — owner: **Mikhail**
 - [ ] Ownership balance check — if it has drifted, the next tasks come from the lighter side
       — check: both members have authored commits in **every** week of this phase, with the hook's
       journal commits excluded — `sh scripts/contribution.sh` reports the two apart
+      — owner: together
 - [x] The moderator's pages in the browser check — `BrowserLayoutTest` visits `/moderate/queue` and
       `/moderate/submissions/{number}` without a session, so it measures the login page they redirect
       to, not them (found 28 Sep, after FEAT-006 met the layout of FEAT-003)
@@ -127,6 +130,7 @@ the criteria do not reach it.
       were generated on 28 Sep with the git figures only, and W39 still lacks Abdirakhim's paragraph.
       Each is marked as written after the week it covers
       — check: no file in `docs/team/weekly-log/` up to W39 still says "Not written yet"
+      — owner: each member writes their own paragraph
 
 ## Queue raised on 27 September
 
@@ -190,16 +194,19 @@ Where the steps above and this queue compete for the same days, the human orders
 5. [ ] **Frontend interactivity** — whether a lightweight library (htmx, Alpine.js or none) is
    added, and for what
    — check: the choice recorded as an ADR with the alternatives weighed
+   — owner: together — a discussion; the human decides
 6. [ ] **All screens, with features not yet built** — how screens of unbuilt slices are shown
    without fake data passing for real (for example fixtures only under a separate profile, each one a
    debt entry)
    — check: the option chosen; every screen in `docs/design/screens/` reachable
+   — owner: together — a discussion; the human decides
 7. [ ] **Email one-time code for submitting** — against spam and bots, a way to ban an address
    later, and approval status sent by email. Collects an email address but creates no account;
    touches CON-001's reason (personal data), ADR-0008 (which challenge), a mail server, and what OGE
    agrees to store
    — check: a requirement and an ADR agreed; what is stored and the mail server are ours to decide,
    OGE is not asked (item 10, closed 29 Sep)
+   — owner: together — a discussion; the human decides
 8. [x] **Diff view for the moderator** — reviewing an edit shows exactly what changed, where.
    Reverses CON-004 ("No diffs"); belongs to the review screen of `moderate` (FR-015)
    — check: CON-004 revised by the human and the requirement written
@@ -245,52 +252,104 @@ design pass (3) is the largest piece and starts with redrawn screens.
 
 - [ ] [Take the author notes out of 30 seed articles (F-4)](../verification/walkthrough-fixes.md#11-author-notes-published-in-the-articles-f-4) — decided 1 Oct: removed from the text, kept in `docs/content/open-questions.md`
       — check: `grep "Needs checking"` over the seed finds nothing, and the reset stand shows none
+      — owner: **Mikhail**
 - [ ] [Show `[[Title]]` in the editor's hint (F-5)](../verification/walkthrough-fixes.md#12-the-wiki-link-hint-eaten-by-thymeleaf-f-5)
       — check: a test finds `[[Title]]` on `/submit`, red first
+      — owner: **Mikhail**
 - [ ] [Show times in IST from one setting (F-23)](../verification/walkthrough-fixes.md#13-moderation-times-in-utc-f-23)
       — check: a test with a UTC time expects the IST time and label
+      — owner: **Mikhail**
 - [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: the common formats (MP4, MOV, WebM, MKV, AVI, 3GP, MPEG, OGG, WMV) as uploaded, no conversion; play on the site where the browser can, a download card otherwise; warn about location metadata
       — check: tests with `isom`, `mp42` and `qt` files
+      — owner: **Mikhail**
 - [ ] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
       — check: "FRRO registration" returns only articles with both words; junk queries return none
+      — owner: **Abdirakhim**
 - [ ] [Seed before indexing at start-up (F-1)](../verification/walkthrough-fixes.md#16-search-sees-part-of-the-seed-right-after-a-start-f-1)
       — check: after `down -v` and `up`, the first FRRO search is right
+      — owner: **Abdirakhim**
 - [ ] [A 404 text that fits what was asked for (F-26)](../verification/walkthrough-fixes.md#17-small-wrong-texts-f-26-f-14)
       — check: `/tags/no-such-tag` says it is a tag
+      — owner: **Abdirakhim**
 - [ ] [Long input must not break the layout; limits for summary, tags and body (F-31, F-32, F-33)](../verification/walkthrough-fixes.md#18-long-input-breaks-the-layout-and-some-input-has-no-limit-f-31-f-32-f-33) — decided 1 Oct: summary 300, 10 tags, body 100,000
       — check: a fixture with a 255-character unbroken title scrolls no page sideways; a test per limit
+      — owner: **Abdirakhim** the layout and the `BrowserLayoutTest` fixture; **Mikhail** the three limits
 - [ ] [Larger uploads: 500 MB a video, 100 GB in all, from `.env`; sweep rejected files (DEBT-014)](../verification/walkthrough-fixes.md#19-larger-uploads-and-what-they-leave-behind) — decided 1 Oct; the limits done 1 Oct, the sweep to do
       — check: `MediaConfigurationTest`, `UploadTooLargeTest`; a sweep test that never touches a published asset
+      — owner: **Mikhail**
 - [ ] [What becomes a setting and what stays a constant](../verification/walkthrough-fixes.md#110-what-else-should-be-a-setting) — decided 1 Oct: the time zone and the sweep age; the rest stays
       — check: each new setting has a default, an `.env.example` line where the stand sets it, a test at another value
+      — owner: **Mikhail**
 - [ ] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
       — check: every page has the three links; a menu at 390 px
+      — owner: **Abdirakhim**
 - [ ] [Every article reachable, FRRO first (F-7)](../verification/walkthrough-fixes.md#22-all-articles-not-just-the-newest-twelve-f-7) — decided 1 Oct: an "All articles" page and FR-025 (pinning) built now
       — check: every article in two clicks from `/`
+      FR-025 (`could`) is taken from phase 4 into this step; recorded in
+      [04-hardening.md](04-hardening.md).
+      — owner: **Mikhail**
 - [ ] [The moderator's own header, and a message after each action (F-24, F-15)](../verification/walkthrough-fixes.md#23-the-moderators-own-frame-f-24-f-15)
       — check: tests for "Published", "Rejected", "Removed", the link to the published article and the file mark
+      — owner: **Abdirakhim**
 - [ ] [Clearer submission numbers, a Copy button, title and date on the status page (F-29, F-19)](../verification/walkthrough-fixes.md#24-times-numbers-copying-f-29-f-19) — decided 1 Oct: title and date shown
       — check: tests for the title, the date and the button
+      — owner: **Mikhail**
 - [ ] [Design pass over every screen, against the design screens (F-22)](../verification/walkthrough-fixes.md#3-a-design-pass-over-every-screen-f-22) — screens redrawn and accepted by the human before templates change
       — check: each screen compared with its design screen, differences accepted
+      — owner: **Abdirakhim**, except 3.6 and 3.7
 - [ ] [Use the width of the window (F-17)](../verification/walkthrough-fixes.md#31-use-the-width-f-17)
       — check: `BrowserLayoutTest`: main content at least 60 % of a 1280 and 1920 px window
+      — owner: **Abdirakhim**
 - [ ] [One set of buttons, a focus ring in the site's colours (F-27, F-21, F-26)](../verification/walkthrough-fixes.md#32-one-set-of-buttons-f-27)
       — check: a design screen with every button, accepted; axe clean
+      — owner: **Abdirakhim**
 - [ ] [One card everywhere; tags as a sidebar (F-21, F-8)](../verification/walkthrough-fixes.md#33-one-card-f-21-f-8)
       — check: the same card on landing, search and tag pages
+      — owner: **Abdirakhim**
 - [ ] [The landing page brought to its design screen (F-2)](../verification/walkthrough-fixes.md#34-the-landing-page-f-2)
       — check: side-by-side comparison accepted — closes the open step "Templates brought up to the design screens"
+      — owner: **Abdirakhim**
 - [ ] [The article page: actions at the top, summary, date, sidebar, contents, external links (F-10)](../verification/walkthrough-fixes.md#35-the-article-page-f-10)
       — check: a test per element; 390 px
+      — owner: **Abdirakhim**
 - [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — decided 1 Oct: Tom Select for tags, FilePond with image previews for the file, by a new ADR
       — check: `SubmissionFlowTest` unchanged and green; the human tries the form on desktop and phone
+      — owner: **Mikhail**
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
+      — owner: **Mikhail**
 - [ ] [The 404, tracking and login pages made helpful (F-14, F-15, F-19)](../verification/walkthrough-fixes.md#38-the-small-pages-f-14-f-15-f-19)
       — check: each page has its explanation and a way back
+      — owner: **Abdirakhim**
 - [ ] [The stand before the demo: commit F-3, drop the raised limit, change the password, reset](../verification/walkthrough-fixes.md#4-the-stand-before-the-demo)
       — check: `.env` has no raised limit; `down -v` and `up` give 36 clean articles
+      — owner: together, last — after every section-1 item is merged
+
+## Parallel streams, 1 October
+
+Agreed by the human on 1 Oct: the open items above split into two streams that touch different
+files, so both members can work at once. Each item carries its owner on an `— owner:` line. The
+split leans toward Mikhail in `app/src`, where `scripts/contribution.sh` and the ownership table
+show him the lighter side.
+[ownership.md](../team/ownership.md) was stale when this was decided and was regenerated with it.
+
+| | Mikhail — media, time, content, the contributor's forms | Abdirakhim — search, navigation, the shared layout |
+|---|---|---|
+| Before the mid-demo | 1.1 author notes, 1.2 `[[Title]]`, 1.3 + 1.10 IST and settings, 1.4 video formats, 1.8 the three limits, 1.9 the sweep | 1.5 search by every word, 1.6 seed before index, 1.7 the 404 text, 1.8 the layout, 2.1 the header and `GET /tags` |
+| After the mid-demo | 2.2 all articles and FR-025, 2.4 numbers and the status page, 3.6 the forms (new ADR), 3.7 the review page; the `ai-tools gaps` step | 2.3 the moderator's frame, 3.1–3.3 width, buttons, card, 3.4 the landing page, 3.5 the article page, 3.8 the small pages |
+| Each, alone | the weekly-log paragraphs up to W39 | the weekly-log paragraphs up to W39 |
+| Together | the stand (section 4), last; queue items 5–7 as discussions | |
+
+Where the streams meet — one owner per file, and the second waits for the first to be merged:
+
+- `static/css/site.css` and `tokens.css`: Abdirakhim only. Mikhail starts 3.6 after 3.1 and 3.2.
+- The header fragment: Abdirakhim only (2.1, then 2.3).
+- `contribute/SubmissionForm.html`: Mikhail only (1.2, 1.4's `accept`, 1.8's limits, 3.6).
+- The search results template: Abdirakhim, 1.5 before 3.3's card.
+- Dates on cards and the article page: Mikhail's 1.3 before Abdirakhim's 3.3 and 3.5.
+- The landing page's pinned section: Mikhail's 2.2 before Abdirakhim's 3.4.
+- `routes.yml`: both add a route (`/tags`, the all-articles page); the tables are regenerated by
+  `ai-tools routes` after a merge, never merged by hand.
 
 ## Readiness criterion
 

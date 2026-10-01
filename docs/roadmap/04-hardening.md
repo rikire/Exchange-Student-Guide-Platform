@@ -15,6 +15,11 @@ Make it survive real use and real inputs, and make it something a third person c
       — check: FR-023's four criteria and FR-024's four criteria are eight tests; the admin-route
       enumeration test from the original phase-3 step (every admin route redirects when
       unauthenticated, enumerated from the route contract) is included
+- [ ] ~~FR-025 — editing the homepage's pinned articles~~
+      **Moved to phase 3, 1 Oct** by the human, with the "All articles" page: the walkthrough found
+      *Registering with FRRO* missing from the landing page — see the step "Every article reachable,
+      FRRO first (F-7)" in [03-main-flow.md](03-main-flow.md)
+      — check: FR-025's two criteria are two tests, built under that phase-3 step
 - [x] Moved from phase 3, 10 Sep: FR-019 — providing a rejection reason
       — check: rejecting with a reason stores it, rejecting without one stores none — two tests
       **Built early, 29 Sep:** [FEAT-006](../features/FEAT-006-moderating-a-submission.md), both
