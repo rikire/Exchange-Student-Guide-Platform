@@ -76,7 +76,10 @@ matches an article containing that script.
 
 ### NFR-004 — Exportability
 
-**Status:** in-progress
+**Status:** done — marked by the human on 2 Oct: `ArticleArchive.exportTo` writes every published
+article with its metadata as the seed's Markdown with front matter (FEAT-004); an address longer
+than a file name may be is cut to fit since the same day. Media files are not part of the fit
+criterion and are not exported
 
 The knowledge base can be exported in full to a human-readable format, independent of the
 application, so OGE is never locked into this system.

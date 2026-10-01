@@ -12,8 +12,8 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 
 ```mermaid
 pie showData title Requirements by status
-    "done" : 31
-    "in-progress" : 3
+    "done" : 34
+    "in-progress" : 0
     "planned" : 8
 ```
 
@@ -23,12 +23,12 @@ The arrows are the dependencies Spring Modulith read from the code (`app/target/
 
 ```mermaid
 flowchart LR
-    articleview["articleview · 6/7 done"]:::partial
+    articleview["articleview · 7/7 done"]:::done
     backlink["backlink · 1/1 done"]:::done
-    backup["backup · 1/2 done"]:::partial
-    contribute["contribute · 7/8 done"]:::partial
+    backup["backup · 2/2 done"]:::done
+    contribute["contribute · 8/8 done"]:::done
     home["home · 1/1 done"]:::done
-    media["media · 4/6 done"]:::partial
+    media["media · 6/6 done"]:::done
     moderate["moderate · 9/9 done"]:::done
     search["search · 2/2 done"]:::done
     shared["shared · 2/2 done"]:::done
@@ -72,12 +72,12 @@ flowchart LR
 
 | Slice | Requirements covered | Done | State |
 |---|---|---|---|
-| articleview | 7 | 6 | partial |
+| articleview | 7 | 7 | done |
 | backlink | 1 | 1 | done |
-| backup | 2 | 1 | partial |
-| contribute | 8 | 7 | partial |
+| backup | 2 | 2 | done |
+| contribute | 8 | 8 | done |
 | home | 1 | 1 | done |
-| media | 6 | 4 | partial |
+| media | 6 | 6 | done |
 | moderate | 9 | 9 | done |
 | search | 2 | 2 | done |
 | shared | 2 | 2 | done |
@@ -93,9 +93,7 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-001 | in-progress | must | Reading a published article | 3 | 53 | 0 |
 | FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
-| FR-011 | in-progress | must | Proposing an edit to an existing article | 5 | 9 | 0 |
 | FR-013 | planned | should | Abuse handling without accounts | 2 | 0 | 2 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
@@ -103,7 +101,6 @@ real figure can only be higher.
 | FR-024 | planned | could | Editing an article directly | 4 | 0 | 4 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
 | NFR-003 | planned |  | Multilingual content survival | 0 | 0 | 0 |
-| NFR-004 | in-progress |  | Exportability | 0 | 27 | 0 |
 
 ## Done, with criteria that no test is anchored to
 
