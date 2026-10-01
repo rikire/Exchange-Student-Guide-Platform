@@ -48,7 +48,10 @@ passes in one run.
 
 ### DEBT-021 — The search page has no query-count case and no test of its bound
 
-**Status:** open
+**Status:** resolved 2026-10-02 — `PageQueryCountTest` has a case for `/search` and for
+`/tags/{tag}` (two against thirty), and `SearchFlowTest.thirty_matches_show_the_first_twenty_with_the_total`
+holds the bound. Shown to catch their faults: with `LIMIT` at 50 the bound test went red, and with
+a batch fetch size of 1 the two counts went from 3 and 5 to 21 and 33
 **Created:** 2026-09-30
 **Marker:** `app/src/main/java/in/ac/iitm/guide/search/internal/ArticleSearchService.java` — `LIMIT`
 

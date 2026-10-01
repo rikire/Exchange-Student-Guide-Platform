@@ -110,7 +110,6 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
-| DEBT-021 | The search page has no query-count case and no test of its bound | phase 4's load check ([04-hardening.md](roadmap/04-hardening.md)), which measures search. |
 | DEBT-020 | Templates are not cached on the stand | phase 4's load check ([04-hardening.md](roadmap/04-hardening.md)), which should measure |
 | DEBT-018 | The application container runs as root | the handoff package of phase 5, which is the stand OGE runs. |
 | DEBT-015 | A file far over the container's limit gets a closed connection, not the page | the first report of an upload ending in a connection error, or phase 4's hardening. |
