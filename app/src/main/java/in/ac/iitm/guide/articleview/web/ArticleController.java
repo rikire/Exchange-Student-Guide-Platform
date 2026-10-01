@@ -5,12 +5,14 @@ import in.ac.iitm.guide.articleview.persistence.ArticleViewRepository;
 import in.ac.iitm.guide.backlink.Backlinks;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.MediaItem;
+import in.ac.iitm.guide.search.SimilarTitles;
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +46,7 @@ class ArticleController {
     private final MediaAssets media;
     private final Backlinks backlinks;
     private final DisplayTime displayTime;
+    private final SimilarTitles similarTitles;
 
     private final WikiLinkRenderer renderer = new WikiLinkRenderer();
 
@@ -52,21 +55,30 @@ class ArticleController {
             ArticleViewRepository views,
             MediaAssets media,
             Backlinks backlinks,
-            DisplayTime displayTime) {
+            DisplayTime displayTime,
+            SimilarTitles similarTitles) {
         this.articles = articles;
         this.views = views;
         this.media = media;
         this.backlinks = backlinks;
         this.displayTime = displayTime;
+        this.similarTitles = similarTitles;
     }
 
     @GetMapping("/articles/{address}")
-    String show(@PathVariable String address, Model model, HttpServletRequest request) {
+    String show(@PathVariable String address, Model model, HttpServletRequest request, HttpServletResponse response) {
         // The address is put through the same rule as a title, so /articles/HOSTEL-Life reaches the
         // article stored under "hostel-life" (ui-routes.md: matched case-insensitively).
-        var slug = ArticleAddress.slugOf(address).orElseThrow(() -> new ArticleNotFoundException(address));
-        var article =
-                articles.findBySlugAndRemovedAtIsNull(slug).orElseThrow(() -> new ArticleNotFoundException(address));
+        var found = ArticleAddress.slugOf(address).flatMap(articles::findBySlugAndRemovedAtIsNull);
+        if (found.isEmpty()) {
+            // Fix 3.8 (F-14): the not-found page itself, rendered here rather than by the error
+            // dispatch, so it can offer titles close to the address.
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            model.addAttribute("path", request.getRequestURI());
+            model.addAttribute("suggestions", similarTitles.near(address));
+            return "error/404";
+        }
+        var article = found.get();
 
         var tags = TagLink.of(article.getTags().stream().map(Tag::getName).toList());
         var body = renderer.renderBody(article.getBody(), this::resolve);

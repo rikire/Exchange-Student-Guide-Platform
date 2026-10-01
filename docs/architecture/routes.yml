@@ -30,7 +30,8 @@ routes:
     fields: >-
       — (read only)
     responses: >-
-      `200` published; `404` unapproved / rejected / removed / no match
+      `200` published; `404` unapproved / rejected / removed / no match, the not-found page with
+      up to five titles close to the address (fix 3.8)
     serves: >-
       FR-001 (UC-003), with the article's attached media below the text, each fetched from
       `GET /media/{id}` ([FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md)). Also

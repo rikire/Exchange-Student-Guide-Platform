@@ -2,6 +2,12 @@ package in.ac.iitm.guide.articleview;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.wikilink.ArticleAddress;
+import jakarta.persistence.EntityManager;
+import java.time.OffsetDateTime;
+import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * Through a real server, not MockMvc: MockMvc stops at the status and never dispatches to the error
@@ -21,6 +28,67 @@ class NotFoundPageTest {
 
     @Autowired
     private TestRestTemplate http;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
+    private TransactionTemplate transaction;
+
+    /** Through the entity manager, so the search index forgets them too. */
+    @AfterEach
+    void clearTheArticles() {
+        transaction.executeWithoutResult(status -> entityManager
+                .createQuery("SELECT a FROM Article a", Article.class)
+                .getResultList()
+                .forEach(entityManager::remove));
+    }
+
+    @Test
+    // trace:FR-001
+    void every_not_found_page_offers_the_search_box_and_the_way_back() {
+        var page = notFound("/no-such-page");
+
+        assertThat(page)
+                .containsPattern("<form[^>]*action=\"/search\"")
+                .containsPattern("class=\"button-quiet button-back\" href=\"/\"");
+    }
+
+    @Test
+    // trace:FR-001
+    void a_missing_article_suggests_published_titles_close_to_its_address() {
+        publish("Registering with FRRO");
+        publish("Opening a bank account");
+
+        var page = notFound("/articles/registring-frro");
+
+        assertThat(page)
+                .contains("Did you mean")
+                .contains("<a href=\"/articles/registering-with-frro\">Registering with FRRO</a>")
+                .doesNotContain("Opening a bank account");
+    }
+
+    @Test
+    // trace:FR-001
+    void a_missing_article_close_to_no_title_suggests_nothing() {
+        publish("Opening a bank account");
+
+        assertThat(notFound("/articles/qwxz")).doesNotContain("Did you mean");
+    }
+
+    private void publish(String title) {
+        transaction.executeWithoutResult(status -> {
+            var article = new Article();
+            article.setTitle(title);
+            article.setSlug(ArticleAddress.slugOf(title).orElseThrow());
+            article.setSummary("A summary.");
+            article.setBody("Text.");
+            article.setPublishedAt(OffsetDateTime.now());
+            article.setUpdatedAt(OffsetDateTime.now());
+            article.setTags(Set.of());
+            entityManager.persist(article);
+        });
+    }
 
     @Test
     // trace:FR-001

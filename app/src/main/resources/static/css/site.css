@@ -355,3 +355,6 @@ p a, .article-body a { text-decoration: underline; }
 @media (max-width: 600px) {
   .landing-main .card-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Fix 3.8 (F-14): the not-found page's suggestions, a card no wider than the text. */
+.suggestions { max-width: 46rem; margin: 0 0 var(--space-5); }

@@ -125,6 +125,8 @@ the text — F-10's complaint was the actions at the very end. Tags stay above t
 design screen draws them. Red first: `WikiLinkRendererTest` 3, `ArticleControllerTest` 2 and
 `BrowserLayoutTest.on_a_phone_the_articles_actions_come_under_its_title_before_the_text`.
 
+**Fix 3.8, 2 Oct** (confirmed by the human, no design screen: the page is made of parts that have one): an article address that answers nothing is rendered by `ArticleController` itself as `error/404.html`, with "Did you mean" and up to five titles from `search`'s `SimilarTitles`; every not-found page offers the search box and "Back to the guide". `NotFoundPageTest`, two tests red first.
+
 ## Deliberately out of scope
 
 - The summary is not shown on the article page (the design does not show it; it appears on cards).
