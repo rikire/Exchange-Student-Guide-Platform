@@ -249,7 +249,7 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — check: a test finds `[[Title]]` on `/submit`, red first
 - [ ] [Show times in IST from one setting (F-23)](../verification/walkthrough-fixes.md#13-moderation-times-in-utc-f-23)
       — check: a test with a UTC time expects the IST time and label
-- [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: a fixed list, no conversion of every upload; **open:** the list and `.mov`
+- [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: the common formats (MP4, MOV, WebM, MKV, AVI, 3GP, MPEG, OGG, WMV) as uploaded, no conversion; play on the site where the browser can, a download card otherwise; warn about location metadata
       — check: tests with `isom`, `mp42` and `qt` files
 - [ ] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
       — check: "FRRO registration" returns only articles with both words; junk queries return none
@@ -259,6 +259,10 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — check: `/tags/no-such-tag` says it is a tag
 - [ ] [Long input must not break the layout; limits for summary, tags and body (F-31, F-32, F-33)](../verification/walkthrough-fixes.md#18-long-input-breaks-the-layout-and-some-input-has-no-limit-f-31-f-32-f-33) — decided 1 Oct: summary 300, 10 tags, body 100,000
       — check: a fixture with a 255-character unbroken title scrolls no page sideways; a test per limit
+- [ ] [Larger uploads: 500 MB a video, 100 GB in all, from `.env`; sweep rejected files (DEBT-014)](../verification/walkthrough-fixes.md#19-larger-uploads-and-what-they-leave-behind) — decided 1 Oct; the limits done 1 Oct, the sweep to do
+      — check: `MediaConfigurationTest`, `UploadTooLargeTest`; a sweep test that never touches a published asset
+- [ ] [What becomes a setting and what stays a constant](../verification/walkthrough-fixes.md#110-what-else-should-be-a-setting) — decided 1 Oct: the time zone and the sweep age; the rest stays
+      — check: each new setting has a default, an `.env.example` line where the stand sets it, a test at another value
 - [ ] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
       — check: every page has the three links; a menu at 390 px
 - [ ] [Every article reachable, FRRO first (F-7)](../verification/walkthrough-fixes.md#22-all-articles-not-just-the-newest-twelve-f-7) — decided 1 Oct: an "All articles" page and FR-025 (pinning) built now
@@ -279,7 +283,7 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — check: side-by-side comparison accepted — closes the open step "Templates brought up to the design screens"
 - [ ] [The article page: actions at the top, summary, date, sidebar, contents, external links (F-10)](../verification/walkthrough-fixes.md#35-the-article-page-f-10)
       — check: a test per element; 390 px
-- [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — **open:** Tom Select for tags (recommended), the drop zone ours or FilePond — see the comparison
+- [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — decided 1 Oct: Tom Select for tags, FilePond with image previews for the file, by a new ADR
       — check: `SubmissionFlowTest` unchanged and green; the human tries the form on desktop and phone
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea

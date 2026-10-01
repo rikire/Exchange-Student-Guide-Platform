@@ -56,19 +56,40 @@ An MP4 with the brand `isom` (what ffmpeg and many Android phones write) is dete
 `video/quicktime`; `media/internal/AcceptedType.java` accepts only `video/mp4`. Most videos from a
 phone will be refused.
 
-- **Decided 1 Oct by the human:** no conversion of every upload; a fixed list of accepted video formats.
-  **Open:** the list, and whether `.mov` is worth converting. An iPhone records `.mov` in HEVC by
-  default, which Chrome on many Windows and Android devices does not play (not verified per device).
-  Converting means ffmpeg in the image, a background job with a "processing" state, HEVC to H.264
-  re-encoding that takes CPU, and ffmpeg parsing files from anonymous visitors; a `.mov` already in
-  H.264 only needs its container changed (`-c copy`), which is fast. Recommended for now: the MP4
-  family (`isom`, `iso2`, `mp41`, `mp42`, `avc1`, `M4V`), stored as `video/mp4`, and a clear message
-  for other formats.
-- **Change:** in `media`, a second check after Tika: for `video/quicktime`, read the `ftyp` box and
-  map the MP4 brands to `AcceptedType.MP4`.
-- **Check:** tests with an `isom` file (accepted), an `mp42` file (accepted) and a real `qt  ` file
-  (refused, or accepted under the other answer). The test file can be the 10-second clip from
-  test-videos.co.uk the walkthrough used.
+- **Decided 1 Oct by the human:** the common video formats are accepted as uploaded, with no
+  conversion and no editing on the server; rare and specialised formats are refused.
+  - The list: MP4 and M4V (every MP4 brand, `isom`, `mp42` and the rest), MOV, WebM, MKV, AVI, 3GP,
+    MPEG, OGG, WMV. Each is an `AcceptedType` keyed by the type Tika reads from the bytes, never by
+    the extension or the type the browser sends; anything else is refused with the list in the
+    message.
+  - The server does not parse a video: no ffmpeg, no metadata reading. Its exposure stays at Tika's
+    signature check.
+  - Limits (NFR-001, raised 1 Oct, see 1.9): 500 MB per video, 100 GB for the media volume; NFR-005's 5
+    submissions an hour; nothing reaches a public page before a moderator approves it.
+  - A video keeps its metadata, including where it was filmed, which a phone writes into a `.mov`.
+    Photos lose it in re-encoding; videos would not. Decided: warn the author under the file field,
+    and add a line to the moderator's review page; no stripping.
+- **Change, accepting:** the new `AcceptedType` rows, each stored as the type it was detected as,
+  with its own extension. The form's `accept` attribute and the "accepted" text list the same set.
+- **Change, playing on the site:** every video gets a `<video>` player; the browser's own decoders
+  decide what plays, and a JavaScript player would not add any. MP4 with H.264, WebM and OGG play
+  in every current browser; a `.mov` plays where the browser can decode its codec (H.264 in Chrome
+  and Safari, HEVC from an iPhone in Safari and only on some Chrome systems — not verified per
+  device); MKV, AVI, 3GP, MPEG and WMV will mostly not. A small script of our own (CSP allows
+  `'self'`) listens for the player's `error` event and replaces it with "This video can't play in
+  your browser — download it", the Download link (FR-016) staying under it either way. The formats
+  known not to play inline (AVI, MPEG, WMV) skip the player and show the download card directly.
+- **Change, delivery:** the stored type and `nosniff` on every response, as now;
+  `Content-Disposition: attachment` for the types shown only as a download card.
+- **Requirements touched at implementation, each with the human's yes:** CON-006 (the format list),
+  FR-010 and FR-011 (what is accepted), `docs/ai/security.md` (the allowlist and the metadata note).
+- **Check:**
+  - one test per format with a real sample file, accepted and stored under its detected type; a
+    renamed text file refused. Whether Tika's core detector tells WebM from MKV and recognises 3GP,
+    AVI and WMV is not verified: the samples settle it, and a format it cannot detect is dropped
+    from the list or brought back to the human;
+  - a browser test: an MP4 plays inline, an unplayable file shows the download card;
+  - the human uploads an iPhone `.mov` and an Android `.mp4` on the stand.
 
 ### 1.5 Search results are noise (F-9)
 
@@ -116,6 +137,38 @@ pushes the queue's "Review" link off screen; a summary and the list of tags have
 - **Change, test:** `BrowserLayoutTest` gains a fixture article with a 255-character unbroken title
   and a long summary, so this cannot come back unseen.
 - **Check:** with that fixture, no page scrolls sideways at any width; tests for each new limit.
+
+### 1.9 Larger uploads, and what they leave behind
+
+Raised to the human on 1 Oct: 200 MB per video and 20 GB in all are too little.
+
+- **Done 1 Oct:** NFR-001's defaults are 500 MB per video and 100 GB for the volume; each limit is
+  set on the stand from `.env` (`GUIDE_MEDIA_*`); the container's multipart ceiling is derived from
+  the limits in `media/internal/MediaConfiguration.java` instead of being a second number in
+  `application.yml`. Checked by `MediaConfigurationTest` and `UploadTooLargeTest`.
+- **Change, still to do — DEBT-014, moved into phase 3 by the human:** a sweep that deletes the files
+  and rows of assets whose submission was rejected longer ago than a set time (a `guide.media`
+  setting). At 500 MB a video and 5 submissions an hour, one address can leave 2.5 GB an hour of
+  rejected files.
+- **Check:** a test that a rejected submission's asset older than the setting is swept, a newer one
+  is kept, and a published article's asset is never swept; DEBT-014 closed.
+
+### 1.10 What else should be a setting
+
+Reviewed 1 Oct and agreed with the human: a value becomes a setting when the office running the
+stand may need its own; product rules and security bounds stay constants.
+
+- **Settings:** the display time zone (1.3, `guide.time-zone`); NFR-001's limits (1.9, done); the
+  age after which rejected files are swept (1.9). Already settings: NFR-005's limits, the moderator
+  password, the index and media directories.
+- **Constants, deliberately:** the landing page's card and tag counts and the search, backlink and
+  tag-page sizes (`LandingPageService`, `ArticleSearchService`, `Backlinks`, `TagBrowseService`);
+  the content limits — title 255 (a schema column), tag 64, rejection reason 2000, and 1.8's
+  summary, tag-count and body limits; the security bounds — a photo's 50 megapixels, a submission
+  number's 60 bits, the content-security policy, the 100,000 addresses a rate limiter remembers.
+  Making one of these a setting is a way to weaken it without a code review.
+- **Check:** each new setting has a default in `application.yml`, a line in `.env.example` if the
+  stand sets it, and a test at a non-default value.
 
 ## 2. Navigation and the moderator's panel
 
@@ -236,8 +289,11 @@ the title and a date, and a "Pinned" section (2.2).
 - **Change, edit form:** "Propose an edit to *Title*"; "Cancel" back to the article; the collision
   message names the other article.
 - **Change, phone:** a search placeholder that fits ("Search the guide").
-- **Decision, open:** what builds the tag field and the drop zone. Researched 1 Oct (npm registry,
-  WebJars on Maven Central, the bundles read for CSP-breaking code; not yet tried in a browser):
+- **Decided 1 Oct by the human:** libraries, not our own scripts. Tags: **Tom Select**. File:
+  **FilePond** with `filepond-plugin-image-preview`, in `storeAsFile` mode so the file goes with the
+  form and the server does not change. Both as WebJars, an addition to ADR-0013 by a new ADR.
+  Researched 1 Oct (npm registry, WebJars on Maven Central, the bundles read for CSP-breaking code;
+  not yet tried in a browser):
 
   | Library | Latest, WebJar | gzip | Licence | For us |
   |---|---|---|---|---|
@@ -247,9 +303,6 @@ the title and a date, and a "Pinned" section (2.2).
   | FilePond | 4.32.12, WebJar 4.32.12 | 33 KB + 3 KB | MIT | uploads by its own request unless `storeAsFile`; previews need `filepond-plugin-image-preview` (last release Dec 2023, WebJar 4.6.11) |
   | Dropzone | 6.3.5, WebJar 6.0.0-beta.2 only | 11 KB | MIT | no current WebJar, so ADR-0013 rules it out |
 
-  Recommended: Tom Select for tags; for the file, our own few lines over the real
-  `<input type=file>` unless photo previews are wanted, in which case FilePond with its preview
-  plugin. Either library is an addition to ADR-0013.
 - **Check:** `SubmissionFlowTest` still passes unchanged (the server contract is the same); tests for
   the draft; `BrowserLayoutTest`; the human tries the form on desktop and phone.
 

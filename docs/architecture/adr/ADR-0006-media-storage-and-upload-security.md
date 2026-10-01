@@ -135,3 +135,9 @@ quietly reworded.
 
 This is the same mistake in the same shape twice — a hard-to-guess address recorded as though it
 were a gate — which is worth naming here so the third instance is recognised faster.
+
+## Note, 1 October: the limits raised
+
+NFR-001's defaults became 500 MB per video and 100 GB for the volume (decided by the human after the
+screen walkthrough), and each is set on the stand from `.env`. The decision above stands: a larger
+video makes a BLOB worse, not better.

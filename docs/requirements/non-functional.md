@@ -42,8 +42,13 @@ An uploaded media asset's size does not exceed a configurable maximum that diffe
 and the whole media volume does not exceed a configurable maximum of its own. Both are application
 settings, not hardcoded constants.
 
-**Fit criterion:** by default — 10 MB per image, 20 MB per document, 200 MB per video, and 20 GB for
-the whole media volume. Verified by a test asserting each configured limit is enforced.
+**Fit criterion:** by default — 10 MB per image, 20 MB per document, 500 MB per video, and 100 GB
+for the whole media volume. Verified by a test asserting each configured limit is enforced, and by
+`MediaConfigurationTest` and `UploadTooLargeTest` that the container's ceiling follows them.
+
+Raised from 200 MB and 20 GB by the human on 1 Oct after the screen walkthrough: a minute of phone
+video in 1080p is roughly 100–130 MB (typical figure, not measured), and OGE sets its own values on
+its server.
 
 ### NFR-002 — Search latency
 

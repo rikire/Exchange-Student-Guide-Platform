@@ -152,20 +152,23 @@ and its file; ADR-0006 already allows an orphan as "wasted disk, not exposure", 
 cleanup off on 28 Sep.
 
 **Consequence:** every rejected attachment keeps its bytes, and its `size_bytes` counts towards
-NFR-001's 20 GB volume, so spam that is rejected still fills the storage, up to refusing every
+NFR-001's volume limit (100 GB by default since 1 Oct), so spam that is rejected still fills the storage, up to refusing every
 upload.
 
 **How to fix:** a sweep that deletes the rows and files of assets whose submission was rejected
 longer ago than a set time, with a test that a published article's asset is never swept.
 
 **Trigger:** the volume passing half its limit, or phase 4's hardening
-([04-hardening.md](roadmap/04-hardening.md)), whichever comes first.
+([04-hardening.md](roadmap/04-hardening.md)), whichever comes first. Moved into phase 3 by the human
+on 1 Oct, when the video limit went to 500 MB: one address may now send 2.5 GB an hour
+([walkthrough-fixes.md 1.9](verification/walkthrough-fixes.md#19-larger-uploads-and-what-they-leave-behind)).
 
 ### DEBT-015 — A file far over the container's limit gets a closed connection, not the page
 
 **Status:** open
 **Created:** 2026-09-28
-**Marker:** `app/src/main/resources/application.yml` — `spring.servlet.multipart`
+**Marker:** `app/src/main/java/in/ac/iitm/guide/media/internal/MediaConfiguration.java` —
+`multipartConfig`, the container's ceiling (in `application.yml` until 1 Oct)
 
 **Cause:** FEAT-009 answers a form over the container's limit with `413` and the form. Tomcat reads
 at most 2 MB past the limit (`server.tomcat.max-swallow-size`) to deliver that answer and then closes
@@ -173,7 +176,7 @@ the connection: checked on 28 Sep, a file 5 MB over the test's limit ended in a 
 the page. Raising the setting means the server reads that much more of a request it has already
 refused, which is a choice between a clear message and the cost of reading a stranger's upload.
 
-**Consequence:** a contributor who picks a file more than 2 MB over 200 MB sees the browser's
+**Consequence:** a contributor who picks a file more than 2 MB over the largest upload limit sees the browser's
 connection error rather than the form's message.
 
 **How to fix:** the human decides `server.tomcat.max-swallow-size` (unlimited, a set size, or the

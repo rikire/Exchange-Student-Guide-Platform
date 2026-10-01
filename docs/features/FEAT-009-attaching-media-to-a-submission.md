@@ -99,7 +99,8 @@ on Wikipedia and the libraries on Maven Central:
   lets the JDK's ImageIO read WebP. JPEG and PNG are read and written by the JDK itself. Tika 3.3.2
   was chosen over 4.0.0 (18 Aug 2026) as the mature line with the same detection API.
 - **Limits of NFR-001 are settings** (`guide.media.*`): 10 MB a photo, 20 MB a document, 200 MB a
-  video, and 20 GB for the volume, counted as the sum of `size_bytes`.
+  video, and 20 GB for the volume, counted as the sum of `size_bytes`. Raised on 1 Oct to 500 MB a
+  video and 100 GB, each settable from the stand's `.env`.
 - **A refused attachment answers `422`** with the form and what was typed. A request larger than the
   largest limit is refused by the container before the form is read, and answers `413` with the empty
   form and the error.
@@ -147,7 +148,9 @@ image width rule `BrowserLayoutTest` measured the article at 1633 px wide at 320
 Found while building, each settled rather than guessed:
 
 - **The container's multipart limits** are 1 MB a file by default, which would refuse a 10 MB photo;
-  they are now 200 MB a file and 210 MB a request (`spring.servlet.multipart`).
+  they are now 200 MB a file and 210 MB a request (`spring.servlet.multipart`). Since 1 Oct the
+  ceiling is derived from the `guide.media` limits by `MediaConfiguration`, the largest of them a
+  file and 10 MB more a request, so raising a limit does not leave the container refusing it.
 - **The CSRF token is read from a multipart body** by Spring Security through a real Tomcat, shown by
   `UploadTooLargeTest` rather than assumed.
 - **A file more than 2 MB over the container's limit** ends in a closed connection, not the `413`
