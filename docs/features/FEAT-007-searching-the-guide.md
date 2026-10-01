@@ -14,10 +14,15 @@ code:
   - app/src/main/java/in/ac/iitm/guide/search/internal/EnglishAnalysis.java
   - app/src/main/java/in/ac/iitm/guide/search/internal/SearchIndexBuilder.java
   - app/src/main/java/in/ac/iitm/guide/search/internal/SearchResults.java
+  - app/src/main/java/in/ac/iitm/guide/search/internal/Passage.java
+  - app/src/main/java/in/ac/iitm/guide/search/internal/BodyAsText.java
+  - app/src/main/java/in/ac/iitm/guide/wikilink/WikiLinkRenderer.java
+  - app/src/main/resources/static/css/site.css
   - app/src/main/resources/templates/search/SearchResults.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/search/SearchFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/StartupOrderTest.java
+  - app/src/test/java/in/ac/iitm/guide/wikilink/WikiLinkRendererTest.java
 ---
 
 # FEAT-007 — Searching the guide
@@ -86,11 +91,19 @@ agent's suggested answers.
 
 ## Acceptance criteria
 
-The four of FR-007, each a test in `SearchFlowTest`:
+The criteria of FR-007, each a test in `SearchFlowTest`. The second and third replaced "matching
+more of the query's words appears higher" on 2 Oct, when the human changed FR-007 to every word
+(walkthrough fix 1.5):
 
 - [x] A published article whose title, body or tags contain a word from the query appears in the
       results.
-- [x] A published article matching more of the query's words than another appears higher.
+- [x] An article holding only some of the query's words does not appear —
+      `only_articles_holding_every_word_of_the_query_appear`; the words may be spread over the title,
+      the text and the tags — `the_words_may_be_spread_over_the_title_the_text_and_the_tags`
+- [x] A result shows a passage of the text with the words marked, without Markdown —
+      `a_result_shows_a_passage_of_the_text_with_the_words_marked`,
+      `the_passage_is_plain_text_without_markdown_or_wiki_link_brackets`; the words are marked in
+      the title too; HTML in the text is escaped in the passage
 - [x] When only a submission not yet approved matches the query, no result appears for it.
 - [x] When only a rejected submission matches the query, no result appears for it.
 
@@ -105,6 +118,10 @@ And from the route contract and the decisions above:
       fresh start finds every article (walkthrough fix 1.6, 2 Oct) —
       `StartupOrderTest.the_seed_is_imported_and_indexed_before_the_web_server_starts`
 - [x] An article the moderator approves is found.
+- [x] Markup and query syntax typed into the box find nothing, and the page says that no article
+      holds all the words, with a link to the tags —
+      `markup_and_query_syntax_typed_into_the_box_find_nothing`,
+      `when_no_article_holds_every_word_the_page_says_so_and_links_to_the_tags`
 
 Evidence, 28 Sep: the first thirteen tests of `SearchFlowTest` were red first (`404`, no route),
 then green; the tests added after review were red first where they asked for new behaviour. Four negative tests were shown to catch their fault: with `Submission` indexed and searched
@@ -123,6 +140,17 @@ nothing and `bank -account` still finds "Bank account", because the query is ana
 parsed. It goes red with `match` swapped for `simpleQueryString`. The bound of 20 results and the
 page's query count have no test: [DEBT-021](../tech-debt.md), marked at `ArticleSearchService.LIMIT`.
 
+**Walkthrough fix 1.5, 2 Oct (F-9):** every word is required, by one `must` clause per word as the
+analyzer reduces it, searched with `skipAnalysis`; there is no fallback to fewer words, by the
+human's decision, since it would bring the junk queries back. The body is indexed as plain text
+(`BodyAsText`, through `WikiLinkRenderer.plainText`), so the passage carries no Markdown and a link's
+address is not searched. Hibernate Search's plain highlighter marks the words with two control
+characters that `Passage` cuts on, and the template prints every piece escaped: no `th:utext`
+(security.md). The result follows `docs/design/screens/SearchResults.html`: a list, the "Best match"
+badge, the title and the passage marked; the summary when only the title or a tag matched. Seven of
+the new tests were red first. The index's fields changed, so an index kept on disk is rebuilt once,
+by removing the `guide-index` volume.
+
 **NFR-002, 30 Sep** ([search-latency.md](../verification/search-latency.md)): `scripts/search-latency.sh`
 measured 100 searches on 100 generated articles of 500 words on the compose stand. The slowest took
 0.023 s and the median 0.009 s, against a limit of 2 s. On that measurement, agreed with the human as
@@ -131,8 +159,12 @@ the check, NFR-002 is `done`.
 ## Deliberately out of scope
 
 - NFR-002 (search latency) and NFR-003 (Hindi and Tamil queries): their own steps.
-- Highlighted snippets and the "best match" badge of `SearchResults.html`: the summary is shown
-  instead.
+- **A query mixing word forms the stemmer keeps apart.** English Porter reduces "registration" to
+  `registr` and "registering" to `regist`, so with every word required "FRRO registration" does not
+  find an article that only says "registering". Found by `BrowserKeyboardTest` on 2 Oct, whose
+  article was given the word, as the seed's FRRO article has it. A lighter stemmer or synonyms
+  would be their own decision.
+- The one card shared by the landing, search and tag pages: walkthrough fix 3.3.
 - Paging: the first 20 results are shown with the total count.
 - The search box in the site header on every page.
 

@@ -57,6 +57,7 @@ flowchart LR
     moderate --> shared
     moderate --> taxonomy
     moderate --> wikilink
+    search --> shared
     search --> taxonomy
     search --> wikilink
     taxonomy --> shared

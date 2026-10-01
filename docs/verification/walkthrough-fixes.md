@@ -141,6 +141,18 @@ code shows it is not.)
 - **Check:** tests: "FRRO registration" returns only articles holding both words; the junk queries
   return none; a snippet holds `<mark>`.
 
+**Done 2 Oct**, with the human's decisions of that day: FR-007 now says every word; no fallback to
+fewer words, which would bring the junk queries back, and the empty page says no article holds all
+of them, with a link to the tags; the passage is plain text, without Markdown; the result follows its
+design screen, `SearchResults.html`. Recorded in FEAT-007, with the one limit found: the stemmer keeps
+"registration" and "registering" apart, so a query in one form misses an article written only in the
+other.
+
+**The junk-query check reworded by the human, 2 Oct:** on the seed, `hostel" OR 1=1 --` finds 6
+articles, each of which really holds "hostel", "or" and "1" ("1. Reach your hostel or guest house"),
+where it found all 36 before. The check is now: the markup query finds nothing, and a query with
+operators finds only articles holding every one of its words, never the whole guide.
+
 ### 1.6 Search sees part of the seed right after a start (F-1)
 
 `search/internal/SearchIndexBuilder` runs first (`@Order(HIGHEST_PRECEDENCE)`) and finds an empty

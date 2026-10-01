@@ -277,8 +277,11 @@ design pass (3) is the largest piece and starts with redrawn screens.
       and MPEG as a card only, the metadata warning. Left: the human's iPhone `.mov` and Android
       `.mp4` on the stand, which closes this item.
       — owner: **Mikhail**
-- [ ] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
-      — check: "FRRO registration" returns only articles with both words; junk queries return none
+- [x] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
+      — check: "FRRO registration" returns only articles with both words; the markup query returns
+      none, and a query with operators only articles holding all its words (reworded 2 Oct)
+      Built 2 Oct: FR-007 changed to every word, a marked passage of plain text, the result as its
+      design screen draws it (FEAT-007). Accepted by the human on 2 Oct on the stand.
       — owner: **Abdirakhim**
 - [x] [Seed before indexing at start-up (F-1)](../verification/walkthrough-fixes.md#16-search-sees-part-of-the-seed-right-after-a-start-f-1)
       — check: after `down -v` and `up`, the first FRRO search is right

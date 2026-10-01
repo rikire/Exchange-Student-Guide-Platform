@@ -69,7 +69,9 @@ routes:
       `200` always, including zero matches; `400` if `q` is missing or blank — an empty query is the
       landing page's job, and redirecting there silently would hide a broken link from whoever built
       it; `400` if `q` has more than 50 words as the index's analyzer splits them, which past Lucene's
-      clause limit answered `500` (decided 28 Sep)
+      clause limit answered `500` (decided 28 Sep). An article matches when it holds every word of
+      the query; each result shows its title and a passage of its text with the words marked
+      (walkthrough fix 1.5, 2 Oct)
     serves: >-
       FR-007 (UC-001)
 
