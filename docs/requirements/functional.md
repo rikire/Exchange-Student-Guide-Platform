@@ -200,10 +200,15 @@ THEN that link does not appear in A's backlink list
 **Status:** done
 **Priority:** must
 
-When a reader searches a query, the system shall return the published articles whose title, body,
-or tags contain any of the query's words, matched case-insensitively and independent of word form
-(for example, singular/plural or verb tense), ranked so that closer and more complete matches
-appear first.
+When a reader searches a query, the system shall return the published articles whose title, body
+and tags together contain every one of the query's words, matched case-insensitively and
+independent of word form (for example, singular/plural or verb tense), ranked so that closer
+matches appear first. Each result shows a passage of the article's text with the query's words
+marked.
+
+Changed by the human on 2 Oct (walkthrough fix 1.5, F-9): "any of the query's words" let a
+two-word query bring back articles holding only one of them, and markup typed into the box find
+half the guide. No result is shown from fewer words when none holds them all.
 
 IF a submission has not yet been approved by moderation, THEN the system shall exclude it from
 search results.
@@ -215,9 +220,13 @@ GIVEN a published article whose title, body, or tags contain a word from the que
 WHEN that query is searched
 THEN the article appears in the results
 
-GIVEN a published article matching more of the query's words than another
+GIVEN a published article holding only some of the query's words
 WHEN that query is searched
-THEN it appears higher in the results
+THEN it does not appear in the results
+
+GIVEN a published article whose text holds a word from the query
+WHEN that query is searched
+THEN its result shows a passage of the text with that word marked, without Markdown
 
 GIVEN only a submission not yet approved by moderation matches the query
 WHEN that query is searched
