@@ -72,7 +72,9 @@ default is safe only while `article` is empty, as it is everywhere today.
   edit", "What links here" and "Report this article"; each belongs to a requirement without a route
   yet (FR-011, FR-006, FR-021) and is left out rather than drawn as a dead control.
 - **A 404 is a page in the shared frame for a browser** (`error/404.html`), and Spring's JSON error
-  body for a client that does not ask for HTML.
+  body for a client that does not ask for HTML. Since 2 Oct (walkthrough fix 1.7) its text
+  names what was asked for, from the path in the error model: an article, a tag, or any other page
+  (`NotFoundPageTest`).
 - **Checked in the running application**, not only through MockMvc: `/` and the stylesheets and logo
   serve, an unknown address gives the 404 page to a request that accepts HTML, and an address
   containing `%2F` or a broken percent sequence is refused by Tomcat with `400` before it reaches

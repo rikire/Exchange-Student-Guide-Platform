@@ -177,6 +177,11 @@ server starts (red first: no articles yet). On a fresh stand: seed 30.39 s, inde
   this address". **Change:** the 404 page names what was asked for (article, tag) or says "page".
 - **Check:** `/tags/no-such-tag` shows a tag-specific message.
 
+**Done 2 Oct:** `error/404.html` picks its text from the path in Spring Boot's error model: an
+article, a tag ("No published article carries this tag", with a link to the tags), or any other
+page. `NotFoundPageTest` checks the three through a real server; the tag and the other page were red
+first.
+
 ### 1.8 Long input breaks the layout, and some input has no limit (F-31, F-32, F-33)
 
 A 255-character title without spaces makes the landing page 2525 px wide in a 1920 px window and

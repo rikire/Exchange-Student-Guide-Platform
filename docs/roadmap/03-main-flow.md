@@ -289,8 +289,10 @@ design pass (3) is the largest piece and starts with redrawn screens.
       (`StartupOrderTest`, red first); a fresh stand gave 420 searches, none empty. Accepted by the
       human on 2 Oct.
       — owner: **Abdirakhim**
-- [ ] [A 404 text that fits what was asked for (F-26)](../verification/walkthrough-fixes.md#17-small-wrong-texts-f-26-f-14)
+- [x] [A 404 text that fits what was asked for (F-26)](../verification/walkthrough-fixes.md#17-small-wrong-texts-f-26-f-14)
       — check: `/tags/no-such-tag` says it is a tag
+      Built 2 Oct: the 404 page names an article, a tag or a page (`NotFoundPageTest`). Accepted by
+      the human on 2 Oct.
       — owner: **Abdirakhim**
 - [ ] [Long input must not break the layout; limits for summary, tags and body (F-31, F-32, F-33)](../verification/walkthrough-fixes.md#18-long-input-breaks-the-layout-and-some-input-has-no-limit-f-31-f-32-f-33) — decided 1 Oct: summary 300, 10 tags, body 100,000
       — check: a fixture with a 255-character unbroken title scrolls no page sideways; a test per limit
