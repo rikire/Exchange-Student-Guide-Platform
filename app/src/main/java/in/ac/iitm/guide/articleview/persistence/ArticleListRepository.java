@@ -18,11 +18,16 @@ public interface ArticleListRepository extends Repository<Article, UUID> {
 
     Page<Article> findByRemovedAtIsNull(Pageable page);
 
-    /** The articles carrying any of these tag names: the names one tag address stands for. */
+    /**
+     * The articles carrying any of these tag names: the names one tag address stands for. The tag is
+     * matched in a subquery rather than by a join and {@code distinct}: PostgreSQL refuses
+     * {@code select distinct} ordered by {@code lower(title)}, the A–Z order, which H2 accepts.
+     */
     @Query(
-            value = "select distinct a from Article a join a.tags t where a.removedAt is null and t.name in :names",
-            countQuery =
-                    "select count(distinct a) from Article a join a.tags t where a.removedAt is null and t.name in :names")
+            value = "select a from Article a where a.removedAt is null"
+                    + " and exists (select 1 from a.tags t where t.name in :names)",
+            countQuery = "select count(a) from Article a where a.removedAt is null"
+                    + " and exists (select 1 from a.tags t where t.name in :names)")
     Page<Article> findPublishedCarrying(Collection<String> names, Pageable page);
 
     /** The names of the tags published articles carry, for the filter. */

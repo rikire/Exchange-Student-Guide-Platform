@@ -79,6 +79,8 @@ V8 ([ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md)):
 - [x] `views` and `pin` import, export and round-trip; a file without them has none.
 - [x] The list's query count does not grow with the number of articles (ADR-0010).
 
+**Fixed 2 Oct:** narrowed to a tag in the default A–Z order, the list answered `500` on the PostgreSQL stand: `select distinct` ordered by `lower(title)` is refused there and accepted by H2. The tag is now matched in an `exists` subquery. `ArticleListTest.narrowed_to_a_tag_only_the_articles_carrying_it_are_listed` was red under `-P postgres` before the change; the whole suite passes on PostgreSQL after it.
+
 ## Deliberately out of scope
 
 - Showing the count to readers.
