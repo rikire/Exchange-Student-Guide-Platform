@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buttons and page width — Exchange Student Guide (draft screen)</title>
+<!-- Added 2 Oct, walkthrough fixes 3.1 and 3.2 (F-17, F-27, F-21, F-26): the one set of buttons every
+     template uses, the focus ring, and the page frame. Sizes follow the screens already drawn:
+     SubmissionForm's primary and ghost, Article's outlined Download and its "report" text button,
+     SubmissionReview's Reject. Where walkthrough-fixes.md 3.2 differs from them it wins, being the
+     later decision: Cancel is quiet, not a ghost button, and Approve stays maroon. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
+  <style>
+    :root { --maroon:#781F19; --maroon-dark:#5C1712; --ink:#1F1917; --ink-soft:#5B534C; --paper:#FFFFFF; --sand:#F7F4EF; --line:#E6DFD3; --red:#D9261C; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .page { font-family: 'Noto Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); min-height: 100vh; }
+    .body { max-width: 1440px; margin: 0 auto; padding: 40px; }
+    h1 { font-size: 32px; margin: 0 0 8px; }
+    h2 { font-size: 20px; margin: 40px 0 12px; }
+    .lead { font-size: 16px; color: var(--ink-soft); margin: 0 0 8px; max-width: 46rem; line-height: 1.6; }
+    .note { font-size: 14px; color: var(--ink-soft); margin: 8px 0 0; }
+
+    /* The four buttons. 44 px high and a 4 px corner, as the screens draw them. */
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 22px; border-radius: 4px; font: inherit; font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer; border: 1.5px solid transparent; }
+    .button-primary { background: var(--maroon); color: var(--paper); }
+    .button-primary:hover { background: var(--maroon-dark); }
+    .button-secondary { background: var(--paper); color: var(--maroon); border-color: var(--maroon); }
+    .button-secondary:hover { background: #FBF3E3; }
+    .button-quiet { background: none; color: var(--maroon); padding: 0 8px; }
+    .button-quiet:hover { text-decoration: underline; }
+    .button-danger { background: var(--paper); color: var(--red); border-color: var(--red); }
+    .button-danger:hover { background: #FBEAE8; }
+    .icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* The focus ring in the site's colour, replacing the browser's blue (F-21). */
+    .button:focus-visible, a:focus-visible, .shown-focused { outline: 3px solid var(--maroon); outline-offset: 2px; }
+
+    .button-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 24px; }
+    table { border-collapse: collapse; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+    th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 15px; vertical-align: middle; }
+    th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); background: var(--sand); }
+
+    /* The page frame (3.1): up to 1440 px; running text keeps about 70 characters, the sidebar takes the rest. */
+    .frame { border: 2px dashed var(--ink-soft); border-radius: 6px; padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; }
+    .frame-text { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px; }
+    .frame-text p { max-width: 46rem; line-height: 1.7; margin: 0; }
+    .frame-side { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px; font-size: 14px; color: var(--ink-soft); }
+
+    @media (max-width: 600px) {
+      .body { padding: 24px 16px; }
+      h1 { font-size: 26px; }
+      .button-row { flex-direction: column; align-items: stretch; }
+      .button { width: 100%; }
+      .frame { grid-template-columns: 1fr; gap: 16px; }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="body">
+    <h1>Buttons and page width</h1>
+    <p class="lead">One set of buttons for every page, so an action reads as an action (walkthrough fix 3.2), and a wider page frame (3.1).</p>
+
+    <h2>The four kinds</h2>
+    <div class="panel">
+      <div class="button-row">
+        <a class="button button-primary" href="#">Propose an edit</a>
+        <a class="button button-secondary" href="#">Save as PDF</a>
+        <a class="button button-quiet" href="#"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Back to the guide</a>
+        <button class="button button-danger" type="button">Remove</button>
+      </div>
+      <p class="note">Primary: filled maroon. Secondary: maroon outline. Quiet: text with an icon. Danger: red outline. 44 px high, 12 px apart in a row (F-26). On a phone a row becomes a column, each button the full width.</p>
+    </div>
+
+    <h2>Focus</h2>
+    <div class="panel">
+      <div class="button-row">
+        <a class="button button-primary shown-focused" href="#">Submit for review</a>
+        <a class="button button-secondary shown-focused" href="#">Download</a>
+        <a class="button button-quiet shown-focused" href="#"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Cancel</a>
+        <button class="button button-danger shown-focused" type="button">Reject</button>
+      </div>
+      <p class="note">A 3 px maroon ring, 2 px away from the button, instead of the browser's blue (F-21). Shown here on all four at once; on the site it appears on the one reached with the keyboard.</p>
+    </div>
+
+    <h2>Where each one is used</h2>
+    <table>
+      <thead><tr><th>Action</th><th>Kind</th><th>Page</th></tr></thead>
+      <tbody>
+        <tr><td>Propose an edit</td><td><a class="button button-primary" href="#">Primary</a></td><td>Article</td></tr>
+        <tr><td>Submit for review · Sign in · Approve &amp; publish</td><td><a class="button button-primary" href="#">Primary</a></td><td>Submission form, login, review</td></tr>
+        <tr><td>Save as PDF · Download · Check its status · Copy</td><td><a class="button button-secondary" href="#">Secondary</a></td><td>Article, attachments, confirmation</td></tr>
+        <tr><td>Cancel · Back to the guide</td><td><a class="button button-quiet" href="#"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Quiet</a></td><td>Forms, login, confirmation, 404</td></tr>
+        <tr><td>Remove · Reject</td><td><button class="button button-danger" type="button">Danger</button></td><td>Remove an article, review</td></tr>
+      </tbody>
+    </table>
+    <p class="note">The search button stays gold: it belongs to the search box, as Landing.html draws it.</p>
+
+    <h2>The page frame</h2>
+    <div class="frame">
+      <div class="frame-text"><p>Running text keeps a readable measure of about 70 characters, however wide the window. The frame grows to 1440 px (it was 1100), so at 1920 px it is 75 % of the window instead of 57 %; what fills the extra width is what sits beside the text — the article's and the landing page's sidebar (3.4, 3.5), the wide editor (3.6), the queue and the review page at full width.</p></div>
+      <div class="frame-side">Sidebar, 260 px, as Article.html and Landing.html draw it.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

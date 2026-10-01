@@ -52,6 +52,8 @@ cannot.
   Noto Sans draws Devanagari in the same style as Latin, so Hindi does not fall back to another face.
   Both are open licences with the weights the scale needs; Tamil still comes from the system font.
   Nothing about either came from IITM.
+  The eleven screens still drawn in Public Sans were switched to Noto Sans on 2 Oct; the canvas
+  sources in `canvas-src/` keep the old face as the record of how the screens were first made.
 - **Text size on a phone or tablet** (NFR-008, 27 Sep): everything a reader reads is at least 16 px
   below 1024 px wide, field help, the footer and small labels included; on a wide screen they keep
   `--text-small`. Only tag chips and the pinned badge stay small everywhere: they are labels, not text
