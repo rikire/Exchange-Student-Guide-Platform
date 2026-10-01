@@ -103,7 +103,8 @@ class EditorPreviewTest {
         var html = preview(body);
         submit(body);
 
-        assertThat(html).contains("<h2>" + EVERY_SCRIPT + "</h2>").contains("<p>" + EVERY_SCRIPT + "</p>");
+        // The heading carries its id since fix 3.5; the text is what this test is about.
+        assertThat(html).containsPattern("<h2[^>]*>" + EVERY_SCRIPT + "</h2>").contains("<p>" + EVERY_SCRIPT + "</p>");
         assertThat(jdbc.queryForObject("SELECT body FROM submission", String.class))
                 .isEqualTo(body);
     }

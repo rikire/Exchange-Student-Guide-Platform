@@ -70,7 +70,9 @@ the choice does not touch the slice rules. Chosen over flexmark-java, whose last
 the security settings it must run with are in [security.md](security.md), "Article content".
 Since 28 September with its tables extension, `commonmark-ext-gfm-tables` (same project, version and
 BSD-2-Clause licence), added by the human's decision: CommonMark has no tables, and three seed
-articles hold them.
+articles hold them. Since 2 October with `commonmark-ext-heading-anchor` (same project, version and
+licence; human, 2 Oct): an id on every heading, prefixed `section-`, so an article's contents list can
+link to it (walkthrough fix 3.5).
 
 **Media: `tika-core` 3.3.2, `metadata-extractor` 2.21.0 and TwelveMonkeys `imageio-webp` 3.15.2**,
 added 28 September with FEAT-009 by the human's decision, each checked on Maven Central and used only

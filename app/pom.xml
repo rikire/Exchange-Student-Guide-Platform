@@ -142,6 +142,13 @@
       <artifactId>commonmark-ext-gfm-tables</artifactId>
       <version>${commonmark.version}</version>
     </dependency>
+    <!-- Fix 3.5 (F-10): an id on every heading, so an article's contents list can link to it. Same
+         release train as commonmark; added by the human's decision of 2 Oct. -->
+    <dependency>
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark-ext-heading-anchor</artifactId>
+      <version>${commonmark.version}</version>
+    </dependency>
 
     <!-- FR-029: the paragraphs and words an edit changes, for the moderator's review (ADR-0015).
          Apache-2.0, no runtime dependencies. -->

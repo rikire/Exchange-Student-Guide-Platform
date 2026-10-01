@@ -12,7 +12,10 @@ import java.util.regex.Pattern;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TableBlock;
 import org.commonmark.ext.gfm.tables.TablesExtension;
+import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
+import org.commonmark.ext.heading.anchor.IdGenerator;
 import org.commonmark.node.AbstractVisitor;
+import org.commonmark.node.Code;
 import org.commonmark.node.CustomNode;
 import org.commonmark.node.Image;
 import org.commonmark.node.Link;
@@ -48,6 +51,11 @@ public class WikiLinkRenderer {
     // Tables as GitHub writes them (the human, 28 Sep): CommonMark has none, and seed articles use them.
     private static final List<Extension> EXTENSIONS = List.of(TablesExtension.create());
 
+    // Fix 3.5 (F-10): ids on headings, prefixed so a heading named "Tags" cannot take an id the
+    // page around the body already uses.
+    private static final String HEADING_ID_PREFIX = "section-";
+    private static final String HEADING_DEFAULT_ID = "heading";
+
     private final Parser parser = Parser.builder().extensions(EXTENSIONS).build();
 
     // escapeHtml and sanitizeUrls are what make ADR-0001's "no HTML allowlist" true: the converter
@@ -57,6 +65,10 @@ public class WikiLinkRenderer {
             .extensions(EXTENSIONS)
             .escapeHtml(true)
             .sanitizeUrls(true)
+            .extensions(List.of(HeadingAnchorExtension.builder()
+                    .idPrefix(HEADING_ID_PREFIX)
+                    .defaultId(HEADING_DEFAULT_ID)
+                    .build()))
             .attributeProviderFactory(context -> WikiLinkRenderer::markExternalLink)
             .attributeProviderFactory(context -> WikiLinkRenderer::makeTableFocusable)
             .nodeRendererFactory(WikiLinkHtml::new)
@@ -76,6 +88,10 @@ public class WikiLinkRenderer {
      * @return HTML for the body; raw HTML in the body is escaped, never passed through
      */
     public String render(String markdown, TitleResolver resolver) {
+        return htmlRenderer.render(resolved(markdown, resolver));
+    }
+
+    private Node resolved(String markdown, TitleResolver resolver) {
         Node document = parser.parse(markdown);
 
         var runs = new ArrayList<Run>();
@@ -88,8 +104,61 @@ public class WikiLinkRenderer {
             var hrefs = resolver.resolve(Set.copyOf(titles));
             runs.forEach(run -> run.replaceIn(hrefs));
         }
+        return document;
+    }
 
-        return htmlRenderer.render(document);
+    /** A heading of the body, as an article's contents list names it (fix 3.5, F-10). */
+    public record Heading(int level, String text, String id) {}
+
+    /** A body rendered, with its headings in order, each under the id its HTML carries. */
+    public record Body(String html, List<Heading> contents) {}
+
+    /**
+     * {@link #render}, and the headings a contents list links to. The ids come from the library's
+     * {@link IdGenerator}, fed the same words in the same order as the heading-anchor extension feeds
+     * it while rendering — the text and code of the heading, not a wiki link's words — so each id
+     * here is the one the heading carries.
+     */
+    public Body renderBody(String markdown, TitleResolver resolver) {
+        var document = resolved(markdown, resolver);
+        var ids = IdGenerator.builder()
+                .prefix(HEADING_ID_PREFIX)
+                .defaultId(HEADING_DEFAULT_ID)
+                .build();
+        var contents = new ArrayList<Heading>();
+        document.accept(new AbstractVisitor() {
+            @Override
+            public void visit(org.commonmark.node.Heading heading) {
+                var idWords = new StringBuilder();
+                var shownWords = new StringBuilder();
+                heading.accept(new AbstractVisitor() {
+                    @Override
+                    public void visit(Text text) {
+                        idWords.append(text.getLiteral());
+                        shownWords.append(text.getLiteral());
+                    }
+
+                    @Override
+                    public void visit(Code code) {
+                        idWords.append(code.getLiteral());
+                        shownWords.append(code.getLiteral());
+                    }
+
+                    @Override
+                    public void visit(CustomNode node) {
+                        if (node instanceof WikiLinkNode link) {
+                            shownWords.append(link.words);
+                        }
+                        visitChildren(node);
+                    }
+                });
+                contents.add(new Heading(
+                        heading.getLevel(),
+                        shownWords.toString().strip(),
+                        ids.generateId(idWords.toString().trim().toLowerCase())));
+            }
+        });
+        return new Body(htmlRenderer.render(document), List.copyOf(contents));
     }
 
     /**
@@ -114,6 +183,8 @@ public class WikiLinkRenderer {
     private static void markExternalLink(Node node, String tagName, Map<String, String> attributes) {
         if (node instanceof Link link && isExternal(link.getDestination())) {
             attributes.put("rel", "nofollow noopener noreferrer");
+            // Fix 3.5 (F-10): a reader keeps the guide open; site.css marks such a link.
+            attributes.put("target", "_blank");
         }
     }
 

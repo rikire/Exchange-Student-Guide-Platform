@@ -379,6 +379,41 @@ class WikiLinkRendererTest {
     }
 
     @Test
+    // trace:FR-001
+    void an_external_link_opens_in_a_new_tab() {
+        var html = renderer.render("[the portal](https://example.org/portal)", NOTHING_EXISTS);
+
+        assertThat(html).contains("target=\"_blank\"");
+    }
+
+    @Test
+    // trace:FR-001
+    void every_heading_carries_an_id_and_the_contents_list_names_it_with_the_same_id() {
+        var body = renderer.renderBody(
+                "## Before you go\n\nText.\n\n### Fees\n\nMore.\n\n## Fees\n\nLast.", NOTHING_EXISTS);
+
+        assertThat(body.contents())
+                .containsExactly(
+                        new WikiLinkRenderer.Heading(2, "Before you go", "section-before-you-go"),
+                        new WikiLinkRenderer.Heading(3, "Fees", "section-fees"),
+                        new WikiLinkRenderer.Heading(2, "Fees", "section-fees-1"));
+        assertThat(body.html())
+                .contains("<h2 id=\"section-before-you-go\">")
+                .contains("<h3 id=\"section-fees\">")
+                .contains("<h2 id=\"section-fees-1\">");
+    }
+
+    @Test
+    // trace:FR-001
+    void a_heading_with_a_wiki_link_is_listed_with_the_links_words_under_the_id_it_carries() {
+        var body = renderer.renderBody("## Before [[Hostel Life]]", NOTHING_EXISTS);
+
+        var heading = body.contents().get(0);
+        assertThat(heading.text()).isEqualTo("Before Hostel Life");
+        assertThat(body.html()).contains("id=\"" + heading.id() + "\"");
+    }
+
+    @Test
     void an_internal_link_in_a_body_does_not_get_the_external_link_rel() {
         var html = renderer.render("[other](/articles/other)", NOTHING_EXISTS);
 
