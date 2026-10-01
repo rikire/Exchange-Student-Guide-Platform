@@ -69,6 +69,19 @@ class SubmissionStatusTest {
 
     @Test
     // trace:FR-012
+    void the_status_page_says_what_the_number_is_and_where_it_was_given_and_leads_back() throws Exception {
+        var page = mockMvc.perform(get("/submissions/status"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page)
+                .contains("shown when you sent your article or edit")
+                .containsPattern("class=\"button-quiet button-back\" href=\"/\"");
+    }
+
+    @Test
+    // trace:FR-012
     void a_blank_number_shows_the_form_and_no_answer() throws Exception {
         var response = lookUp("   ");
 

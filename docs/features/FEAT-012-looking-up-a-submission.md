@@ -93,6 +93,8 @@ written after the code and shown red with the blank check removed.
 submission, one approved with its article link, one rejected with its reason, and a wrong number. On
 that acceptance FR-012 is `done`.
 
+**Fix 3.8, 2 Oct** (F-15): the tracking page says what the number is and where it was given, and offers "Back to the guide"; `SubmissionStatusTest.the_status_page_says_what_the_number_is_and_where_it_was_given_and_leads_back`, red first.
+
 ## Deliberately out of scope
 
 - Telling the contributor without their asking (email) — CON-001; queue item 7 of the roadmap.

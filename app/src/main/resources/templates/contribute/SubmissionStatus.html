@@ -7,6 +7,8 @@
 <body>
   <main class="site-main">
     <h1 class="article-title">Track a submission</h1>
+    <!-- Fix 3.8 (F-15): what the number is and where it was given. -->
+    <p class="form-note">Enter the number starting with SUB- that was shown when you sent your article or edit.</p>
     <form class="search-form search-form-page" th:action="@{/submissions/status}" method="get">
       <input class="search-input" type="text" name="number" required th:value="${typed}"
              placeholder="SUB-K7M2-QX9P-4TVB" aria-label="Submission number" autocomplete="off">
@@ -34,6 +36,7 @@
         <p th:text="${found.rejectionReason}">The reason.</p>
       </div>
     </div>
+    <p class="button-row"><a class="button-quiet button-back" th:href="@{/}">Back to the guide</a></p>
     <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
   </main>
 </body>
