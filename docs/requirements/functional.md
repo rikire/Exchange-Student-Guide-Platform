@@ -432,16 +432,15 @@ several submissions can tell them apart; the number is already the authorisation
 
 ### FR-013 — Abuse handling without accounts
 
-**Status:** planned
+**Status:** done — marked by the human on 2 Oct: the rate limit is NFR-005's, tested in
+`RateLimitTest`; the CAPTCHA was dropped the same day ([CON-010](constraints.md#con-010--no-captcha-on-the-forms))
 **Priority:** should
 
 IF a contributor submits at a rate exceeding a configured limit, THEN the system shall reject
 further submissions from them until the limit resets.
 
-IF a submission does not pass a CAPTCHA challenge, THEN the system shall reject it.
-
-The rate limit itself is set by NFR-005. The CAPTCHA provider is still undecided — a separate
-dependency decision, not repeated here.
+The rate limit itself is set by NFR-005. **Changed 2 Oct:** the CAPTCHA this requirement also asked
+for is not built ([CON-010](constraints.md#con-010--no-captcha-on-the-forms)).
 
 **Acceptance criteria:**
 
@@ -449,10 +448,6 @@ dependency decision, not repeated here.
 GIVEN a contributor has reached the configured submission rate limit
 WHEN they attempt another submission
 THEN it is rejected until the limit resets
-
-GIVEN a submission that does not pass the CAPTCHA challenge
-WHEN it is submitted
-THEN it is rejected
 ```
 
 ### FR-014 — Moderation queue

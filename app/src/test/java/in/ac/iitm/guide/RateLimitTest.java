@@ -102,6 +102,7 @@ class RateLimitTest {
 
     @Test
     // trace:NFR-005
+    // trace:FR-013
     void the_sixth_submission_in_an_hour_answers_429_on_the_form_with_the_text_kept() throws Exception {
         var address = "198.51.100.1";
         for (var i = 1; i <= 5; i++) {
@@ -179,6 +180,7 @@ class RateLimitTest {
 
     @Test
     // trace:NFR-005
+    // trace:FR-013
     void the_count_starts_again_once_the_hour_has_passed() throws Exception {
         var address = "198.51.100.7";
         exhaustSubmissions(address);

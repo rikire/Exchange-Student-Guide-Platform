@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
  * without the address.
  */
 // trace:NFR-005
+// trace:FR-013
 @Component
 @EnableConfigurationProperties(ContributionLimitSettings.class)
 public class ContributionLimits {

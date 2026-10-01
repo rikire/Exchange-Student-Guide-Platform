@@ -2,7 +2,7 @@
 id: FEAT-017
 title: Rate limits per client address, and the moderator's logout
 status: done
-covers: [NFR-005]
+covers: [NFR-005, FR-013]
 slice: contribute
 routes: ["POST /submissions", "POST /articles/{title}/edits", "POST /contribute/preview", "POST /moderate/login", "POST /moderate/logout"]
 tables: []
@@ -101,6 +101,9 @@ counted" and "right passwords are not counted". They guard against a limit that 
 and would fail if every attempt were counted.
 
 **Accepted by the human on 1 Oct** on the compose stand. On that acceptance NFR-005 is `done`.
+
+**FR-013, 2 Oct:** its rate-limit half is this feature's submission limit, and the human marked it
+done; its CAPTCHA half was dropped ([CON-010](../requirements/constraints.md#con-010--no-captcha-on-the-forms)).
 
 ## Deliberately out of scope
 
