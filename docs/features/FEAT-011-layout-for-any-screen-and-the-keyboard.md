@@ -85,6 +85,8 @@ ghost button of the older screens; Approve stays maroon rather than the screens'
   60 %") and the focus ring.
 - The 404 page's inline "Back to the guide" is left for fix 3.8, which rebuilds that page.
 
+**Found on the human's phone, 2 Oct:** below 1024 px the header wrapped, Menu fell to the left edge and its list, opening leftwards, went off the screen. The menu now keeps to the right edge (`.site-nav { margin-left: auto }`); `BrowserLayoutTest.on_a_phone_the_menu_sits_at_the_right_and_opens_inside_the_screen`, at 320 and 390 px, was red first. The landing's search placeholder is "Search the guide", which fits a phone.
+
 ## Deliberately out of scope
 
 - A manual pass with a screen reader, which NFR-007's fit criterion asked for until the human dropped

@@ -188,6 +188,9 @@ p a, .article-body a { text-decoration: underline; }
 @media (max-width: 1023px) {
   .site-nav > .site-links { display: none; }
   .site-menu { display: block; }
+  /* The menu keeps to the right edge, on the brand's row or, when the row is too narrow, on its own,
+     so its list, which opens leftwards from the button, stays on the screen. */
+  .site-nav { margin-left: auto; }
 }
 .article-actions { margin: var(--space-5) 0 0; }
 

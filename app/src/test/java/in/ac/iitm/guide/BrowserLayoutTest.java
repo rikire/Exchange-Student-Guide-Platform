@@ -269,6 +269,29 @@ class BrowserLayoutTest {
 
     @org.junit.jupiter.api.Test
     // trace:NFR-008
+    void on_a_phone_the_menu_sits_at_the_right_and_opens_inside_the_screen() {
+        for (var width : List.of(320, 390)) {
+            try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 844))) {
+                var page = context.newPage();
+                page.navigate("http://localhost:" + port + "/");
+                var menu = page.locator(".site-menu summary").boundingBox();
+
+                page.click(".site-menu summary");
+                var list = page.locator(".site-menu ul").boundingBox();
+
+                assertThat(menu.x + menu.width)
+                        .as("the button at the right edge, %d px", width)
+                        .isGreaterThan(width - 24);
+                assertThat(list.x)
+                        .as("the list starts on the screen, %d px", width)
+                        .isGreaterThanOrEqualTo(0);
+                assertThat(list.x + list.width).as("and ends on it").isLessThanOrEqualTo(width);
+            }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
     void on_a_wide_screen_the_header_links_are_shown_without_a_menu() {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
             var page = context.newPage();
