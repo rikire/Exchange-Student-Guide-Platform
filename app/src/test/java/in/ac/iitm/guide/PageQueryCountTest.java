@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 import javax.sql.DataSource;
 import net.ttddyy.dsproxy.QueryCountHolder;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
+import org.hibernate.search.mapper.orm.Search;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,9 @@ class PageQueryCountTest {
         jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
         jdbc.execute("DELETE FROM tag");
+        // The rows went by JDBC, which the search index does not see.
+        transaction.executeWithoutResult(
+                status -> Search.session(entityManager).workspace().purge());
     }
 
     @Test
@@ -137,6 +141,42 @@ class PageQueryCountTest {
         assertSelectCount(baseline);
     }
 
+    @Test
+    // trace:FR-007
+    void a_search_runs_the_same_queries_for_two_matches_or_thirty() throws Exception {
+        seedLanding(0, 2);
+        var baseline = selectsFor("/search?q=text");
+        assertThat(baseline).as("SELECTs of a search with two matches").isPositive();
+
+        clearTheDatabase();
+        seedLanding(0, 30);
+        reset();
+        mockMvc.perform(get("/search?q=text")).andExpect(status().isOk());
+        assertSelectCount(baseline);
+    }
+
+    @Test
+    // trace:FR-008
+    void a_tag_page_runs_the_same_queries_for_two_articles_or_thirty() throws Exception {
+        seedTagged(2);
+        var baseline = selectsFor("/tags/shared");
+        assertThat(baseline).as("SELECTs of a tag page of two articles").isPositive();
+
+        clearTheDatabase();
+        seedTagged(30);
+        reset();
+        mockMvc.perform(get("/tags/shared")).andExpect(status().isOk());
+        assertSelectCount(baseline);
+    }
+
+    /** {@code count} articles carrying the tag "shared", each with two tags of its own besides. */
+    private void seedTagged(int count) {
+        var shared = new Tag();
+        shared.setName("shared");
+        transaction.executeWithoutResult(status -> entityManager.persist(shared));
+        IntStream.range(0, count).forEach(i -> publish("Tagged " + i, "Text.", NOW.minusDays(i), null, shared));
+    }
+
     private long selectsFor(String path) throws Exception {
         reset();
         mockMvc.perform(get(path)).andExpect(status().isOk());
@@ -164,7 +204,8 @@ class PageQueryCountTest {
     }
 
     /** Every article carries two tags of its own, so a tag lookup per article would show. */
-    private void publish(String title, String body, OffsetDateTime publishedAt, OffsetDateTime pinnedAt) {
+    private void publish(
+            String title, String body, OffsetDateTime publishedAt, OffsetDateTime pinnedAt, Tag... alsoCarried) {
         var tags = new HashSet<Tag>();
         for (var suffix : new String[] {" one", " two"}) {
             var tag = new Tag();
@@ -179,9 +220,13 @@ class PageQueryCountTest {
         article.setPublishedAt(publishedAt);
         article.setUpdatedAt(publishedAt);
         article.setPinnedAt(pinnedAt);
-        article.setTags(Set.copyOf(tags));
+        var carried = new HashSet<>(tags);
         transaction.executeWithoutResult(status -> {
             tags.forEach(entityManager::persist);
+            for (var tag : alsoCarried) {
+                carried.add(entityManager.merge(tag));
+            }
+            article.setTags(Set.copyOf(carried));
             entityManager.persist(article);
         });
     }

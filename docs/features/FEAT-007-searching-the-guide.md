@@ -139,7 +139,7 @@ FEAT-008). On that acceptance FR-007 is `done`.
 `query_syntax_typed_into_the_search_box_is_searched_as_words_not_obeyed` pins that `acc*` finds
 nothing and `bank -account` still finds "Bank account", because the query is analysed rather than
 parsed. It goes red with `match` swapped for `simpleQueryString`. The bound of 20 results and the
-page's query count have no test: [DEBT-021](../tech-debt.md), marked at `ArticleSearchService.LIMIT`.
+page's query count had no test until 2 Oct ([DEBT-021](../tech-debt.md), resolved): `thirty_matches_show_the_first_twenty_with_the_total` and `PageQueryCountTest`.
 
 **Walkthrough fix 1.5, 2 Oct (F-9):** every word is required, by one `must` clause per word as the
 analyzer reduces it, searched with `skipAnalysis`; there is no fallback to fewer words, by the

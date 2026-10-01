@@ -79,6 +79,27 @@ class SearchFlowTest {
 
     @Test
     // trace:FR-007
+    void thirty_matches_show_the_first_twenty_with_the_total() throws Exception {
+        for (var i = 0; i < 30; i++) {
+            publish("Hostel guide " + i, "Rooms and mess.");
+        }
+
+        var page = mockMvc.perform(get("/search").param("q", "hostel"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page).contains("30 results for &quot;hostel&quot;");
+        assertThat(Pattern.compile("<li class=\"search-hit\"")
+                        .matcher(page)
+                        .results()
+                        .count())
+                .isEqualTo(20);
+    }
+
+    @Test
+    // trace:FR-007
     void a_published_article_whose_title_contains_a_word_from_the_query_appears_in_the_results() throws Exception {
         publish("Registering with FRRO", "Nothing else here.");
 
