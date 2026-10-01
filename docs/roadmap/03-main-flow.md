@@ -378,9 +378,12 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**
-- [ ] [The 404, tracking and login pages made helpful (F-14, F-15, F-19)](../verification/walkthrough-fixes.md#38-the-small-pages-f-14-f-15-f-19)
+- [x] [The 404, tracking and login pages made helpful (F-14, F-15, F-19)](../verification/walkthrough-fixes.md#38-the-small-pages-f-14-f-15-f-19)
       — check: each page has its explanation and a way back
       — owner: **Abdirakhim**
+      Built 2 Oct: "Did you mean" with titles from `search`'s `SimilarTitles`, the search box and the
+      way back on every not-found page; the tracking page's line and way back; the login page had
+      both since 2.3. Accepted by the human on 2 Oct.
 - [ ] [The stand before the demo: commit F-3, drop the raised limit, change the password, reset](../verification/walkthrough-fixes.md#4-the-stand-before-the-demo)
       — check: `.env` has no raised limit; `down -v` and `up` give 36 clean articles
       — owner: together, last — after every section-1 item is merged
