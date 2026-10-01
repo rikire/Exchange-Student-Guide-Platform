@@ -2,17 +2,24 @@ package in.ac.iitm.guide.media.internal;
 
 import in.ac.iitm.guide.media.MediaKind;
 import java.nio.file.Path;
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.unit.DataSize;
 
 /**
- * {@code guide.media.*}: where the bytes live (ADR-0006) and NFR-001's limits, which are settings
- * rather than constants. Their values are in {@code application.yml}, the one place they default.
+ * {@code guide.media.*}: where the bytes live (ADR-0006), NFR-001's limits, and how long a rejected
+ * submission's files are kept (DEBT-016), which are settings rather than constants. Their values are
+ * in {@code application.yml}, the one place they default.
  */
 // trace:NFR-001
 @ConfigurationProperties("guide.media")
 public record MediaSettings(
-        Path root, DataSize photoLimit, DataSize documentLimit, DataSize videoLimit, DataSize volumeLimit) {
+        Path root,
+        DataSize photoLimit,
+        DataSize documentLimit,
+        DataSize videoLimit,
+        DataSize volumeLimit,
+        Duration rejectedKeptFor) {
 
     public DataSize limitOf(MediaKind kind) {
         return switch (kind) {

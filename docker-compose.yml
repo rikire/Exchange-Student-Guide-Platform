@@ -53,6 +53,8 @@ services:
       GUIDE_MEDIA_DOCUMENTLIMIT: ${GUIDE_MEDIA_DOCUMENTLIMIT:-20MB}
       GUIDE_MEDIA_VIDEOLIMIT: ${GUIDE_MEDIA_VIDEOLIMIT:-500MB}
       GUIDE_MEDIA_VOLUMELIMIT: ${GUIDE_MEDIA_VOLUMELIMIT:-100GB}
+      # How long a rejected submission's files are kept (guide.media.rejected-kept-for).
+      GUIDE_MEDIA_REJECTEDKEPTFOR: ${GUIDE_MEDIA_REJECTEDKEPTFOR:-7d}
       GUIDE_INDEX_TYPE: local-filesystem
       GUIDE_INDEX_DIR: /var/lib/guide/index
       GUIDE_MEDIA_ROOT: /var/lib/guide/media

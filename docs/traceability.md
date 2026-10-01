@@ -50,7 +50,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 
 | Requirement | Status | Features | Code | Tests | Migrations | Routes | Tables | Title |
 |---|---|---|---|---|---|---|---|---|
-| NFR-001 | done | FEAT-009 | MediaAssets, MediaKind, MediaRejectedException, MediaSettings | MediaAssetsTest, MediaConfigurationTest |  | GET /media/{id}, POST /articles/{title}/edits, POST /submissions | media_asset | Upload size limit |
+| NFR-001 | done | FEAT-009 | MediaAssets, MediaKind, MediaRejectedException, MediaSettings, RejectedMediaSweep | MediaAssetsTest, MediaConfigurationTest, RejectedMediaSweepTest |  | GET /media/{id}, POST /articles/{title}/edits, POST /submissions | media_asset | Upload size limit |
 | NFR-002 | done | FEAT-007 |  |  |  | GET /search | article, article_tag, tag | Search latency |
 | NFR-003 | planned |  |  |  |  |  |  | Multilingual content survival |
 | NFR-004 | in-progress | FEAT-004 | ArchiveArticleRepository, ArchiveFormatException, ArchivedArticle, ArticleArchive, FrontMatter, ImportReport, SeedRunner | ArticleArchiveTest, ExportQueryTest, SeedRunnerTest |  |  | article, article_tag, tag | Exportability |

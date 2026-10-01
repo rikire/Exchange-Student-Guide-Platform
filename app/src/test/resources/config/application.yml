@@ -12,6 +12,8 @@ guide:
     document-limit: 16KB
     video-limit: 32KB
     volume-limit: 256KB
+    # Not the application's 7d, so RejectedMediaSweepTest also tries the setting at another value.
+    rejected-kept-for: 2d
   # NFR-005's limits made large, since every test sends from one address and the counters live as long
   # as the context. RateLimitTest sets the application's own values back for itself.
   contribute:

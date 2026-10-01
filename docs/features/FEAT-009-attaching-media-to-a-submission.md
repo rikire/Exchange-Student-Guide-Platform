@@ -31,6 +31,7 @@ code:
   - app/src/main/resources/templates/moderate/SubmissionReview.html
   - app/src/main/resources/templates/articleview/Article.html
   - app/src/main/resources/application.yml
+  - app/src/main/java/in/ac/iitm/guide/media/internal/RejectedMediaSweep.java
 tests:
   - app/src/test/java/in/ac/iitm/guide/media/MediaAssetsTest.java
   - app/src/test/java/in/ac/iitm/guide/media/MediaDeliveryTest.java
@@ -39,6 +40,7 @@ tests:
   - app/src/test/java/in/ac/iitm/guide/contribute/UploadTooLargeTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
+  - app/src/test/java/in/ac/iitm/guide/media/RejectedMediaSweepTest.java
 ---
 
 # FEAT-009 — Attaching media to a submission
@@ -196,8 +198,9 @@ an approved edit in a browser; on that acceptance FR-016 is `done`.
 ## Deliberately out of scope
 
 - Assets in the export archive (ADR-0007) — the backup slice's work.
-- Removing the files of rejected submissions: they are unreachable and only take space; recorded as
-  debt, by the human's decision on 28 Sep.
+- ~~Removing the files of rejected submissions~~ — built 1 Oct (DEBT-016): seven days after the
+  rejection by default, `guide.media.rejected-kept-for`, swept a minute after start-up and every 24
+  hours (`RejectedMediaSweep`, `RejectedMediaSweepTest`).
 - More than one attachment per submission: FR-010 and FR-011 say one.
 - Audio: removed from CON-006 on 28 Sep.
 - DOCX: dropped on 28 Sep, see the decisions above.

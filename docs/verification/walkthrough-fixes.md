@@ -185,12 +185,19 @@ Raised to the human on 1 Oct: 200 MB per video and 20 GB in all are too little.
   set on the stand from `.env` (`GUIDE_MEDIA_*`); the container's multipart ceiling is derived from
   the limits in `media/internal/MediaConfiguration.java` instead of being a second number in
   `application.yml`. Checked by `MediaConfigurationTest` and `UploadTooLargeTest`.
-- **Change, still to do — DEBT-014, moved into phase 3 by the human:** a sweep that deletes the files
+- **Change, still to do — DEBT-016 (named DEBT-014 here until 1 Oct, which is the cookie's
+  `Secure` flag), moved into phase 3 by the human:** a sweep that deletes the files
   and rows of assets whose submission was rejected longer ago than a set time (a `guide.media`
   setting). At 500 MB a video and 5 submissions an hour, one address can leave 2.5 GB an hour of
   rejected files.
 - **Check:** a test that a rejected submission's asset older than the setting is swept, a newer one
-  is kept, and a published article's asset is never swept; DEBT-014 closed.
+  is kept, and a published article's asset is never swept; DEBT-016 closed.
+- **Sweep done 1 Oct.** `MediaAssets.sweepRejected` removes the rows in the transaction and the
+  files after it commits; `RejectedMediaSweep` runs it a minute after start-up and every 24 hours
+  (the human: not at a set hour, which a stand switched off at night never reaches).
+  `guide.media.rejected-kept-for` is 7 days, `GUIDE_MEDIA_REJECTEDKEPTFOR` on the stand.
+  `RejectedMediaSweepTest` runs at 2 days and covers rejected, recent, pending and published assets
+  and the freed volume. DEBT-016 is closed.
 
 ### 1.10 What else should be a setting
 
@@ -209,6 +216,7 @@ stand may need its own; product rules and security bounds stay constants.
 - **Check:** each new setting has a default in `application.yml`, a line in `.env.example` if the
   stand sets it, and a test at a non-default value.
 - **1 Oct:** the time zone done (`DisplayTimeTest` at `UTC`); the sweep age waits for 1.9.
+- **1 Oct:** the sweep age done (`rejected-kept-for`, tested at 2 days); both settings are in.
 
 ## 2. Navigation and the moderator's panel
 

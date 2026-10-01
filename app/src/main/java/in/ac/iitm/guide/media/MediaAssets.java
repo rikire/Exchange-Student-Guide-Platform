@@ -14,8 +14,12 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * The one way a file reaches the media root and {@code media_asset} (ADR-0006): the type is read from
@@ -36,6 +40,8 @@ public class MediaAssets {
                     + " (MP4, MOV, WebM, MKV, 3GP, AVI or MPEG).";
 
     /** The detector only, from {@code tika-core}; none of Tika's parsers is on the class path. */
+    private static final Logger log = LoggerFactory.getLogger(MediaAssets.class);
+
     private final Tika tika = new Tika();
 
     private final MediaAssetRepository assets;
@@ -104,8 +110,41 @@ public class MediaAssets {
                 + MediaSettings.spoken(settings.videoLimit()) + ".";
     }
 
+    /**
+     * DEBT-016: removes the assets of submissions rejected longer than {@code guide.media.rejected-kept-for}
+     * before {@code now}.
+     *
+     * @return how many were removed
+     */
+    @Transactional
+    public int sweepRejected(OffsetDateTime now) {
+        var swept = assets.findOfSubmissionsRejectedBefore(now.minus(settings.rejectedKeptFor()));
+        if (swept.isEmpty()) {
+            return 0;
+        }
+        assets.deleteAll(swept);
+        var names = swept.stream().map(MediaAsset::getStoredName).toList();
+        // The files go only once the rows are gone for good: a row without its file would answer 500.
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                names.forEach(MediaAssets.this::deleteFile);
+            }
+        });
+        log.info("Removed the files of {} assets of rejected submissions", swept.size());
+        return swept.size();
+    }
+
+    private void deleteFile(String storedName) {
+        try {
+            files.delete(storedName);
+        } catch (IOException e) {
+            // The row is gone, so the volume is freed; the file is wasted disk, not exposure (ADR-0006).
+            log.warn("Could not remove the stored file {}", storedName, e);
+        }
+    }
+
     /** Moves every asset of an approved submission to the article it became or changed. */
-    // TODO(DEBT-016): a rejected submission's assets are never moved and never removed.
     @Transactional
     public void moveToArticle(UUID submissionId, UUID articleId) {
         assets.moveToArticle(submissionId, articleId);

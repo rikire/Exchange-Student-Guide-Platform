@@ -142,7 +142,10 @@ load on the route, whichever comes first.
 
 ### DEBT-016 — The files of rejected submissions stay in the media root
 
-**Status:** open
+**Status:** resolved 2026-10-01 — `MediaAssets.sweepRejected` removes the rows and then the files
+of assets whose submission was rejected longer than `guide.media.rejected-kept-for` ago (7 days),
+run a minute after start-up and every 24 hours (`RejectedMediaSweep`); `RejectedMediaSweepTest`
+shows a pending or published asset is never touched.
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/media/MediaAssets.java` — `moveToArticle`, the only
 place an asset changes owner

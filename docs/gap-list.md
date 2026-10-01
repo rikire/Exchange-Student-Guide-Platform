@@ -113,7 +113,6 @@ None.
 | DEBT-021 | The search page has no query-count case and no test of its bound | phase 4's load check ([04-hardening.md](roadmap/04-hardening.md)), which measures search. |
 | DEBT-020 | Templates are not cached on the stand | phase 4's load check ([04-hardening.md](roadmap/04-hardening.md)), which should measure |
 | DEBT-018 | The application container runs as root | the handoff package of phase 5, which is the stand OGE runs. |
-| DEBT-016 | The files of rejected submissions stay in the media root | the volume passing half its limit, or phase 4's hardening |
 | DEBT-015 | A file far over the container's limit gets a closed connection, not the page | the first report of an upload ending in a connection error, or phase 4's hardening. |
 | DEBT-014 | The stand's session cookie is not marked `Secure` | the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any |
 | DEBT-010 | An article's old address answers `404` after an edit changes its title | the first renamed article anyone complains about, or the phase 4 edge cases, whichever |

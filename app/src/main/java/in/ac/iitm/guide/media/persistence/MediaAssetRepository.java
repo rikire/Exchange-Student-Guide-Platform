@@ -1,6 +1,7 @@
 package in.ac.iitm.guide.media.persistence;
 
 import in.ac.iitm.guide.shared.persistence.MediaAsset;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +21,12 @@ public interface MediaAssetRepository extends JpaRepository<MediaAsset, UUID> {
     @Query("SELECT m FROM MediaAsset m WHERE m.id = :id AND m.articleId IN"
             + " (SELECT a.id FROM Article a WHERE a.removedAt IS NULL)")
     Optional<MediaAsset> findPublic(@Param("id") UUID id);
+
+    /** DEBT-016: the assets of submissions rejected before that moment; never a pending or published one. */
+    @Query("SELECT m FROM MediaAsset m WHERE m.submissionId IN (SELECT s.id FROM Submission s"
+            + " WHERE s.status = in.ac.iitm.guide.shared.persistence.SubmissionStatus.REJECTED"
+            + " AND s.decidedAt < :before)")
+    List<MediaAsset> findOfSubmissionsRejectedBefore(@Param("before") OffsetDateTime before);
 
     /** NFR-001's volume, counted from the rows rather than by walking the media root. */
     @Query("SELECT COALESCE(SUM(m.sizeBytes), 0) FROM MediaAsset m")

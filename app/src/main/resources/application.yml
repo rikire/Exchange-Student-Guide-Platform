@@ -63,6 +63,9 @@ guide:
     document-limit: 20MB
     video-limit: 500MB
     volume-limit: 100GB
+    # DEBT-016: a rejected submission's files go this long after the rejection (the human, 1 Oct);
+    # GUIDE_MEDIA_REJECTEDKEPTFOR on the stand.
+    rejected-kept-for: 7d
   admin:
     # ADR-0009: the BCrypt hash of the office's one shared password, never the password and never in
     # git. Empty means no password logs in (FEAT-006). How to make one: .env.example.

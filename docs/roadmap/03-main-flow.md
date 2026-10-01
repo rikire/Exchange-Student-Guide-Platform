@@ -291,12 +291,16 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — owner: **Abdirakhim** the layout and the `BrowserLayoutTest` fixture; **Mikhail** the three limits
       **Limits done 1 Oct** (summary, body, tag count, in the domain and the form's `maxlength`);
       the layout half is still to do.
-- [ ] [Larger uploads: 500 MB a video, 100 GB in all, from `.env`; sweep rejected files (DEBT-014)](../verification/walkthrough-fixes.md#19-larger-uploads-and-what-they-leave-behind) — decided 1 Oct; the limits done 1 Oct, the sweep to do
+- [x] [Larger uploads: 500 MB a video, 100 GB in all, from `.env`; sweep rejected files (DEBT-016)](../verification/walkthrough-fixes.md#19-larger-uploads-and-what-they-leave-behind) — decided 1 Oct; the limits done 1 Oct, the sweep to do
       — check: `MediaConfigurationTest`, `UploadTooLargeTest`; a sweep test that never touches a published asset
       — owner: **Mikhail**
-- [ ] [What becomes a setting and what stays a constant](../verification/walkthrough-fixes.md#110-what-else-should-be-a-setting) — decided 1 Oct: the time zone and the sweep age; the rest stays
+      **Done 1 Oct:** the sweep, a minute after start-up and every 24 hours, 7 days by default
+      (`RejectedMediaSweepTest`); DEBT-016 closed. The debt was named DEBT-014 here until then.
+- [x] [What becomes a setting and what stays a constant](../verification/walkthrough-fixes.md#110-what-else-should-be-a-setting) — decided 1 Oct: the time zone and the sweep age; the rest stays
       — check: each new setting has a default, an `.env.example` line where the stand sets it, a test at another value
       — owner: **Mikhail**
+      **Done 1 Oct:** `guide.time-zone` and `guide.media.rejected-kept-for`, each with a default, an
+      `.env.example` line and a test at another value.
 - [ ] [Header links: Browse tags, Track a submission, Submit (F-6)](../verification/walkthrough-fixes.md#21-the-header-f-6) — decided 1 Oct: a new `GET /tags` page
       — check: every page has the three links; a menu at 390 px
       — owner: **Abdirakhim**

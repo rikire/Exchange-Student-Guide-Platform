@@ -29,6 +29,11 @@ public class MediaFiles {
         return name;
     }
 
+    /** Removes the stored file of that name; a file already gone is not an error. */
+    public void delete(String storedName) throws IOException {
+        Files.deleteIfExists(resolve(storedName));
+    }
+
     /** @return the stored file of that name, inside the root */
     public Path resolve(String storedName) {
         var path = root.resolve(storedName).normalize();

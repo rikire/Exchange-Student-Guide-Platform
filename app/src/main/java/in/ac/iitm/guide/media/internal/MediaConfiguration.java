@@ -8,10 +8,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.unit.DataSize;
 
 @Configuration
 @EnableConfigurationProperties(MediaSettings.class)
+// RejectedMediaSweep is the application's only scheduled work so far.
+@EnableScheduling
 class MediaConfiguration {
 
     /** What a form carries beside its file: the title, the summary, a body of up to 100,000 characters. */

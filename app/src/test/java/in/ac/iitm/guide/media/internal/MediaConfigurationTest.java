@@ -3,6 +3,7 @@ package in.ac.iitm.guide.media.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Path;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.unit.DataSize;
 
@@ -40,6 +41,7 @@ class MediaConfigurationTest {
                 DataSize.ofMegabytes(photoMb),
                 DataSize.ofMegabytes(documentMb),
                 DataSize.ofMegabytes(videoMb),
-                DataSize.ofGigabytes(100));
+                DataSize.ofGigabytes(100),
+                Duration.ofDays(7));
     }
 }
