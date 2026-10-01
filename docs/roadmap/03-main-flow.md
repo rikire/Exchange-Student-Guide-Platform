@@ -259,9 +259,12 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [Show `[[Title]]` in the editor's hint (F-5)](../verification/walkthrough-fixes.md#12-the-wiki-link-hint-eaten-by-thymeleaf-f-5)
       — check: a test finds `[[Title]]` on `/submit`, red first
       — owner: **Mikhail**
-- [ ] [Show times in IST from one setting (F-23)](../verification/walkthrough-fixes.md#13-moderation-times-in-utc-f-23)
+- [x] [Show times in IST from one setting (F-23)](../verification/walkthrough-fixes.md#13-moderation-times-in-utc-f-23)
       — check: a test with a UTC time expects the IST time and label
       — owner: **Mikhail**
+      **Done 1 Oct:** `shared/web/DisplayTime` (`shared` grown by the human's choice over a copy per
+      slice) formats the queue's time and the tag page's date from `guide.time-zone`; red first in
+      `ModerationFlowTest`, `TagBrowseTest` and `DisplayTimeTest`.
 - [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: the common formats (MP4, MOV, WebM, MKV, AVI, 3GP, MPEG, OGG, WMV) as uploaded, no conversion; play on the site where the browser can, a download card otherwise; warn about location metadata
       — check: tests with `isom`, `mp42` and `qt` files
       — owner: **Mikhail**

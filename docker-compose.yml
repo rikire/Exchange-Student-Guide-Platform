@@ -45,6 +45,8 @@ services:
       # NFR-005's submissions per client address per hour (guide.contribute.submission-limit),
       # raised in .env for a manual walk where one tester sends many; 5 otherwise.
       GUIDE_CONTRIBUTE_SUBMISSIONLIMIT_REQUESTS: ${GUIDE_CONTRIBUTE_SUBMISSIONLIMIT_REQUESTS:-5}
+      # The zone pages show times in (guide.time-zone); India's unless .env sets another.
+      GUIDE_TIMEZONE: ${GUIDE_TIMEZONE:-Asia/Kolkata}
       # NFR-001's upload limits (guide.media.*), the defaults of application.yml repeated because
       # Compose passes a variable only when it has a value; set in .env to change one.
       GUIDE_MEDIA_PHOTOLIMIT: ${GUIDE_MEDIA_PHOTOLIMIT:-10MB}

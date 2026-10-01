@@ -16,6 +16,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/ApprovalConflictException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/RejectionRefusedException.java
   - app/src/main/java/in/ac/iitm/guide/moderate/internal/TextDiff.java
+  - app/src/main/java/in/ac/iitm/guide/shared/web/DisplayTime.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateSubmissionRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepository.java
   - app/src/main/java/in/ac/iitm/guide/moderate/persistence/RevisionRepository.java
@@ -27,6 +28,7 @@ code:
 tests:
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/internal/TextDiffTest.java
+  - app/src/test/java/in/ac/iitm/guide/shared/web/DisplayTimeTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginTest.java
   - app/src/test/java/in/ac/iitm/guide/moderate/persistence/ModerateArticleRepositoryTest.java
   - app/src/test/java/in/ac/iitm/guide/shared/security/ModeratorLoginWithoutHashTest.java
@@ -83,6 +85,9 @@ Confirmed by the human on 28 Sep with the contract for this step (prompt journal
   (FR-020), in the same transaction.
 - **The password is the office's, set by whoever runs the server** as a BCrypt hash in
   `GUIDE_ADMIN_PASSWORD_HASH`. Never in git; with no hash set, no password logs in.
+- **The queue shows when a submission was sent in the office's time zone**, with its label
+  (`1 Oct 2026, 17:28 IST`), from the `guide.time-zone` setting through `shared/web/DisplayTime`
+  (walkthrough F-23, 1 Oct; it showed the stored UTC until then).
 
 ## Acceptance criteria
 

@@ -53,6 +53,10 @@ is UTC. A submission sent at 17:28 in Chennai shows "11:58".
   same setting for the dates on cards (`taxonomy/internal/TagBrowseService.java`, F-21) and anywhere
   else a time is shown.
 - **Check:** a test with a fixed `submitted_at` in UTC expects the IST time and the zone label.
+- **Done 1 Oct:** `shared/web/DisplayTime`, chosen by the human over a formatter per slice, serves the
+  queue (`1 Oct 2026, 17:28 IST`) and the tag page's dates; `guide.time-zone` in `application.yml`,
+  `GUIDE_TIMEZONE` in `docker-compose.yml` and `.env.example`. The status page (2.4) and the article
+  page (3.5) use it when they show a date.
 
 ### 1.4 A real MP4 refused (F-28)
 
@@ -173,6 +177,7 @@ stand may need its own; product rules and security bounds stay constants.
   Making one of these a setting is a way to weaken it without a code review.
 - **Check:** each new setting has a default in `application.yml`, a line in `.env.example` if the
   stand sets it, and a test at a non-default value.
+- **1 Oct:** the time zone done (`DisplayTimeTest` at `UTC`); the sweep age waits for 1.9.
 
 ## 2. Navigation and the moderator's panel
 

@@ -188,6 +188,16 @@ class TagBrowseTest {
 
     @Test
     // trace:FR-008
+    void the_date_on_a_card_is_the_day_in_india() throws Exception {
+        publish("Registering with FRRO", OffsetDateTime.parse("2026-09-30T20:00:00Z"), "visa");
+
+        var page = mockMvc.perform(get("/tags/visa")).andReturn().getResponse().getContentAsString();
+
+        assertThat(page).contains("Updated 1 Oct 2026");
+    }
+
+    @Test
+    // trace:FR-008
     void the_date_is_in_english_whatever_language_the_browser_asks_for() throws Exception {
         publish("Registering with FRRO", NOW, "visa");
 

@@ -1,12 +1,11 @@
 package in.ac.iitm.guide.taxonomy.internal;
 
 import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagLink;
 import in.ac.iitm.guide.taxonomy.persistence.TagBrowseRepository;
 import in.ac.iitm.guide.taxonomy.persistence.TagRepository;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,15 +23,14 @@ public class TagBrowseService {
     // ADR-0010: a page is bounded. No paging yet (FEAT-008, out of scope).
     static final int LIMIT = 50;
 
-    // English whatever the reader's browser asks for: the guide is written in English.
-    private static final DateTimeFormatter UPDATED = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH);
-
     private final TagBrowseRepository articles;
     private final TagRepository tags;
+    private final DisplayTime displayTime;
 
-    TagBrowseService(TagBrowseRepository articles, TagRepository tags) {
+    TagBrowseService(TagBrowseRepository articles, TagRepository tags, DisplayTime displayTime) {
         this.articles = articles;
         this.tags = tags;
+        this.displayTime = displayTime;
     }
 
     /** FR-031: counted only once the page is known to answer, so a {@code 404} counts nothing. */
@@ -65,16 +63,16 @@ public class TagBrowseService {
             return Optional.empty();
         }
         var entries = articles.findPublishedCarrying(names, PageRequest.of(0, LIMIT)).stream()
-                .map(TagBrowseService::entry)
+                .map(this::entry)
                 .toList();
         return Optional.of(new TagPage(names, total, entries));
     }
 
-    private static TagPage.Entry entry(Article article) {
+    private TagPage.Entry entry(Article article) {
         return new TagPage.Entry(
                 article.getTitle(),
                 article.getSummary(),
                 ArticleAddress.pathOf(article.getSlug()),
-                UPDATED.format(article.getUpdatedAt()));
+                displayTime.date(article.getUpdatedAt()));
     }
 }

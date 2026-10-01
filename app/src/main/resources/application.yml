@@ -50,6 +50,9 @@ logging:
     in.ac.iitm.guide: DEBUG
 
 guide:
+  # F-23: times are stored as they happened and shown in the office's zone, with its label
+  # (DisplayTime). On the stand, GUIDE_TIMEZONE in .env.
+  time-zone: Asia/Kolkata
   media:
     # ADR-0006: the bytes live here, under names the system generates; the stand mounts a volume
     # (GUIDE_MEDIA_ROOT). NFR-001's limits, which are settings rather than constants; the container's

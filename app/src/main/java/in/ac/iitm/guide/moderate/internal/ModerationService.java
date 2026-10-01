@@ -12,14 +12,13 @@ import in.ac.iitm.guide.shared.persistence.Submission;
 import in.ac.iitm.guide.shared.persistence.SubmissionStatus;
 import in.ac.iitm.guide.shared.persistence.SubmissionType;
 import in.ac.iitm.guide.shared.persistence.Tag;
+import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagRejectedException;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -55,6 +54,7 @@ public class ModerationService {
     private final Tags tags;
     private final MediaAssets media;
     private final ApplicationEventPublisher events;
+    private final DisplayTime displayTime;
 
     ModerationService(
             ModerateSubmissionRepository submissions,
@@ -62,27 +62,24 @@ public class ModerationService {
             RevisionRepository revisions,
             Tags tags,
             MediaAssets media,
-            ApplicationEventPublisher events) {
+            ApplicationEventPublisher events,
+            DisplayTime displayTime) {
         this.submissions = submissions;
         this.articles = articles;
         this.revisions = revisions;
         this.tags = tags;
         this.media = media;
         this.events = events;
+        this.displayTime = displayTime;
     }
 
-    /** A line of the queue. */
-    public record QueueEntry(String number, SubmissionType type, String title, OffsetDateTime submittedAt) {
-
-        // English whatever the moderator's browser asks for (the human, 28 Sep).
-        private static final DateTimeFormatter SUBMITTED =
-                DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm", Locale.ENGLISH);
-
-        /** @return {@link #submittedAt} as the queue shows it */
-        public String submitted() {
-            return SUBMITTED.format(submittedAt);
-        }
-    }
+    /**
+     * A line of the queue.
+     *
+     * @param submitted {@code submittedAt} as the queue shows it, in the office's time zone
+     */
+    public record QueueEntry(
+            String number, SubmissionType type, String title, OffsetDateTime submittedAt, String submitted) {}
 
     /**
      * A submission as the moderator reads it; {@code status} says whether it can still be decided.
@@ -116,7 +113,12 @@ public class ModerationService {
     @Transactional(readOnly = true)
     public List<QueueEntry> queue() {
         return submissions.findByStatusOrderBySubmittedAtAsc(SubmissionStatus.PENDING).stream()
-                .map(s -> new QueueEntry(s.getSubmissionNumber(), s.getType(), s.getTitle(), s.getSubmittedAt()))
+                .map(s -> new QueueEntry(
+                        s.getSubmissionNumber(),
+                        s.getType(),
+                        s.getTitle(),
+                        s.getSubmittedAt(),
+                        displayTime.dateTime(s.getSubmittedAt())))
                 .toList();
     }
 

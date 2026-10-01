@@ -128,6 +128,17 @@ class ModerationFlowTest {
 
     @Test
     // trace:FR-014
+    void the_queue_shows_when_a_submission_was_sent_in_india_time() throws Exception {
+        // Walkthrough F-23: sent at 17:28 in Chennai, the queue said 11:58, the stored UTC.
+        pending("Getting a SIM card", OffsetDateTime.parse("2026-10-01T11:58:00Z"));
+
+        var queue = page(loggedIn(), "/moderate/queue");
+
+        assertThat(queue).contains("1 Oct 2026, 17:28 IST");
+    }
+
+    @Test
+    // trace:FR-014
     void with_nothing_pending_the_queue_says_it_is_empty() throws Exception {
         var rejected = pending("Already turned down", MONDAY);
         decide(rejected, SubmissionStatus.REJECTED);
