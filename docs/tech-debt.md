@@ -70,7 +70,9 @@ two matches and for thirty), and a search test that thirty matches show twenty w
 
 ### DEBT-020 — Templates are not cached on the stand
 
-**Status:** open
+**Status:** resolved 2026-10-02 — `spring.thymeleaf.cache` is `true` in `application.yml` and
+`false` only in `application-dev.yml`; `ApplicationSmokeTest.templates_are_cached_unless_the_dev_profile_says_otherwise`
+was red first
 **Created:** 2026-09-30
 **Marker:** `app/src/main/resources/application.yml` — `spring.thymeleaf.cache`
 
