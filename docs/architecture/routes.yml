@@ -137,7 +137,8 @@ routes:
       `contribute/SubmissionForm.html`
     fields: >-
       — (empty form; fields below belong to the POST); `?title=` fills the title in, the way a red
-      link's invitation opens it (FR-005)
+      link's invitation opens it (FR-005); the tag list offers the tags of live articles, A–Z, at most
+      500 (`Tags.inUse`, ADR-0022)
     responses: >-
       `200` always
     serves: >-
@@ -155,9 +156,10 @@ routes:
       contain `[[Title]]`, stored unchanged per FR-003); `attachment` (file, optional — one photo
       (JPEG, PNG, WebP), document (PDF) or video (MP4, MOV, M4V, 3GP, WebM, MKV, AVI, MPEG), the type
       read from the content;
-      NFR-001's size limits; [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md));
-      `tags` (repeatable text, optional; the form shows at least five fields and ignores the empty
-      ones). Sent as `multipart/form-data`
+      NFR-001's size limits; [FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md); the
+      form's FilePond drop zone posts it as this same field, ADR-0022);
+      `tags` (repeatable text, optional; the form sends one per chip of its Tom Select list, at most
+      10, and an empty value is ignored — ADR-0022). Sent as `multipart/form-data`
     responses: >-
       `302` to the confirmation route on success; `422` on a title collision (with the offered
       link/rename choice), a rejected attachment, or a field over its limit (title 255, summary 300,
