@@ -366,3 +366,8 @@ p a, .article-body a { text-decoration: underline; }
 
 /* Fix 3.8 (F-14): the not-found page's suggestions, a card no wider than the text. */
 .suggestions { max-width: 46rem; margin: 0 0 var(--space-5); }
+
+/* FR-021/FR-022: the moderator's inbox of reports, one card each, the message as the reader wrote it. */
+.report-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); max-width: 46rem; }
+.report-entry .article-card-title { margin-bottom: var(--space-1); }
+.report-message { white-space: pre-line; overflow-wrap: anywhere; }
