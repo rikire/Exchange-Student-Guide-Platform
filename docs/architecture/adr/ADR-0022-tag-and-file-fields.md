@@ -1,6 +1,6 @@
 # ADR-0022 — Tag and file fields from libraries, and the policy they need
 
-**Status:** proposed
+**Status:** accepted (by the human, 2 Oct)
 **Date:** 2026-10-02
 
 ## Context
