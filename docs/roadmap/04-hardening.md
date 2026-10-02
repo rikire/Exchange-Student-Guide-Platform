@@ -94,7 +94,7 @@ Make it survive real use and real inputs, and make it something a third person c
       beside the demo stand: 100 searches, maximum 0.023 s, median 0.009 s
       ([search-latency.md](../verification/search-latency.md)). The demo stand is compose on the
       development Mac; OGE's server is not measured, and the script runs there unchanged.
-- [~] PostgreSQL profile with Testcontainers
+- [x] PostgreSQL profile with Testcontainers
       — check: the full suite passes against PostgreSQL as well as H2, in CI rather than locally
       **Built early, 27 Sep:** `-P postgres` passes all tests locally on PostgreSQL 17.11. Left for
       this step: running it in CI.
@@ -103,6 +103,9 @@ Make it survive real use and real inputs, and make it something a third person c
       `500` on PostgreSQL. That page is fixed ([FEAT-006](../features/FEAT-006-moderating-a-submission.md)),
       and DEBT-022 was closed the same day: all 369 tests pass on PostgreSQL 17.11 in one run. Left
       for this step: running it in CI.
+      **Done 2 Oct:** the `postgres` job of [ci.yml](../../.github/workflows/ci.yml) runs
+      `./mvnw -B -pl app verify -P postgres` on every push and pull request, beside `build`; 564
+      tests passed locally on `postgres:17` before it was added.
 - [x] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
       — check: media and the index survive `docker compose down` and come back on the next start
       **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the

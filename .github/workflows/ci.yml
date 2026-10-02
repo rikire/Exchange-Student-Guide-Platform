@@ -86,3 +86,21 @@ jobs:
         run: |
           echo "Authors in this branch:"
           git log --format='%an <%ae>' origin/${{ github.base_ref }}..HEAD | sort -u
+
+  # The same tests on PostgreSQL 17 through Testcontainers, which needs Docker: the runner has it,
+  # a laptop running check.sh may not, so this is a job of its own rather than a step of the script.
+  # H2 hid an edit's review page answering 500 on PostgreSQL until 30 Sep; this is what catches the next one.
+  postgres:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          java-version: "21"
+          distribution: temurin
+          cache: maven
+
+      - name: Tests on PostgreSQL
+        run: ./mvnw -B -pl app verify -P postgres

@@ -42,11 +42,11 @@ to build with a possibly different version.
 ```sh
 scripts/hooks.sh                    # build the tooling, install the git hooks — run this first
 ./mvnw verify                       # build, test, check formatting
-./mvnw -P postgres verify           # the same tests on PostgreSQL 17 (needs Docker)
+./mvnw -P postgres verify           # the same tests on PostgreSQL 17 (needs Docker); CI's postgres job
 ./mvnw -pl app -P browser verify    # plus every page in a real browser at four widths (downloads Chromium)
 ./mvnw -pl app spring-boot:run      # http://localhost:8080
 ./mvnw -pl app spring-boot:run -Dspring-boot.run.profiles=dev,seed  # templates reload on edit, starter articles
-scripts/check.sh                    # everything CI runs, before you push
+scripts/check.sh                    # everything CI's build job runs, before you push
 scripts/diagrams.sh                 # re-render the C4 diagrams and the ERD
 scripts/contribution.sh             # who wrote what, per ISO week
 ```
