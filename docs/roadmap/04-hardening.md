@@ -19,7 +19,7 @@ Make it survive real use and real inputs, and make it something a third person c
       [FEAT-021](../features/FEAT-021-publishing-directly.md), eight criterion tests among
       `DirectPublishingTest`'s twelve; `ModeratorLoginTest` enumerates the four new routes from
       `routes.yml`
-- [ ] ~~FR-025 — editing the homepage's pinned articles~~
+- [x] ~~FR-025 — editing the homepage's pinned articles~~
       **Moved to phase 3, 1 Oct** by the human, with the "All articles" page: the walkthrough found
       *Registering with FRRO* missing from the landing page — see the step "Every article reachable,
       FRRO first (F-7)" in [03-main-flow.md](03-main-flow.md)
