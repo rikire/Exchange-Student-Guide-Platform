@@ -2,7 +2,7 @@
 id: FEAT-001
 title: Wiki links in article text
 status: done
-covers: [FR-002, FR-004]
+covers: [FR-002, FR-004, FR-005]
 slice: wikilink
 routes: []
 tables: []
@@ -102,6 +102,16 @@ None.
 - [x] An external link carries `noopener noreferrer`, an internal one does not ([security.md](../architecture/security.md))
 - [x] `wikilink` imports neither Spring nor JPA (`ArchitectureRulesTest`, demonstrated by adding a
       Spring import and watching it fail)
+
+**FR-005, 2 Oct** (decided by the human, as [RedlinkInvite.html](../design/screens/RedlinkInvite.html)
+draws it): a red link is a link now, to the address the missing article would have with its title
+as written (`?title=`); `ArticleController` answers that address's `404` with "This article doesn't
+exist yet" and "Create this article", which opens `/submit?title=` filled in. The title is offered only
+when its address is the one asked for. A title with no letters or digits has no address and stays
+red text. Red first: `WikiLinkRendererTest.a_red_link_leads_to_where_the_article_would_be_carrying_its_title`,
+`NotFoundPageTest.a_red_links_address_invites_the_reader_to_write_the_article_with_its_title`,
+`SubmissionFlowTest.the_form_opened_from_a_red_link_has_its_title_filled_in`; four tests that
+expected a red `<span>` now expect the link.
 
 ## Deliberately out of scope
 

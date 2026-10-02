@@ -31,7 +31,8 @@ routes:
       — (read only)
     responses: >-
       `200` published; `404` unapproved / rejected / removed / no match, the not-found page with
-      up to five titles close to the address (fix 3.8)
+      up to five titles close to the address (fix 3.8); with `?title=` whose address is this one —
+      where a red link leads — the `404` invites the reader to write the article (FR-005)
     serves: >-
       FR-001 (UC-003), with the article's attached media below the text, each fetched from
       `GET /media/{id}` ([FEAT-009](../features/FEAT-009-attaching-media-to-a-submission.md)). Also
@@ -135,11 +136,12 @@ routes:
     template: >-
       `contribute/SubmissionForm.html`
     fields: >-
-      — (empty form; fields below belong to the POST)
+      — (empty form; fields below belong to the POST); `?title=` fills the title in, the way a red
+      link's invitation opens it (FR-005)
     responses: >-
       `200` always
     serves: >-
-      FR-010 (UC-010) — entry point
+      FR-010 (UC-010) — entry point; FR-005
 
   - methods: [POST]
     path: /submissions

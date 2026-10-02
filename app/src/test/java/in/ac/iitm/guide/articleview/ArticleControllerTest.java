@@ -221,7 +221,7 @@ class ArticleControllerTest {
 
         var page = html(get("/articles/arrival"));
 
-        assertThat(page).contains("<span class=\"wikilink wikilink-missing\">Nowhere Yet</span>");
+        assertThat(page).contains("class=\"wikilink wikilink-missing\">Nowhere Yet</a>");
     }
 
     @Test

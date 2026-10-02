@@ -69,6 +69,24 @@ class NotFoundPageTest {
     }
 
     @Test
+    // trace:FR-005
+    void a_red_links_address_invites_the_reader_to_write_the_article_with_its_title() {
+        var page = notFound("/articles/sim-card-registration?title=SIM%20card%20registration");
+
+        assertThat(page)
+                .contains("This article doesn't exist yet")
+                .contains("SIM card registration")
+                .contains("href=\"/submit?title=SIM%20card%20registration\"")
+                .contains(">Create this article</a>");
+    }
+
+    @Test
+    // trace:FR-005
+    void an_address_typed_without_a_red_links_title_is_not_an_invitation() {
+        assertThat(notFound("/articles/sim-card-registration")).doesNotContain("Create this article");
+    }
+
+    @Test
     // trace:FR-001
     void a_missing_article_close_to_no_title_suggests_nothing() {
         publish("Opening a bank account");
@@ -133,8 +151,10 @@ class NotFoundPageTest {
     private String notFound(String path) {
         var headers = new HttpHeaders();
         headers.setAccept(java.util.List.of(MediaType.TEXT_HTML));
+        // A URI, not a template string: the template would encode a "%20" in the path a second time.
+        var uri = java.net.URI.create(http.getRootUri() + path);
         var response =
-                http.exchange(path, org.springframework.http.HttpMethod.GET, new HttpEntity<>(headers), String.class);
+                http.exchange(uri, org.springframework.http.HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         return response.getBody();
     }

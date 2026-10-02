@@ -23,9 +23,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /** {@code GET /articles/{address}}: one published article, its body rendered, wiki links resolved. */
 // trace:FR-001
+// trace:FR-005
 // trace:FR-002
 // trace:FR-004
 // trace:FR-030
@@ -66,7 +68,12 @@ class ArticleController {
     }
 
     @GetMapping("/articles/{address}")
-    String show(@PathVariable String address, Model model, HttpServletRequest request, HttpServletResponse response) {
+    String show(
+            @PathVariable String address,
+            @RequestParam(name = "title", required = false) String invitedTitle,
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         // The address is put through the same rule as a title, so /articles/HOSTEL-Life reaches the
         // article stored under "hostel-life" (ui-routes.md: matched case-insensitively).
         var found = ArticleAddress.slugOf(address).flatMap(articles::findBySlugAndRemovedAtIsNull);
@@ -76,6 +83,11 @@ class ArticleController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             model.addAttribute("path", request.getRequestURI());
             model.addAttribute("suggestions", similarTitles.near(address));
+            // FR-005: a red link's title, offered to the submission form, only when it is the title
+            // this address belongs to, so a crafted link cannot put other words in the invitation.
+            if (invitedTitle != null && ArticleAddress.slugOf(invitedTitle).equals(ArticleAddress.slugOf(address))) {
+                model.addAttribute("invitation", invitedTitle);
+            }
             return "error/404";
         }
         var article = found.get();

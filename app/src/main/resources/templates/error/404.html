@@ -15,10 +15,20 @@
 <body>
   <main class="site-main" th:with="article=${path != null && #strings.startsWith(path, '/articles/')},
                                    tag=${path != null && #strings.startsWith(path, '/tags/')}">
+    <!-- FR-005, as docs/design/screens/RedlinkInvite.html draws it: a red link's address invites
+         the reader to write the article, its title carried to the form. -->
+    <th:block th:if="${invitation != null}">
+      <h1 class="article-title">This article doesn't exist yet</h1>
+      <p class="article-summary" th:text="${invitation}">SIM card registration</p>
+      <p>Someone linked to this title from another article, but nobody has written it. You can be the first — it goes through the same review as any other submission.</p>
+      <p class="button-row"><a class="button-primary" th:href="@{/submit(title=${invitation})}">Create this article</a></p>
+    </th:block>
+    <th:block th:if="${invitation == null}">
     <h1 class="article-title" th:text="${tag} ? 'We could not find that tag' : 'We could not find that page'">We could not find that page</h1>
     <p th:if="${article}">There is no published article at this address.</p>
     <p th:if="${tag}">No published article carries this tag. <a th:href="@{/tags}">Browse the tags</a> instead.</p>
     <p th:unless="${article || tag}">There is no page at this address.</p>
+    </th:block>
     <section class="side-card suggestions" th:if="${suggestions != null && !suggestions.isEmpty()}" aria-labelledby="suggestions-heading">
       <h2 class="side-title" id="suggestions-heading">Did you mean</h2>
       <ul class="contents-list">

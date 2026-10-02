@@ -55,9 +55,10 @@ class SubmissionController {
         this.limits = limits;
     }
 
+    /** {@code title} comes from a red link's invitation (FR-005); the form is empty without it. */
     @GetMapping("/submit")
-    String newArticleForm(Model model) {
-        return form(model, FormPage.forNewArticle(new Draft("", "", "", List.of())));
+    String newArticleForm(@RequestParam(defaultValue = "") String title, Model model) {
+        return form(model, FormPage.forNewArticle(new Draft(title, "", "", List.of())));
     }
 
     @PostMapping("/submissions")

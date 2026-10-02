@@ -77,6 +77,18 @@ class SubmissionFlowTest {
     }
 
     @Test
+    // trace:FR-005
+    void the_form_opened_from_a_red_link_has_its_title_filled_in() throws Exception {
+        var page = mockMvc.perform(get("/submit").param("title", "SIM card registration"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(page).containsPattern("name=\"title\"[^>]*value=\"SIM card registration\"");
+    }
+
+    @Test
     // trace:FR-010
     void a_new_article_submitted_through_the_form_is_pending_in_the_queue_and_its_number_is_shown() throws Exception {
         var result = submitNew("Getting a SIM card", "Where to buy one.", "Take your passport.", "SIM", " Phone ");

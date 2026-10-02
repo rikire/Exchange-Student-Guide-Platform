@@ -43,9 +43,25 @@ class WikiLinkRendererTest {
     void a_link_to_a_missing_article_renders_red() {
         var html = renderer.render("See [[Nowhere]].", NOTHING_EXISTS);
 
+        assertThat(html).contains("class=\"wikilink wikilink-missing\">Nowhere</a>");
+    }
+
+    @Test
+    // trace:FR-005
+    void a_red_link_leads_to_where_the_article_would_be_carrying_its_title() {
+        var html = renderer.render("Read [[SIM card registration|the SIM page]].", NOTHING_EXISTS);
+
         assertThat(html)
-                .contains("<span class=\"wikilink wikilink-missing\">Nowhere</span>")
-                .doesNotContain("<a ");
+                .contains("<a href=\"/articles/sim-card-registration?title=SIM%20card%20registration\""
+                        + " class=\"wikilink wikilink-missing\">the SIM page</a>");
+    }
+
+    @Test
+    // trace:FR-005
+    void a_red_link_to_a_title_with_no_address_stays_plain_red_text() {
+        var html = renderer.render("See [[!!!]].", NOTHING_EXISTS);
+
+        assertThat(html).contains("<span class=\"wikilink wikilink-missing\">!!!</span>");
     }
 
     @Test
@@ -69,9 +85,10 @@ class WikiLinkRendererTest {
     void a_missing_link_with_words_is_red_and_shows_the_words() {
         var html = renderer.render("Read [[Nowhere|that page]] now.", NOTHING_EXISTS);
 
+        // The title is in the address the red link leads to (FR-005), never in the words shown.
         assertThat(html)
-                .contains("<span class=\"wikilink wikilink-missing\">that page</span>")
-                .doesNotContain("Nowhere");
+                .contains("class=\"wikilink wikilink-missing\">that page</a>")
+                .doesNotContain(">Nowhere<");
     }
 
     @Test
@@ -95,8 +112,8 @@ class WikiLinkRendererTest {
         var html = renderer.render("[[A]][[B]]", titles -> Map.of("A", "/articles/a"));
 
         assertThat(html)
-                .contains(
-                        "<a href=\"/articles/a\" class=\"wikilink\">A</a><span class=\"wikilink wikilink-missing\">B</span>");
+                .contains("<a href=\"/articles/a\" class=\"wikilink\">A</a>"
+                        + "<a href=\"/articles/b?title=B\" class=\"wikilink wikilink-missing\">B</a>");
     }
 
     @Test

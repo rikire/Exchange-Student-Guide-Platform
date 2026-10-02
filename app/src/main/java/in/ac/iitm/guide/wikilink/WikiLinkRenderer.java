@@ -1,5 +1,7 @@
 package in.ac.iitm.guide.wikilink;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -315,7 +317,9 @@ public class WikiLinkRenderer {
                 Node replacement =
                         switch (piece) {
                             case Occurrence occurrence -> new WikiLinkNode(
-                                    occurrence.words(), hrefs.get(occurrence.title()));
+                                    occurrence.words(),
+                                    hrefs.get(occurrence.title()),
+                                    invitationTo(occurrence.title()));
                             case Literal literal -> new Text(literal.text());
                         };
                 node.insertBefore(replacement);
@@ -324,14 +328,33 @@ public class WikiLinkRenderer {
         }
     }
 
-    /** The link itself once the resolver has answered; {@code href} is null for a red link. */
+    /**
+     * FR-005: where a red link leads — the address the missing article would have, carrying the title
+     * as written, which the not-found page there offers to the submission form. Empty for a title
+     * with no letters or digits, which can have no address.
+     */
+    private static String invitationTo(String title) {
+        return ArticleAddress.slugOf(title)
+                .map(slug -> ArticleAddress.pathOf(slug) + "?title="
+                        // Form encoding writes a space as "+"; in a query a "%20" reads the same and
+                        // is what the submission form's link carries on.
+                        + URLEncoder.encode(title, StandardCharsets.UTF_8).replace("+", "%20"))
+                .orElse(null);
+    }
+
+    /**
+     * The link itself once the resolver has answered; {@code href} is null for a red link, and
+     * {@code invitation} then where it leads (FR-005), null when the title has no address.
+     */
     private static final class WikiLinkNode extends CustomNode {
         private final String words;
         private final String href;
+        private final String invitation;
 
-        WikiLinkNode(String words, String href) {
+        WikiLinkNode(String words, String href, String invitation) {
             this.words = words;
             this.href = href;
+            this.invitation = invitation;
         }
     }
 
@@ -355,6 +378,12 @@ public class WikiLinkRenderer {
             if (link.href != null) {
                 attributes.put("href", link.href);
                 attributes.put("class", "wikilink");
+                writer.tag("a", context.extendAttributes(node, "a", attributes));
+                writer.text(link.words);
+                writer.tag("/a");
+            } else if (link.invitation != null) {
+                attributes.put("href", link.invitation);
+                attributes.put("class", "wikilink wikilink-missing");
                 writer.tag("a", context.extendAttributes(node, "a", attributes));
                 writer.text(link.words);
                 writer.tag("/a");

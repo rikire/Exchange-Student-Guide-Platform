@@ -84,7 +84,7 @@ class EditorPreviewTest {
         assertThat(html)
                 .contains("<strong>Bring</strong>")
                 .contains("<a href=\"/articles/hostel-life\" class=\"wikilink\">hostel life</a>")
-                .contains("<span class=\"wikilink wikilink-missing\">No Such Page</span>");
+                .contains("class=\"wikilink wikilink-missing\">No Such Page</a>");
     }
 
     @Test
