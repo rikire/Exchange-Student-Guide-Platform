@@ -8,13 +8,17 @@ Make it survive real use and real inputs, and make it something a third person c
 
 ## Steps
 
-- [ ] Moved from phase 3, 10 Sep — see the revised milestone plan in
+- [x] Moved from phase 3, 10 Sep — see the revised milestone plan in
       [01-requirements-design.md](01-requirements-design.md): admin panel behind the single
       password, plus FR-023 (publishing a new article directly) and FR-024 (editing an article
       directly)
       — check: FR-023's four criteria and FR-024's four criteria are eight tests; the admin-route
       enumeration test from the original phase-3 step (every admin route redirects when
       unauthenticated, enumerated from the route contract) is included
+      **Done 2 Oct**, accepted by the human on the stand:
+      [FEAT-021](../features/FEAT-021-publishing-directly.md), eight criterion tests among
+      `DirectPublishingTest`'s twelve; `ModeratorLoginTest` enumerates the four new routes from
+      `routes.yml`
 - [ ] ~~FR-025 — editing the homepage's pinned articles~~
       **Moved to phase 3, 1 Oct** by the human, with the "All articles" page: the walkthrough found
       *Registering with FRRO* missing from the landing page — see the step "Every article reachable,
