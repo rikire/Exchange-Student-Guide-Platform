@@ -78,7 +78,8 @@ Versions are verified against the registry, never recalled from memory.
 ./mvnw verify                   # tests + Spotless
 ./mvnw -pl app spring-boot:run  # run the application
 java -jar tools/target/ai-tools.jar docs-check  # docs that describe what the repository lacks
-scripts/check.sh                # everything CI runs
+scripts/check.sh                # everything CI's build job runs
+./mvnw -pl app -P postgres verify  # CI's postgres job: the tests on PostgreSQL (needs Docker)
 scripts/hooks.sh                # build the jar and install the git hooks
 ```
 
