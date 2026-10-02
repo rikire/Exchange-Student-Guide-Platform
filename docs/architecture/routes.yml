@@ -178,7 +178,8 @@ routes:
     slice: contribute
     status: built
     template: >-
-      `contribute/SubmissionForm.html`, pre-filled from the article
+      `contribute/SubmissionForm.html`, pre-filled from the article and headed "Propose an edit to
+      <its title>"; "Cancel" leads back to the article (fix 3.6)
     fields: >-
       — (pre-filled form; fields below belong to the POST)
     responses: >-
