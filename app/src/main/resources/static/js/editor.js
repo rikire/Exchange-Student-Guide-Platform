@@ -32,6 +32,18 @@
     return { name: name, action: action, title: title, icon: icon(name) };
   }
 
+  // Fix 3.6: [[ ]] around the selection, or empty with the cursor between them to type a title.
+  function wikiLink(editor) {
+    var cm = editor.codemirror;
+    var selected = cm.getSelection();
+    cm.replaceSelection('[[' + selected + ']]');
+    if (!selected) {
+      var cursor = cm.getCursor();
+      cm.setCursor({ line: cursor.line, ch: cursor.ch - 2 });
+    }
+    cm.focus();
+  }
+
   var timer;
   var asked = 0;
   var shown = 0;
@@ -85,7 +97,8 @@
       button('unordered-list', EasyMDE.toggleUnorderedList, 'Bulleted list'),
       button('ordered-list', EasyMDE.toggleOrderedList, 'Numbered list'),
       '|',
-      button('link', EasyMDE.drawLink, 'Link')
+      button('link', EasyMDE.drawLink, 'Link'),
+      button('wikilink', wikiLink, 'Link to an article in the guide')
     ]
   });
 
@@ -102,8 +115,11 @@
   editor.codemirror.setOption('extraKeys', keys);
 
   // EasyMDE takes its buttons out of the tab order; the keyboard shortcuts alone are not discoverable.
+  // Its title is a tooltip only; a screen reader is given the same name (fix 3.6).
   Object.keys(editor.toolbarElements).forEach(function (name) {
-    editor.toolbarElements[name].tabIndex = 0;
+    var control = editor.toolbarElements[name];
+    control.tabIndex = 0;
+    control.setAttribute('aria-label', control.title);
   });
 
   form.addEventListener('submit', function () {

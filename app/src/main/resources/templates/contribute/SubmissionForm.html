@@ -26,7 +26,7 @@
         <span class="field-label">Summary</span>
         <input class="field-input" type="text" name="summary" required th:maxlength="${summaryLimit}" th:value="${form.summary}">
       </label>
-      <label class="field">
+      <label class="field field-editor">
         <span class="field-label">Body (Markdown)</span>
         <!-- data-draft names the draft the editor keeps in the browser: one per form (editor.js). -->
         <textarea class="field-textarea" name="body" required th:maxlength="${bodyLimit}" th:data-draft="${form.action}" th:text="${form.body}"></textarea>

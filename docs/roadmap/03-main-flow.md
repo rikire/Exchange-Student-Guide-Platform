@@ -391,7 +391,10 @@ design pass (3) is the largest piece and starts with redrawn screens.
       as ADR-0022 predicted from the code. `BrowserLayoutTest` also passes over a fully transparent
       control (FilePond's file input). Looked at in Chrome on the dev stand: two styling defects in
       the tag field (a second frame, "Addvi") fixed the same day. `BrowserTagFieldTest`'s first test
-      failed once in five full browser runs and never alone; the cause is not found.
+      failed once in five full browser runs and never alone; the cause is not found. Recorded as
+      DEBT-023. **Editor built 2 Oct (d):** the `[[link]]` control, an `aria-label` on every
+      control, the toolbar pinned while the body scrolls, and the editor at the frame's width
+      (FEAT-010).
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**
@@ -441,6 +444,15 @@ Where the streams meet — one owner per file, and the second waits for the firs
   page's use `<relative-time>` from `shared/web/LocalTime.html` (ADR-0020).
 - Mikhail's open items: the human's checks on the stand (iPhone `.mov`, Android `.mp4`, 0 against 8
   in the numbers), then 3.6, which waits for 3.1 and 3.2, and 3.7.
+
+**Where Mikhail's stream touched the other, 2 Oct (3.6)** — for Abdirakhim's design pass:
+- `site.css`: `.submission-form:has(.field-editor)` takes the whole frame, and its fields other than
+  the editor keep 46rem. Other forms with `.submission-form` are unchanged.
+- `BrowserLayoutTest` passes over an element that is clipped to nothing or fully transparent on its
+  own (the controls Tom Select and FilePond hide); `BrowserKeyboardTest` looks for the focus ring on
+  `.ts-control`, as on `.CodeMirror`.
+- `SubmissionReview.html` is untouched; its tag fields are 3.7's. `PublishForm.html` (FEAT-021)
+  still has five text fields: DEBT-024.
 
 ## Readiness criterion
 

@@ -20,6 +20,43 @@ constraint hides it.
 
 ## Register
 
+### DEBT-024 — The moderator's publish form still has five plain tag fields
+
+**Status:** open
+**Created:** 2026-10-02
+**Marker:** `app/src/main/resources/templates/moderate/PublishForm.html` — `.tag-fields`
+
+**Cause:** fix 3.6 changed the contributor's form only (ADR-0022): one tag list under Tom Select,
+filled from `Tags.inUse`. FEAT-021's form for publishing directly was not in that fix, and fix 3.7
+covers the review page, not this one.
+
+**Consequence:** the moderator types tags into five bare fields with no suggestions, so a stored tag
+is retyped and can be misspelled into a new one; the two forms look and behave differently.
+
+**How to fix:** give `DirectPublishingController` the same tag list (`Tags.inUse`, `Tags.MOST`) and
+the template the `<select class="tag-select">` with `tags.js` and `tags.css`, as `SubmissionForm.html`
+has; a `DirectPublishingTest` case for the selected tags.
+
+**Trigger:** fix 3.7, which brings the same field to the review page, or the human's look at the
+moderator's pages, whichever is first.
+
+### DEBT-023 — A tag-field browser test failed once without a known cause
+
+**Status:** open
+**Created:** 2026-10-02
+**Marker:** `app/src/test/java/in/ac/iitm/guide/BrowserTagFieldTest.java` — `a_word_becomes_a_chip_on_enter_and_on_a_comma`
+
+**Cause:** not known. In five full runs of `Browser*Test` on 2 Oct it failed once, on the chips it
+read after typing; run alone it passed every time, and the failing run's details were not kept.
+
+**Consequence:** a flaky check teaches people to rerun until green, which hides a real fault the day
+one appears. If the cause is in the field rather than the test, a fast typist could lose a tag.
+
+**How to fix:** keep the output of the next failing run (the chips it read), then either wait in the
+test for Tom Select to have handled each key or fix the field, depending on what it shows.
+
+**Trigger:** its next failure, in CI or locally.
+
 ### DEBT-022 — Test classes leave rows that break other classes' cleanup on PostgreSQL
 
 **Status:** resolved 2026-09-30 — `UploadTooLargeTest` clears what it stores, and the fifteen classes

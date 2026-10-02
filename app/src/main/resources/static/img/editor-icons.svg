@@ -30,4 +30,8 @@
     <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/>
     <path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>
   </symbol>
+  <!-- Fix 3.6: a wiki link, [[ ]], drawn as two pairs of brackets. -->
+  <symbol id="wikilink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 4H3v16h3M9 4H6v16h3M18 4h3v16h-3M15 4h3v16h-3"/>
+  </symbol>
 </svg>

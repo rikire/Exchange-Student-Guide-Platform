@@ -19,8 +19,20 @@
 .cm-s-easymde .cm-link, .cm-s-easymde .cm-url, .cm-s-easymde .cm-quote { color: var(--ink-soft); }
 .cm-s-easymde .cm-tag, .cm-s-easymde .cm-attribute { color: var(--maroon); }
 
-/* Each control is a 44-px target on every width (NFR-008). */
-.editor-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-1); padding: var(--space-1); border-color: var(--line); }
+/* Each control is a 44-px target on every width (NFR-008). The toolbar stays at the top of the
+   window while a long body scrolls past it (fix 3.6). */
+.editor-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-color: var(--line);
+  background: var(--paper);
+  opacity: 1;
+}
 .editor-toolbar button {
   display: inline-flex;
   align-items: center;

@@ -133,6 +133,10 @@ p a, .article-body a { text-decoration: underline; }
 .form-error p { margin: 0 0 var(--space-2); }
 .form-error p:last-child { margin: 0; }
 .submission-form { display: flex; flex-direction: column; gap: var(--space-4); max-width: 46rem; }
+/* Fix 3.6 (F-17): a form with the editor takes the frame and the editor all of it; its other fields
+   keep the readable width. */
+.submission-form:has(.field-editor) { max-width: none; }
+.submission-form:has(.field-editor) > :not(.field-editor) { max-width: 46rem; }
 .field { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; border: none; }
 .field-label { font-weight: 600; }
 .field-input, .field-textarea { font: inherit; min-height: var(--target); padding: var(--space-2) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }

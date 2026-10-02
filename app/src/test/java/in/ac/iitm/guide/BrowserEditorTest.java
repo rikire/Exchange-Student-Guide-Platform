@@ -168,6 +168,71 @@ class BrowserEditorTest {
                 .isEmpty();
     }
 
+    @Test
+    // trace:FR-003
+    void the_wiki_link_control_puts_double_brackets_around_the_selected_title() {
+        var page = openTheForm();
+        page.evaluate("() => { const cm = document.querySelector('.CodeMirror').CodeMirror;"
+                + " cm.setValue('See Registering with FRRO'); cm.setSelection({line: 0, ch: 4}, {line: 0, ch: 25}); }");
+
+        page.click(".editor-toolbar button.wikilink");
+
+        assertThat(editorText(page)).isEqualTo("See [[Registering with FRRO]]");
+    }
+
+    @Test
+    // trace:FR-003
+    void the_wiki_link_control_with_nothing_selected_leaves_the_cursor_between_the_brackets() {
+        var page = openTheForm();
+        page.evaluate("() => { const cm = document.querySelector('.CodeMirror').CodeMirror;"
+                + " cm.setValue('See '); cm.setCursor({line: 0, ch: 4}); }");
+
+        page.click(".editor-toolbar button.wikilink");
+        page.keyboard().type("Hostel Life");
+
+        assertThat(editorText(page)).isEqualTo("See [[Hostel Life]]");
+    }
+
+    @Test
+    // trace:FR-027
+    void every_formatting_control_is_named_for_a_screen_reader_and_in_a_tooltip() {
+        var page = openTheForm();
+
+        @SuppressWarnings("unchecked")
+        var unnamed = (List<String>) page.evaluate("() => [...document.querySelectorAll('.editor-toolbar button')]"
+                + ".filter(b => !b.getAttribute('aria-label') || b.getAttribute('aria-label') !== b.title)"
+                + ".map(b => b.className)");
+
+        assertThat(unnamed).as("buttons without the same aria-label and title").isEmpty();
+    }
+
+    @Test
+    // trace:FR-027
+    void the_formatting_controls_stay_in_view_while_a_long_body_is_scrolled() {
+        var page = openTheForm();
+        page.evaluate("() => document.querySelector('.CodeMirror').CodeMirror"
+                + ".setValue(Array.from({length: 300}, (_, i) => 'Line ' + i).join('\\n'))");
+
+        page.evaluate("() => window.scrollTo(0, document.querySelector('.CodeMirror').getBoundingClientRect().top"
+                + " + window.scrollY + 2000)");
+
+        var toolbar = page.locator(".editor-toolbar").boundingBox();
+        assertThat(toolbar.y).as("the toolbar's top, in the window").isBetween(-1.0, 1.0);
+    }
+
+    @Test
+    // trace:FR-027
+    void on_a_wide_screen_the_editor_takes_the_width_of_the_page_frame() {
+        var page = openTheForm();
+
+        page.setViewportSize(1920, 1080);
+
+        var editor = page.locator(".EasyMDEContainer").boundingBox();
+        assertThat(editor.width).as("the editor's width at 1920 px").isGreaterThanOrEqualTo(0.6 * 1920);
+        var title = page.locator("input[name=title]").boundingBox();
+        assertThat(title.width).as("the title field keeps a readable width").isLessThanOrEqualTo(800);
+    }
+
     private Page openTheForm() {
         var page = context.newPage();
         page.onConsoleMessage(message -> {

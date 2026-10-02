@@ -41,8 +41,12 @@ the published rendering while they write and keeps an unsent draft in their brow
 ## Scenario
 
 1. A contributor opens `GET /submit` or an article's edit form (UC-010, UC-011). The body is EasyMDE
-   with a toolbar of seven controls and a preview: under the text on a phone and a tablet, beside it
-   from 64rem up.
+   with a toolbar of eight controls and a preview: under the text on a phone and a tablet, beside it
+   from 64rem up. The editor takes the width of the page frame; the other fields keep 46rem (fix
+   3.6). The toolbar stays at the top of the window while a long body scrolls past it, and every
+   control carries its name as both a tooltip and an `aria-label`.
+   The eighth control, "Link to an article in the guide", puts `[[ ]]` around the selection, or
+   leaves the cursor between empty brackets to type a title (fix 3.6).
 2. A control used with text selected puts the Markdown around the selection.
 3. When typing pauses for 300 ms, the page posts the body to `POST /contribute/preview` with the
    form's CSRF token, and the preview shows the answer: the article page's own rendering, wiki links
@@ -98,6 +102,10 @@ And ADR-0013's conditions:
   `EditorPreviewTest.a_preview_without_a_csrf_token_is_refused`
 - [x] Raw HTML in the preview is escaped as on the article page —
   `EditorPreviewTest.the_preview_is_the_article_page_rendering_so_raw_html_is_escaped`
+- [x] The wiki-link control wraps the selection in `[[ ]]`, or leaves the cursor between empty
+      brackets; every control is named alike for a tooltip and a screen reader; the toolbar stays in
+      view while a long body scrolls; at 1920 px the editor is at least 60 % of the window while the
+      title field stays readable — `BrowserEditorTest` (fix 3.6)
 
 ## What building it found
 
