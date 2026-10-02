@@ -105,7 +105,10 @@ Make it survive real use and real inputs, and make it something a third person c
       for this step: running it in CI.
       **Done 2 Oct:** the `postgres` job of [ci.yml](../../.github/workflows/ci.yml) runs
       `./mvnw -B -pl app verify -P postgres` on every push and pull request, beside `build`; 564
-      tests passed locally on `postgres:17` before it was added.
+      tests passed locally on `postgres:17` before it was added. Its first run failed: the two
+      `seed`-profile classes, `StartupOrderTest` and `SeedRunnerTest`, left the seed's articles in
+      the shared database, and `ReportFlowTest`, run next on the runner, collided with a title. Both
+      now clear what the seed wrote; the suite passes on PostgreSQL in alphabetical and reverse order.
 - [x] `docker-compose.yml` with volumes for media and the search index; one-command start scripts
       — check: media and the index survive `docker compose down` and come back on the next start
       **Started early, 26 Sep:** `Dockerfile` plus `app` and `db` (PostgreSQL 17) services, with the

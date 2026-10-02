@@ -3,7 +3,9 @@ package in.ac.iitm.guide.backup;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import in.ac.iitm.guide.backup.internal.SeedRunner;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +13,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Starting the application with the {@code seed} profile fills the guide from the seed files. The
- * tests share the seeded database on purpose and do not clean it: this context is the only one with
- * the profile, and each context has an in-memory database of its own, so nothing leaks into other
- * tests.
+ * tests share the seeded database on purpose and clean it once, after the last of them: on H2 each
+ * context has a database of its own, but under {@code -P postgres} every context shares one, and the
+ * seed's articles would collide with the titles other classes publish.
  */
 @SpringBootTest
 @ActiveProfiles("seed")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SeedRunnerTest {
 
     @Autowired
@@ -24,6 +27,14 @@ class SeedRunnerTest {
 
     @Autowired
     private SeedRunner runner;
+
+    @AfterAll
+    void clearTheSeed() {
+        jdbc.execute("DELETE FROM article_tag");
+        jdbc.execute("DELETE FROM article_link");
+        jdbc.execute("DELETE FROM article");
+        jdbc.execute("DELETE FROM tag");
+    }
 
     @Test
     // trace:NFR-004

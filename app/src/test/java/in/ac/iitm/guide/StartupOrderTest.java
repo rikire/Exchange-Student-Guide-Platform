@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import in.ac.iitm.guide.shared.persistence.Article;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.search.mapper.orm.Search;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,6 +50,19 @@ class StartupOrderTest {
 
     @Autowired
     private AtWebServerStart atStart;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    // Under -P postgres every context shares one database, and the seed's articles would collide
+    // with the titles the next class publishes.
+    @AfterEach
+    void clearTheSeed() {
+        jdbc.execute("DELETE FROM article_tag");
+        jdbc.execute("DELETE FROM article_link");
+        jdbc.execute("DELETE FROM article");
+        jdbc.execute("DELETE FROM tag");
+    }
 
     @Test
     // trace:FR-007
