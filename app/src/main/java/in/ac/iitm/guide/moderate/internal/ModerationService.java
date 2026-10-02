@@ -194,7 +194,21 @@ public class ModerationService {
      */
     @Transactional
     public Published approve(String number, String summary, List<String> tagNames) {
+        return approve(pendingForDecision(number), summary, tagNames, OffsetDateTime.now());
+    }
+
+    /**
+     * As {@link #approve}, decided at the moment it was submitted: the moderator's own article
+     * (FR-023, FR-024), which the history tells from a queued one by the two times being equal.
+     */
+    @Transactional
+    Published approveAsSubmitted(String number, String summary, List<String> tagNames) {
         var submission = pendingForDecision(number);
+        return approve(submission, summary, tagNames, submission.getSubmittedAt());
+    }
+
+    private Published approve(Submission submission, String summary, List<String> tagNames, OffsetDateTime now) {
+        var number = submission.getSubmissionNumber();
         if (summary.isBlank()) {
             throw new ApprovalRefusedException("Give the article a summary.");
         }
@@ -203,7 +217,6 @@ public class ModerationService {
                     "The summary is longer than " + Article.LONGEST_SUMMARY + " characters.");
         }
         var chosenTags = tagsOf(tagNames);
-        var now = OffsetDateTime.now();
 
         var article = submission.getType() == SubmissionType.NEW_ARTICLE
                 ? publish(submission, summary.strip(), chosenTags, now)
