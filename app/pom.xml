@@ -103,6 +103,20 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!-- The file field of fix 3.6 (ADR-0022): FilePond and its image preview; neither WebJar declares
+         dependencies. -->
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>filepond</artifactId>
+      <version>${filepond.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>filepond-plugin-image-preview</artifactId>
+      <version>${filepond-plugin-image-preview.version}</version>
+      <scope>runtime</scope>
+    </dependency>
     <!-- CSRF on every form (security.md), from FEAT-005; the moderator login (ADR-0009) builds on it. -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

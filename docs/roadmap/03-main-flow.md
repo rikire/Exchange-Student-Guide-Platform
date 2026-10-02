@@ -385,6 +385,13 @@ design pass (3) is the largest piece and starts with redrawn screens.
       `<select multiple>` of the tags in use (`Tags.inUse`), and Tom Select makes it chips
       (FEAT-005). `BrowserLayoutTest` and `BrowserKeyboardTest` now pass over a visually hidden
       control and look for the ring on Tom Select's control, as they did for CodeMirror.
+      **File field built 2 Oct (c):** FilePond 4.32.12 with the image preview 4.6.11, `storeAsFile`
+      (FEAT-009); the policy gained `img-src blob:` and `worker-src blob:`, pinned whole in
+      `ContentSecurityPolicyTest`. Under the old policy the preview's image was blocked in Chromium,
+      as ADR-0022 predicted from the code. `BrowserLayoutTest` also passes over a fully transparent
+      control (FilePond's file input). Looked at in Chrome on the dev stand: two styling defects in
+      the tag field (a second frame, "Addvi") fixed the same day. `BrowserTagFieldTest`'s first test
+      failed once in five full browser runs and never alone; the cause is not found.
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**

@@ -33,14 +33,17 @@
         <!-- th:inline="none": Thymeleaf would read [[Title]] as its own inline expression (F-5). -->
         <span class="field-help" th:inline="none">Link to another article with [[Title]].</span>
       </label>
-      <label class="field">
-        <span class="field-label">Attachment (optional)</span>
-        <!-- accept= only narrows the file picker; the type is read from the content (FEAT-009). -->
-        <input class="field-input" type="file" name="attachment" accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/x-m4v,video/3gpp,video/3gpp2,video/webm,video/x-matroska,video/x-msvideo,video/mpeg,.mkv,.m4v,.3gp,.avi,.mpg,.mpeg">
+      <!-- A div, not a label around the field: inside a label every click on the drop zone would
+           open the file picker a second time. -->
+      <div class="field">
+        <label class="field-label" for="attachment">Attachment (optional)</label>
+        <!-- accept= only narrows the file picker; the type is read from the content (FEAT-009).
+             files.js makes this a FilePond drop zone that still posts the file as attachment (ADR-0022). -->
+        <input class="field-input file-drop" type="file" id="attachment" name="attachment" accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/x-m4v,video/3gpp,video/3gpp2,video/webm,video/x-matroska,video/x-msvideo,video/mpeg,.mkv,.m4v,.3gp,.avi,.mpg,.mpeg">
         <span class="field-help" th:text="${accepted}">One photo up to 10 MB, a PDF up to 20 MB or an MP4 video up to 200 MB.</span>
         <!-- Walkthrough fix 1.4 (the human, 1 Oct): a photo is re-encoded and loses its metadata, a video is stored as it came. -->
         <span class="field-help">A video keeps what the camera recorded, which can include where it was filmed.</span>
-      </label>
+      </div>
       <label class="field" for="tags">
         <span class="field-label">Suggested tags</span>
         <!-- Fix 3.6 (ADR-0022): tags.js turns this list into Tom Select's chips; each chip is one
@@ -68,6 +71,14 @@
     <link rel="stylesheet" th:href="@{/css/tags.css}">
     <script th:src="@{/webjars/tom-select/2.6.2/dist/js/tom-select.complete.min.js}" defer></script>
     <script th:src="@{/js/tags.js}" defer></script>
+    <!-- The file field (ADR-0022); the versions are the root pom's filepond.version and
+         filepond-plugin-image-preview.version. -->
+    <link rel="stylesheet" th:href="@{/webjars/filepond/4.32.12/dist/filepond.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/filepond-plugin-image-preview/4.6.11/dist/filepond-plugin-image-preview.min.css}">
+    <link rel="stylesheet" th:href="@{/css/files.css}">
+    <script th:src="@{/webjars/filepond-plugin-image-preview/4.6.11/dist/filepond-plugin-image-preview.min.js}" defer></script>
+    <script th:src="@{/webjars/filepond/4.32.12/dist/filepond.min.js}" defer></script>
+    <script th:src="@{/js/files.js}" defer></script>
   </main>
 </body>
 </html>

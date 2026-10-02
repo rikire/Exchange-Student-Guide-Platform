@@ -455,15 +455,18 @@ class BrowserLayoutTest {
      * Whether an element is inside a box that hides its overflow and has no width or no height, so none
      * of it shows. The editor's CodeMirror takes keystrokes through such a textarea, 1000 by 13 px
      * inside a 3-by-0 box (FR-027); it is neither text anyone reads nor a target anyone taps. So is an
-     * element clipped to nothing on its own, as Tom Select hides the select it replaces (ADR-0022).
+     * element clipped to nothing or fully transparent on its own, as Tom Select and FilePond hide the
+     * controls they replace (ADR-0022).
      */
     private static final String CLIPPED_AWAY =
             """
             e => {
-              // Visually hidden on its own, as a library hides the control it replaces (Tom Select's
-              // select, ADR-0022): nothing of it is drawn, so it is neither text nor a target.
+              // Hidden on its own, as a library hides the control it replaces (Tom Select's select,
+              // FilePond's file input, ADR-0022): nothing of it is drawn, so it is neither text nor a
+              // target; FilePond's whole drop zone is what is tapped.
               const own = getComputedStyle(e);
               if (own.clipPath === 'inset(50%)' || own.clip === 'rect(0px, 0px, 0px, 0px)') return true;
+              if (own.opacity === '0') return true;
               for (let box = e.parentElement; box; box = box.parentElement) {
                 const r = box.getBoundingClientRect();
                 if (getComputedStyle(box).overflow === 'hidden' && (r.width === 0 || r.height === 0)) return true;

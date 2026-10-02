@@ -121,6 +121,13 @@ on Wikipedia and the libraries on Maven Central:
   rejected submission only with a moderator session, `404` without; `404` for an unknown id.
   `X-Content-Type-Options: nosniff` always; `Range` is answered by Spring MVC's `Resource` handling;
   everything that is not a photo is sent as `Content-Disposition: attachment`.
+- **The file field is a FilePond drop zone** (fix 3.6, ADR-0022) over the same `attachment` input,
+  in `storeAsFile` mode: the file is posted with the form, never uploaded on its own, so the server
+  and its checks are unchanged. It shows the chosen file's name and size, a preview of a photo, and
+  a way to remove it. The preview loads the photo from a `blob:` URL and scales it in a `blob:`
+  worker, so the policy allows `img-src 'self' blob:` and `worker-src blob:`; under the old policy
+  Chromium blocked the preview's image (seen in `BrowserFileFieldTest` on 2 Oct). Without the script
+  the field is the browser's file input it was.
 - **Approval moves the asset** from the submission to the article, through `media`'s published type.
 - **Shown** as a picture, a video player, or the document's name and size linking to its route, on
   the review screen and on the article.
@@ -138,6 +145,10 @@ on Wikipedia and the libraries on Maven Central:
       with the hint.
 - [x] A stored photo is re-encoded: bytes hidden after its image data are not kept.
 - [x] A photo with an EXIF orientation is stored upright.
+- [x] In a browser, a chosen file shows its name and size, a photo is previewed, × removes the
+      file, and the chosen file is stored with the submission; a form with no file has no
+      attachment; no policy violation (`BrowserFileFieldTest`). Dropping a file from the operating
+      system is a person's check: Playwright cannot do it.
 - [x] An original name such as `../../x.jpg` does not reach the stored path.
 - [x] Each of NFR-001's four limits is enforced at its configured value.
 - [x] A request over the container's limit answers `413` with the form and an error.

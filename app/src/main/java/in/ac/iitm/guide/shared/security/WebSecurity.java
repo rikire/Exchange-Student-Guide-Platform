@@ -23,7 +23,8 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
  *
  * <p>ADR-0013's Content-Security-Policy goes on every response: scripts, styles, fonts and media only
  * from the site itself, nothing inline, and no framing. It is the second layer behind ADR-0001's
- * escaping of article text.
+ * escaping of article text. ADR-0022 adds {@code blob:} images and workers, which only a script
+ * already running on the page can make, for the file field's image preview.
  */
 // trace:FR-010
 // trace:FR-014
@@ -35,8 +36,8 @@ class WebSecurity {
     static final String LOGIN = "/moderate/login";
     static final String LOGOUT = "/moderate/logout";
 
-    static final String POLICY = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';"
-            + " font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none';"
+    static final String POLICY = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob:;"
+            + " worker-src blob:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none';"
             + " form-action 'self'; frame-ancestors 'none'";
 
     /** One repository for the filter chain and for the login, which replaces the token through it. */

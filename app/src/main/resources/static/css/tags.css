@@ -4,13 +4,18 @@
 /* Tom Select sets 13 px on these three; body text is never under 16 px (BrowserLayoutTest). */
 .ts-control, .ts-control input, .ts-dropdown { font-family: var(--font-body); font-size: var(--text-body); line-height: 1.5; }
 
+/* Tom Select copies the select's classes to its wrapper, so field-input's border and padding would
+   frame the control a second time. */
+.ts-wrapper.field-input { padding: 0; border: 0; background: none; }
+
 .ts-wrapper .ts-control {
   min-height: var(--target);
   padding: 0 var(--space-2);
   gap: var(--space-1);
   color: var(--ink);
+  background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-card);
   box-shadow: none;
 }
 /* Tom Select pins the input's min-height to 0 with !important; height it leaves alone. */
@@ -43,5 +48,6 @@
 }
 
 .ts-dropdown { color: var(--ink); border-color: var(--line); }
-.ts-dropdown .option, .ts-dropdown .create { min-height: var(--target); display: flex; align-items: center; padding: 0 var(--space-3); }
+/* Padding, not flex, makes the 44 px: in a flex row the space in "Add <strong>vi</strong>" is lost. */
+.ts-dropdown .option, .ts-dropdown .create { min-height: var(--target); padding: 10px var(--space-3); box-sizing: border-box; }
 .ts-dropdown .active { color: var(--ink); background: var(--sand-raised); }
