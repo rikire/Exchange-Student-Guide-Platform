@@ -1,7 +1,7 @@
 ---
 id: FEAT-021
 title: The moderator publishes and edits directly
-status: in-progress
+status: done
 covers: [FR-023, FR-024]
 slice: moderate
 routes: ["GET /moderate/write", "POST /moderate/articles", "GET /moderate/articles/{title}/edit", "POST /moderate/articles/{title}/edits"]

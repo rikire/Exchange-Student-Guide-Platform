@@ -652,7 +652,8 @@ THEN it is removed from the inbox
 
 ### FR-023 — Publishing a new article directly
 
-**Status:** planned
+**Status:** done — accepted by the human on 2 Oct on the stand: "Write an article" in the
+moderator's header publishes at once, never through the queue (FEAT-021)
 **Priority:** could
 
 When a moderator writes a new article directly, optionally attaching a photo, document or video,
@@ -691,7 +692,8 @@ THEN the publication is rejected
 
 ### FR-024 — Editing an article directly
 
-**Status:** planned
+**Status:** done — accepted by the human on 2 Oct on the stand: "Edit now" on the article page and
+"Edit article" in the report inbox publish at once, the replaced text kept as a revision (FEAT-021)
 **Priority:** could
 
 When a moderator edits an existing article directly — its title, its body, or both, optionally

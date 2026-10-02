@@ -12,9 +12,9 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 
 ```mermaid
 pie showData title Requirements by status
-    "done" : 39
+    "done" : 41
     "in-progress" : 0
-    "planned" : 3
+    "planned" : 1
 ```
 
 Each slice with the requirements its features cover: green when all are done, amber when
@@ -29,7 +29,7 @@ flowchart LR
     contribute["contribute · 9/9 done"]:::done
     home["home · 1/1 done"]:::done
     media["media · 6/6 done"]:::done
-    moderate["moderate · 9/11 done"]:::partial
+    moderate["moderate · 11/11 done"]:::done
     report["report · 2/2 done"]:::done
     search["search · 3/3 done"]:::done
     shared["shared · 2/2 done"]:::done
@@ -82,7 +82,7 @@ flowchart LR
 | contribute | 9 | 9 | done |
 | home | 1 | 1 | done |
 | media | 6 | 6 | done |
-| moderate | 11 | 9 | partial |
+| moderate | 11 | 11 | done |
 | report | 2 | 2 | done |
 | search | 3 | 3 | done |
 | shared | 2 | 2 | done |
@@ -98,8 +98,6 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-023 | planned | could | Publishing a new article directly | 4 | 6 | 0 |
-| FR-024 | planned | could | Editing an article directly | 4 | 6 | 0 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
 
 ## Done, with criteria that no test is anchored to
