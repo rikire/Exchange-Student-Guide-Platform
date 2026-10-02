@@ -12,9 +12,9 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 
 ```mermaid
 pie showData title Requirements by status
-    "done" : 37
+    "done" : 39
     "in-progress" : 0
-    "planned" : 5
+    "planned" : 3
 ```
 
 Each slice with the requirements its features cover: green when all are done, amber when
@@ -30,7 +30,7 @@ flowchart LR
     home["home · 1/1 done"]:::done
     media["media · 6/6 done"]:::done
     moderate["moderate · 9/9 done"]:::done
-    report["report · 0/2 done"]:::none
+    report["report · 2/2 done"]:::done
     search["search · 3/3 done"]:::done
     shared["shared · 2/2 done"]:::done
     taxonomy["taxonomy · 2/2 done"]:::done
@@ -82,7 +82,7 @@ flowchart LR
 | home | 1 | 1 | done |
 | media | 6 | 6 | done |
 | moderate | 9 | 9 | done |
-| report | 2 | 0 | none |
+| report | 2 | 2 | done |
 | search | 3 | 3 | done |
 | shared | 2 | 2 | done |
 | taxonomy | 2 | 2 | done |
@@ -97,8 +97,6 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-021 | planned | could | Reporting an article | 2 | 9 | 0 |
-| FR-022 | planned | could | Closing a report | 1 | 2 | 0 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
 | FR-024 | planned | could | Editing an article directly | 4 | 0 | 4 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |

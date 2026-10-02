@@ -613,7 +613,8 @@ THEN the article's content prior to the change is retained as a revision
 
 ### FR-021 — Reporting an article
 
-**Status:** planned
+**Status:** done — accepted by the human on 2 Oct on the stand: "Report this article" on the
+article page, a message up to 2000 characters, 10 reports an hour per address (FEAT-020)
 **Priority:** could
 
 When a reader flags a published article with a message describing the problem, the system shall
@@ -635,7 +636,8 @@ THEN the report is rejected
 
 ### FR-022 — Closing a report
 
-**Status:** planned
+**Status:** done — accepted by the human on 2 Oct on the stand: the moderator's Reports page
+lists open reports and closes one (FEAT-020)
 **Priority:** could
 
 When a moderator closes a report, the system shall remove it from the inbox.

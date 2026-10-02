@@ -33,8 +33,8 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-018 | done | FEAT-006 | ModerateSubmissionRepository, ModerationController, ModerationService | ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Rejecting a submission |
 | FR-019 | done | FEAT-006 | ModerationController, ModerationService | ModerationFlowTest |  | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Providing a rejection reason |
 | FR-020 | done | FEAT-006 | ModerateArticleRepository, ModerationService, Revision, RevisionRepository | ModerateArticleRepositoryTest, ModerationFlowTest, SchemaMigrationTest | V1__create_content_and_moderation_schema | GET /moderate/login, GET /moderate/queue, GET /moderate/submissions/{number}, POST /moderate/login, POST /moderate/submissions/{number}/approve, POST /moderate/submissions/{number}/reject | article, article_tag, revision, submission, submission_tag, tag | Retaining article revisions |
-| FR-021 | planned | FEAT-020 | ArticleController, Report, ReportController, ReportRepository, ReportService, ReportSettings, ReportedArticleRepository | ReportFlowTest, SchemaMigrationTest | V1__create_content_and_moderation_schema, V2__add_moderation_and_report_query_indexes | GET /articles/{title}/report, GET /moderate/reports, POST /articles/{title}/reports, POST /moderate/reports/{id}/close | article, report | Reporting an article |
-| FR-022 | planned | FEAT-020 | ReportController, ReportRepository, ReportService | ReportFlowTest |  | GET /articles/{title}/report, GET /moderate/reports, POST /articles/{title}/reports, POST /moderate/reports/{id}/close | article, report | Closing a report |
+| FR-021 | done | FEAT-020 | ArticleController, Report, ReportController, ReportRepository, ReportService, ReportSettings, ReportedArticleRepository | ReportFlowTest, SchemaMigrationTest | V1__create_content_and_moderation_schema, V2__add_moderation_and_report_query_indexes | GET /articles/{title}/report, GET /moderate/reports, POST /articles/{title}/reports, POST /moderate/reports/{id}/close | article, report | Reporting an article |
+| FR-022 | done | FEAT-020 | ReportController, ReportRepository, ReportService | ReportFlowTest |  | GET /articles/{title}/report, GET /moderate/reports, POST /articles/{title}/reports, POST /moderate/reports/{id}/close | article, report | Closing a report |
 | FR-023 | planned |  |  |  |  |  |  | Publishing a new article directly |
 | FR-024 | planned |  |  |  |  |  |  | Editing an article directly |
 | FR-025 | done | FEAT-019 | ArticleAdmin, ArticlePinning, ArticlePinningController | ArticleArchiveTest, LandingControllerTest, PinningTest, SeedRunnerTest | V8__add_article_view_count_and_pin_position | GET /moderate/articles, POST /moderate/articles/{title}/down, POST /moderate/articles/{title}/pin, POST /moderate/articles/{title}/unpin, POST /moderate/articles/{title}/up | article | Editing the homepage's pinned articles |
@@ -81,5 +81,4 @@ None.
 
 ## Notes
 
-- FR-021 is planned but has anchors in code; its status may be stale
-- FR-022 is planned but has anchors in code; its status may be stale
+None.

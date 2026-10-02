@@ -1,7 +1,7 @@
 ---
 id: FEAT-020
 title: Reporting an article, and closing the report
-status: in-progress
+status: done
 covers: [FR-021, FR-022]
 slice: report
 routes: ["GET /articles/{title}/report", "POST /articles/{title}/reports", "GET /moderate/reports", "POST /moderate/reports/{id}/close"]
