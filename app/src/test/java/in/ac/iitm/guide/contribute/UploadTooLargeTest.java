@@ -73,6 +73,14 @@ class UploadTooLargeTest {
 
     @Test
     // trace:FR-010
+    void the_413_form_has_the_same_tag_list_as_the_form_it_replaces() {
+        var response = submitWith(MediaTestFiles.pdf(20 * 1024));
+
+        assertThat(response.getBody()).containsPattern("<select[^>]*name=\"tags\"[^>]*data-most=\"10\"");
+    }
+
+    @Test
+    // trace:FR-010
     void a_request_the_container_accepts_still_reaches_the_form_with_its_csrf_token() {
         // The token travels in the multipart body; if the security filter could not read it there,
         // every upload would be refused with 403. The client follows the redirect to the confirmation.

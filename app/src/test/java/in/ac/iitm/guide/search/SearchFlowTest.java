@@ -116,6 +116,14 @@ class SearchFlowTest {
 
     @Test
     // trace:FR-007
+    void the_search_box_hint_is_short_enough_for_a_phone() throws Exception {
+        var page = search("visa");
+
+        assertThat(page).containsPattern("<input[^>]*name=\"q\"[^>]*placeholder=\"Search the guide\"");
+    }
+
+    @Test
+    // trace:FR-007
     void thirty_matches_show_the_first_twenty_with_the_total() throws Exception {
         for (var i = 0; i < 30; i++) {
             publish("Hostel guide " + i, "Rooms and mess.");

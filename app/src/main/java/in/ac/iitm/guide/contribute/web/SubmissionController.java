@@ -106,7 +106,9 @@ class SubmissionController {
     @GetMapping("/articles/{address}/edit")
     String editForm(@PathVariable String address, Model model) {
         var editing = submissions.editing(address);
-        return form(model, FormPage.forEdit(address, editing.article(), editing.draft()));
+        return form(
+                model,
+                FormPage.forEdit(address, editing.article(), editing.draft().title(), editing.draft()));
     }
 
     @PostMapping("/articles/{address}/edits")
@@ -130,7 +132,11 @@ class SubmissionController {
             return tooMany(
                     model,
                     response,
-                    FormPage.forEdit(address, article, draft)
+                    FormPage.forEdit(
+                                    address,
+                                    article,
+                                    submissions.titleAt(address).orElse(null),
+                                    draft)
                             .withFileChosen(chosen(attachment).isPresent()),
                     wait.get());
         }
@@ -141,7 +147,8 @@ class SubmissionController {
             return confirmation(number);
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(ArticleAddress::pathOf);
-            var page = FormPage.forEdit(address, article, draft)
+            var page = FormPage.forEdit(
+                            address, article, submissions.titleAt(address).orElse(null), draft)
                     .refusedAt(e.field(), e.getMessage(), link.orElse(null), "Open that article")
                     .withFileChosen(chosen(attachment).isPresent());
             return refused(model, response, page);
@@ -149,7 +156,11 @@ class SubmissionController {
             response.setStatus(HttpStatus.CONFLICT.value());
             return form(
                     model,
-                    FormPage.forEdit(address, article, draft)
+                    FormPage.forEdit(
+                                    address,
+                                    article,
+                                    submissions.titleAt(address).orElse(null),
+                                    draft)
                             .refused(
                                     "This article was removed while you were editing it, so the edit cannot be sent."
                                             + " Your text is still below; copy it if you want to keep it.",
@@ -234,14 +245,18 @@ class SubmissionController {
     }
 
     /**
-     * What the form template shows. {@code tags} are the submission's own, selected in the tag list.
+     * What the form template shows. {@code articleTitle} heads an edit form with the article it edits,
+     * and {@code cancelHref} leads back to it (fix 3.6). {@code tags} are the submission's own,
+     * selected in the tag list.
      * {@code errorField} is the field a refusal is about, marked and explained beside it; without one
      * the error stays in the box at the top. {@code fileChosen}: the refused form had a file, which no
      * browser keeps across a page, so the form asks for it again (fix 3.6).
      */
     record FormPage(
             String heading,
+            String articleTitle,
             String action,
+            String cancelHref,
             String title,
             String summary,
             String body,
@@ -254,20 +269,26 @@ class SubmissionController {
             boolean fileChosen) {
 
         static FormPage forNewArticle(Draft draft) {
-            return of("Submit a new article", "/submissions", draft, null);
+            return of("Submit a new article", null, "/submissions", "/", draft, null);
         }
 
-        /** @param article the article the form was opened for, sent back so DEBT-009's 409 can be told apart */
-        static FormPage forEdit(String address, UUID article, Draft draft) {
+        /**
+         * @param article the article the form was opened for, sent back so DEBT-009's 409 can be told apart
+         * @param articleTitle the edited article's own title, for the heading; null once it was removed
+         */
+        static FormPage forEdit(String address, UUID article, String articleTitle, Draft draft) {
             var path =
                     ArticleAddress.slugOf(address).map(ArticleAddress::pathOf).orElseThrow();
-            return of("Propose an edit", path + "/edits", draft, article);
+            return of("Propose an edit", articleTitle, path + "/edits", path, draft, article);
         }
 
-        private static FormPage of(String heading, String action, Draft draft, UUID article) {
+        private static FormPage of(
+                String heading, String articleTitle, String action, String cancelHref, Draft draft, UUID article) {
             return new FormPage(
                     heading,
+                    articleTitle,
                     action,
+                    cancelHref,
                     draft.title(),
                     draft.summary(),
                     draft.body(),
@@ -298,7 +319,9 @@ class SubmissionController {
         FormPage refusedAt(Field field, String error, String linkHref, String linkLabel) {
             return new FormPage(
                     heading,
+                    articleTitle,
                     action,
+                    cancelHref,
                     title,
                     summary,
                     body,
@@ -314,7 +337,9 @@ class SubmissionController {
         FormPage withFileChosen(boolean chosen) {
             return new FormPage(
                     heading,
+                    articleTitle,
                     action,
+                    cancelHref,
                     title,
                     summary,
                     body,

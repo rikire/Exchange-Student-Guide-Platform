@@ -399,6 +399,9 @@ design pass (3) is the largest piece and starts with redrawn screens.
       file again (FEAT-005). **Draft built 2 Oct (f):** the title and summary are kept beside the body's
       draft and cleared with it (FEAT-010). The same day a full run caught DEBT-023 again, with its
       output: Enter chose a stored tag over the typed word; `tags.js` now refilters on every key.
+      **Edit form built 2 Oct (g):** headed "Propose an edit to *Title*", "Cancel" back to the
+      article, the collision naming the other article; the search page's box says "Search the
+      guide" (F-16). All seven steps built; left: the human's try of the form on desktop and phone.
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**
@@ -455,6 +458,8 @@ Where the streams meet — one owner per file, and the second waits for the firs
 - `BrowserLayoutTest` passes over an element that is clipped to nothing or fully transparent on its
   own (the controls Tom Select and FilePond hide); `BrowserKeyboardTest` looks for the focus ring on
   `.ts-control`, as on `.CodeMirror`.
+- `search/SearchResults.html`: the box's placeholder is "Search the guide", as on the landing and
+  404 pages (F-16, fix 3.6 step g).
 - `SubmissionReview.html` is untouched; its tag fields are 3.7's. `PublishForm.html` (FEAT-021)
   still has five text fields: DEBT-024.
 

@@ -102,7 +102,7 @@ public class SubmissionService {
         if (!slug.equals(target.getSlug())) {
             articles.findBySlug(slug).ifPresent(other -> {
                 throw new SubmissionRejectedException(
-                        "A different article already has this title. Choose another title.",
+                        "“" + other.getTitle() + "” already has this title. Choose another title.",
                         other.getRemovedAt() == null ? other.getSlug() : null,
                         true);
             });
@@ -126,6 +126,19 @@ public class SubmissionService {
         var tagNames = article.getTags().stream().map(Tag::getName).sorted().toList();
         return new Editing(
                 article.getId(), new Draft(article.getTitle(), article.getSummary(), article.getBody(), tagNames));
+    }
+
+    /**
+     * Fix 3.6: the title the edit form is headed with, read again when a refused form comes back,
+     * since the title typed may differ.
+     *
+     * @return the title of the published article at that address; empty once it was removed
+     */
+    @Transactional(readOnly = true)
+    public Optional<String> titleAt(String address) {
+        return ArticleAddress.slugOf(address)
+                .flatMap(articles::findWithTagsBySlugAndRemovedAtIsNull)
+                .map(Article::getTitle);
     }
 
     /**

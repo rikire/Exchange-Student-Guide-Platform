@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
 <head>
-  <title th:text="${form.heading} + ' — Exchange Student Guide'">Submit a new article</title>
+  <title th:text="${form.heading} + (${form.articleTitle} ? ' to ' + ${form.articleTitle} : '') + ' — Exchange Student Guide'">Submit a new article</title>
 </head>
 <body>
   <main class="site-main">
-    <h1 class="article-title" th:text="${form.heading}">Submit a new article</h1>
+    <h1 class="article-title"><th:block th:text="${form.heading}">Submit a new article</th:block><th:block th:if="${form.articleTitle}"> to <em th:text="${form.articleTitle}">Title</em></th:block></h1>
     <p class="form-note">Anyone can contribute, no account needed. OGE reviews every submission before it is published.</p>
 
     <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
@@ -77,7 +77,7 @@
       </label>
       <div class="button-row">
         <button class="button-primary" type="submit">Submit for review</button>
-        <a class="button-quiet button-back" th:href="@{/}">Cancel</a>
+        <a class="button-quiet button-back" th:href="@{${form.cancelHref}}">Cancel</a>
       </div>
     </form>
 

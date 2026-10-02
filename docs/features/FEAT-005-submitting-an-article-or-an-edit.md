@@ -96,13 +96,19 @@ Each follows from something already decided; each has a test.
   becomes a chip on Enter or a comma, × removes it, a typed word is kept when the field loses focus,
   and at most `Tags.MOST` chips are taken. The post is one `tags` field per chip, as before, so the
   controller reads it unchanged. Without the script the list still offers the stored tags, but a new
-  one cannot be typed.
+  one cannot be typed. The `413` form (`UploadTooLargeAdvice`) gets the same list; until step g of
+  fix 3.6 it was given none, found when that step changed the form's record.
 - **A refusal is shown at the field it is about** (fix 3.6). `SubmissionRejectedException` names
   the field (`Field`: title, summary, body, tags, attachment); the form marks it `aria-invalid`,
   puts the message beside it, tied by `aria-describedby`, and the box at the top of the form only
   says that a field below is marked. A refusal no field explains (`409`, `429`) stays in the box.
   The box is inside the form, so no wider than its fields. A form refused with a file chosen says
   beside the file field to choose it again: no browser keeps a file across a page.
+- **The edit form names the article it edits** (fix 3.6): "Propose an edit to *Title*", read again
+  from the article when a refused form comes back (`SubmissionService.titleAt`), since the title
+  typed may differ; once the article is removed it is "Propose an edit". "Cancel" leads back to the
+  article, and to the guide from a new article's form. A title taken by a different article is
+  refused naming that article's title.
 - **An edit may keep its own title** or change its capitalisation; only a *different* article's
   address collides.
 - **The submission number** is `SUB-` and 12 Crockford base32 characters in groups of four, 60 bits
@@ -147,6 +153,9 @@ Each follows from something already decided; each has a test.
 - [x] A refused form marks the field at fault and says why beside it; a refusal no field explains
       stays in the box at the top, inside the form; a form refused with a file chosen asks for the
       file again, one without does not (`FieldErrorTest`)
+- [x] The edit form is headed with the article's own title, also when refused; "Cancel" leads back
+      to the article, or to the guide from a new article's form; a title taken by a different
+      article is refused naming it (`EditFormTest`)
 - [x] In a browser, a word becomes a chip on Enter or a comma, × removes it, a stored tag is
       suggested while typed, and the chips are stored as the submission's tags, with no policy
       violation (`BrowserTagFieldTest`)

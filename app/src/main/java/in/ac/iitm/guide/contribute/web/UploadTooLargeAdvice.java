@@ -5,6 +5,7 @@ import in.ac.iitm.guide.contribute.internal.ArticleNotPublishedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
 import in.ac.iitm.guide.contribute.web.SubmissionController.FormPage;
 import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.taxonomy.Tags;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,10 +30,12 @@ class UploadTooLargeAdvice {
 
     private final SubmissionService submissions;
     private final MediaAssets media;
+    private final Tags tags;
 
-    UploadTooLargeAdvice(SubmissionService submissions, MediaAssets media) {
+    UploadTooLargeAdvice(SubmissionService submissions, MediaAssets media, Tags tags) {
         this.submissions = submissions;
         this.media = media;
+        this.tags = tags;
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
@@ -40,8 +43,12 @@ class UploadTooLargeAdvice {
     String tooLarge(HttpServletRequest request, Model model) {
         var error = "The attachment is larger than the guide accepts, so nothing was saved. " + media.accepted()
                 + " Fill in the form again with a smaller file.";
-        model.addAttribute("form", formFor(request.getRequestURI()).refused(error, null, null));
+        var form = formFor(request.getRequestURI()).refused(error, null, null);
+        model.addAttribute("form", form);
         model.addAttribute("accepted", media.accepted());
+        // The tag list as SubmissionController gives it (fix 3.6, ADR-0022).
+        model.addAttribute("tagChoices", form.tagChoices(tags.inUse()));
+        model.addAttribute("tagMost", Tags.MOST);
         return "contribute/SubmissionForm";
     }
 
@@ -50,7 +57,8 @@ class UploadTooLargeAdvice {
         if (edit.matches()) {
             try {
                 var editing = submissions.editing(edit.group(1));
-                return FormPage.forEdit(edit.group(1), editing.article(), editing.draft());
+                return FormPage.forEdit(
+                        edit.group(1), editing.article(), editing.draft().title(), editing.draft());
             } catch (ArticleNotPublishedException e) {
                 // The article went while the file was on its way; the empty form is still somewhere to go.
             }
