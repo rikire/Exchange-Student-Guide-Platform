@@ -12,9 +12,9 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 
 ```mermaid
 pie showData title Requirements by status
-    "done" : 36
+    "done" : 37
     "in-progress" : 0
-    "planned" : 6
+    "planned" : 5
 ```
 
 Each slice with the requirements its features cover: green when all are done, amber when
@@ -33,8 +33,8 @@ flowchart LR
     search["search · 3/3 done"]:::done
     shared["shared · 2/2 done"]:::done
     taxonomy["taxonomy · 2/2 done"]:::done
-    wikilink["wikilink · 2/2 done"]:::done
-    unmapped["no feature yet: FR-005, FR-021, FR-022, FR-023, FR-024, FR-028"]:::unmapped
+    wikilink["wikilink · 3/3 done"]:::done
+    unmapped["no feature yet: FR-021, FR-022, FR-023, FR-024, FR-028"]:::unmapped
     articleview --> backlink
     articleview --> media
     articleview --> search
@@ -82,9 +82,9 @@ flowchart LR
 | search | 3 | 3 | done |
 | shared | 2 | 2 | done |
 | taxonomy | 2 | 2 | done |
-| wikilink | 2 | 2 | done |
+| wikilink | 3 | 3 | done |
 
-No feature covers yet: FR-005, FR-021, FR-022, FR-023, FR-024, FR-028.
+No feature covers yet: FR-021, FR-022, FR-023, FR-024, FR-028.
 
 ## Requirements not done
 
@@ -93,7 +93,6 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-005 | planned | could | Creating an article from a red link | 1 | 0 | 1 |
 | FR-021 | planned | could | Reporting an article | 2 | 1 | 1 |
 | FR-022 | planned | could | Closing a report | 1 | 0 | 1 |
 | FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |

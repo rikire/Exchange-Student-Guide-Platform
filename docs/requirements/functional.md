@@ -155,7 +155,8 @@ THEN it is not styled as a red link
 
 ### FR-005 — Creating an article from a red link
 
-**Status:** planned
+**Status:** done — accepted by the human on 2 Oct on the stand: a red link leads to an invitation
+that opens the submission form with the title filled in (FEAT-001)
 **Priority:** could
 
 When a reader clicks a red link, the system shall take them to a page inviting them to create the
