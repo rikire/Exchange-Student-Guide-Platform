@@ -31,11 +31,14 @@ filled from `Tags.inUse`. FEAT-021's form for publishing directly was not in tha
 covers the review page, not this one.
 
 **Consequence:** the moderator types tags into five bare fields with no suggestions, so a stored tag
-is retyped and can be misspelled into a new one; the two forms look and behave differently.
+is retyped and can be misspelled into a new one; a refusal is shown only in the box at the top, not
+at the field (fix 3.6's step e did the contributor's form); the two forms look and behave
+differently.
 
 **How to fix:** give `DirectPublishingController` the same tag list (`Tags.inUse`, `Tags.MOST`) and
-the template the `<select class="tag-select">` with `tags.js` and `tags.css`, as `SubmissionForm.html`
-has; a `DirectPublishingTest` case for the selected tags.
+the template the `<select class="tag-select">` with `tags.js` and `tags.css`, and the field errors
+(`SubmissionRejectedException.field()`, `form.css`), as `SubmissionForm.html` has; `DirectPublishingTest`
+cases for the selected tags and a marked field.
 
 **Trigger:** fix 3.7, which brings the same field to the review page, or the human's look at the
 moderator's pages, whichever is first.

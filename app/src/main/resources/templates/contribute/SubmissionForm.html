@@ -9,27 +9,40 @@
     <h1 class="article-title" th:text="${form.heading}">Submit a new article</h1>
     <p class="form-note">Anyone can contribute, no account needed. OGE reviews every submission before it is published.</p>
 
-    <div class="form-error" role="alert" th:if="${form.error}">
-      <p th:text="${form.error}">What to fix.</p>
-      <p class="page-actions" th:if="${form.linkHref}"><a th:href="@{${form.linkHref}}" th:text="${form.linkLabel}">Link</a></p>
-    </div>
-
     <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
     <form class="submission-form" method="post" enctype="multipart/form-data" th:action="@{${form.action}}">
+      <!-- Inside the form, so no wider than its fields (fix 3.6). A refusal about one field is said
+           beside it; the box then only announces it. -->
+      <div class="form-error" role="alert" th:if="${form.error}">
+        <p th:if="${form.errorField}">The article was not sent. Fix the field marked below.</p>
+        <th:block th:unless="${form.errorField}">
+          <p th:text="${form.error}">What to fix.</p>
+          <p class="page-actions" th:if="${form.linkHref}"><a th:href="@{${form.linkHref}}" th:text="${form.linkLabel}">Link</a></p>
+        </th:block>
+      </div>
       <input type="hidden" name="article" th:if="${form.article}" th:value="${form.article}">
       <label class="field">
         <span class="field-label">Title</span>
-        <input class="field-input" type="text" name="title" required maxlength="255" th:value="${form.title}">
+        <input class="field-input" type="text" id="title" name="title" required maxlength="255" th:value="${form.title}"
+               th:aria-invalid="${form.invalid('title')} ? 'true'" th:aria-describedby="${form.invalid('title')} ? 'title-error'">
         <span class="field-help">Must be unique among published articles.</span>
+        <p class="field-error" id="title-error" th:if="${form.invalid('title')}">
+          <span th:text="${form.error}">What to fix.</span>
+          <a th:if="${form.linkHref}" th:href="@{${form.linkHref}}" th:text="${form.linkLabel}">Link</a>
+        </p>
       </label>
       <label class="field">
         <span class="field-label">Summary</span>
-        <input class="field-input" type="text" name="summary" required th:maxlength="${summaryLimit}" th:value="${form.summary}">
+        <input class="field-input" type="text" id="summary" name="summary" required th:maxlength="${summaryLimit}" th:value="${form.summary}"
+               th:aria-invalid="${form.invalid('summary')} ? 'true'" th:aria-describedby="${form.invalid('summary')} ? 'summary-error'">
+        <p class="field-error" id="summary-error" th:if="${form.invalid('summary')}" th:text="${form.error}">What to fix.</p>
       </label>
       <label class="field field-editor">
         <span class="field-label">Body (Markdown)</span>
         <!-- data-draft names the draft the editor keeps in the browser: one per form (editor.js). -->
-        <textarea class="field-textarea" name="body" required th:maxlength="${bodyLimit}" th:data-draft="${form.action}" th:text="${form.body}"></textarea>
+        <textarea class="field-textarea" id="body" name="body" required th:maxlength="${bodyLimit}" th:data-draft="${form.action}" th:text="${form.body}"
+                  th:aria-invalid="${form.invalid('body')} ? 'true'" th:aria-describedby="${form.invalid('body')} ? 'body-error'"></textarea>
+        <p class="field-error" id="body-error" th:if="${form.invalid('body')}" th:text="${form.error}">What to fix.</p>
         <!-- th:inline="none": Thymeleaf would read [[Title]] as its own inline expression (F-5). -->
         <span class="field-help" th:inline="none">Link to another article with [[Title]].</span>
       </label>
@@ -39,19 +52,28 @@
         <label class="field-label" for="attachment">Attachment (optional)</label>
         <!-- accept= only narrows the file picker; the type is read from the content (FEAT-009).
              files.js makes this a FilePond drop zone that still posts the file as attachment (ADR-0022). -->
-        <input class="field-input file-drop" type="file" id="attachment" name="attachment" accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/x-m4v,video/3gpp,video/3gpp2,video/webm,video/x-matroska,video/x-msvideo,video/mpeg,.mkv,.m4v,.3gp,.avi,.mpg,.mpeg">
+        <input class="field-input file-drop" type="file" id="attachment" name="attachment"
+               th:aria-invalid="${form.invalid('attachment')} ? 'true'"
+               th:aria-describedby="${form.invalid('attachment') or form.fileChosen} ? 'attachment-error'"
+               accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/x-m4v,video/3gpp,video/3gpp2,video/webm,video/x-matroska,video/x-msvideo,video/mpeg,.mkv,.m4v,.3gp,.avi,.mpg,.mpeg">
         <span class="field-help" th:text="${accepted}">One photo up to 10 MB, a PDF up to 20 MB or an MP4 video up to 200 MB.</span>
         <!-- Walkthrough fix 1.4 (the human, 1 Oct): a photo is re-encoded and loses its metadata, a video is stored as it came. -->
         <span class="field-help">A video keeps what the camera recorded, which can include where it was filmed.</span>
+        <p class="field-error" id="attachment-error" th:if="${form.invalid('attachment') or form.fileChosen}">
+          <span th:if="${form.invalid('attachment')}" th:text="${form.error}">What to fix.</span>
+          <span th:if="${form.fileChosen}">Choose the file again: a browser does not keep it when the form comes back.</span>
+        </p>
       </div>
       <label class="field" for="tags">
         <span class="field-label">Suggested tags</span>
         <!-- Fix 3.6 (ADR-0022): tags.js turns this list into Tom Select's chips; each chip is one
              tags field in the post, as the five text fields were. -->
-        <select class="field-input tag-select" id="tags" name="tags" multiple th:data-most="${tagMost}">
+        <select class="field-input tag-select" id="tags" name="tags" multiple th:data-most="${tagMost}"
+                th:aria-invalid="${form.invalid('tags')} ? 'true'" th:aria-describedby="${form.invalid('tags')} ? 'tags-error'">
           <option th:each="tag : ${tagChoices}" th:value="${tag}" th:text="${tag}" th:selected="${#lists.contains(form.tags, tag)}">visa</option>
         </select>
         <span class="field-help" th:text="|Up to ${tagMost}. Press Enter or type a comma after each.|">Up to 10. Press Enter or type a comma after each.</span>
+        <p class="field-error" id="tags-error" th:if="${form.invalid('tags')}" th:text="${form.error}">What to fix.</p>
       </label>
       <div class="button-row">
         <button class="button-primary" type="submit">Submit for review</button>
@@ -76,6 +98,7 @@
     <link rel="stylesheet" th:href="@{/webjars/filepond/4.32.12/dist/filepond.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/filepond-plugin-image-preview/4.6.11/dist/filepond-plugin-image-preview.min.css}">
     <link rel="stylesheet" th:href="@{/css/files.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
     <script th:src="@{/webjars/filepond-plugin-image-preview/4.6.11/dist/filepond-plugin-image-preview.min.js}" defer></script>
     <script th:src="@{/webjars/filepond/4.32.12/dist/filepond.min.js}" defer></script>
     <script th:src="@{/js/files.js}" defer></script>

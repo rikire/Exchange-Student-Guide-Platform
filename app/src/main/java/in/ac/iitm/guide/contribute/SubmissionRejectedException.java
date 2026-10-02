@@ -14,11 +14,24 @@ import java.util.Optional;
 // trace:FR-024
 public class SubmissionRejectedException extends RuntimeException {
 
+    /** The form field a refusal is about, so the form can mark it and say why beside it (fix 3.6). */
+    public enum Field {
+        TITLE,
+        SUMMARY,
+        BODY,
+        TAGS,
+        ATTACHMENT
+    }
+
     private final String collision;
     private final boolean titleTaken;
+    private final Field field;
 
-    public SubmissionRejectedException(String message) {
-        this(message, null, false);
+    public SubmissionRejectedException(String message, Field field) {
+        super(message);
+        this.collision = null;
+        this.titleTaken = false;
+        this.field = field;
     }
 
     /** @param titleTaken whether another article already has the title, rather than the draft being incomplete */
@@ -26,6 +39,12 @@ public class SubmissionRejectedException extends RuntimeException {
         super(message);
         this.collision = collision;
         this.titleTaken = titleTaken;
+        this.field = Field.TITLE;
+    }
+
+    /** @return the field at fault */
+    public Field field() {
+        return field;
     }
 
     /** @return whether another article already has the title; the moderator's form answers {@code 409} for it */

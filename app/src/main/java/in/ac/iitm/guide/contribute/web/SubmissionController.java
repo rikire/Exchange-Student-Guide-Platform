@@ -2,6 +2,7 @@ package in.ac.iitm.guide.contribute.web;
 
 import in.ac.iitm.guide.contribute.Draft;
 import in.ac.iitm.guide.contribute.SubmissionRejectedException;
+import in.ac.iitm.guide.contribute.SubmissionRejectedException.Field;
 import in.ac.iitm.guide.contribute.internal.ArticleNotPublishedException;
 import in.ac.iitm.guide.contribute.internal.ArticleRemovedWhileEditingException;
 import in.ac.iitm.guide.contribute.internal.BodyPreview;
@@ -77,7 +78,12 @@ class SubmissionController {
         var address = request.getRemoteAddr();
         var wait = limits.takeSubmission(address);
         if (wait.isPresent()) {
-            return tooMany(model, response, FormPage.forNewArticle(draft), wait.get());
+            return tooMany(
+                    model,
+                    response,
+                    FormPage.forNewArticle(draft)
+                            .withFileChosen(chosen(attachment).isPresent()),
+                    wait.get());
         }
         var accepted = false;
         try {
@@ -87,7 +93,8 @@ class SubmissionController {
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(slug -> ArticleAddress.pathOf(slug) + "/edit");
             var page = FormPage.forNewArticle(draft)
-                    .refused(e.getMessage(), link.orElse(null), "Propose an edit to the existing article");
+                    .refusedAt(e.field(), e.getMessage(), link.orElse(null), "Propose an edit to the existing article")
+                    .withFileChosen(chosen(attachment).isPresent());
             return refused(model, response, page);
         } finally {
             if (!accepted) {
@@ -120,7 +127,12 @@ class SubmissionController {
         var client = request.getRemoteAddr();
         var wait = limits.takeSubmission(client);
         if (wait.isPresent()) {
-            return tooMany(model, response, FormPage.forEdit(address, article, draft), wait.get());
+            return tooMany(
+                    model,
+                    response,
+                    FormPage.forEdit(address, article, draft)
+                            .withFileChosen(chosen(attachment).isPresent()),
+                    wait.get());
         }
         var accepted = false;
         try {
@@ -130,7 +142,8 @@ class SubmissionController {
         } catch (SubmissionRejectedException e) {
             var link = e.collision().map(ArticleAddress::pathOf);
             var page = FormPage.forEdit(address, article, draft)
-                    .refused(e.getMessage(), link.orElse(null), "Open that article");
+                    .refusedAt(e.field(), e.getMessage(), link.orElse(null), "Open that article")
+                    .withFileChosen(chosen(attachment).isPresent());
             return refused(model, response, page);
         } catch (ArticleRemovedWhileEditingException e) {
             response.setStatus(HttpStatus.CONFLICT.value());
@@ -141,7 +154,8 @@ class SubmissionController {
                                     "This article was removed while you were editing it, so the edit cannot be sent."
                                             + " Your text is still below; copy it if you want to keep it.",
                                     null,
-                                    null));
+                                    null)
+                            .withFileChosen(chosen(attachment).isPresent()));
         } finally {
             if (!accepted) {
                 limits.giveBackSubmission(client);
@@ -219,7 +233,12 @@ class SubmissionController {
         return form(model, page.refused(error, null, null));
     }
 
-    /** What the form template shows. {@code tags} are the submission's own, selected in the tag list. */
+    /**
+     * What the form template shows. {@code tags} are the submission's own, selected in the tag list.
+     * {@code errorField} is the field a refusal is about, marked and explained beside it; without one
+     * the error stays in the box at the top. {@code fileChosen}: the refused form had a file, which no
+     * browser keeps across a page, so the form asks for it again (fix 3.6).
+     */
     record FormPage(
             String heading,
             String action,
@@ -230,7 +249,9 @@ class SubmissionController {
             String error,
             String linkHref,
             String linkLabel,
-            UUID article) {
+            UUID article,
+            Field errorField,
+            boolean fileChosen) {
 
         static FormPage forNewArticle(Draft draft) {
             return of("Submit a new article", "/submissions", draft, null);
@@ -254,7 +275,9 @@ class SubmissionController {
                     null,
                     null,
                     null,
-                    article);
+                    article,
+                    null,
+                    false);
         }
 
         /**
@@ -269,7 +292,44 @@ class SubmissionController {
         }
 
         FormPage refused(String error, String linkHref, String linkLabel) {
-            return new FormPage(heading, action, title, summary, body, tags, error, linkHref, linkLabel, article);
+            return refusedAt(null, error, linkHref, linkLabel);
+        }
+
+        FormPage refusedAt(Field field, String error, String linkHref, String linkLabel) {
+            return new FormPage(
+                    heading,
+                    action,
+                    title,
+                    summary,
+                    body,
+                    tags,
+                    error,
+                    linkHref,
+                    linkLabel,
+                    article,
+                    field,
+                    fileChosen);
+        }
+
+        FormPage withFileChosen(boolean chosen) {
+            return new FormPage(
+                    heading,
+                    action,
+                    title,
+                    summary,
+                    body,
+                    tags,
+                    error,
+                    linkHref,
+                    linkLabel,
+                    article,
+                    errorField,
+                    chosen);
+        }
+
+        /** @param name a form field's name, as the template writes it */
+        public boolean invalid(String name) {
+            return errorField != null && errorField.name().equalsIgnoreCase(name);
         }
     }
 

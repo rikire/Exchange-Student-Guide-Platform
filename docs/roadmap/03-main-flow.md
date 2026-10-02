@@ -394,7 +394,9 @@ design pass (3) is the largest piece and starts with redrawn screens.
       failed once in five full browser runs and never alone; the cause is not found. Recorded as
       DEBT-023. **Editor built 2 Oct (d):** the `[[link]]` control, an `aria-label` on every
       control, the toolbar pinned while the body scrolls, and the editor at the frame's width
-      (FEAT-010).
+      (FEAT-010). **Errors built 2 Oct (e):** a refusal names its field; the form marks it and
+      says why beside it, the box sits inside the form, and a refused form with a file asks for the
+      file again (FEAT-005).
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**

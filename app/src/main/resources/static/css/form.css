@@ -1,0 +1,15 @@
+/* Fix 3.6: an error at the field. The message stands beside the field at fault, and the field's
+   border turns red; the text stays in the site's ink, which keeps WCAG AA's contrast (NFR-007). */
+
+.field-error {
+  margin: 0;
+  padding-left: var(--space-2);
+  border-left: 3px solid var(--red);
+  color: var(--ink);
+  font-weight: 600;
+}
+.field-error span { display: block; }
+
+[aria-invalid="true"],
+[aria-invalid="true"] + .EasyMDEContainer .CodeMirror,
+select[aria-invalid="true"] + .ts-wrapper .ts-control { border-color: var(--red); }

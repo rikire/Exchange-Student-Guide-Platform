@@ -2,6 +2,7 @@ package in.ac.iitm.guide.contribute.internal;
 
 import in.ac.iitm.guide.contribute.Draft;
 import in.ac.iitm.guide.contribute.SubmissionRejectedException;
+import in.ac.iitm.guide.contribute.SubmissionRejectedException.Field;
 import in.ac.iitm.guide.contribute.persistence.ContributeArticleRepository;
 import in.ac.iitm.guide.contribute.persistence.SubmissionRepository;
 import in.ac.iitm.guide.media.MediaAssets;
@@ -197,27 +198,29 @@ public class SubmissionService {
     private static String check(Draft draft) {
         var title = draft.title().strip();
         if (title.isEmpty()) {
-            throw new SubmissionRejectedException("Give the article a title.");
+            throw new SubmissionRejectedException("Give the article a title.", Field.TITLE);
         }
         if (title.length() > LONGEST_TITLE) {
-            throw new SubmissionRejectedException("The title is longer than " + LONGEST_TITLE + " characters.");
+            throw new SubmissionRejectedException(
+                    "The title is longer than " + LONGEST_TITLE + " characters.", Field.TITLE);
         }
         if (draft.summary().isBlank()) {
-            throw new SubmissionRejectedException("Give the article a summary.");
+            throw new SubmissionRejectedException("Give the article a summary.", Field.SUMMARY);
         }
         if (draft.summary().strip().length() > Article.LONGEST_SUMMARY) {
             throw new SubmissionRejectedException(
-                    "The summary is longer than " + Article.LONGEST_SUMMARY + " characters.");
+                    "The summary is longer than " + Article.LONGEST_SUMMARY + " characters.", Field.SUMMARY);
         }
         if (draft.body().isBlank()) {
-            throw new SubmissionRejectedException("The article has no text.");
+            throw new SubmissionRejectedException("The article has no text.", Field.BODY);
         }
         if (draft.body().length() > BodyPreview.LONGEST_BODY) {
             throw new SubmissionRejectedException(
-                    "The text is longer than " + BodyPreview.LONGEST_BODY + " characters.");
+                    "The text is longer than " + BodyPreview.LONGEST_BODY + " characters.", Field.BODY);
         }
         return ArticleAddress.slugOf(title)
-                .orElseThrow(() -> new SubmissionRejectedException("The title needs at least one letter or digit."));
+                .orElseThrow(() ->
+                        new SubmissionRejectedException("The title needs at least one letter or digit.", Field.TITLE));
     }
 
     private String save(Draft draft, SubmissionType type, UUID target, Optional<Upload> attachment) {
@@ -233,7 +236,7 @@ public class SubmissionService {
         try {
             submission.setTags(tags.named(draft.tags()));
         } catch (TagRejectedException e) {
-            throw new SubmissionRejectedException(e.getMessage() + ".");
+            throw new SubmissionRejectedException(e.getMessage() + ".", Field.TAGS);
         }
         var saved = submissions.save(submission);
         try {
@@ -241,7 +244,7 @@ public class SubmissionService {
             // the whole form again.
             attachment.ifPresent(upload -> media.attach(saved.getId(), upload));
         } catch (MediaRejectedException e) {
-            throw new SubmissionRejectedException(e.getMessage());
+            throw new SubmissionRejectedException(e.getMessage(), Field.ATTACHMENT);
         }
         return saved.getSubmissionNumber();
     }

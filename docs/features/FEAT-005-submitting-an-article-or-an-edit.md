@@ -97,6 +97,12 @@ Each follows from something already decided; each has a test.
   and at most `Tags.MOST` chips are taken. The post is one `tags` field per chip, as before, so the
   controller reads it unchanged. Without the script the list still offers the stored tags, but a new
   one cannot be typed.
+- **A refusal is shown at the field it is about** (fix 3.6). `SubmissionRejectedException` names
+  the field (`Field`: title, summary, body, tags, attachment); the form marks it `aria-invalid`,
+  puts the message beside it, tied by `aria-describedby`, and the box at the top of the form only
+  says that a field below is marked. A refusal no field explains (`409`, `429`) stays in the box.
+  The box is inside the form, so no wider than its fields. A form refused with a file chosen says
+  beside the file field to choose it again: no browser keeps a file across a page.
 - **An edit may keep its own title** or change its capitalisation; only a *different* article's
   address collides.
 - **The submission number** is `SUB-` and 12 Crockford base32 characters in groups of four, 60 bits
@@ -138,6 +144,9 @@ Each follows from something already decided; each has a test.
 - [x] The form offers every tag of a live article once, A–Z and at most 500, and none carried only by
       a removed article or a submission; the edit form and a refused form have the submission's own
       tags selected (`TagFieldTest`)
+- [x] A refused form marks the field at fault and says why beside it; a refusal no field explains
+      stays in the box at the top, inside the form; a form refused with a file chosen asks for the
+      file again, one without does not (`FieldErrorTest`)
 - [x] In a browser, a word becomes a chip on Enter or a comma, × removes it, a stored tag is
       suggested while typed, and the chips are stored as the submission's tags, with no policy
       violation (`BrowserTagFieldTest`)
