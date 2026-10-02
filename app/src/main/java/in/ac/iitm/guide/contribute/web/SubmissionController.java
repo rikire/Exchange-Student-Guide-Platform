@@ -11,6 +11,7 @@ import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.web.RetryAfter;
+import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -43,17 +45,16 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 class SubmissionController {
 
-    /** The form always offers this many tag fields, more when an article already has more tags. */
-    private static final int TAG_FIELDS = 5;
-
     private final SubmissionService submissions;
     private final MediaAssets media;
     private final ContributionLimits limits;
+    private final Tags tags;
 
-    SubmissionController(SubmissionService submissions, MediaAssets media, ContributionLimits limits) {
+    SubmissionController(SubmissionService submissions, MediaAssets media, ContributionLimits limits, Tags tags) {
         this.submissions = submissions;
         this.media = media;
         this.limits = limits;
+        this.tags = tags;
     }
 
     /** {@code title} comes from a red link's invitation (FR-005); the form is empty without it. */
@@ -183,7 +184,7 @@ class SubmissionController {
         return Optional.of(new Upload(attachment.getOriginalFilename(), attachment.getSize(), attachment));
     }
 
-    /** The form's tag fields arrive whether or not they were filled in; an empty one is not a tag. */
+    /** A browser without the tag script can still send an empty value; an empty one is not a tag. */
     private static List<String> filled(List<String> tags) {
         return tags.stream().filter(tag -> !tag.isBlank()).toList();
     }
@@ -197,6 +198,8 @@ class SubmissionController {
         model.addAttribute("accepted", media.accepted());
         model.addAttribute("summaryLimit", Article.LONGEST_SUMMARY);
         model.addAttribute("bodyLimit", BodyPreview.LONGEST_BODY);
+        model.addAttribute("tagChoices", page.tagChoices(tags.inUse()));
+        model.addAttribute("tagMost", Tags.MOST);
         return "contribute/SubmissionForm";
     }
 
@@ -216,7 +219,7 @@ class SubmissionController {
         return form(model, page.refused(error, null, null));
     }
 
-    /** What the form template shows. {@code tags} is padded with empty fields to fill in. */
+    /** What the form template shows. {@code tags} are the submission's own, selected in the tag list. */
     record FormPage(
             String heading,
             String action,
@@ -241,12 +244,28 @@ class SubmissionController {
         }
 
         private static FormPage of(String heading, String action, Draft draft, UUID article) {
-            var fields = new ArrayList<>(draft.tags());
-            do {
-                fields.add("");
-            } while (fields.size() < TAG_FIELDS);
             return new FormPage(
-                    heading, action, draft.title(), draft.summary(), draft.body(), fields, null, null, null, article);
+                    heading,
+                    action,
+                    draft.title(),
+                    draft.summary(),
+                    draft.body(),
+                    draft.tags(),
+                    null,
+                    null,
+                    null,
+                    article);
+        }
+
+        /**
+         * Fix 3.6 (ADR-0022): the tag list's options — this submission's tags as typed, then every
+         * tag in use that none of them is stored as ({@link Tags#storedAs}), so none is offered twice.
+         */
+        List<String> tagChoices(List<String> inUse) {
+            var typed = tags.stream().map(Tags::storedAs).collect(Collectors.toSet());
+            var choices = new ArrayList<>(tags);
+            inUse.stream().filter(name -> !typed.contains(name)).forEach(choices::add);
+            return choices;
         }
 
         FormPage refused(String error, String linkHref, String linkLabel) {

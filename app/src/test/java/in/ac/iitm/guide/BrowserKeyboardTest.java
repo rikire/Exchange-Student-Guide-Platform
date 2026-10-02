@@ -208,7 +208,7 @@ class BrowserKeyboardTest {
             """
             () => {
               const e = document.activeElement;
-              const style = getComputedStyle(e.closest('.CodeMirror') || e);
+              const style = getComputedStyle(e.closest('.CodeMirror') || e.closest('.ts-control') || e);
               const outline = style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
               return outline || style.boxShadow !== 'none';
             }

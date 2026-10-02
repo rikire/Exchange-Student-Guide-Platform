@@ -378,6 +378,13 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — decided 1 Oct: Tom Select for tags, FilePond with image previews for the file, by a new ADR
       — check: `SubmissionFlowTest` unchanged and green; the human tries the form on desktop and phone
       — owner: **Mikhail**
+      **ADR-0022 accepted 2 Oct**, done in steps a–g, each accepted by the human before the next.
+      Reading the FilePond bundle found that the image preview needs `img-src blob:` and
+      `worker-src blob:`; the human chose to widen the policy (option A). **Tags built 2 Oct (b):**
+      the form had no list of stored tags to suggest from, so the server now renders the field as a
+      `<select multiple>` of the tags in use (`Tags.inUse`), and Tom Select makes it chips
+      (FEAT-005). `BrowserLayoutTest` and `BrowserKeyboardTest` now pass over a visually hidden
+      control and look for the ring on Tom Select's control, as they did for CodeMirror.
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**

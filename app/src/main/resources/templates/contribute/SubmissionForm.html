@@ -41,12 +41,15 @@
         <!-- Walkthrough fix 1.4 (the human, 1 Oct): a photo is re-encoded and loses its metadata, a video is stored as it came. -->
         <span class="field-help">A video keeps what the camera recorded, which can include where it was filmed.</span>
       </label>
-      <fieldset class="field">
-        <legend class="field-label">Suggested tags</legend>
-        <div class="tag-fields">
-          <input class="field-input" type="text" name="tags" maxlength="64" th:each="tag : ${form.tags}" th:value="${tag}" aria-label="Tag">
-        </div>
-      </fieldset>
+      <label class="field" for="tags">
+        <span class="field-label">Suggested tags</span>
+        <!-- Fix 3.6 (ADR-0022): tags.js turns this list into Tom Select's chips; each chip is one
+             tags field in the post, as the five text fields were. -->
+        <select class="field-input tag-select" id="tags" name="tags" multiple th:data-most="${tagMost}">
+          <option th:each="tag : ${tagChoices}" th:value="${tag}" th:text="${tag}" th:selected="${#lists.contains(form.tags, tag)}">visa</option>
+        </select>
+        <span class="field-help" th:text="|Up to ${tagMost}. Press Enter or type a comma after each.|">Up to 10. Press Enter or type a comma after each.</span>
+      </label>
       <div class="button-row">
         <button class="button-primary" type="submit">Submit for review</button>
         <a class="button-quiet button-back" th:href="@{/}">Cancel</a>
@@ -60,6 +63,11 @@
     <link rel="stylesheet" th:href="@{/css/editor.css}">
     <script th:src="@{/webjars/easymde/2.21.0/dist/easymde.min.js}" defer></script>
     <script th:src="@{/js/editor.js}" defer></script>
+    <!-- The tag field (ADR-0022); the version is the root pom's tom-select.version. -->
+    <link rel="stylesheet" th:href="@{/webjars/tom-select/2.6.2/dist/css/tom-select.min.css}">
+    <link rel="stylesheet" th:href="@{/css/tags.css}">
+    <script th:src="@{/webjars/tom-select/2.6.2/dist/js/tom-select.complete.min.js}" defer></script>
+    <script th:src="@{/js/tags.js}" defer></script>
   </main>
 </body>
 </html>

@@ -78,7 +78,7 @@ Each follows from something already decided; each has a test.
 - **A title with no letters or digits is refused with `422`**: it has no address and "cannot be
   published" (ui-routes.md, "Article identity in a URL").
 - **Title, summary and body are required**; blank after trimming is empty. The title is at most 255
-  characters (the column). Blank tag fields are ignored; a tag longer than 64 characters (the column)
+  characters (the column). A blank tag is ignored; a tag longer than 64 characters (the column)
   is refused with `422` by `taxonomy`.
 - **The summary is at most 300 characters, the body 100,000, and at most 10 distinct tags**, each
   refused with `422` (the human, 1 Oct, walkthrough F-32 and F-33). The summary's 300 is
@@ -90,6 +90,13 @@ Each follows from something already decided; each has a test.
 - **Tags go through `taxonomy`**, which trims and lower-cases them and creates the missing ones
   (ADR-0005). A tag suggested on a submission that is never approved stays in `tag`; the landing page
   lists only tags on live articles, so it is not shown anywhere.
+- **The tag field is one `<select multiple name="tags">` under Tom Select** (fix 3.6, ADR-0022). Its
+  options are the submission's own tags, selected and as typed, then every tag of a live article that
+  none of them is stored as (`Tags.storedAs`), A–Z, at most 500 (`Tags.inUse`, ADR-0010). A word
+  becomes a chip on Enter or a comma, × removes it, a typed word is kept when the field loses focus,
+  and at most `Tags.MOST` chips are taken. The post is one `tags` field per chip, as before, so the
+  controller reads it unchanged. Without the script the list still offers the stored tags, but a new
+  one cannot be typed.
 - **An edit may keep its own title** or change its capitalisation; only a *different* article's
   address collides.
 - **The submission number** is `SUB-` and 12 Crockford base32 characters in groups of four, 60 bits
@@ -128,6 +135,12 @@ Each follows from something already decided; each has a test.
 - [x] A submission is reachable from no public page: its title is on neither `/` nor an article
       address
 - [x] Submission numbers are not ordered by issue and are drawn from `SecureRandom` (NFR-006)
+- [x] The form offers every tag of a live article once, A–Z and at most 500, and none carried only by
+      a removed article or a submission; the edit form and a refused form have the submission's own
+      tags selected (`TagFieldTest`)
+- [x] In a browser, a word becomes a chip on Enter or a comma, × removes it, a stored tag is
+      suggested while typed, and the chips are stored as the submission's tags, with no policy
+      violation (`BrowserTagFieldTest`)
 - [x] A number is found ignoring case and hyphens; a number never issued is `404`
 - [x] A POST without a CSRF token is refused and stores nothing
 - [x] A form still submits after its session has expired

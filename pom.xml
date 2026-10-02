@@ -44,6 +44,9 @@
          5.4.3. PhotoViewer.html and photos.js name this version in their paths. -->
     <photoswipe.version>5.4.3</photoswipe.version>
     <relative-time-element.version>5.3.1</relative-time-element.version>
+    <!-- The tag field (ADR-0022), checked on Maven Central on 2 Oct: WebJar and npm both at 2.6.2.
+         SubmissionForm.html names this version in its paths. -->
+    <tom-select.version>2.6.2</tom-select.version>
 
     <!-- Verified against Maven Central on 2026-09-25 (0.30.0, released 2026-08-06); Spring Boot's BOM
          does not manage it. Chosen over flexmark-java (no release since 2023-05); see

@@ -1,0 +1,47 @@
+/* The tag field of fix 3.6 (ADR-0022), over Tom Select's own stylesheet, which loads first: its
+   greys and blues replaced by the site's tokens, and every control a 44-px target (NFR-008). */
+
+/* Tom Select sets 13 px on these three; body text is never under 16 px (BrowserLayoutTest). */
+.ts-control, .ts-control input, .ts-dropdown { font-family: var(--font-body); font-size: var(--text-body); line-height: 1.5; }
+
+.ts-wrapper .ts-control {
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  gap: var(--space-1);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  box-shadow: none;
+}
+/* Tom Select pins the input's min-height to 0 with !important; height it leaves alone. */
+.ts-wrapper .ts-control > input { height: var(--target); font: inherit; color: var(--ink); }
+/* Tom Select takes the outline off its input with !important, so the ring goes on the control,
+   as editor.css does for CodeMirror (NFR-007). */
+.ts-wrapper.focus .ts-control { outline: 2px solid var(--maroon); outline-offset: 2px; box-shadow: none; }
+
+.ts-wrapper.multi .ts-control > .item {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 0 0 var(--space-2);
+  color: var(--ink);
+  background: var(--sand);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+.ts-wrapper.multi .ts-control > .item.active { color: var(--paper); background: var(--maroon); border-color: var(--maroon); }
+
+.ts-wrapper.plugin-remove_button .item .remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target);
+  min-height: var(--target);
+  margin-left: 0;
+  color: inherit;
+  border-left: 0;
+}
+
+.ts-dropdown { color: var(--ink); border-color: var(--line); }
+.ts-dropdown .option, .ts-dropdown .create { min-height: var(--target); display: flex; align-items: center; padding: 0 var(--space-3); }
+.ts-dropdown .active { color: var(--ink); background: var(--sand-raised); }

@@ -89,6 +89,20 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!-- The tag field of fix 3.6 (ADR-0022). dist/js/tom-select.complete.min.js has Sifter and
+         unicode-variants inside it, so the WebJars it declares for them, by version range, are left out. -->
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>tom-select</artifactId>
+      <version>${tom-select.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!-- CSRF on every form (security.md), from FEAT-005; the moderator login (ADR-0009) builds on it. -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

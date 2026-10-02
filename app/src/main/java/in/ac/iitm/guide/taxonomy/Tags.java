@@ -4,10 +4,12 @@ import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.taxonomy.persistence.TagRepository;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,10 @@ public class Tags {
      * Distinct tags on one article or submission, counted after normalising (the human, 1 Oct,
      * walkthrough F-33); every path that writes tags comes through here.
      */
-    static final int MOST = 10;
+    public static final int MOST = 10;
+
+    /** ADR-0010's bound on the names a form offers; the tag index has the same one. */
+    static final int MOST_OFFERED = 500;
 
     private final TagRepository tags;
 
@@ -66,8 +71,26 @@ public class Tags {
         return result;
     }
 
+    /**
+     * Fix 3.6 (ADR-0022): what a form suggests while a tag is typed.
+     *
+     * @return the name of every tag a live article carries, A–Z, at most {@value #MOST_OFFERED}
+     */
+    @Transactional(readOnly = true)
+    public List<String> inUse() {
+        return tags.findNamesInUse(PageRequest.of(0, MOST_OFFERED));
+    }
+
+    /**
+     * The name a typed tag is stored under, before the checks of {@link #named}: two spellings with
+     * the same result are one tag.
+     */
+    public static String storedAs(String name) {
+        return name.strip().toLowerCase(Locale.ROOT);
+    }
+
     private static String normalise(String name) {
-        var tag = name.strip().toLowerCase(Locale.ROOT);
+        var tag = storedAs(name);
         if (tag.isEmpty()) {
             throw new TagRejectedException("A tag is empty");
         }
