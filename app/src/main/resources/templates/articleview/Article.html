@@ -10,6 +10,8 @@
          text on the left and a sidebar of cards on the right; below 1024 px one column in which the
          actions and the contents come under the title and the backlinks after the text. The DOM
          order is that phone order, so the keyboard meets them in it too. -->
+    <!-- FR-021: the thanks after a report, once. -->
+    <p class="flash" role="status" th:if="${notice}" th:text="${notice}">Thanks — OGE will look at it.</p>
     <article class="article-layout">
       <header class="article-head">
         <ul class="chip-row" th:if="${!article.tags.isEmpty()}">
@@ -25,6 +27,8 @@
           <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->
           <button class="button-secondary" type="button" data-print hidden>Save as PDF</button>
           <a class="button-danger" th:if="${article.removePath}" th:href="@{${article.removePath}}">Remove this article</a>
+          <!-- FR-021: the report slice's form, linked by address. -->
+          <a class="button-quiet" th:href="@{${article.reportPath}}">Report this article</a>
         </div>
         <nav class="side-card article-contents" th:unless="${article.contents.isEmpty()}" aria-labelledby="contents-heading">
           <h2 class="side-title" id="contents-heading">Contents</h2>

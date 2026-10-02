@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+  FR-022: the moderator's inbox of open reports, newest first, as docs/design/screens/ReportInbox.html
+  draws it. "Open article" stands where the screen has "Edit article" until FR-024 lets the moderator
+  edit directly (human, 2 Oct).
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Reported articles — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Reported articles</h1>
+    <p class="flash" role="status" th:if="${notice}" th:text="${notice}">Report closed.</p>
+    <p class="empty-note" th:if="${#lists.isEmpty(entries)}">No reports. Nothing is waiting.</p>
+    <ul class="report-list" th:unless="${#lists.isEmpty(entries)}">
+      <li class="side-card report-entry" th:each="entry : ${entries}">
+        <h2 class="article-card-title"><a th:href="@{${entry.path}}" th:text="${entry.title}">Chennai monsoon survival guide</a></h2>
+        <p class="article-card-meta">Reported <relative-time lang="en-GB" hour-cycle="h23" th:datetime="${entry.reportedAt}" th:text="${entry.reported}">28 Sep 2026, 10:00 IST</relative-time></p>
+        <p class="side-title">Message from the reader</p>
+        <p class="report-message" th:text="${entry.message}">The bus route numbers changed.</p>
+        <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
+        <form class="button-row" method="post" th:action="@{/moderate/reports/{id}/close(id=${entry.id})}">
+          <a class="button-secondary" th:href="@{${entry.path}}">Open article</a>
+          <button class="button-primary" type="submit">Close report</button>
+        </form>
+      </li>
+    </ul>
+    <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
+  </main>
+</body>
+</html>

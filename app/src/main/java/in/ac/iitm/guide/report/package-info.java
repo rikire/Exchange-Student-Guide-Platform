@@ -3,10 +3,8 @@
  *
  * <p>Serves FR-021, FR-022.
  *
- * <p><strong>Declared, not yet built.</strong> This package holds only its module declaration: the
- * slice itself is written in phase 2 or 3 (see {@code docs/roadmap/}). It exists now so the
- * boundary described in {@code docs/ai/architecture-rules.md} is enforced by
- * {@code ModularityTest} rather than only described, and so Spring Modulith generates the module
- * canvas from the code instead of from a diagram someone drew.
+ * <p>Built 2 Oct: a report form per published article, its POST, the moderator's inbox under
+ * {@code /moderate/reports} and closing a report. Nothing in the package root is published: no other
+ * slice calls this one; the article page links to {@code /articles/{address}/report} by address.
  */
 package in.ac.iitm.guide.report;

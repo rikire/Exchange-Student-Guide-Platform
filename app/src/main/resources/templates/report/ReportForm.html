@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- FR-021: a reader tells OGE what is wrong with a published article. The message is required. -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Report an article — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Report this article</h1>
+    <p class="article-summary" th:text="${title}">Registering with FRRO</p>
+    <p class="form-note">Tell OGE what is wrong or out of date. Only the office reads it, and it is not published.</p>
+    <div class="form-error" role="alert" th:if="${error}"><p th:text="${error}">Say what is wrong with the article.</p></div>
+    <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
+    <form class="submission-form" method="post" th:action="@{${action}}">
+      <label class="field">
+        <span class="field-label">What is wrong?</span>
+        <textarea class="field-textarea reason-textarea" name="message" required th:maxlength="${messageLimit}" th:text="${message}"></textarea>
+      </label>
+      <div class="button-row">
+        <button class="button-primary" type="submit">Send the report</button>
+        <a class="button-quiet button-back" th:href="@{${articlePath}}">Cancel</a>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

@@ -8,9 +8,9 @@ routes: ["POST /submissions", "POST /articles/{title}/edits", "POST /contribute/
 tables: []
 code:
   - app/src/main/java/in/ac/iitm/guide/contribute/internal/ContributionLimitSettings.java
-  - app/src/main/java/in/ac/iitm/guide/contribute/internal/AddressLimit.java
+  - app/src/main/java/in/ac/iitm/guide/shared/web/AddressLimit.java
   - app/src/main/java/in/ac/iitm/guide/contribute/internal/ContributionLimits.java
-  - app/src/main/java/in/ac/iitm/guide/contribute/web/RetryAfter.java
+  - app/src/main/java/in/ac/iitm/guide/shared/web/RetryAfter.java
   - app/src/main/java/in/ac/iitm/guide/contribute/web/SubmissionController.java
   - app/src/main/java/in/ac/iitm/guide/contribute/web/PreviewController.java
   - app/src/main/java/in/ac/iitm/guide/shared/security/FailedLoginLimit.java

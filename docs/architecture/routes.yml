@@ -417,6 +417,64 @@ routes:
     serves: >-
       FR-026
 
+  - methods: [GET]
+    path: /articles/{title}/report
+    slice: report
+    status: built
+    template: >-
+      `report/ReportForm.html`
+    fields: >-
+      — (the form; fields below belong to the POST)
+    responses: >-
+      `200` for a published article; `404` if `{title}` matches no published article
+    serves: >-
+      FR-021 — "Report this article" in the article's sidebar leads here
+
+  - methods: [POST]
+    path: /articles/{title}/reports
+    slice: report
+    status: built
+    template: >-
+      re-renders `report/ReportForm.html` on `422` and `429`
+    fields: >-
+      CSRF token (hidden, required); `message` (textarea, required, at most 2,000 characters)
+    responses: >-
+      `302` to the article, which then says "Thanks — OGE will look at it."; `422` with the message
+      kept when it is blank or too long, nothing stored; `429` with `Retry-After` past
+      `guide.report.limit`, 10 reports an hour per client address (decided 2 Oct, as ADR-0019);
+      `404` as the GET; `403` without the token
+    serves: >-
+      FR-021
+
+  - methods: [GET]
+    path: /moderate/reports
+    slice: report
+    status: built
+    template: >-
+      `report/ReportInbox.html`
+    fields: >-
+      — (each report's Close is a form to the POST below)
+    responses: >-
+      `200` with the open reports on published articles, newest first, at most 100; `302`
+      unauthenticated
+    serves: >-
+      FR-022's inbox, as `docs/design/screens/ReportInbox.html` draws it, "Open article" in place of
+      the screen's "Edit article" until FR-024; linked from the moderator's header
+
+  - methods: [POST]
+    path: /moderate/reports/{id}/close
+    slice: report
+    status: built
+    template: >-
+      — (redirects)
+    fields: >-
+      CSRF token (hidden, required)
+    responses: >-
+      `302` to `/moderate/reports`, which then says "Report closed."; `404` for an unknown `{id}`;
+      a closed report stays closed; `403` without the token; `302` unauthenticated
+    serves: >-
+      FR-022
+
   - methods: [GET, POST]
     path: /moderate/login
     slice: shared/security
@@ -462,11 +520,6 @@ deferred:
     requirements: >-
       FR-005
   - feature: >-
-      Report an article
-    priority: could
-    requirements: >-
-      FR-021
-  - feature: >-
       Abuse handling (rate limiting + CAPTCHA)
     priority: should
     requirements: >-
@@ -476,11 +529,6 @@ deferred:
     priority: should
     requirements: >-
       FR-020 — no UI route; storage only
-  - feature: >-
-      Closing a report
-    priority: could
-    requirements: >-
-      FR-022
   - feature: >-
       Write/publish directly, bypassing the queue (×2)
     priority: could

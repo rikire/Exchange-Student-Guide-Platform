@@ -119,6 +119,10 @@ the table; `RouteContractTest` fails when it and the controllers disagree, in ei
 | `POST /moderate/articles/{title}/down` | `moderate` | — (redirects) | CSRF token (hidden, required) | `302` to `/moderate/articles`; `404` if `{title}` matches no published article; `403` without the token; `302` unauthenticated | FR-025: swaps the article's place with the one after it; the last stays last (ADR-0021) |
 | `GET /moderate/articles/{title}/remove` | `moderate` | `moderate/RemoveArticle.html` | — (the confirmation; Remove submits to the POST below, Cancel goes back to the article) | `200` for a published article; `404` if `{title}` matches no published article, removed ones included; `302` unauthenticated | FR-026 — asks first, because removal cannot be undone from the application |
 | `POST /moderate/articles/{title}/remove` | `moderate` | — (redirects) | CSRF token (hidden, required) | `302` to `/moderate/queue` once `removed_at` is set; `404` as the GET; `302` unauthenticated | FR-026 |
+| `GET /articles/{title}/report` | `report` | `report/ReportForm.html` | — (the form; fields below belong to the POST) | `200` for a published article; `404` if `{title}` matches no published article | FR-021 — "Report this article" in the article's sidebar leads here |
+| `POST /articles/{title}/reports` | `report` | re-renders `report/ReportForm.html` on `422` and `429` | CSRF token (hidden, required); `message` (textarea, required, at most 2,000 characters) | `302` to the article, which then says "Thanks — OGE will look at it."; `422` with the message kept when it is blank or too long, nothing stored; `429` with `Retry-After` past `guide.report.limit`, 10 reports an hour per client address (decided 2 Oct, as ADR-0019); `404` as the GET; `403` without the token | FR-021 |
+| `GET /moderate/reports` | `report` | `report/ReportInbox.html` | — (each report's Close is a form to the POST below) | `200` with the open reports on published articles, newest first, at most 100; `302` unauthenticated | FR-022's inbox, as `docs/design/screens/ReportInbox.html` draws it, "Open article" in place of the screen's "Edit article" until FR-024; linked from the moderator's header |
+| `POST /moderate/reports/{id}/close` | `report` | — (redirects) | CSRF token (hidden, required) | `302` to `/moderate/reports`, which then says "Report closed."; `404` for an unknown `{id}`; a closed report stays closed; `403` without the token; `302` unauthenticated | FR-022 |
 | `GET /moderate/login`, `POST /moderate/login` | `shared/security` | `shared/security/AdminLogin.html` | CSRF token (hidden, required); `password` (text, required) | `200` form; `302` to `/moderate/queue` on success; `401` re-rendering the form on a wrong password; `429` re-rendering the form with `Retry-After` once an address has failed 10 times in 15 minutes, even with the right password (NFR-005, ADR-0019). `?logout` adds "You are logged out". **Not gated** — the one carve-out in the rule above | Not itself an `FR` — the session gate [ADR-0009](adr/ADR-0009-admin-authentication.md) decided, without which every `/moderate/**` row above is unreachable |
 | `POST /moderate/logout` | `shared/security` | — (Spring Security's logout filter; the "Log out" button is `shared/security/LogOut.html` on the queue and the review pages) | CSRF token (hidden, required) | `302` to `/moderate/login?logout`, the session invalidated and the CSRF token cleared; `403` without the token, the session left as it was. Not gated: without a session it only redirects | Ending ADR-0009's session on a shared office computer (DEBT-019, closed) |
 <!-- /routes:table -->
@@ -205,10 +209,8 @@ Also written from [routes.yml](routes.yml), its `deferred` list.
 |---|---|---|
 | Backlinks on an article | could | FR-006 |
 | Creating an article from a red link | could | FR-005 |
-| Report an article | could | FR-021 |
 | Abuse handling (rate limiting + CAPTCHA) | should | FR-013 |
 | Version-history groundwork | should | FR-020 — no UI route; storage only |
-| Closing a report | could | FR-022 |
 | Write/publish directly, bypassing the queue (×2) | could | FR-023, FR-024 |
 <!-- /routes:deferred -->
 

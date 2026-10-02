@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.contribute.internal;
 
+import in.ac.iitm.guide.shared.web.AddressLimit;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Optional;
@@ -31,8 +32,12 @@ public class ContributionLimits {
     /** @param clock a test's clock when it provides one, the system's otherwise */
     ContributionLimits(ContributionLimitSettings settings, ObjectProvider<Clock> clock) {
         var time = clock.getIfAvailable(Clock::systemUTC);
-        this.submissions = new AddressLimit(settings.submissionLimit(), time);
-        this.previews = new AddressLimit(settings.previewLimit(), time);
+        this.submissions = new AddressLimit(
+                settings.submissionLimit().requests(),
+                settings.submissionLimit().per(),
+                time);
+        this.previews = new AddressLimit(
+                settings.previewLimit().requests(), settings.previewLimit().per(), time);
     }
 
     /**

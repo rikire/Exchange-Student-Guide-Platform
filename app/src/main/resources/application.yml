@@ -76,6 +76,12 @@ guide:
     failed-login-limit:
       requests: 10
       per: 15m
+  report:
+    # FR-021: how many reports one client address may send, decided by the human on 2 Oct, so a
+    # flood cannot bury the moderator's inbox. Every report counts.
+    limit:
+      requests: 10
+      per: 1h
   contribute:
     # NFR-005 (ADR-0019): what one client address may send. Submissions count a new article and an
     # edit together, and only the ones accepted; the preview counts every request. The address is the

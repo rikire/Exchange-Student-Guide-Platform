@@ -1,30 +1,34 @@
-package in.ac.iitm.guide.contribute.internal;
+package in.ac.iitm.guide.shared.web;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import in.ac.iitm.guide.contribute.internal.ContributionLimitSettings.Limit;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.TimeMeter;
 import java.time.Clock;
+import java.time.Duration;
 
 /**
  * One of NFR-005's limits (ADR-0019): a Bucket4j token bucket per client address, refilled whole
- * once per window. Caffeine forgets an address a window after its last request, when its bucket
+ * once per window. In {@code shared} since 2 Oct, when reporting (FR-021) needed one as well as
+ * {@code contribute}. Caffeine forgets an address a window after its last request, when its bucket
  * would be full again anyway, and holds at most {@link #ADDRESSES} of them, so a flood of new
  * addresses cannot grow the memory without bound.
  */
-final class AddressLimit {
+public final class AddressLimit {
 
     static final long ADDRESSES = 100_000;
 
-    private final Limit limit;
+    private final int requests;
+    private final Duration per;
     private final TimeMeter time;
     private final Cache<String, Bucket> buckets;
 
-    AddressLimit(Limit limit, Clock clock) {
-        this.limit = limit;
+    /** At most {@code requests} from one address in each {@code per}. */
+    public AddressLimit(int requests, Duration per, Clock clock) {
+        this.requests = requests;
+        this.per = per;
         this.time = new TimeMeter() {
             @Override
             public long currentTimeNanos() {
@@ -38,24 +42,24 @@ final class AddressLimit {
             }
         };
         this.buckets = Caffeine.newBuilder()
-                .expireAfterAccess(limit.per())
+                .expireAfterAccess(per)
                 .maximumSize(ADDRESSES)
                 .build();
     }
 
-    ConsumptionProbe take(String address) {
+    public ConsumptionProbe take(String address) {
         return buckets.get(address, this::bucket).tryConsumeAndReturnRemaining(1);
     }
 
-    void giveBack(String address) {
+    public void giveBack(String address) {
         buckets.get(address, this::bucket).addTokens(1);
     }
 
     private Bucket bucket(String address) {
         return Bucket.builder()
                 .addLimit(Bandwidth.builder()
-                        .capacity(limit.requests())
-                        .refillIntervally(limit.requests(), limit.per())
+                        .capacity(requests)
+                        .refillIntervally(requests, per)
                         .build())
                 .withCustomTimePrecision(time)
                 .build();

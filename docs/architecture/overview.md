@@ -142,8 +142,9 @@ list, and a slice added to one without the other fails a test. On 10 September t
 otherwise **empty**; since 25 September `home`, `articleview`, `wikilink` and `backup` have code,
 since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing), since 28 September
 `moderate` (FEAT-006), `search` (FEAT-007) and `media` (FEAT-009), since 29 September `backlink`
-(FR-006, [ADR-0016](adr/ADR-0016-backlinks-through-an-event-fed-slice.md)), and `report` stays empty until its
-step ([03-main-flow.md](../roadmap/03-main-flow.md)).
+(FR-006, [ADR-0016](adr/ADR-0016-backlinks-through-an-event-fed-slice.md)), and since 2 October `report`
+(FR-021, FR-022, [FEAT-020](../features/FEAT-020-reporting-an-article.md)), which uses `shared/web`'s
+`AddressLimit`, moved there from `contribute` for it.
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

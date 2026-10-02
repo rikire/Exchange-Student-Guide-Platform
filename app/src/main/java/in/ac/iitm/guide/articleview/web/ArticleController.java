@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /** {@code GET /articles/{address}}: one published article, its body rendered, wiki links resolved. */
 // trace:FR-001
 // trace:FR-005
+// trace:FR-021
 // trace:FR-002
 // trace:FR-004
 // trace:FR-030
@@ -106,6 +107,7 @@ class ArticleController {
                         body.contents().size() >= CONTENTS_FROM ? body.contents() : List.of(),
                         media.ofArticle(article.getId()),
                         ArticleAddress.pathOf(article.getSlug()) + "/edit",
+                        ArticleAddress.pathOf(article.getSlug()) + "/report",
                         request.isUserInRole(MODERATOR)
                                 ? "/moderate/articles/" + article.getSlug() + "/remove"
                                 : null));
@@ -143,7 +145,8 @@ class ArticleController {
      * part. {@code updated} is {@code updatedAt} as text, the fallback without scripts (ADR-0020);
      * {@code contents} is empty below {@link #CONTENTS_FROM} headings.
      * {@code media} are the attached assets (FR-001's Article, FEAT-009). {@code editPath} leads
-     * to proposing an edit (FR-011, {@code contribute}). {@code removePath} leads to FR-026's removal
+     * to proposing an edit (FR-011, {@code contribute}), {@code reportPath} to reporting it (FR-021,
+     * {@code report}). {@code removePath} leads to FR-026's removal
      * and is {@code null} for anyone but the signed-in moderator.
      */
     record ArticlePage(
@@ -156,5 +159,6 @@ class ArticleController {
             List<WikiLinkRenderer.Heading> contents,
             List<MediaItem> media,
             String editPath,
+            String reportPath,
             String removePath) {}
 }
