@@ -52,7 +52,11 @@ the published rendering while they write and keeps an unsent draft in their brow
    form's CSRF token, and the preview shows the answer: the article page's own rendering, wiki links
    resolved against published articles and missing ones red.
 4. The body is saved to `localStorage` a second after each change, one draft per form (a new
-   article, or an edit of one address). Reopening the form in the same browser restores it.
+   article, or an edit of one address). Reopening the form in the same browser restores it. The
+   title and summary are saved beside it on every key (fix 3.6): a saved value fills an empty field
+   and, on an edit form, replaces the article's own, as the body's does; a title a red link brought
+   is kept. Sisyphus.js, the one form-saving library with a WebJar, is a jQuery plugin from 2016 that
+   bundles jQuery 1.9.1, so these two fields are `editor.js`'s own code (the human, 2 Oct).
 5. The submission succeeds and the confirmation page clears that draft. A refused submission keeps
    it; so does a form over the container's limit, which comes back empty (`413`) and gets the text
    back from the draft.
@@ -102,6 +106,9 @@ And ADR-0013's conditions:
   `EditorPreviewTest.a_preview_without_a_csrf_token_is_refused`
 - [x] Raw HTML in the preview is escaped as on the article page —
   `EditorPreviewTest.the_preview_is_the_article_page_rendering_so_raw_html_is_escaped`
+- [x] The draft keeps the title and summary and clears them once the submission succeeds; an
+      edit's draft keeps its changed title over the article's; a red link's title is not replaced by
+      an older draft — `BrowserEditorTest` (fix 3.6)
 - [x] The wiki-link control wraps the selection in `[[ ]]`, or leaves the cursor between empty
       brackets; every control is named alike for a tooltip and a screen reader; the toolbar stays in
       view while a long body scrolls; at 1920 px the editor is at least 60 % of the window while the

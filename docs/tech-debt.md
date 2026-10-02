@@ -49,14 +49,22 @@ moderator's pages, whichever is first.
 **Created:** 2026-10-02
 **Marker:** `app/src/test/java/in/ac/iitm/guide/BrowserTagFieldTest.java` — `a_word_becomes_a_chip_on_enter_and_on_a_comma`
 
-**Cause:** not known. In five full runs of `Browser*Test` on 2 Oct it failed once, on the chips it
-read after typing; run alone it passed every time, and the failing run's details were not kept.
+**Cause:** found in part. In five full runs of `Browser*Test` on 2 Oct it failed once, its output
+not kept; in a sixth the same day it failed again with the chips `["arrival", "mess food"]` for
+"hostel" + Enter: Enter chose the first stored tag instead of making the typed word a chip. Tom
+Select refilters its list 300 ms after a key (`refreshThrottle`) and Enter acts on the option lit at
+that moment, so Enter inside those 300 ms can pick an option from before the word. `tags.js` now sets
+`refreshThrottle: 0`, which makes the refiltering synchronous. Not proven: a test that types a word in
+one event and presses Enter at once passed with the old setting too, so what lit "arrival" first is
+still unknown.
 
 **Consequence:** a flaky check teaches people to rerun until green, which hides a real fault the day
-one appears. If the cause is in the field rather than the test, a fast typist could lose a tag.
+one appears. The cause is in the field, not the test: a fast typist could get a stored tag instead of
+the word they typed.
 
-**How to fix:** keep the output of the next failing run (the chips it read), then either wait in the
-test for Tom Select to have handled each key or fix the field, depending on what it shows.
+**How to fix:** find what makes the first option active before the word is filtered, and turn that
+into a test that fails without `refreshThrottle: 0`; if the failure comes back with it, the cause is
+elsewhere and the field needs a fix of its own.
 
 **Trigger:** its next failure, in CI or locally.
 

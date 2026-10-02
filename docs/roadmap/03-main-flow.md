@@ -396,7 +396,9 @@ design pass (3) is the largest piece and starts with redrawn screens.
       control, the toolbar pinned while the body scrolls, and the editor at the frame's width
       (FEAT-010). **Errors built 2 Oct (e):** a refusal names its field; the form marks it and
       says why beside it, the box sits inside the form, and a refused form with a file asks for the
-      file again (FEAT-005).
+      file again (FEAT-005). **Draft built 2 Oct (f):** the title and summary are kept beside the body's
+      draft and cleared with it (FEAT-010). The same day a full run caught DEBT-023 again, with its
+      output: Enter chose a stored tag over the typed word; `tags.js` now refilters on every key.
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**

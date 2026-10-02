@@ -18,6 +18,10 @@
       persist: false,
       delimiter: ',',
       maxItems: Number(select.getAttribute('data-most')),
+      // Tom Select refilters the list 300 ms after typing, and Enter acts on the option lit before
+      // that; a run on 2 Oct turned "hostel" into "arrival" (DEBT-023). The list is the page's own,
+      // at most 500 names, so refiltering on every key costs nothing.
+      refreshThrottle: 0,
       plugins: { remove_button: { title: 'Remove this tag' } },
       // Tom Select keeps the search after a suggestion is clicked, so the next word would be typed
       // onto it ("vi" + "hostel"); a tag field wants a fresh word each time.

@@ -233,7 +233,57 @@ class BrowserEditorTest {
         assertThat(title.width).as("the title field keeps a readable width").isLessThanOrEqualTo(800);
     }
 
+    @Test
+    // trace:FR-027
+    void the_draft_keeps_the_title_and_summary_and_clears_them_once_the_submission_succeeds() {
+        var page = openTheForm();
+        page.fill("input[name=title]", "Hostel rooms");
+        page.fill("input[name=summary]", "Who shares a room.");
+        page.close();
+
+        var reopened = openTheForm();
+        assertThat(reopened.inputValue("input[name=title]")).isEqualTo("Hostel rooms");
+        assertThat(reopened.inputValue("input[name=summary]")).isEqualTo("Who shares a room.");
+
+        reopened.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('Rooms are shared.')");
+        reopened.click("button[type=submit]");
+        reopened.waitForURL("**/confirmation");
+        var again = openTheForm();
+        assertThat(again.inputValue("input[name=title]")).isEmpty();
+        assertThat((List<?>) again.evaluate("() => Object.keys(localStorage).filter(key => key.includes('guide:'))"))
+                .as("drafts left in the browser")
+                .isEmpty();
+    }
+
+    @Test
+    // trace:FR-027
+    void an_edits_draft_keeps_its_changed_title_over_the_articles_own() {
+        var page = openTheForm("/articles/registering-with-frro/edit");
+        page.fill("input[name=title]", "Registering with the FRRO");
+        page.close();
+
+        var reopened = openTheForm("/articles/registering-with-frro/edit");
+
+        assertThat(reopened.inputValue("input[name=title]")).isEqualTo("Registering with the FRRO");
+    }
+
+    @Test
+    // trace:FR-005
+    void a_title_brought_by_a_red_link_is_not_replaced_by_an_older_draft() {
+        var page = openTheForm();
+        page.fill("input[name=title]", "An older draft");
+        page.close();
+
+        var invited = openTheForm("/submit?title=Mess%20Food");
+
+        assertThat(invited.inputValue("input[name=title]")).isEqualTo("Mess Food");
+    }
+
     private Page openTheForm() {
+        return openTheForm("/submit");
+    }
+
+    private Page openTheForm(String path) {
         var page = context.newPage();
         page.onConsoleMessage(message -> {
             if ("error".equals(message.type())) {
@@ -241,7 +291,7 @@ class BrowserEditorTest {
             }
         });
         page.onPageError(error -> problems.add(error));
-        page.navigate("http://localhost:" + port + "/submit");
+        page.navigate("http://localhost:" + port + path);
         page.waitForSelector(".EasyMDEContainer .editor-preview-active-side");
         return page;
     }

@@ -7,8 +7,9 @@
  * - The draft is EasyMDE's autosave, one per form: a new article, or an edit of one address.
  *   EasyMDE clears it when the form is submitted, before the server has answered; FR-027 keeps it
  *   until the submission succeeds, so that listener is suppressed and the confirmation page clears
- *   the draft named here (draft-sent.js). The case it saves: a form over the container's limit comes
- *   back as an empty form (413, UploadTooLargeAdvice), and the draft puts the text back into it.
+ *   the draft named here (draft-sent.js), and the title and summary saved beside it. The case it
+ *   saves: a form over the container's limit comes back as an empty form (413,
+ *   UploadTooLargeAdvice), and the draft puts the text back into it.
  * - Icons are our own sprite, not Font Awesome from a CDN; nothing is downloaded from elsewhere.
  */
 (function () {
@@ -122,9 +123,39 @@
     control.setAttribute('aria-label', control.title);
   });
 
+  // Fix 3.6: the draft keeps the title and the summary beside EasyMDE's body. Sisyphus.js, the one
+  // form-saving library with a WebJar, is a jQuery plugin built in 2016 that bundles jQuery 1.9.1;
+  // two fields do not justify it (the human, 2 Oct). A saved value fills an empty field, and on an
+  // edit form replaces the article's own, as the body's draft does; a title a red link brought
+  // (?title=) is kept.
+  var fields = draft + ':fields';
+  var editing = form.querySelector('input[name="article"]') !== null;
+  var named = ['title', 'summary'].map(function (name) { return form.elements[name]; });
+  try {
+    var saved = JSON.parse(localStorage.getItem(fields) || '{}');
+    named.forEach(function (field) {
+      if (typeof saved[field.name] === 'string' && (field.value === '' || editing)) {
+        field.value = saved[field.name];
+      }
+    });
+  } catch (e) {
+    // Storage is off or the saved value is not ours to read: the fields keep what the server sent.
+  }
+  named.forEach(function (field) {
+    field.addEventListener('input', function () {
+      var values = {};
+      named.forEach(function (each) { values[each.name] = each.value; });
+      try {
+        localStorage.setItem(fields, JSON.stringify(values));
+      } catch (e) {
+        // Without localStorage the title and summary are not kept; the form still submits.
+      }
+    });
+  });
+
   form.addEventListener('submit', function () {
     try {
-      sessionStorage.setItem('guide:draft-sent', 'smde_' + draft);
+      sessionStorage.setItem('guide:draft-sent', JSON.stringify(['smde_' + draft, fields]));
     } catch (e) {
       // Without sessionStorage the draft outlives the submission; the text is still sent.
     }
