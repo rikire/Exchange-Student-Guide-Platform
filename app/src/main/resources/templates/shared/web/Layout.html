@@ -33,6 +33,7 @@
         <th:block th:if="${moderator}">
           <li><a th:href="@{/moderate/queue}">Queue</a></li>
           <li><a th:href="@{/moderate/reports}">Reports</a></li>
+          <li><a th:href="@{/moderate/write}">Write an article</a></li>
           <li><a th:href="@{/moderate/articles}">Homepage &amp; articles</a></li>
           <li><a th:href="@{/}">The guide</a></li>
           <li><form th:replace="~{shared/security/LogOut :: form}"></form></li>

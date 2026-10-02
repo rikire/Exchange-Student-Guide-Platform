@@ -127,6 +127,10 @@ since 28 September, `moderate` also use `taxonomy`'s `Tags`, the only way a tag 
 `backup` publish its `ArticleTextChanged`, and `backlink` uses `wikilink`'s parser (ADR-0016).
 Since 2 October `articleview` asks `search`'s `SimilarTitles`, its first published type, for titles
 close to an article address that answers nothing (walkthrough fix 3.8, F-14).
+Since 2 Oct `moderate` uses `contribute`'s published `Submissions`, `Draft` and
+`SubmissionRejectedException` for the moderator's direct publishing (FR-023, FR-024): the
+moderator's article is submitted through the same checks as a contributor's and approved in the same
+transaction, rather than `moderate` repeating the checks (human, 2 Oct).
 `ModularityTest` writes that diagram and checks
 those eight arrows are in it, so it cannot drift from the code without a test failing.
 

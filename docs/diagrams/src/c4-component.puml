@@ -20,8 +20,8 @@ Container_Boundary(web, "Web application") {
   Component(articleview, "articleview", "slice", "Reading a published article (FR-001)")
   Component(search, "search", "slice", "Indexing and querying (FR-007)", $tags="planned")
   Component(taxonomy, "taxonomy", "slice", "Tags, and browsing by tag. Owns tag creation and normalisation (FR-008, ADR-0005)", $tags="planned")
-  Component(contribute, "contribute", "slice", "New articles, proposed edits, status lookup (FR-010 to FR-012, FR-023, FR-024)", $tags="planned")
-  Component(moderate, "moderate", "slice", "The queue, approval, rejection, revisions, removal (FR-014 to FR-020, FR-026)", $tags="planned")
+  Component(contribute, "contribute", "slice", "New articles, proposed edits, status lookup (FR-010 to FR-012)", $tags="planned")
+  Component(moderate, "moderate", "slice", "The queue, approval, rejection, revisions, removal, direct publishing (FR-014 to FR-020, FR-023, FR-024, FR-026)", $tags="planned")
   Component(report, "report", "slice", "Flagging an article, and closing the flag (FR-021, FR-022)", $tags="planned")
   Component(media, "media", "slice", "Upload, storage, safe delivery (FR-016)", $tags="planned")
   Component(wikilink, "wikilink", "plain Java", "The [[link]] parser and renderer. No Spring, no JPA — so its tests run without a context (FR-002 to FR-005)")
@@ -51,7 +51,7 @@ Rel(contribute, media, "Stores an upload against the submission", "published typ
 Rel(moderate, media, "Moves media to the article on approval", "published type", $tags="planned")
 Rel(report, articleview, "Links the inbox to the reported article", "published type", $tags="planned")
 Rel(moderate, search, "Approved, edited or removed — reindex", "ApplicationEvent", $tags="planned")
-Rel(contribute, search, "Published directly by a moderator — reindex (FR-023, FR-024)", "ApplicationEvent", $tags="planned")
+Rel(moderate, contribute, "Submits the moderator's own article through the same checks (FR-023, FR-024)", "published type")
 Rel(backup, search, "Reindex after an import", "ApplicationEvent", $tags="planned")
 
 ' To the stores. Each slice declares its own Spring Data repository over the entities in

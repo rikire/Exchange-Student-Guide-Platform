@@ -29,13 +29,13 @@ flowchart LR
     contribute["contribute · 9/9 done"]:::done
     home["home · 1/1 done"]:::done
     media["media · 6/6 done"]:::done
-    moderate["moderate · 9/9 done"]:::done
+    moderate["moderate · 9/11 done"]:::partial
     report["report · 2/2 done"]:::done
     search["search · 3/3 done"]:::done
     shared["shared · 2/2 done"]:::done
     taxonomy["taxonomy · 2/2 done"]:::done
     wikilink["wikilink · 3/3 done"]:::done
-    unmapped["no feature yet: FR-023, FR-024, FR-028"]:::unmapped
+    unmapped["no feature yet: FR-028"]:::unmapped
     articleview --> backlink
     articleview --> media
     articleview --> search
@@ -56,6 +56,7 @@ flowchart LR
     home --> taxonomy
     home --> wikilink
     moderate --> backlink
+    moderate --> contribute
     moderate --> media
     moderate --> shared
     moderate --> taxonomy
@@ -81,14 +82,14 @@ flowchart LR
 | contribute | 9 | 9 | done |
 | home | 1 | 1 | done |
 | media | 6 | 6 | done |
-| moderate | 9 | 9 | done |
+| moderate | 11 | 9 | partial |
 | report | 2 | 2 | done |
 | search | 3 | 3 | done |
 | shared | 2 | 2 | done |
 | taxonomy | 2 | 2 | done |
 | wikilink | 3 | 3 | done |
 
-No feature covers yet: FR-023, FR-024, FR-028.
+No feature covers yet: FR-028.
 
 ## Requirements not done
 
@@ -97,8 +98,8 @@ real figure can only be higher.
 
 | Requirement | Status | Priority | Title | Criteria | Tests | No test, at least |
 |---|---|---|---|---|---|---|
-| FR-023 | planned | could | Publishing a new article directly | 4 | 0 | 4 |
-| FR-024 | planned | could | Editing an article directly | 4 | 0 | 4 |
+| FR-023 | planned | could | Publishing a new article directly | 4 | 6 | 0 |
+| FR-024 | planned | could | Editing an article directly | 4 | 6 | 0 |
 | FR-028 | planned | should | Completing a wiki link while writing | 2 | 0 | 2 |
 
 ## Done, with criteria that no test is anchored to

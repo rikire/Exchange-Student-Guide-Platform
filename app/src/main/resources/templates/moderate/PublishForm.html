@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title th:text="${form.heading} + ' — Exchange Student Guide'">Write an article</title>
+</head>
+<body>
+  <!-- FR-023, FR-024: the contributor's form (contribute/SubmissionForm.html), published at once
+       rather than sent for review, so the tags are the article's own rather than suggestions. -->
+  <main class="site-main">
+    <h1 class="article-title" th:text="${form.heading}">Write an article</h1>
+    <p class="form-note">Published as soon as you press Publish now; it does not go through the queue.</p>
+
+    <div class="form-error" role="alert" th:if="${form.error}">
+      <p th:text="${form.error}">What to fix.</p>
+    </div>
+
+    <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
+    <form class="submission-form" method="post" enctype="multipart/form-data" th:action="@{${form.action}}">
+      <label class="field">
+        <span class="field-label">Title</span>
+        <input class="field-input" type="text" name="title" required maxlength="255" th:value="${form.title}">
+        <span class="field-help">Must be unique among published articles.</span>
+      </label>
+      <label class="field">
+        <span class="field-label">Summary</span>
+        <input class="field-input" type="text" name="summary" required th:maxlength="${summaryLimit}" th:value="${form.summary}">
+      </label>
+      <label class="field">
+        <span class="field-label">Body (Markdown)</span>
+        <!-- data-draft names the draft the editor keeps in the browser: one per form (editor.js). -->
+        <textarea class="field-textarea" name="body" required th:maxlength="${bodyLimit}" th:data-draft="${form.action}" th:text="${form.body}"></textarea>
+        <!-- th:inline="none": Thymeleaf would read [[Title]] as its own inline expression (F-5). -->
+        <span class="field-help" th:inline="none">Link to another article with [[Title]].</span>
+      </label>
+      <label class="field">
+        <span class="field-label">Attachment (optional)</span>
+        <!-- accept= only narrows the file picker; the type is read from the content (FEAT-009). -->
+        <input class="field-input" type="file" name="attachment" accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/x-m4v,video/3gpp,video/3gpp2,video/webm,video/x-matroska,video/x-msvideo,video/mpeg,.mkv,.m4v,.3gp,.avi,.mpg,.mpeg">
+        <span class="field-help" th:text="${accepted}">One photo up to 10 MB, a PDF up to 20 MB or an MP4 video up to 200 MB.</span>
+        <span class="field-help">A video keeps what the camera recorded, which can include where it was filmed.</span>
+      </label>
+      <fieldset class="field">
+        <legend class="field-label">Tags</legend>
+        <div class="tag-fields">
+          <input class="field-input" type="text" name="tags" maxlength="64" th:each="tag : ${form.tags}" th:value="${tag}" aria-label="Tag">
+        </div>
+      </fieldset>
+      <div class="button-row">
+        <button class="button-primary" type="submit">Publish now</button>
+        <a class="button-quiet button-back" th:href="@{/moderate/queue}">Cancel</a>
+      </div>
+    </form>
+
+    <!-- The editor of FR-027 (ADR-0013), as on the contributor's form; the version is the root pom's
+         easymde.version and has to change with it. -->
+    <link rel="stylesheet" th:href="@{/webjars/easymde/2.21.0/dist/easymde.min.css}">
+    <link rel="stylesheet" th:href="@{/css/editor.css}">
+    <script th:src="@{/webjars/easymde/2.21.0/dist/easymde.min.js}" defer></script>
+    <script th:src="@{/js/editor.js}" defer></script>
+  </main>
+</body>
+</html>

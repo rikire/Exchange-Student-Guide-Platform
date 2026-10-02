@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 // trace:FR-001
 // trace:FR-005
 // trace:FR-021
+// trace:FR-024
 // trace:FR-002
 // trace:FR-004
 // trace:FR-030
@@ -106,7 +107,10 @@ class ArticleController {
                         body.html(),
                         body.contents().size() >= CONTENTS_FROM ? body.contents() : List.of(),
                         media.ofArticle(article.getId()),
-                        ArticleAddress.pathOf(article.getSlug()) + "/edit",
+                        // FR-024: the moderator edits directly; anyone else proposes an edit (FR-011).
+                        request.isUserInRole(MODERATOR)
+                                ? "/moderate/articles/" + article.getSlug() + "/edit"
+                                : ArticleAddress.pathOf(article.getSlug()) + "/edit",
                         ArticleAddress.pathOf(article.getSlug()) + "/report",
                         request.isUserInRole(MODERATOR)
                                 ? "/moderate/articles/" + article.getSlug() + "/remove"
@@ -145,7 +149,8 @@ class ArticleController {
      * part. {@code updated} is {@code updatedAt} as text, the fallback without scripts (ADR-0020);
      * {@code contents} is empty below {@link #CONTENTS_FROM} headings.
      * {@code media} are the attached assets (FR-001's Article, FEAT-009). {@code editPath} leads
-     * to proposing an edit (FR-011, {@code contribute}), {@code reportPath} to reporting it (FR-021,
+     * to proposing an edit (FR-011, {@code contribute}), or for the signed-in moderator to editing it
+     * directly (FR-024, {@code moderate}), {@code reportPath} to reporting it (FR-021,
      * {@code report}). {@code removePath} leads to FR-026's removal
      * and is {@code null} for anyone but the signed-in moderator.
      */

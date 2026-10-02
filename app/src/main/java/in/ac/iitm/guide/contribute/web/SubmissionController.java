@@ -1,12 +1,12 @@
 package in.ac.iitm.guide.contribute.web;
 
+import in.ac.iitm.guide.contribute.Draft;
+import in.ac.iitm.guide.contribute.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.internal.ArticleNotPublishedException;
 import in.ac.iitm.guide.contribute.internal.ArticleRemovedWhileEditingException;
 import in.ac.iitm.guide.contribute.internal.BodyPreview;
 import in.ac.iitm.guide.contribute.internal.ContributionLimits;
-import in.ac.iitm.guide.contribute.internal.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
-import in.ac.iitm.guide.contribute.internal.SubmissionService.Draft;
 import in.ac.iitm.guide.media.MediaAssets;
 import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.shared.persistence.Article;

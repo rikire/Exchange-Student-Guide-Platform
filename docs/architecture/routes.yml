@@ -458,8 +458,8 @@ routes:
       `200` with the open reports on published articles, newest first, at most 100; `302`
       unauthenticated
     serves: >-
-      FR-022's inbox, as `docs/design/screens/ReportInbox.html` draws it, "Open article" in place of
-      the screen's "Edit article" until FR-024; linked from the moderator's header
+      FR-022's inbox, as `docs/design/screens/ReportInbox.html` draws it; "Edit article" opens
+      FR-024's direct edit; linked from the moderator's header
 
   - methods: [POST]
     path: /moderate/reports/{id}/close
@@ -474,6 +474,65 @@ routes:
       a closed report stays closed; `403` without the token; `302` unauthenticated
     serves: >-
       FR-022
+
+  - methods: [GET]
+    path: /moderate/write
+    slice: moderate
+    status: built
+    template: >-
+      `moderate/PublishForm.html`
+    fields: >-
+      — (the form; fields below belong to the POST)
+    responses: >-
+      `200`; `302` unauthenticated
+    serves: >-
+      FR-023 — "Write an article" in the moderator's header leads here
+
+  - methods: [POST]
+    path: /moderate/articles
+    slice: moderate
+    status: built
+    template: >-
+      re-renders `moderate/PublishForm.html` on `409` and `422`
+    fields: >-
+      CSRF token (hidden, required); `title`, `summary`, `body`, `tags` (up to five fields),
+      `attachment` (one file, optional) — the contributor's form, as `POST /submissions`
+    responses: >-
+      `302` to the new article, which then says "Published."; `409` with the text kept when another
+      article has the title, case-insensitively; `422` with the text kept for anything else the
+      contributor's form refuses, the attachment's size and type included; `403` without the token;
+      `302` unauthenticated
+    serves: >-
+      FR-023 — a submission made and approved in one transaction, never pending in the queue
+
+  - methods: [GET]
+    path: /moderate/articles/{title}/edit
+    slice: moderate
+    status: built
+    template: >-
+      `moderate/PublishForm.html`
+    fields: >-
+      — (the form, filled with the article; fields below belong to the POST)
+    responses: >-
+      `200` for a published article; `404` if `{title}` matches no published article; `302`
+      unauthenticated
+    serves: >-
+      FR-024 — "Edit now" on the article page and "Edit article" in the report inbox lead here
+
+  - methods: [POST]
+    path: /moderate/articles/{title}/edits
+    slice: moderate
+    status: built
+    template: >-
+      re-renders `moderate/PublishForm.html` on `409` and `422`
+    fields: >-
+      as `POST /moderate/articles`
+    responses: >-
+      `302` to the article at its title's address, which then says "Published."; the text it
+      replaces kept as a revision; `409` when a different article has the new title; `422` as `POST
+      /moderate/articles`; `404` as the GET; `403` without the token; `302` unauthenticated
+    serves: >-
+      FR-024
 
   - methods: [GET, POST]
     path: /moderate/login
@@ -529,8 +588,3 @@ deferred:
     priority: should
     requirements: >-
       FR-020 — no UI route; storage only
-  - feature: >-
-      Write/publish directly, bypassing the queue (×2)
-    priority: could
-    requirements: >-
-      FR-023, FR-024

@@ -39,6 +39,9 @@ class ButtonStylesTest {
         "moderate/RemoveArticle.html, Cancel, button-back",
         "moderate/ArticleAdmin.html, Pin, button-secondary",
         "moderate/ArticleAdmin.html, Move up, button-secondary",
+        "moderate/PublishForm.html, Publish now, button-primary",
+        "moderate/PublishForm.html, Cancel, button-back",
+        "report/ReportInbox.html, Edit article, button-secondary",
     })
     void each_action_wears_its_button(String template, String label, String kind) throws IOException {
         var text = Files.readString(TEMPLATES.resolve(template));

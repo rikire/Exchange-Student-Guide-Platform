@@ -23,7 +23,7 @@
       </header>
       <div class="article-side">
         <div class="side-card article-actions">
-          <a class="button-primary" th:href="@{${article.editPath}}">Propose an edit</a>
+          <a class="button-primary" th:href="@{${article.editPath}}" th:text="${moderator} ? 'Edit now' : 'Propose an edit'">Propose an edit</a>
           <!-- FR-030: hidden until print.js runs, so a browser without scripts shows no control that does nothing. -->
           <button class="button-secondary" type="button" data-print hidden>Save as PDF</button>
           <a class="button-danger" th:if="${article.removePath}" th:href="@{${article.removePath}}">Remove this article</a>

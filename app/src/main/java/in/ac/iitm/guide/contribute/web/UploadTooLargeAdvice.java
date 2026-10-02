@@ -1,8 +1,8 @@
 package in.ac.iitm.guide.contribute.web;
 
+import in.ac.iitm.guide.contribute.Draft;
 import in.ac.iitm.guide.contribute.internal.ArticleNotPublishedException;
 import in.ac.iitm.guide.contribute.internal.SubmissionService;
-import in.ac.iitm.guide.contribute.internal.SubmissionService.Draft;
 import in.ac.iitm.guide.contribute.web.SubmissionController.FormPage;
 import in.ac.iitm.guide.media.MediaAssets;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,5 +1,7 @@
 package in.ac.iitm.guide.contribute.internal;
 
+import in.ac.iitm.guide.contribute.Draft;
+import in.ac.iitm.guide.contribute.SubmissionRejectedException;
 import in.ac.iitm.guide.contribute.persistence.ContributeArticleRepository;
 import in.ac.iitm.guide.contribute.persistence.SubmissionRepository;
 import in.ac.iitm.guide.media.MediaAssets;
@@ -15,7 +17,6 @@ import in.ac.iitm.guide.taxonomy.TagRejectedException;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -60,9 +61,6 @@ public class SubmissionService {
         this.displayTime = displayTime;
     }
 
-    /** What a contributor typed. The body is kept exactly as written (FR-003). */
-    public record Draft(String title, String summary, String body, List<String> tags) {}
-
     /**
      * @param attachment the one file FR-010 allows, if the contributor chose one
      * @return the submission number
@@ -75,7 +73,8 @@ public class SubmissionService {
         articles.findBySlug(slug).ifPresent(existing -> {
             throw new SubmissionRejectedException(
                     "An article with this title already exists. Propose an edit to it, or choose another title.",
-                    existing.getRemovedAt() == null ? existing.getSlug() : null);
+                    existing.getRemovedAt() == null ? existing.getSlug() : null,
+                    true);
         });
         return save(draft, SubmissionType.NEW_ARTICLE, null, attachment);
     }
@@ -103,7 +102,8 @@ public class SubmissionService {
             articles.findBySlug(slug).ifPresent(other -> {
                 throw new SubmissionRejectedException(
                         "A different article already has this title. Choose another title.",
-                        other.getRemovedAt() == null ? other.getSlug() : null);
+                        other.getRemovedAt() == null ? other.getSlug() : null,
+                        true);
             });
         }
         return save(draft, SubmissionType.EDIT, target.getId(), attachment);

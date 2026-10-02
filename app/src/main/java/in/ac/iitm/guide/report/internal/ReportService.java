@@ -85,7 +85,13 @@ public class ReportService {
 
     /** One open report as the inbox shows it. */
     public record Entry(
-            UUID id, String title, String path, OffsetDateTime reportedAt, String reported, String message) {}
+            UUID id,
+            String title,
+            String path,
+            String editPath,
+            OffsetDateTime reportedAt,
+            String reported,
+            String message) {}
 
     @Transactional(readOnly = true)
     public List<Entry> inbox() {
@@ -99,6 +105,7 @@ public class ReportService {
                             report.getId(),
                             article.getTitle(),
                             ArticleAddress.pathOf(article.getSlug()),
+                            "/moderate/articles/" + article.getSlug() + "/edit",
                             report.getReportedAt(),
                             displayTime.dateTime(report.getReportedAt()),
                             report.getMessage());

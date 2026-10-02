@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <!--
   FR-022: the moderator's inbox of open reports, newest first, as docs/design/screens/ReportInbox.html
-  draws it. "Open article" stands where the screen has "Edit article" until FR-024 lets the moderator
-  edit directly (human, 2 Oct).
+  draws it; "Edit article" opens FR-024's direct edit.
 -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
@@ -22,7 +21,7 @@
         <p class="report-message" th:text="${entry.message}">The bus route numbers changed.</p>
         <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
         <form class="button-row" method="post" th:action="@{/moderate/reports/{id}/close(id=${entry.id})}">
-          <a class="button-secondary" th:href="@{${entry.path}}">Open article</a>
+          <a class="button-secondary" th:href="@{${entry.editPath}}">Edit article</a>
           <button class="button-primary" type="submit">Close report</button>
         </form>
       </li>

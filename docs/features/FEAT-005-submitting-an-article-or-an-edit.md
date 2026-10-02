@@ -13,7 +13,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/contribute/web/SubmissionController.java
   - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionService.java
   - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionNumbers.java
-  - app/src/main/java/in/ac/iitm/guide/contribute/internal/SubmissionRejectedException.java
+  - app/src/main/java/in/ac/iitm/guide/contribute/SubmissionRejectedException.java
   - app/src/main/java/in/ac/iitm/guide/contribute/internal/ArticleNotPublishedException.java
   - app/src/main/java/in/ac/iitm/guide/contribute/persistence/ContributeArticleRepository.java
   - app/src/main/java/in/ac/iitm/guide/contribute/persistence/SubmissionRepository.java
