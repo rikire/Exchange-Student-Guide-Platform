@@ -130,9 +130,12 @@ the criteria do not reach it.
       NFR-007 is done without the manual screen-reader pass, which the human dropped.
 - [ ] Weekly-log paragraphs in each member's own words for W37, W38 and W39 — the W37 and W38 files
       were generated on 28 Sep with the git figures only, and W39 still lacks Abdirakhim's paragraph.
-      Each is marked as written after the week it covers
       — check: no file in `docs/team/weekly-log/` up to W39 still says "Not written yet"
       — owner: each member writes their own paragraph
+      **3 Oct:** Abdirakhim's paragraphs for W36, W37, W39 and W40 written; the human dropped the
+      "written after the week" mark, since the commit date shows it. W38, a week with no commits from
+      either member, waits until both agree what it says. Left: Mikhail's W37, W38 and W40, and
+      Abdirakhim's W38.
 
 ## Queue raised on 27 September
 
