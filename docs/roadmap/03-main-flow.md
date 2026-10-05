@@ -516,9 +516,17 @@ the student half driven by a headless Chromium (Playwright), the moderator half 
   on any page; the form at 390 px does not scroll sideways.
 - Found: after a tag is added with Enter, Tom Select keeps its list open over "Submit for review",
   so a mouse click on the button adds the tag under it ("accommodation") and sends nothing. No
-  `BrowserTagFieldTest` case clicks Submit after Enter. To fix before the demo.
+  `BrowserTagFieldTest` case clicks Submit after Enter. Fixed 5 Oct, with that case.
 - Seen: the stand's articles still carry the "Needs checking with OGE" sections fix 1.1 took out
   of the seed; the reset of section 4 imports the seed again.
+- The moderator's approval (the human) answered Tomcat's bare `500`: the approval was saved, but the
+  index, kept from before the 2 Oct mapping change, refused the write, and no generic error page
+  existed. Fixed the same day: the index is built again at every start (the human's decision,
+  ADR-0004 amended), the tag list closes after each tag, and `error.html` is the site's page for any
+  error. On the rebuilt stand the index was rebuilt at start (39 articles), search finds the
+  approved text, and the article shows the photo and the tags `admin`, `rehearsal`, `visa`: **the
+  demo scenario runs end to end on the stand.** Left for section 4's reset: the walk's and this
+  rehearsal's edits.
 
 ## Open questions
 
