@@ -506,6 +506,20 @@ now mounted at `GUIDE_MEDIA_ROOT`, and `.env.example` no longer lists variables 
 Left open: none of the 30 articles contains a red link, so the demo can show one only in the
 editor's preview.
 
+**Demo rehearsal on the compose stand, 4–5 Oct** — after fix 3.6, on the stand's existing volumes,
+the student half driven by a headless Chromium (Playwright), the moderator half by the human:
+- The stand did not start: volumes created by the root image cannot be written since the image runs
+  as `guide` (DEBT-018). A one-off `chown` fixed it; recorded as DEBT-025.
+- "FRRO registration" returns *Registering with FRRO* first; its wiki link leads to *Applying for
+  Your Student Visa*; the edit form is headed with that title; a typed tag became a chip; the photo
+  was previewed; the edit was sent (`SUB-76A2-NNBC-W6GJ`). No console error and no policy violation
+  on any page; the form at 390 px does not scroll sideways.
+- Found: after a tag is added with Enter, Tom Select keeps its list open over "Submit for review",
+  so a mouse click on the button adds the tag under it ("accommodation") and sends nothing. No
+  `BrowserTagFieldTest` case clicks Submit after Enter. To fix before the demo.
+- Seen: the stand's articles still carry the "Needs checking with OGE" sections fix 1.1 took out
+  of the seed; the reset of section 4 imports the seed again.
+
 ## Open questions
 
 Raised on 7 September while giving every step a checkable result.
