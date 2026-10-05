@@ -7,9 +7,9 @@
 # The application starts with the `seed` profile, which loads the starter articles on every start
 # and skips the ones already there, so a restart adds nothing.
 #
-# The search index is kept in the guide-index volume. An empty one is rebuilt from the database at
-# start-up, so removing the volume (docker volume rm, then up) is how the index is rebuilt after a
-# database restore or a change to how articles are indexed (FEAT-007).
+# The search index is kept in the guide-index volume and built again from the database at every
+# start (ADR-0004, amended 5 Oct), so a database restore or a change to how articles are indexed
+# needs only a restart (FEAT-007).
 #
 # Uploaded media (FEAT-009) is kept in the guide-media volume, so an attachment survives a restart
 # and a rebuild of the image.
