@@ -341,15 +341,19 @@ class SearchFlowTest {
 
     @Test
     // trace:FR-007
-    void an_index_that_is_not_empty_is_left_as_it_is_at_start_up() throws Exception {
-        // Decided by the human, 28 Sep: the index is kept on disk between starts, and rebuilt only
-        // when there is none. This article by JDBC stands for one the index has not seen.
+    void an_index_that_is_not_empty_is_rebuilt_from_the_database_at_start_up() throws Exception {
+        // Decided by the human, 5 Oct, reversing 28 Sep: an index kept from an older start may hold
+        // another mapping (the demo rehearsal's 500). The article by JDBC stands for one the index
+        // has not seen, the one deleted by JDBC for one it holds and the database no longer does.
         publish("Campus map", "Where the buildings are.");
+        publish("Old hostel rules", "Curfew at ten.");
         insertByJdbc("Monsoon clothing", "Bring an umbrella.");
+        jdbc.update("DELETE FROM article WHERE title = 'Old hostel rules'");
 
         startUp();
 
-        assertThat(search("umbrella")).doesNotContain("/articles/monsoon-clothing");
+        assertThat(search("umbrella")).contains("href=\"/articles/monsoon-clothing\"");
+        assertThat(search("curfew")).doesNotContain("/articles/old-hostel-rules");
     }
 
     @Test
