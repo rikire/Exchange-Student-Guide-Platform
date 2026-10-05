@@ -16,6 +16,9 @@
       // A word typed but not yet confirmed is kept when the field loses focus, as on submitting.
       createOnBlur: true,
       persist: false,
+      // The list opens under the field, over "Submit for review"; left open after a tag, a click on
+      // the button picked the stored tag under it and sent nothing (the demo rehearsal, 5 Oct).
+      closeAfterSelect: true,
       delimiter: ',',
       maxItems: Number(select.getAttribute('data-most')),
       // Tom Select refilters the list 300 ms after typing, and Enter acts on the option lit before
