@@ -110,6 +110,7 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
+| DEBT-026 | A stand with volumes from before 2 Oct does not start on the new image | the stand reset before the mid-demo (section 4), and any upgrade of a stand with data. |
 | DEBT-025 | The OGE team and developers pages show blanks for facts nobody has supplied | the facts arriving from the developers and from OGE, or the final submission, whichever |
 | DEBT-024 | The moderator's publish form shows a refusal only at the top, not at the field | the human's look at the moderator's pages, or phase 4's edge cases, whichever is first. |
 | DEBT-023 | A tag-field browser test failed once without a known cause | its next failure, in CI or locally. |

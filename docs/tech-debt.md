@@ -20,6 +20,30 @@ constraint hides it.
 
 ## Register
 
+### DEBT-026 — A stand with volumes from before 2 Oct does not start on the new image
+
+**Status:** open
+**Created:** 2026-10-05
+**Marker:** `Dockerfile` — `USER guide`
+
+**Cause:** DEBT-018's fix (2 Oct) runs the application as `guide` (uid 999). The stand's `guide-index`
+and `guide-media` volumes were created by the earlier image, which ran as root, so their files belong
+to uid 0. Docker copies an image directory's owner only into a volume that is new and empty.
+
+**Consequence:** found in the demo rehearsal of 4 Oct: `docker compose up --build` on the existing
+volumes fails at start with `HSEARCH600001: Path '/var/lib/guide/index/Article' exists but does not
+point to a writable directory`, and the media root would refuse every new upload. Any stand that holds
+data and is upgraded without a reset breaks the same way; OGE's stand would be one. A reset
+(`down -v`, section 4 of the walkthrough fixes) creates the volumes owned by `guide`, which should
+start; not verified.
+
+**How to fix:** once, on each stand that was started before 2 Oct:
+`docker compose run --rm --no-deps --user root --entrypoint chown app -R guide:guide /var/lib/guide`
+(done on the rehearsal stand on 5 Oct, which then started). Say so where the stand's upgrade is
+described, or have the image take ownership at start, which needs a root step before `USER guide`.
+
+**Trigger:** the stand reset before the mid-demo (section 4), and any upgrade of a stand with data.
+
 ### DEBT-025 — The OGE team and developers pages show blanks for facts nobody has supplied
 
 **Status:** open
