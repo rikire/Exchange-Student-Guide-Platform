@@ -56,6 +56,10 @@
          5 Oct: pitest-maven 1.30.0, pitest-junit5-plugin 1.2.3. -->
     <pitest.version>1.30.0</pitest.version>
     <pitest-junit5.version>1.2.3</pitest-junit5.version>
+    <!-- Property-based tests for wikilink (docs/ai/testing.md). 1.9.2, not 1.10.1: checked on Maven
+         Central on 5 Oct, 1.9.3 and 1.10.x are built on JUnit Platform 1.13 and 1.14, newer than the
+         1.12.2 Spring Boot's BOM pins; 1.9.2 needs 1.11.3. -->
+    <jqwik.version>1.9.2</jqwik.version>
 
     <!-- Verified against Maven Central on 2026-09-25 (0.30.0, released 2026-08-06); Spring Boot's BOM
          does not manage it. Chosen over flexmark-java (no release since 2023-05); see

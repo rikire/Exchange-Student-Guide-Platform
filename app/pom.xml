@@ -233,6 +233,13 @@
       <artifactId>spring-modulith-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Property-based tests for wikilink, beside JUnit Jupiter on the same platform. -->
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik</artifactId>
+      <version>${jqwik.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
@@ -321,13 +328,6 @@
             <groupId>org.pitest</groupId>
             <artifactId>pitest-maven</artifactId>
             <version>${pitest.version}</version>
-            <dependencies>
-              <dependency>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-junit5-plugin</artifactId>
-                <version>${pitest-junit5.version}</version>
-              </dependency>
-            </dependencies>
             <configuration>
               <targetClasses>
                 <param>in.ac.iitm.guide.wikilink.*</param>
@@ -348,6 +348,13 @@
                 <param>XML</param>
               </outputFormats>
             </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-junit5-plugin</artifactId>
+                <version>${pitest-junit5.version}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>
