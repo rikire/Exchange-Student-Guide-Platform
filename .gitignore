@@ -80,3 +80,4 @@ docs/design/canvas-src/**/*.html
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+.jqwik-database
