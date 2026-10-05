@@ -308,6 +308,50 @@
         <browser.tests>none</browser.tests>
       </properties>
     </profile>
+    <!-- ./mvnw -pl app -P mutation test-compile org.pitest:pitest-maven:mutationCoverage: PIT over the
+         classes of pure logic whose tests start no Spring context, so each mutant runs in milliseconds
+         (docs/ai/testing.md: by hand before a stage, never in CI). The report is
+         app/target/pit-reports/index.html. No threshold fails the build; the surviving mutants are
+         read, and each is either a missing assertion or recorded as equivalent. -->
+    <profile>
+      <id>mutation</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>${pitest.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-junit5-plugin</artifactId>
+                <version>${pitest-junit5.version}</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <targetClasses>
+                <param>in.ac.iitm.guide.wikilink.*</param>
+                <param>in.ac.iitm.guide.moderate.internal.TextDiff*</param>
+                <param>in.ac.iitm.guide.contribute.internal.SubmissionNumbers*</param>
+                <param>in.ac.iitm.guide.shared.web.DisplayTime*</param>
+              </targetClasses>
+              <targetTests>
+                <param>in.ac.iitm.guide.wikilink.ArticleAddressTest</param>
+                <param>in.ac.iitm.guide.wikilink.WikiLinkRendererTest</param>
+                <param>in.ac.iitm.guide.moderate.internal.TextDiffTest</param>
+                <param>in.ac.iitm.guide.contribute.internal.SubmissionNumbersTest</param>
+                <param>in.ac.iitm.guide.shared.web.DisplayTimeTest</param>
+              </targetTests>
+              <timestampedReports>false</timestampedReports>
+              <outputFormats>
+                <param>HTML</param>
+                <param>XML</param>
+              </outputFormats>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!-- ./mvnw -P postgres verify: the same tests on PostgreSQL 17, the production database, instead
          of H2. A container per JVM via Testcontainers' JDBC URL; without a running Docker the context
          cannot start and the build fails, since a skipped check would pass silently. -->

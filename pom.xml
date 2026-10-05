@@ -52,6 +52,10 @@
          versions in its paths. -->
     <filepond.version>4.32.12</filepond.version>
     <filepond-plugin-image-preview.version>4.6.11</filepond-plugin-image-preview.version>
+    <!-- Mutation testing, run by hand before a stage (docs/ai/testing.md); checked on Maven Central on
+         5 Oct: pitest-maven 1.30.0, pitest-junit5-plugin 1.2.3. -->
+    <pitest.version>1.30.0</pitest.version>
+    <pitest-junit5.version>1.2.3</pitest-junit5.version>
 
     <!-- Verified against Maven Central on 2026-09-25 (0.30.0, released 2026-08-06); Spring Boot's BOM
          does not manage it. Chosen over flexmark-java (no release since 2023-05); see
