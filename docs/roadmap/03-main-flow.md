@@ -136,6 +136,12 @@ the criteria do not reach it.
       "written after the week" mark, since the commit date shows it. W38, a week with no commits from
       either member, waits until both agree what it says. Left: Mikhail's W37, W38 and W40, and
       Abdirakhim's W38.
+- [ ] [`docs/course/mid-demo.md`](../course/mid-demo.md) written — it is still the placeholder, and it is
+      the evidence for the rubric's 2-mark row "core workflow runs end to end". Decided 8 Oct by the
+      human: written after the other tasks done before the mid-demo, so it describes the stand as shown.
+      — check: no "Not written yet"; the demo script walks the scenario step by step, and each rubric
+      row of the mid-demo links its evidence
+      — owner: together, before 9 Oct
 
 ## Queue raised on 27 September
 
