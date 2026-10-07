@@ -71,6 +71,8 @@ added with FEAT-018. `pinned_at` still records when an article was pinned.
 
 **Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Pin", "Unpin", "Move up" and "Move down" secondary.
 
+**F-22 check, 8 Oct** ([walkthrough-fixes 3.9](../verification/walkthrough-fixes.md), D3 and D4): "Remove" was left a plain link and is now `button-danger`, as on the article page; from 1024 px both tables take the frame's width, with every cell on its row's middle line.
+
 ## Deliberately out of scope
 
 - Dragging to reorder, which would need a script.
