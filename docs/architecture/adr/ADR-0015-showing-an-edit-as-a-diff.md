@@ -76,3 +76,25 @@ costs a diff per view, which is proportionate for articles of a few thousand wor
 **Reversal:** `TextDiff` is the only class that imports the library; replacing it, or moving to
 option B, touches that class, the review template and the CSS. Reconsider if moderators say the
 Markdown syntax gets in the way — option C is then the next step, and needs a library for it first.
+
+## Amendment, 8 October — the reading text is compared too (fix 3.7, F-25)
+
+The walkthrough of 1 October found what the reversal note foresaw: the moderator reads `**` and the
+source's hard line breaks in the comparison (F-25). Decided 8 Oct by the human:
+
+- **Two views of the same comparison, the reading text first.** Each paragraph is turned into plain
+  text by commonmark's own `TextContentRenderer` (already a dependency), so `**`, link targets and
+  hard line breaks are gone and a `[[Title]]` reads as its title, and `TextDiff` compares those
+  texts exactly as it compares the source. The Markdown view stays one switch away, without a page
+  reload, so a summary being typed is not lost.
+- **Not option C.** Nothing is diffed as HTML, no library is added, and every segment is still
+  escaped by the template. A change of formatting alone (a word made bold) leaves the reading text
+  the same; that view then says so and points to the Markdown one, where the change is visible.
+
+- **Tags as what changed.** Decided the same day by the human after trying it: the tags row shows
+  only the tags the edit removes (struck through) and adds (underlined), not the whole old list and
+  the whole new one, where one added tag was lost among four kept ones. Title and summary stay old
+  and new.
+
+**Consequence:** the comparison is computed twice per view. Paragraphs stay the source's paragraphs,
+so a row of one view is the same row in the other.

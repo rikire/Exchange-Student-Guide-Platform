@@ -872,7 +872,9 @@ When a moderator reviews an edit submission, the system shall show the published
 the proposed text side by side, limited to the paragraphs that changed and their neighbours, with
 removed text marked in red and added text marked in green. A change to the title, the summary or the
 tags shall be shown as the old value and the new one. Added 29 Sep, narrowing
-[CON-004](constraints.md).
+[CON-004](constraints.md). Since 8 Oct the comparison is shown on the reading text first and on the
+Markdown source on request, and a change to the tags as the tags removed and the tags added (fix 3.7,
+ADR-0015's amendment).
 
 **Acceptance criteria:**
 
@@ -886,9 +888,14 @@ GIVEN an edit that adds a paragraph, or removes one
 WHEN the moderator opens its review
 THEN the added paragraph is shown marked as added, or the removed one marked as removed
 
-GIVEN an edit that changes the title, the summary or the tags
+GIVEN an edit that changes the title or the summary
 WHEN the moderator opens its review
 THEN the old and the new value of each changed field are shown
+
+GIVEN an edit that removes one tag, adds another and keeps the rest
+WHEN the moderator opens its review
+THEN the removed tag is shown marked as removed and the added one marked as added
+  AND the tags it keeps are not shown in the comparison
 
 GIVEN an edit whose text is the same as the published article's
 WHEN the moderator opens its review
@@ -897,6 +904,11 @@ THEN the review says the text has not changed
 GIVEN a submission of a new article
 WHEN the moderator opens its review
 THEN its text is shown in full, with no comparison
+
+GIVEN an edit that changes a word inside bold text
+WHEN the moderator opens its review
+THEN the comparison is first shown on the reading text, without the Markdown marks
+  AND the comparison of the Markdown source is one switch away, on the same page
 ```
 
 ### FR-030 — Saving an article as a PDF
