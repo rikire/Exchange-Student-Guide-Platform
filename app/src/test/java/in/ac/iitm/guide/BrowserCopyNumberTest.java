@@ -57,7 +57,7 @@ class BrowserCopyNumberTest {
     @BeforeAll
     void startTheBrowserAndSaveASubmission() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         var submission = new Submission();
         submission.setSubmissionNumber(NUMBER);
         submission.setType(SubmissionType.NEW_ARTICLE);

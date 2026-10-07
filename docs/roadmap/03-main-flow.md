@@ -358,9 +358,9 @@ design pass (3) is the largest piece and starts with redrawn screens.
       — check: each screen compared with its design screen, differences accepted
       — owner: **Abdirakhim**, except 3.6 and 3.7
       **Compared 8 Oct** ([3.9](../verification/walkthrough-fixes.md#39-every-screen-against-its-design-screen-8-oct)):
-      three defects and nine differences fixed, the rest kept by the human's earlier decisions. Left:
-      a run of `./mvnw -pl app -P browser verify`, which holds the new layout cases and could not
-      download its browser on the machine that made the fixes.
+      three defects and nine differences fixed, the rest kept by the human's earlier decisions. The
+      browser suite, run in the installed Chrome, passes every new case; its remaining failures (form
+      contrast, `/favicon.ico`) predate the fixes. Left: the human's word that this closes F-22.
 - [x] [Use the width of the window (F-17)](../verification/walkthrough-fixes.md#31-use-the-width-f-17)
       — check: `BrowserLayoutTest`: main content at least 60 % of a 1280 and 1920 px window
       — owner: **Abdirakhim**

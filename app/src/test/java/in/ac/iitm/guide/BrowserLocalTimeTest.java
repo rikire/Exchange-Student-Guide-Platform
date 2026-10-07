@@ -71,7 +71,7 @@ class BrowserLocalTimeTest {
     @BeforeAll
     void startTheBrowserAndArrangeTheGuide() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         transaction.executeWithoutResult(status -> {
             var visa = new Tag();
             visa.setName("visa");

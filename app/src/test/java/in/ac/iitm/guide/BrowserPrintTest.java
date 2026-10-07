@@ -55,7 +55,7 @@ class BrowserPrintTest {
     @BeforeAll
     void startTheBrowserAndPublishAnArticle() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         transaction.executeWithoutResult(status -> {
             var now = OffsetDateTime.now();
             var article = new Article();

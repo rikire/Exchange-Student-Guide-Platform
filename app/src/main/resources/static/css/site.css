@@ -229,8 +229,9 @@ p a, .article-body a { text-decoration: underline; }
 .queue-table td a { display: inline-flex; align-items: center; min-height: var(--target); }
 .queue-table th, .queue-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
 /* From 1024 px a moderator's table fits, so it is a table again and its rows take the frame's width
-   (fix 3.1; walkthrough-fixes 3.9, D3): as a scrolling block its rows kept their content's width. */
-@media (min-width: 64rem) { .queue-table { display: table; width: 100%; } }
+   (fix 3.1; walkthrough-fixes 3.9, D3): as a scrolling block its rows kept their content's width. A
+   long title breaks inside its cell, since no scroll box holds the table any more. */
+@media (min-width: 64rem) { .queue-table { display: table; width: 100%; } .queue-table td { overflow-wrap: anywhere; } }
 .queue-number { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; white-space: nowrap; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .review-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }

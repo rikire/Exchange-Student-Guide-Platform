@@ -69,7 +69,7 @@ class BrowserVideoTest {
     @BeforeAll
     void startTheBrowserAndPublishTwoVideos() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         publishWith("Playable", "walk.webm", MediaTestFiles.resource("media/webm.webm"));
         publishWith("Unplayable", "walk.mp4", MediaTestFiles.isoMedia("isom", 2_000));
     }

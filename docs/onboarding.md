@@ -96,6 +96,18 @@ It runs what CI runs: executable bits, the documentation check, the build, the t
 formatter, and takes under a minute once the dependencies are downloaded. If it fails, read the
 message before changing anything; each check prints the command that repairs it.
 
+The browser tests (`Browser*Test`, ADR-0014) are not in it: `./mvnw -pl app -P browser verify`. They
+download Playwright's Chromium on the first run. Where that download fails, run them in the installed
+Google Chrome instead:
+
+```sh
+PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 ./mvnw -pl app -P browser verify -Dbrowser.channel=chrome
+```
+
+In Chrome, unlike Playwright's Chromium, two things fail that have nothing to do with a change: the
+request for `/favicon.ico` (404, which the console-error checks catch) and two contrast findings on the
+submission and edit forms ([walkthrough-fixes 3.9](verification/walkthrough-fixes.md)).
+
 ## 5. Your editor
 
 Nothing is required. VS Code picks up `.vscode/settings.json`, whose settings match the formatter, so a

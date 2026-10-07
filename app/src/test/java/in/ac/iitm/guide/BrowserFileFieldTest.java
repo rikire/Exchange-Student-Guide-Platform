@@ -49,7 +49,7 @@ class BrowserFileFieldTest {
     @BeforeAll
     void startTheBrowser() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
     }
 
     @AfterAll

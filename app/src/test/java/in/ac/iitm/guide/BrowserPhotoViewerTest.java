@@ -84,7 +84,7 @@ class BrowserPhotoViewerTest {
     @BeforeAll
     void startTheBrowserAndPublishAnArticleWithPhotos() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         var now = OffsetDateTime.now();
         var article = new Article();
         transaction.executeWithoutResult(status -> {

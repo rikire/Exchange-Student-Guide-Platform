@@ -99,7 +99,7 @@ class BrowserLayoutTest {
     @BeforeAll
     void startTheBrowserAndWriteTheFixtures() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         transaction.executeWithoutResult(status -> {
             var now = OffsetDateTime.now();
             var article = new Article();
@@ -329,9 +329,10 @@ class BrowserLayoutTest {
     // trace:NFR-008
     void on_a_wide_screen_the_moderators_tables_fill_the_frame() {
         // Fix 3.1 (F-17), walkthrough-fixes 3.9 D3: the rows, not only the box that scrolls on a phone.
-        var share = "() => { const t = document.querySelector('.queue-table');"
-                + " return t.querySelector('tr').getBoundingClientRect().width"
-                + " / t.parentElement.getBoundingClientRect().width; }";
+        var share = "() => { const t = document.querySelector('.queue-table'); const frame = t.parentElement;"
+                + " const style = getComputedStyle(frame);"
+                + " return t.querySelector('tr').getBoundingClientRect().width / (frame.clientWidth"
+                + " - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)); }";
 
         for (var measured : onTheModeratorsTables(share)) {
             assertThat(measured.value()).as(measured.where()).isGreaterThan(0.95);

@@ -501,9 +501,13 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
 - **N1, fixed 8 Oct.** The landing page lists 12 tags, not 50, and ends the list in "All tags →".
 
 **Checked 8 Oct** by recapturing every pair: no page of the application is wider than 320 px at 320,
-and none of D1, D3 and D4 is left. `BrowserLayoutTest` (`-P browser`), which holds the new D1, D3 and
-D4 cases, has not run: Playwright's Chromium could not be downloaded on this machine, and CI does not
-run the browser profile.
+and none of D1, D3 and D4 is left. Playwright's Chromium could not be downloaded on this machine, so
+the browser suite ran in the installed Chrome (`-Dbrowser.channel=chrome`, `TestBrowser`). It caught a
+regression of D3 — with no scroll box, a long unbroken title widened `/moderate/articles` to 2,227 px —
+now broken inside its cell. What still fails there failed the same way on `a8da741`, before these
+fixes: axe's contrast rule on two elements of `/submit` and the edit form (3.6), and a 404 for
+`/favicon.ico`, which Chrome requests and Playwright's Chromium does not. Both wait for a run in
+Playwright's Chromium to tell whether they are Chrome's alone.
 
 **Pages with no design screen** — compared with nothing: `/articles`, `/tags`, the plain 404, the
 report form, the moderator's write form, the remove confirmation, the log-out page.

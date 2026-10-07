@@ -68,7 +68,7 @@ class BrowserKeyboardTest {
     @BeforeAll
     void startTheBrowserAndPublishTwoLinkedArticles() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
+        browser = TestBrowser.launch(playwright);
         publish("Registering with FRRO", "FRRO registration is due within 14 days. Bring your [[Hostel Life]] papers.");
         publish("Hostel Life", "Rooms are shared.");
     }
