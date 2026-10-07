@@ -177,6 +177,17 @@ class ArticleRemovalTest {
 
     @Test
     // trace:FR-026
+    void the_articles_list_offers_removal_in_the_danger_style() throws Exception {
+        published("Hostel Life", "Rooms and mess.");
+
+        var page = response(get("/moderate/articles").session(loggedIn())).getContentAsString();
+
+        // Fix 3.2: Remove is drawn as a danger button wherever it is offered (walkthrough-fixes 3.9, D4).
+        assertThat(page).containsPattern("<a class=\"button-danger\" href=\"" + removePath("hostel-life") + "\"");
+    }
+
+    @Test
+    // trace:FR-026
     void removal_without_a_moderator_session_is_refused_and_the_article_stays() throws Exception {
         published("Hostel Life", "Rooms and mess.");
         var readersForm = mockMvc.perform(get("/submit")).andReturn();

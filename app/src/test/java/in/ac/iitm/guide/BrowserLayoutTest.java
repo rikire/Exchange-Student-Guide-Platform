@@ -327,6 +327,51 @@ class BrowserLayoutTest {
 
     @org.junit.jupiter.api.Test
     // trace:NFR-008
+    void on_a_wide_screen_the_moderators_tables_fill_the_frame() {
+        // Fix 3.1 (F-17), walkthrough-fixes 3.9 D3: the rows, not only the box that scrolls on a phone.
+        var share = "() => { const t = document.querySelector('.queue-table');"
+                + " return t.querySelector('tr').getBoundingClientRect().width"
+                + " / t.parentElement.getBoundingClientRect().width; }";
+
+        for (var measured : onTheModeratorsTables(share)) {
+            assertThat(measured.value()).as(measured.where()).isGreaterThan(0.95);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
+    void on_a_wide_screen_each_cell_of_a_moderators_table_sits_on_its_rows_middle_line() {
+        // Walkthrough-fixes 3.9, D3 and D4: "Review", and the tags, sat apart from the rest of the row.
+        var spread = "() => { const middles = [...document.querySelector('.queue-table tbody tr').children]"
+                + ".map(td => { const r = (td.firstElementChild || td).getBoundingClientRect();"
+                + " return r.top + r.height / 2; });"
+                + " return Math.max(...middles) - Math.min(...middles); }";
+
+        for (var measured : onTheModeratorsTables(spread)) {
+            assertThat(measured.value()).as(measured.where()).isLessThan(3);
+        }
+    }
+
+    private record Measured(String where, double value) {}
+
+    private List<Measured> onTheModeratorsTables(String script) {
+        var measured = new ArrayList<Measured>();
+        for (var width : List.of(1280, 1920)) {
+            try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {
+                var page = context.newPage();
+                signIn(page);
+                for (var path : List.of("/moderate/queue", "/moderate/articles")) {
+                    page.navigate("http://localhost:" + port + path);
+                    measured.add(new Measured(
+                            path + " at " + width + " px", ((Number) page.evaluate(script)).doubleValue()));
+                }
+            }
+        }
+        return measured;
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:NFR-008
     void on_a_wide_screen_the_article_has_its_sidebar_beside_the_text_as_its_design_screen_draws() {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
             var page = context.newPage();

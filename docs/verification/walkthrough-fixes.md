@@ -479,6 +479,11 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
   `BrowserLayoutTest`'s sample `SUB-K7M2-QX9P-4TVB` fitted. The fragment puts a `<wbr>` after each
   hyphen, which adds no text to a copy; the test's sample is now `SUB-0WMW-0MWM-0WMW`.
 
+- **D3 and D4, fixed 8 Oct.** As a block that scrolls on a phone, a moderator's table kept its rows at
+  their content's width; from 1024 px it is a table again at the frame's width, and every cell sits on
+  its row's middle line. Remove in the list of published articles is a `button-danger`, as on the
+  article page. Tests: `BrowserLayoutTest`'s two moderator-table cases, and `ArticleRemovalTest`.
+
 **Pages with no design screen** — compared with nothing: `/articles`, `/tags`, the plain 404, the
 report form, the moderator's write form, the remove confirmation, the log-out page.
 

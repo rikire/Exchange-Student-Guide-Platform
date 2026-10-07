@@ -56,7 +56,7 @@
               <form method="post" th:unless="${line.pinned}" th:action="@{/moderate/articles/{a}/pin(a=${line.address})}">
                 <button class="button-secondary" type="submit" th:aria-label="'Pin ' + ${line.title}">Pin</button>
               </form>
-              <a th:href="@{/moderate/articles/{a}/remove(a=${line.address})}" th:aria-label="'Remove ' + ${line.title}">Remove</a>
+              <a class="button-danger" th:href="@{/moderate/articles/{a}/remove(a=${line.address})}" th:aria-label="'Remove ' + ${line.title}">Remove</a>
             </div>
           </td>
         </tr>
