@@ -438,6 +438,50 @@ the title and a date, and a "Pinned" section (2.2).
 - The tracking and login pages: one line on what the number is and where it was given; a link back
   to the guide.
 
+### 3.9 Every screen against its design screen, 8 Oct
+
+The check of F-22. The local application with the `seed` profile, one submission and one report,
+captured by Playwright at 320 and 1280 px beside its design screen; 3.6 and 3.7 are Mikhail's and not
+in it. A difference already decided in 3.1–3.8 or 2.1–2.4 is not repeated here.
+
+**Defects** — they break NFR-008 or a decision taken above, so they are not up for acceptance:
+
+| # | Screen | At | What |
+|---|---|---|---|
+| D1 | Submission confirmation, submission status | 320 | The number `SUB - 1872 - 42CQ - 02KQ` does not wrap: it runs out of its card and the page scrolls sideways (359 px wide). |
+| D2 | Moderation queue | 320 | Only the number column and Review are left, and the number is cut (`…02KC`); the moderator cannot see the title or the type. |
+| D3 | Moderation queue | 1280 | The table is 833 px of a 1200 px frame, against 3.1's "the queue at full frame width"; "Review →" sits lower than the rest of its row. |
+| D4 | Homepage & articles | 1280 | "Remove" is quiet grey text, against 3.2's danger style for Remove; the tags cell sits higher than the title in its row. |
+
+**Differences** — the human accepts or rejects each one:
+
+| # | Screen | Application | Design screen |
+|---|---|---|---|
+| N1 | Landing | Every tag in the sidebar; on a phone the page is 5,713 px, most of it the tags at the end | Eight tags; 2,209 px on a phone |
+| N2 | Landing, tag page | Card titles maroon; on the tag page the summary is cut after three lines | Titles near-black; the whole summary |
+| N3 | Search | A page heading and a separate box with a Search button; the header keeps the navigation | The search box in the header in place of the navigation |
+| N4 | Search, nothing found | A line of text | A dashed card with a search icon, centred |
+| N5 | Tag page | Four cards across, and "8 articles" | One column of cards |
+| N6 | Red-link invite | Left-aligned, the title as plain text, then "Did you mean", search and the way back | A centred card with a warning icon and the title in red monospace, and nothing else |
+| N7 | Submission confirmation | No status badge | A green "Received" badge |
+| N8 | Submission status | The status as a sand-coloured pill with words | A coloured dot badge (red Rejected, and so on) |
+| N9 | Moderator login | The field at the frame's width, no card, no ADMIN label | A narrow card and an ADMIN label beside the logo |
+| N10 | Moderator pages | No MODERATOR label; the queue and the inbox not inside a white card | A MODERATOR label; the table in a white card |
+| N11 | Report inbox | The buttons under the message; "Reported now" and "Message from the reader" with no space between | The buttons to the right of the title |
+| N12 | Homepage & articles | A separate "Pinned, in order" table; tags as text; "Pinned" a small label | One table; tags as chips; Pin and Pinned as pill buttons |
+
+**Decided 8 Oct by the human:** what was decided before stays — N2, N3 and N5 (fix 3.3 and the
+header of 2.1), N6's "Did you mean" and search box (3.8), and D2, the queue that scrolls sideways on a
+phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the order of the tables.
+
+- **D1, fixed 8 Oct.** A browser does not break a line between a hyphen and a digit, so a number whose
+  group starts with a digit (`SUB-1872-…`) stayed on one line; a number of letters wrapped, which is why
+  `BrowserLayoutTest`'s sample `SUB-K7M2-QX9P-4TVB` fitted. The fragment puts a `<wbr>` after each
+  hyphen, which adds no text to a copy; the test's sample is now `SUB-0WMW-0MWM-0WMW`.
+
+**Pages with no design screen** — compared with nothing: `/articles`, `/tags`, the plain 404, the
+report form, the moderator's write form, the remove confirmation, the log-out page.
+
 ## 4. The stand before the demo
 
 - Commit the walkthrough's change to `docker-compose.yml` and `.env.example` (F-3, done during the

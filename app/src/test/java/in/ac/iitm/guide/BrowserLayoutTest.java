@@ -55,7 +55,9 @@ class BrowserLayoutTest {
 
     private static final List<Integer> WIDTHS = List.of(320, 768, 1280, 1920);
     private static final Set<Integer> PHONE_AND_TABLET = Set.of(320, 768);
-    private static final String NUMBER = "SUB-K7M2-QX9P-4TVB";
+    // Each group led by a digit and filled with the widest letters (walkthrough-fixes 3.9, D1): a browser
+    // does not break a line between a hyphen and a digit, so SUB-1872-42CQ-02KQ ran off a 320 px phone.
+    private static final String NUMBER = "SUB-0WMW-0MWM-0WMW";
     private static final String PASSWORD = "the office's password";
 
     /**

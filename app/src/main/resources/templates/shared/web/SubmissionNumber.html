@@ -3,8 +3,9 @@
 <body>
   <!-- Walkthrough F-29 (fix 2.4): a submission number in its groups, spaced apart, so a 0 is not read
        as an 8 when it is copied by hand. The hyphens stay in the text, so selecting and copying it gives
-       the number as issued. -->
+       the number as issued. The <wbr> lets a phone break the line after a hyphen even before a digit,
+       where a browser otherwise will not (walkthrough-fixes 3.9, D1). -->
   <!-- trace:NFR-006 -->
-  <span th:fragment="number(value, style)" th:class="${style}"><th:block th:each="part, at : ${#strings.arraySplit(value, '-')}"><span class="number-group" th:text="${part}">K7M2</span><span class="number-dash" th:unless="${at.last}">-</span></th:block></span>
+  <span th:fragment="number(value, style)" th:class="${style}"><th:block th:each="part, at : ${#strings.arraySplit(value, '-')}"><span class="number-group" th:text="${part}">K7M2</span><span class="number-dash" th:unless="${at.last}">-</span><wbr th:unless="${at.last}"></th:block></span>
 </body>
 </html>
