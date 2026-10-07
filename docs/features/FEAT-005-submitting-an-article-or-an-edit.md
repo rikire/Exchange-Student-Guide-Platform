@@ -93,7 +93,8 @@ Each follows from something already decided; each has a test.
 - **The tag field is one `<select multiple name="tags">` under Tom Select** (fix 3.6, ADR-0022). Its
   options are the submission's own tags, selected and as typed, then every tag of a live article that
   none of them is stored as (`Tags.storedAs`), A–Z, at most 500 (`Tags.inUse`, ADR-0010). A word
-  becomes a chip on Enter or a comma, × removes it, a typed word is kept when the field loses focus,
+  becomes a chip on Enter, on a comma or on the "Add tag" button beside the field (fix 3.7, the
+  human, 8 Oct), × removes it, a typed word is kept when the field loses focus,
   and at most `Tags.MOST` chips are taken. The post is one `tags` field per chip, as before, so the
   controller reads it unchanged. Without the script the list still offers the stored tags, but a new
   one cannot be typed. The `413` form (`UploadTooLargeAdvice`) gets the same list; until step g of

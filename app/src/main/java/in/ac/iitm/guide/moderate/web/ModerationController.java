@@ -9,10 +9,10 @@ import in.ac.iitm.guide.moderate.internal.RejectionRefusedException;
 import in.ac.iitm.guide.moderate.internal.SubmissionNotFoundException;
 import in.ac.iitm.guide.moderate.persistence.ModerateArticleRepository;
 import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,16 +38,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 class ModerationController {
 
-    /** The review page offers at least this many tag fields, as the submission form does. */
-    private static final int TAG_FIELDS = 5;
-
     private final ModerationService moderation;
     private final ModerateArticleRepository articles;
+    private final Tags tags;
     private final WikiLinkRenderer renderer = new WikiLinkRenderer();
 
-    ModerationController(ModerationService moderation, ModerateArticleRepository articles) {
+    ModerationController(ModerationService moderation, ModerateArticleRepository articles, Tags tags) {
         this.moderation = moderation;
         this.articles = articles;
+        this.tags = tags;
     }
 
     @GetMapping("/moderate/queue")
@@ -118,15 +117,15 @@ class ModerationController {
 
     private String reviewPage(Model model, Review review, String error, Settled settled) {
         var summary = settled == null ? review.summary() : settled.summary();
-        var fields = new ArrayList<>(settled == null ? review.tags() : settled.tags());
-        do {
-            fields.add("");
-        } while (fields.size() < TAG_FIELDS);
+        var chosen = settled == null ? review.tags() : settled.tags();
 
         model.addAttribute("review", review);
         model.addAttribute("bodyHtml", renderer.render(review.body(), this::resolve));
         model.addAttribute("summary", summary);
-        model.addAttribute("tagFields", fields);
+        // Fix 3.7 (F-25): the tag field of the contributor's form (ADR-0022), the submission's tags chosen.
+        model.addAttribute("chosenTags", chosen);
+        model.addAttribute("tagChoices", Tags.choices(chosen, tags.inUse()));
+        model.addAttribute("tagMost", Tags.MOST);
         model.addAttribute("error", error);
         model.addAttribute("reasonLimit", ModerationService.REASON_LIMIT);
         model.addAttribute("summaryLimit", Article.LONGEST_SUMMARY);

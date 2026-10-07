@@ -17,11 +17,9 @@ import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -301,15 +299,9 @@ class SubmissionController {
                     false);
         }
 
-        /**
-         * Fix 3.6 (ADR-0022): the tag list's options — this submission's tags as typed, then every
-         * tag in use that none of them is stored as ({@link Tags#storedAs}), so none is offered twice.
-         */
+        /** Fix 3.6 (ADR-0022): the tag list's options, this submission's tags selected among them. */
         List<String> tagChoices(List<String> inUse) {
-            var typed = tags.stream().map(Tags::storedAs).collect(Collectors.toSet());
-            var choices = new ArrayList<>(tags);
-            inUse.stream().filter(name -> !typed.contains(name)).forEach(choices::add);
-            return choices;
+            return Tags.choices(tags, inUse);
         }
 
         FormPage refused(String error, String linkHref, String linkLabel) {

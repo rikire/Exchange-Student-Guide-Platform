@@ -119,6 +119,30 @@ class BrowserTagFieldTest {
 
     @Test
     // trace:FR-010
+    void the_add_tag_button_turns_the_typed_word_into_a_chip() {
+        var page = openTheForm();
+
+        page.click(".ts-control");
+        page.keyboard().type("hostel");
+        page.click("button.tag-add");
+
+        assertThat(chips(page)).containsExactly("hostel");
+    }
+
+    @Test
+    // trace:FR-010
+    void the_add_tag_button_with_nothing_typed_puts_the_cursor_in_the_field() {
+        var page = openTheForm();
+
+        page.click("button.tag-add");
+
+        assertThat(chips(page)).isEmpty();
+        assertThat(page.evaluate("() => document.activeElement.closest('.ts-control') !== null"))
+                .isEqualTo(true);
+    }
+
+    @Test
+    // trace:FR-010
     void the_cross_on_a_chip_removes_it() {
         var page = openTheForm();
         page.click(".ts-control");

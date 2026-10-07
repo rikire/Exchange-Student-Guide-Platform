@@ -25,6 +25,7 @@ code:
   - app/src/main/java/in/ac/iitm/guide/shared/security/ModeratorLoginController.java
   - app/src/main/resources/templates/moderate/ModerationQueue.html
   - app/src/main/resources/templates/moderate/SubmissionReview.html
+  - app/src/main/resources/templates/moderate/DiffTable.html
   - app/src/main/resources/templates/shared/security/AdminLogin.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/moderate/ModerationFlowTest.java
@@ -197,11 +198,25 @@ the guide.
 
 **Fix 3.2, 2 Oct:** the page's actions wear the site's buttons (FEAT-011, [Buttons.html](../design/screens/Buttons.html)): "Approve & publish" and "Sign in" primary, "Reject" danger, "Back to the guide" quiet.
 
+**Fix 3.7, 8 Oct (F-25, ADR-0015's amendment):** an edit's comparison is shown first as the text reads
+— each paragraph through `WikiLinkRenderer.plainText`, so no `**`, no hard line breaks, a wiki link as
+its words — and as its Markdown one radio button away (`DiffTable.html` drawn twice, switched by
+site.css, no script). A change of formatting alone says so and points to the Markdown view. The
+summary is a textarea, and the tags are the contributor's tag field (`Tags.choices`, ADR-0022). Tests:
+five in `TextDiffTest`, five in `ModerationFlowTest`, all red first. `BrowserLayoutTest` and
+`BrowserKeyboardTest` not run: the browser download timed out on 8 Oct.
+Later the same day, run in the installed Chrome (`-Dbrowser.channel=chrome`): the review page passes
+at all four widths once the switch became two labelled buttons over hidden radio buttons. The human
+then tried the page, accepted it, and asked for two changes: the tags row shows only the tags removed
+and added (`TagChange`, FR-029's new criterion), and every tag field has an "Add tag" button
+(`tags.js`, `BrowserTagFieldTest`, two tests).
+
 ## Deliberately out of scope
 
 - Media on the review page (the rest of FR-015's first criterion) — the `media` step (DEBT-008).
 - Showing the rejection reason to anyone — FR-012 (looking up a submission's status), not built.
-- A diff of the rendered page rather than of its Markdown — ADR-0015's option C.
+- A diff of the rendered HTML — ADR-0015's option C. The reading-text view of fix 3.7 compares plain
+  text, not HTML.
 - Logout — no route in the contract; the session expires on its own.
 - The admin panel, direct publishing (FR-023, FR-024), removal (FR-026) — phase 4.
 

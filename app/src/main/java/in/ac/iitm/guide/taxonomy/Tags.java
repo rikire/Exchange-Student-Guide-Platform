@@ -2,6 +2,7 @@ package in.ac.iitm.guide.taxonomy;
 
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.taxonomy.persistence.TagRepository;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,6 +80,18 @@ public class Tags {
     @Transactional(readOnly = true)
     public List<String> inUse() {
         return tags.findNamesInUse(PageRequest.of(0, MOST_OFFERED));
+    }
+
+    /**
+     * A tag field's options (ADR-0022): the chosen tags as typed, then every tag in use that none of
+     * them is stored as ({@link #storedAs}), so none is offered twice. Fix 3.6 built it for the
+     * contributor's form; fix 3.7 shares it with the moderator's two.
+     */
+    public static List<String> choices(List<String> chosen, List<String> inUse) {
+        var typed = chosen.stream().map(Tags::storedAs).collect(Collectors.toSet());
+        var choices = new ArrayList<>(chosen);
+        inUse.stream().filter(name -> !typed.contains(name)).forEach(choices::add);
+        return choices;
     }
 
     /**

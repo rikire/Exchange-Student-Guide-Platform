@@ -3,16 +3,17 @@
 <body>
   <!-- FEAT-009: an article's or a submission's assets. A photo is shown, a video plays, a document is
        named with its size; each is fetched from GET /media/{id}, which decides who may have it.
-       FR-016: every asset has a Download link; the download attribute saves a photo or a video under
-       its original name too, which the server sends inline.
+       FR-016: every asset has a Download link, inside its card (fix 3.7); the download attribute saves
+       a photo or a video under its original name too, which the server sends inline.
        Walkthrough fix 1.4: a video the browser cannot decode becomes its card (videos.js), and an AVI
        or MPEG, which no current browser plays, is only the card. -->
   <div class="media-list" th:fragment="list(items)" th:if="${!items.isEmpty()}">
     <th:block th:each="item : ${items}">
       <figure class="media-photo" th:if="${item.kind().name() == 'PHOTO'}">
         <img th:src="@{${item.href()}}" th:alt="${item.originalName()}" alt="Attached photo" loading="lazy">
+        <figcaption class="media-caption"><a th:replace="~{:: download(${item})}">Download</a></figcaption>
       </figure>
-      <th:block th:if="${item.kind().name() == 'VIDEO'}">
+      <figure class="media-video-item" th:if="${item.kind().name() == 'VIDEO'}">
         <video class="media-video" th:if="${item.playsInPage()}" th:src="@{${item.href()}}" controls preload="metadata"
                th:aria-label="${item.originalName()}"></video>
         <div class="media-block media-video-card" th:hidden="${item.playsInPage()}">
@@ -24,19 +25,22 @@
                 : 'This video plays after you download it.'">This video plays after you download it.</p>
           </div>
         </div>
-      </th:block>
+        <figcaption class="media-caption"><a th:replace="~{:: download(${item})}">Download</a></figcaption>
+      </figure>
       <div class="media-block" th:if="${item.kind().name() == 'DOCUMENT'}">
         <div>
           <a class="media-name" th:href="@{${item.href()}}" th:text="${item.originalName()}">checklist.pdf</a>
           <div class="media-meta" th:text="${item.size()}">240 KB</div>
         </div>
+        <a th:replace="~{:: download(${item})}">Download</a>
       </div>
-      <p class="media-download-row">
-        <a class="media-download button-secondary" th:href="@{${item.href()}}" th:download="${item.originalName()}"
-           th:aria-label="'Download ' + ${item.originalName()}">Download</a>
-      </p>
     </th:block>
     <script type="module" th:src="@{/js/videos.js}"></script>
   </div>
+
+  <!-- Fix 3.7 (F-25): Download sits in the file's own card — beside a document's name, under a photo
+       or a video — not in a row of its own below it. -->
+  <a class="media-download button-secondary" th:fragment="download(item)" th:href="@{${item.href()}}"
+     th:download="${item.originalName()}" th:aria-label="'Download ' + ${item.originalName()}">Download</a>
 </body>
 </html>

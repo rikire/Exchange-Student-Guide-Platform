@@ -5,11 +5,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import in.ac.iitm.guide.moderate.internal.TextDiff.Kind;
 import in.ac.iitm.guide.moderate.internal.TextDiff.Row;
 import in.ac.iitm.guide.moderate.internal.TextDiff.Segment;
+import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
 
 /** FR-029's comparison of an article's body with an edit's, paragraph by paragraph. */
 class TextDiffTest {
+
+    /** The reading text of a paragraph, as the review page asks for it (fix 3.7, ADR-0015's amendment). */
+    private static final UnaryOperator<String> AS_READ = new WikiLinkRenderer()::plainText;
 
     @Test
     // trace:FR-029
@@ -116,5 +121,58 @@ class TextDiffTest {
 
         assertThat(diff.rows()).hasSize(1);
         assertThat(diff.rows().getFirst().after()).contains(new Segment("Visa", true));
+    }
+
+    @Test
+    // trace:FR-029
+    void the_reading_text_marks_a_changed_word_without_the_markdown_around_it() {
+        var diff = TextDiff.of("Bring your **passport** today.", "Bring your **visa** today.", AS_READ);
+
+        assertThat(diff.rows())
+                .containsExactly(new Row(
+                        Kind.CHANGED,
+                        List.of(
+                                new Segment("Bring your ", false),
+                                new Segment("passport", true),
+                                new Segment(" today.", false)),
+                        List.of(
+                                new Segment("Bring your ", false),
+                                new Segment("visa", true),
+                                new Segment(" today.", false)),
+                        0));
+    }
+
+    @Test
+    // trace:FR-029
+    void a_change_of_formatting_alone_leaves_the_reading_text_unchanged() {
+        var diff = TextDiff.of("Bring your passport today.", "Bring your **passport** today.", AS_READ);
+
+        assertThat(diff.unchanged()).isTrue();
+    }
+
+    @Test
+    // trace:FR-029
+    void a_line_break_of_the_source_is_not_in_the_reading_text() {
+        var diff = TextDiff.of("Bring your\npassport today.", "Bring your\nvisa today.", AS_READ);
+
+        assertThat(diff.rows().getFirst().before()).extracting(Segment::text).noneMatch(text -> text.contains("\n"));
+    }
+
+    @Test
+    // trace:FR-029
+    void a_wiki_link_reads_as_the_words_it_shows() {
+        var diff = TextDiff.of("See the office.", "See [[Visa Office|the visa office]].", AS_READ);
+
+        assertThat(diff.rows().getFirst().after())
+                .containsExactly(
+                        new Segment("See the ", false), new Segment("visa ", true), new Segment("office.", false));
+    }
+
+    @Test
+    // trace:FR-029
+    void an_added_paragraph_with_nothing_to_read_is_not_a_change_of_the_reading_text() {
+        var diff = TextDiff.of("First.\n\nSecond.", "First.\n\n---\n\nSecond.", AS_READ);
+
+        assertThat(diff.unchanged()).isTrue();
     }
 }

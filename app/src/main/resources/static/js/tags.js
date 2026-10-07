@@ -11,7 +11,7 @@
     return;
   }
   document.querySelectorAll('select.tag-select').forEach(function (select) {
-    new TomSelect(select, {
+    var field = new TomSelect(select, {
       create: true,
       // A word typed but not yet confirmed is kept when the field loses focus, as on submitting.
       createOnBlur: true,
@@ -30,5 +30,27 @@
         this.refreshOptions(false);
       }
     });
+    addButtonTo(field);
   });
+
+  // Fix 3.7 (the human, 8 Oct): an "Add tag" button beside the field, for whoever does not know that
+  // Enter or a comma makes the chip. Pressing it moves the focus off the field, and createOnBlur has
+  // already made the typed word a chip by the time the click arrives; with nothing typed, the click
+  // puts the cursor in the field. createItem covers a click that did not take the focus first.
+  function addButtonTo(field) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'button-secondary tag-add';
+    button.textContent = 'Add tag';
+    button.addEventListener('click', function () {
+      if (field.inputValue().trim()) {
+        field.createItem();
+      }
+      field.focus();
+    });
+    var row = document.createElement('div');
+    row.className = 'tag-row';
+    field.wrapper.before(row);
+    row.append(field.wrapper, button);
+  }
 })();

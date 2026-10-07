@@ -431,6 +431,19 @@ the title and a date, and a "Pinned" section (2.2).
 - **Change:** the diff of the rendered text as well as the Markdown (a toggle), the summary as a
   textarea, the tag field from 3.6, "Download" inside the file's card.
 - **Check:** tests for the toggle and the textarea.
+- **Built 8 Oct** (taken over by Abdirakhim; ADR-0015 amended and an FR-029 criterion added, both by
+  the human's decision of the same day): the comparison as the text reads first and its Markdown one
+  radio button away, with no script; the summary a textarea; the tag field of 3.6, on the publish form
+  too (DEBT-024 narrowed to the field errors); "Download" in each file's card, on the article page
+  as well, since the fragment is shared. `./mvnw verify` green (614 tests); the browser tests not run,
+  as the browser download timed out. Left: the browser tests, and the human's look at the page.
+- **Checked 8 Oct** in the installed Chrome: the review page passes `BrowserLayoutTest` at four widths
+  (the switch's radio buttons were under 16 and 44 px; now hidden, their labels the targets). Twelve
+  browser tests fail there exactly as on a clean `HEAD` (eight on a `404` resource, four on contrast in
+  the contributor's forms), so not this fix's. The human tried the page on the local app and accepted
+  it, then asked for the tags row to show only removed and added tags (FR-029 and ADR-0015 amended)
+  and an "Add tag" button on every tag field; both built and tested, and **accepted by the human** the
+  same day on the local app.
 
 ### 3.8 The small pages (F-14, F-15, F-19)
 
@@ -491,6 +504,8 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
 - **N9 and N10, fixed 8 Oct.** The header carries a "Moderator" label for a signed-in moderator and
   on every `/moderate/` page, the login among them (`ModeratorFrame.moderatorArea`); on a phone it wraps
   under the site's name. The login is a narrow card; the moderator's tables are on white in a frame.
+  **Changed 8 Oct by the human:** the login's heading, note and card stand in one column at the middle
+  of the page (`.login-panel`), not at the left as on the design screen.
 - **N11, fixed 8 Oct.** From 1024 px a report's two actions stand beside its title and date, and its
   message, set apart from the date, takes the card's width.
 - **N12, fixed 8 Oct, in part.** The tags of a published article are chips. Pin stays a secondary
@@ -504,8 +519,6 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
 and none of D1, D3 and D4 is left. Playwright's Chromium could not be downloaded on this machine, so
 the browser suite ran in the installed Chrome (`-Dbrowser.channel=chrome`, `TestBrowser`). It caught a
 regression of D3 — with no scroll box, a long unbroken title widened `/moderate/articles` to 2,227 px —
-  **Changed 8 Oct by the human:** the login's heading, note and card stand in one column at the middle
-  of the page (`.login-panel`), not at the left as on the design screen.
 now broken inside its cell. What still fails there failed the same way on `a8da741`, before these
 fixes: axe's contrast rule on two elements of `/submit` and the edit form (3.6), and a 404 for
 `/favicon.ico`, which Chrome requests and Playwright's Chromium does not. Both wait for a run in

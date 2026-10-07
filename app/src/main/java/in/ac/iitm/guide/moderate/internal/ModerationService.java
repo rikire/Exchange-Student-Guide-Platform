@@ -17,6 +17,7 @@ import in.ac.iitm.guide.shared.web.DisplayTime;
 import in.ac.iitm.guide.taxonomy.TagRejectedException;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
+import in.ac.iitm.guide.wikilink.WikiLinkRenderer;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class ModerationService {
     private final MediaAssets media;
     private final ApplicationEventPublisher events;
     private final DisplayTime displayTime;
+    private final WikiLinkRenderer renderer = new WikiLinkRenderer();
 
     ModerationService(
             ModerateSubmissionRepository submissions,
@@ -116,8 +118,15 @@ public class ModerationService {
     /** A field an edit changes, as the published value and the proposed one. */
     public record FieldChange(String field, String before, String after) {}
 
-    /** FR-029: the changed fields, and the body paragraph by paragraph. */
-    public record Comparison(List<FieldChange> fields, TextDiff body) {}
+    /** The tags an edit removes and adds; the ones it keeps are not part of the change (fix 3.7). */
+    public record TagChange(List<String> removed, List<String> added) {}
+
+    /**
+     * FR-029: the changed title and summary, the changed tags ({@code null} when there are none), and
+     * the body paragraph by paragraph — as it reads, shown first, and as its Markdown source (fix 3.7,
+     * ADR-0015's amendment).
+     */
+    public record Comparison(List<FieldChange> fields, TagChange tags, TextDiff reading, TextDiff body) {}
 
     /** @return every pending submission, oldest first (FR-014) */
     @Transactional(readOnly = true)
@@ -265,8 +274,11 @@ public class ModerationService {
                     var fields = new ArrayList<FieldChange>();
                     changed(fields, "Title", article.getTitle(), submission.getTitle());
                     changed(fields, "Summary", article.getSummary(), submission.getSummary());
-                    changed(fields, "Tags", listed(publishedTags), listed(proposedTags));
-                    return new Comparison(fields, TextDiff.of(article.getBody(), submission.getBody()));
+                    return new Comparison(
+                            fields,
+                            tagChange(publishedTags, proposedTags),
+                            TextDiff.of(article.getBody(), submission.getBody(), renderer::plainText),
+                            TextDiff.of(article.getBody(), submission.getBody()));
                 })
                 .orElse(null);
     }
@@ -277,8 +289,10 @@ public class ModerationService {
         }
     }
 
-    private static String listed(List<String> tagNames) {
-        return tagNames.isEmpty() ? "(no tags)" : String.join(", ", tagNames);
+    private static TagChange tagChange(List<String> published, List<String> proposed) {
+        var removed = published.stream().filter(tag -> !proposed.contains(tag)).toList();
+        var added = proposed.stream().filter(tag -> !published.contains(tag)).toList();
+        return removed.isEmpty() && added.isEmpty() ? null : new TagChange(removed, added);
     }
 
     private Submission pendingForDecision(String number) {

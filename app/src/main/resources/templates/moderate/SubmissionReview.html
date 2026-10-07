@@ -26,25 +26,36 @@
       <div>
         <section class="diff" th:if="${review.comparison}" aria-labelledby="diff-heading">
           <h2 class="section-title" id="diff-heading">What this edit changes</h2>
-          <dl class="diff-fields" th:unless="${review.comparison.fields.isEmpty()}">
+          <dl class="diff-fields" th:unless="${review.comparison.fields.isEmpty() and review.comparison.tags == null}">
             <div th:each="change : ${review.comparison.fields}">
               <dt th:text="${change.field}">Title</dt>
               <dd><del class="diff-removed" th:text="${change.before}">Old title</del> <span aria-hidden="true">→</span> <ins class="diff-added" th:text="${change.after}">New title</ins></dd>
             </div>
+            <!-- Fix 3.7: only the tags removed and added, not the whole list twice (ADR-0015's amendment). -->
+            <div th:if="${review.comparison.tags}">
+              <dt>Tags</dt>
+              <dd class="diff-tags"><del class="diff-removed" th:each="tag : ${review.comparison.tags.removed}" th:text="${tag}">visa</del><ins class="diff-added" th:each="tag : ${review.comparison.tags.added}" th:text="${tag}">deadline</ins></dd>
+            </div>
           </dl>
           <p class="empty-note" th:if="${review.comparison.body.unchanged()}">The text has not changed.</p>
-          <div class="diff-table" th:unless="${review.comparison.body.unchanged()}">
-            <div class="diff-head" aria-hidden="true"><span>Published</span><span>Proposed</span></div>
-            <th:block th:each="row : ${review.comparison.body.rows}">
-              <p class="diff-skipped" th:if="${row.kind.name() == 'SKIPPED'}"
-                 th:text="${row.skipped == 1} ? '1 unchanged paragraph' : ${row.skipped} + ' unchanged paragraphs'">3 unchanged paragraphs</p>
-              <div class="diff-row" th:unless="${row.kind.name() == 'SKIPPED'}"
-                   th:classappend="${'diff-row-' + #strings.toLowerCase(row.kind.name())}">
-                <div class="diff-before"><span class="diff-side">Published</span><th:block th:each="part : ${row.before}"><del class="diff-removed" th:if="${part.marked}" th:text="${part.text}">old</del><span th:unless="${part.marked}" th:text="${part.text}">same</span></th:block></div>
-                <div class="diff-after"><span class="diff-side">Proposed</span><th:block th:each="part : ${row.after}"><ins class="diff-added" th:if="${part.marked}" th:text="${part.text}">new</ins><span th:unless="${part.marked}" th:text="${part.text}">same</span></th:block></div>
-              </div>
-            </th:block>
-          </div>
+          <th:block th:unless="${review.comparison.body.unchanged()}">
+            <!-- Fix 3.7 (F-25, ADR-0015's amendment): the text as it reads first, its Markdown one switch
+                 away. Radio buttons and site.css, no script; outside the forms, so nothing is posted. -->
+            <fieldset class="diff-view">
+              <legend class="visually-hidden">Compare</legend>
+              <label class="diff-view-option"><input class="visually-hidden" type="radio" name="diff-view" value="reading" checked> As it reads</label>
+              <label class="diff-view-option"><input class="visually-hidden" type="radio" name="diff-view" value="markdown"> Markdown</label>
+            </fieldset>
+            <div class="diff-reading">
+              <p class="empty-note" th:if="${review.comparison.reading.unchanged()}">The text reads the same; only its formatting changed. Switch to Markdown to see it.</p>
+              <th:block th:unless="${review.comparison.reading.unchanged()}">
+                <div th:replace="~{moderate/DiffTable :: table(${review.comparison.reading})}"></div>
+              </th:block>
+            </div>
+            <div class="diff-markdown">
+              <div th:replace="~{moderate/DiffTable :: table(${review.comparison.body})}"></div>
+            </div>
+          </th:block>
         </section>
         <!-- th:utext: bodyHtml is WikiLinkRenderer's output, as on the article page. The converter escapes
              raw HTML and sanitises URLs (ADR-0001, security.md), which is the only reason this is not an injection. -->
@@ -63,14 +74,16 @@
               th:action="@{/moderate/submissions/{number}/approve(number=${review.number})}">
           <label class="field">
             <span class="field-label">Summary (adjust before publishing)</span>
-            <input class="field-input" type="text" name="summary" required th:maxlength="${summaryLimit}" th:value="${summary}">
+            <textarea class="field-textarea summary-textarea" name="summary" required th:maxlength="${summaryLimit}" th:text="${summary}"></textarea>
           </label>
-          <fieldset class="field">
-            <legend class="field-label">Tags (suggested by the contributor — adjust before publishing)</legend>
-            <div class="tag-fields">
-              <input class="field-input" type="text" name="tags" maxlength="64" th:each="tag : ${tagFields}" th:value="${tag}" aria-label="Tag">
-            </div>
-          </fieldset>
+          <label class="field" for="tags">
+            <span class="field-label">Tags (suggested by the contributor — adjust before publishing)</span>
+            <!-- Fix 3.7 (F-25): the contributor's tag field (ADR-0022); tags.js turns it into chips. -->
+            <select class="field-input tag-select" id="tags" name="tags" multiple th:data-most="${tagMost}">
+              <option th:each="tag : ${tagChoices}" th:value="${tag}" th:text="${tag}" th:selected="${#lists.contains(chosenTags, tag)}">visa</option>
+            </select>
+            <span class="field-help" th:text="|Up to ${tagMost}. Press Enter or type a comma after each.|">Up to 10. Press Enter or type a comma after each.</span>
+          </label>
           <button class="button-primary" type="submit">Approve &amp; publish</button>
         </form>
         <form class="result-card submission-form" method="post"
@@ -84,6 +97,13 @@
       </div>
     </div>
     <th:block th:replace="~{shared/web/PhotoViewer :: assets}"></th:block>
+    <!-- The tag field (ADR-0022), as on the contributor's form; the version is the root pom's tom-select.version. -->
+    <th:block th:if="${review.pending()}">
+      <link rel="stylesheet" th:href="@{/webjars/tom-select/2.6.2/dist/css/tom-select.min.css}">
+      <link rel="stylesheet" th:href="@{/css/tags.css}">
+      <script th:src="@{/webjars/tom-select/2.6.2/dist/js/tom-select.complete.min.js}" defer></script>
+      <script th:src="@{/js/tags.js}" defer></script>
+    </th:block>
   </main>
 </body>
 </html>

@@ -286,7 +286,8 @@ routes:
       `200` pending, or `200` showing "no longer pending" if already decided (FR-015 shows the
       state, it does not hide the submission); `404` if `{number}` was never issued; `302`
       unauthenticated. For an edit, the page first shows what it changes against the live article
-      (FR-029, [ADR-0015](adr/ADR-0015-showing-an-edit-as-a-diff.md)), the full text one click away
+      (FR-029, [ADR-0015](adr/ADR-0015-showing-an-edit-as-a-diff.md)), as the text reads and, one
+      switch away, as its Markdown (fix 3.7); the full text one click away
     serves: >-
       FR-015 (UC-015); FR-029
 
@@ -297,8 +298,9 @@ routes:
     template: >-
       `moderate/SubmissionReview.html` on error
     fields: >-
-      CSRF token (hidden, required); `summary` (text, editable, pre-filled from the submission);
-      `tags` (repeatable text, editable, pre-filled from the submission's suggested tags)
+      CSRF token (hidden, required); `summary` (textarea, editable, pre-filled from the submission);
+      `tags` (repeatable, from the tag field of ADR-0022, the submission's suggested tags selected;
+      fix 3.7)
     responses: >-
       `302` to `/moderate/queue` on success; `409` if already decided, or if the title's address
       was taken by another article while the submission waited (it stays pending, decided 28 Sep,
@@ -501,8 +503,9 @@ routes:
     template: >-
       re-renders `moderate/PublishForm.html` on `409` and `422`
     fields: >-
-      CSRF token (hidden, required); `title`, `summary`, `body`, `tags` (up to five fields),
-      `attachment` (one file, optional) — the contributor's form, as `POST /submissions`
+      CSRF token (hidden, required); `title`, `summary`, `body`, `tags` (repeatable, from the tag field
+      of ADR-0022; fix 3.7), `attachment` (one file, optional) — the contributor's form, as `POST
+      /submissions`
     responses: >-
       `302` to the new article, which then says "Published."; `409` with the text kept when another
       article has the title, case-insensitively; `422` with the text kept for anything else the

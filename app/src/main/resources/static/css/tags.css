@@ -51,3 +51,7 @@
 /* Padding, not flex, makes the 44 px: in a flex row the space in "Add <strong>vi</strong>" is lost. */
 .ts-dropdown .option, .ts-dropdown .create { min-height: var(--target); padding: 10px var(--space-3); box-sizing: border-box; }
 .ts-dropdown .active { color: var(--ink); background: var(--sand-raised); }
+
+/* Fix 3.7: the "Add tag" button beside the field (tags.js), under it on a narrow screen. */
+.tag-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-2); }
+.tag-row .ts-wrapper { flex: 1 1 16rem; min-width: 0; }

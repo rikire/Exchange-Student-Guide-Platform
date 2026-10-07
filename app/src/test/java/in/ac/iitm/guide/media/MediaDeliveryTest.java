@@ -131,6 +131,24 @@ class MediaDeliveryTest {
     }
 
     @Test
+    // trace:FR-016
+    void the_download_link_of_a_document_is_inside_its_card() throws Exception {
+        var article = article();
+        var document = publishedTo(article, "FRRO checklist.pdf", MediaTestFiles.pdf(2_000));
+
+        var page = mockMvc.perform(get("/articles/" + slugOf(article)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // The card is the media-block; the link is inside it, not in a row of its own below (F-25).
+        assertThat(page)
+                .containsPattern("(?s)<div class=\"media-block\">((?!</figure>|media-block).)*" + "<a[^>]*href=\""
+                        + document.href() + "\"[^>]*download=\"FRRO checklist.pdf\"");
+        assertThat(page).doesNotContain("media-download-row");
+    }
+
+    @Test
     // trace:FR-001
     void a_video_a_browser_can_play_has_a_player_and_a_hidden_card_for_one_that_cannot() throws Exception {
         var article = article();

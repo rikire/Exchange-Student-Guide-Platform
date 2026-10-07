@@ -418,9 +418,12 @@ design pass (3) is the largest piece and starts with redrawn screens.
       guide" (F-16). All seven steps built; left: the human's try of the form on desktop and phone.
       **Accepted 8 Oct** by the human ("checked"), on desktop and phone; not on the agent's local run of
       the same day, whose queue stayed empty.
-- [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
+- [x] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
-      — owner: **Mikhail**
+      — owner: **Abdirakhim** (taken over from Mikhail on 8 Oct)
+      **Built 8 Oct:** the tests are green under `./mvnw verify`, and the browser tests in the installed
+      Chrome. Tried by the human the same day; the tags row and an "Add tag" button changed at their
+      request. **Accepted 8 Oct** by the human after trying both on the local app.
 - [x] [The 404, tracking and login pages made helpful (F-14, F-15, F-19)](../verification/walkthrough-fixes.md#38-the-small-pages-f-14-f-15-f-19)
       — check: each page has its explanation and a way back
       — owner: **Abdirakhim**

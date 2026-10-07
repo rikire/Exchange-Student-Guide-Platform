@@ -342,16 +342,23 @@ class ModerationFlowTest {
 
     @Test
     // trace:FR-029
-    void the_review_of_an_edit_shows_changed_tags_as_old_and_new() throws Exception {
+    void the_review_of_an_edit_shows_only_the_tags_it_removes_and_adds() throws Exception {
         var article = published("Hostel Life", "The text.");
         tag(article, "visa");
+        tag(article, "arrival");
         var edit = pendingEdit(article, "Hostel Life", "The text.");
         tag(edit, "hostel");
+        jdbc.update(
+                "INSERT INTO submission_tag (submission_id, tag_id) SELECT ?, id FROM tag WHERE name = 'arrival'",
+                edit.getId());
 
         var review = page(loggedIn(), reviewPath(edit));
+        var row = review.substring(
+                review.indexOf("<dt>Tags</dt>"), review.indexOf("</div>", review.indexOf("<dt>Tags</dt>")));
 
-        assertThat(review).contains("<del class=\"diff-removed\">visa</del>");
-        assertThat(review).contains("<ins class=\"diff-added\">hostel</ins>");
+        assertThat(row).contains("<del class=\"diff-removed\">visa</del>");
+        assertThat(row).contains("<ins class=\"diff-added\">hostel</ins>");
+        assertThat(row).doesNotContain("arrival").doesNotContain("→");
     }
 
     @Test
@@ -398,6 +405,72 @@ class ModerationFlowTest {
 
         assertThat(review).containsPattern("<details[^>]*>\\s*<summary[^>]*>Show the full proposed text</summary>");
         assertThat(review).contains("<strong>visa</strong>");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_compares_the_reading_text_first_and_the_markdown_one_switch_away() throws Exception {
+        var article = published("Hostel Life", "Bring your **passport** today.");
+        var edit = pendingEdit(article, "Hostel Life", "Bring your **visa** today.");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review).containsPattern("<input[^>]*name=\"diff-view\"[^>]*value=\"reading\"[^>]*checked");
+        assertThat(review).containsPattern("<input[^>]*name=\"diff-view\"[^>]*value=\"markdown\"");
+        assertThat(review).contains("<ins class=\"diff-added\">visa</ins>");
+        assertThat(review).contains("<ins class=\"diff-added\">**visa**</ins>");
+    }
+
+    @Test
+    // trace:FR-029
+    void the_review_of_an_edit_that_changes_only_formatting_says_so_and_points_to_the_markdown() throws Exception {
+        var article = published("Hostel Life", "Bring your passport today.");
+        var edit = pendingEdit(article, "Hostel Life", "Bring your **passport** today.");
+
+        var review = page(loggedIn(), reviewPath(edit));
+
+        assertThat(review)
+                .contains("The text reads the same; only its formatting changed. Switch to Markdown to see it.");
+        assertThat(review).contains("<ins class=\"diff-added\">**passport**</ins>");
+    }
+
+    @Test
+    // trace:FR-017
+    void the_review_offers_the_summary_in_a_text_area_holding_it_whole() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var summary = "s".repeat(300);
+        jdbc.update("UPDATE submission SET summary = ? WHERE id = ?", summary, submission.getId());
+
+        var review = page(loggedIn(), reviewPath(submission));
+
+        assertThat(review).containsPattern("<textarea[^>]*name=\"summary\"[^>]*>" + summary + "</textarea>");
+    }
+
+    @Test
+    // trace:FR-017
+    void a_refused_approval_keeps_the_typed_summary_in_its_text_area() throws Exception {
+        var submission = pending("Getting a SIM card", MONDAY);
+        var typed = "s".repeat(301);
+
+        var result = approve(loggedIn(), submission, typed, "telecom");
+
+        assertThat(result.getResponse().getContentAsString())
+                .containsPattern("<textarea[^>]*name=\"summary\"[^>]*>" + typed + "</textarea>");
+    }
+
+    @Test
+    // trace:FR-017
+    void the_review_offers_every_tag_in_use_with_the_submissions_own_selected() throws Exception {
+        var article = published("Hostel Life", "The text.");
+        tag(article, "visa");
+        var submission = pending("Getting a SIM card", MONDAY);
+        tag(submission, "telecom");
+
+        var review = page(loggedIn(), reviewPath(submission));
+
+        assertThat(review).containsPattern("<select[^>]*name=\"tags\"[^>]*multiple[^>]*data-most=\"10\"");
+        assertThat(review).containsPattern("<option value=\"telecom\" selected=\"selected\">telecom</option>");
+        assertThat(review).contains("<option value=\"visa\">visa</option>");
     }
 
     @Test

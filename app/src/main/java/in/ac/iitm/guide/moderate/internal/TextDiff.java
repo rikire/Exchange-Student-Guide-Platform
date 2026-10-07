@@ -6,13 +6,15 @@ import com.github.difflib.patch.DeltaType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 /**
  * What an edit changes in an article's body, as the moderator's review shows it (FR-029, ADR-0015):
  * paragraphs side by side, the changed words marked inside a changed paragraph, and unchanged
- * paragraphs away from a change skipped. The Markdown source is compared, not the rendered page, so
- * every changed character is visible.
+ * paragraphs away from a change skipped. The Markdown source is compared, so every changed character
+ * is visible; or, since fix 3.7, each source paragraph as it reads, with the Markdown marks gone
+ * (ADR-0015's amendment).
  *
  * <p>java-diff-utils finds the differences; this class only arranges them into rows. Its own
  * {@code DiffRowGenerator} is not used because it returns strings with the markup already inserted,
@@ -51,8 +53,16 @@ public record TextDiff(List<Row> rows) {
     public record Row(Kind kind, List<Segment> before, List<Segment> after, int skipped) {}
 
     public static TextDiff of(String published, String proposed) {
-        var before = paragraphs(published);
-        var after = paragraphs(proposed);
+        return of(published, proposed, UnaryOperator.identity());
+    }
+
+    /**
+     * @param asRead turns one paragraph of the source into what is compared; a paragraph it turns into
+     *     nothing (a horizontal rule) is left out, so it is not a change
+     */
+    public static TextDiff of(String published, String proposed, UnaryOperator<String> asRead) {
+        var before = paragraphs(published, asRead);
+        var after = paragraphs(proposed, asRead);
         var rows = new ArrayList<Row>();
         var next = 0;
         for (var delta : DiffUtils.diff(before, after).getDeltas()) {
@@ -73,13 +83,15 @@ public record TextDiff(List<Row> rows) {
         return rows.stream().allMatch(row -> row.kind() == Kind.SAME || row.kind() == Kind.SKIPPED);
     }
 
-    private static List<String> paragraphs(String text) {
+    private static List<String> paragraphs(String text, UnaryOperator<String> asRead) {
         var normalised = text.replace("\r\n", "\n").strip();
         if (normalised.isEmpty()) {
             return List.of();
         }
         return Arrays.stream(PARAGRAPH_BREAK.split(normalised))
+                .map(asRead)
                 .map(String::strip)
+                .filter(paragraph -> !paragraph.isEmpty())
                 .toList();
     }
 

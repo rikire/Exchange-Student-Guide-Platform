@@ -69,7 +69,7 @@ p a, .article-body a { text-decoration: underline; }
 
 /* FEAT-009: attached media, below the text. */
 .media-list { display: grid; gap: var(--space-4); max-width: 46rem; margin: var(--space-5) 0; }
-.media-photo { margin: 0; }
+.media-photo, .media-video-item { margin: 0; }
 .media-photo img, .media-video { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
 /* A video's ground is black, as players draw it: in full screen the picture keeps its shape and the
    rest of the screen is black, with no border or rounded corner left from the page. */
@@ -146,10 +146,8 @@ p a, .article-body a { text-decoration: underline; }
 .field-label { font-weight: 600; }
 .field-input, .field-textarea { font: inherit; min-height: var(--target); padding: var(--space-2) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
 .field-textarea { min-height: 16rem; resize: vertical; }
-.reason-textarea { min-height: calc(var(--target) * 3); }
+.reason-textarea, .summary-textarea { min-height: calc(var(--target) * 3); }
 .field-help { font-size: var(--text-small); color: var(--ink-soft); }
-.tag-fields { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.tag-fields .field-input { width: 10rem; }
 .button-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .button-row a:not([class]) { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-2); }
 /* Fix 3.2 (F-27): the four buttons of docs/design/screens/Buttons.html, and the only ones a page uses.
@@ -288,6 +286,7 @@ p a, .article-body a { text-decoration: underline; }
 .diff-fields div { margin: 0 0 var(--space-2); }
 .diff-fields dt { font-weight: 600; }
 .diff-fields dd { margin: 0; overflow-wrap: anywhere; }
+.diff-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .diff-removed { background: var(--diff-removed-bg); color: var(--diff-removed-ink); text-decoration: line-through; }
 .diff-added { background: var(--diff-added-bg); color: var(--diff-added-ink); text-decoration: underline; }
 .diff-table { border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden; }
@@ -297,6 +296,17 @@ p a, .article-body a { text-decoration: underline; }
 .diff-before, .diff-after { padding: var(--space-3); white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
 .diff-side { display: block; font-weight: 600; color: var(--ink-soft); }
 .diff-skipped { margin: 0; padding: var(--space-2) var(--space-3); border-top: 1px solid var(--line); color: var(--ink-soft); background: var(--sand); }
+/* Fix 3.7 (F-25): the comparison as it reads or as its Markdown, two radio buttons and no script.
+   The buttons are hidden and their labels drawn as one two-part switch, a 44-px target (NFR-008);
+   the keyboard still moves between the radio buttons, and the label shows their focus. */
+.diff-view { display: flex; flex-wrap: wrap; margin: 0 0 var(--space-3); padding: 0; border: 0; }
+.diff-view-option { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-4); border: 1px solid var(--maroon); background: var(--paper); color: var(--maroon); font-weight: 600; cursor: pointer; }
+.diff-view-option:first-of-type { border-radius: var(--radius-card) 0 0 var(--radius-card); }
+.diff-view-option:last-of-type { border-left: 0; border-radius: 0 var(--radius-card) var(--radius-card) 0; }
+.diff-view-option:has(input:checked) { background: var(--maroon); color: var(--paper); }
+.diff-view-option:has(input:focus-visible) { outline: 3px solid var(--maroon); outline-offset: 2px; }
+.diff:has(input[value="reading"]:checked) .diff-markdown,
+.diff:has(input[value="markdown"]:checked) .diff-reading { display: none; }
 .full-text { margin: 0 0 var(--space-5); }
 .full-text summary { min-height: var(--target); display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 @media (min-width: 48rem) {
@@ -307,13 +317,14 @@ p a, .article-body a { text-decoration: underline; }
   .diff-side { display: none; }
 }
 
-/* FR-016: the Download link under each file, a 44-px target on a phone (NFR-008). */
-.media-download-row { margin: 0 0 var(--space-4); }
+/* FR-016: the Download link in each file's card (fix 3.7, F-25), a 44-px target on a phone (NFR-008). */
+.media-caption { display: flex; justify-content: flex-end; margin: var(--space-2) 0 0; }
+.media-block .media-download { margin-left: auto; flex: none; }
 
 /* FR-030: "Save as PDF" beside "Propose an edit", and the page as it prints — the article alone. */
 .article-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
 @media print {
-  .site-header, .site-nav, .site-footer, .article-side, .article-actions, .media-download-row, .media-video, .backlinks { display: none; }
+  .site-header, .site-nav, .site-footer, .article-side, .article-actions, .media-download, .media-video, .backlinks { display: none; }
   .article-layout { display: block; }
   body, .site-main { background: var(--paper); color: var(--ink); }
   .site-main { max-width: none; padding: 0; margin: 0; }
