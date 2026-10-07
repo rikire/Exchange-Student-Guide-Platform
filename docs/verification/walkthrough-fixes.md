@@ -535,3 +535,6 @@ report form, the moderator's write form, the remove confirmation, the log-out pa
 - Change the moderator's password: the one used in the walk is in the prompt journal.
 - Reset the stand (`docker compose down -v`, `up --build`): *Your First Days on Campus* carries the
   walk's `[walk]` sentence and photo, which cannot be removed from the application.
+
+**Done 8 Oct**, all four; the checks are in the step's note in
+[03-main-flow.md](../roadmap/03-main-flow.md).

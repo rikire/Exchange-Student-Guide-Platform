@@ -432,9 +432,12 @@ design pass (3) is the largest piece and starts with redrawn screens.
       Built 2 Oct: "Did you mean" with titles from `search`'s `SimilarTitles`, the search box and the
       way back on every not-found page; the tracking page's line and way back; the login page had
       both since 2.3. Accepted by the human on 2 Oct.
-- [ ] [The stand before the demo: commit F-3, drop the raised limit, change the password, reset](../verification/walkthrough-fixes.md#4-the-stand-before-the-demo)
+- [x] [The stand before the demo: commit F-3, drop the raised limit, change the password, reset](../verification/walkthrough-fixes.md#4-the-stand-before-the-demo)
       — check: `.env` has no raised limit; `down -v` and `up` give 36 clean articles
       — owner: together, last — after every section-1 item is merged
+      **Done 8 Oct:** the human set the new password's hash in `.env` without it passing through the
+      chat; after `down -v` and `up --build`, `/articles` lists 36 articles, no article page has
+      `[walk]`, `/moderate/queue` redirects to the login, and the human logged in with the new password.
 
 ## Parallel streams, 1 October
 
