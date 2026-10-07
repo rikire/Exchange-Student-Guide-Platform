@@ -357,6 +357,10 @@ design pass (3) is the largest piece and starts with redrawn screens.
 - [ ] [Design pass over every screen, against the design screens (F-22)](../verification/walkthrough-fixes.md#3-a-design-pass-over-every-screen-f-22) — screens redrawn and accepted by the human before templates change
       — check: each screen compared with its design screen, differences accepted
       — owner: **Abdirakhim**, except 3.6 and 3.7
+      **Compared 8 Oct** ([3.9](../verification/walkthrough-fixes.md#39-every-screen-against-its-design-screen-8-oct)):
+      three defects and nine differences fixed, the rest kept by the human's earlier decisions. Left:
+      a run of `./mvnw -pl app -P browser verify`, which holds the new layout cases and could not
+      download its browser on the machine that made the fixes.
 - [x] [Use the width of the window (F-17)](../verification/walkthrough-fixes.md#31-use-the-width-f-17)
       — check: `BrowserLayoutTest`: main content at least 60 % of a 1280 and 1920 px window
       — owner: **Abdirakhim**
