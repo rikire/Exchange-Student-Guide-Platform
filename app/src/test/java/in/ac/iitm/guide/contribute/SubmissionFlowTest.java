@@ -364,6 +364,17 @@ class SubmissionFlowTest {
 
     @Test
     // trace:FR-010
+    void the_confirmation_marks_the_submission_received_with_the_status_pill() throws Exception {
+        var confirmation = submitNew("Title", "Summary.", "Body.").getResponse().getRedirectedUrl();
+
+        var page = page(confirmation);
+
+        // Walkthrough-fixes 3.9, N7: the "Received" pill of docs/design/screens/SubmissionConfirmation.html.
+        assertThat(page).contains("<span class=\"status-pill status-received\">Received</span>");
+    }
+
+    @Test
+    // trace:FR-010
     void a_number_is_found_ignoring_case_and_hyphens_and_one_never_issued_is_not_found() throws Exception {
         var confirmation = submitNew("Title", "Summary.", "Body.").getResponse().getRedirectedUrl();
         var number = confirmation.split("/")[2];

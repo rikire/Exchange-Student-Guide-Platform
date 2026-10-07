@@ -20,7 +20,9 @@
     <th:block th:if="${results != null}">
       <p class="results-meta" th:text="${results.total} + (${results.total} == 1 ? ' result' : ' results') + ' for &quot;' + ${results.query} + '&quot;'">4 results for "frro registration"</p>
 
-      <div class="empty-note" th:if="${#lists.isEmpty(results.hits)}">
+      <!-- The empty state of docs/design/screens/SearchResultsEmpty.html (walkthrough-fixes 3.9, N4). -->
+      <div class="empty-state" th:if="${#lists.isEmpty(results.hits)}">
+        <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <h2 class="section-title">No articles matched</h2>
         <p th:if="${words > 1}">No article holds all of these words. Try fewer words, or <a th:href="@{/tags}">browse the tags</a>.</p>
         <p th:unless="${words > 1}">Try a different word, or <a th:href="@{/tags}">browse the tags</a>.</p>

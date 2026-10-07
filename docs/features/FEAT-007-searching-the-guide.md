@@ -168,6 +168,8 @@ kept, and nothing after it changes them; `an_article_mixing_english_hindi_and_ta
 and `a_query_in_hindi_or_tamil_finds_the_article_holding_those_words` (four queries) pass on H2 and
 with `-P postgres`. They were green at once: they hold behaviour the slice already had.
 
+**F-22 check, 8 Oct** ([walkthrough-fixes 3.9](../verification/walkthrough-fixes.md), N4): a search that finds nothing shows the design screen's empty state, a dashed card with a search icon; the words are unchanged.
+
 ## Deliberately out of scope
 
 - ~~NFR-002 and NFR-003: their own steps~~ — both done, see below. Word forms in Hindi and Tamil: the stemmer is English.

@@ -484,6 +484,10 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
   its row's middle line. Remove in the list of published articles is a `button-danger`, as on the
   article page. Tests: `BrowserLayoutTest`'s two moderator-table cases, and `ArticleRemovalTest`.
 
+- **N4, N7 and N8, fixed 8 Oct.** Nothing found is the design's dashed card with an icon. The status
+  pills carry the dot; Received and Approved are olive (new tokens `--olive`, `--olive-soft`), Rejected
+  the diff's red pair, since the design's red on its pale ground is 4.25:1, under WCAG AA.
+
 **Pages with no design screen** — compared with nothing: `/articles`, `/tags`, the plain 404, the
 report form, the moderator's write form, the remove confirmation, the log-out page.
 

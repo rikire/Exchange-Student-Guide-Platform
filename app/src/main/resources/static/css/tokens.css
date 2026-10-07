@@ -16,6 +16,9 @@
   --sand: #F7F4EF;
   --sand-raised: #FBF3E3;
   --line: #E6DFD3;
+  /* A received or approved submission, from docs/design/screens/SubmissionConfirmation.html (5.0:1). */
+  --olive: #4B7043;
+  --olive-soft: #EDF2EA;
 
   --space-1: 4px;
   --space-2: 8px;

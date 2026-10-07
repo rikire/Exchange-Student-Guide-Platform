@@ -95,6 +95,8 @@ that acceptance FR-012 is `done`.
 
 **Fix 3.8, 2 Oct** (F-15): the tracking page says what the number is and where it was given, and offers "Back to the guide"; `SubmissionStatusTest.the_status_page_says_what_the_number_is_and_where_it_was_given_and_leads_back`, red first.
 
+**F-22 check, 8 Oct** ([walkthrough-fixes 3.9](../verification/walkthrough-fixes.md), N7 and N8): every status pill has the design screen's dot; Approved is olive, Rejected the diff's red pair (the design's red is 4.25:1 on its ground, under AA), and the confirmation carries an olive "Received" pill — `SubmissionFlowTest.the_confirmation_marks_the_submission_received_with_the_status_pill`, red first.
+
 ## Deliberately out of scope
 
 - Telling the contributor without their asking (email) — CON-001; queue item 7 of the roadmap.
