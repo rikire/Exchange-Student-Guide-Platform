@@ -86,12 +86,14 @@ the criteria do not reach it.
       out of CON-006, DOCX out of the formats; the 50-megapixel ceiling kept, DEBT-015 put off and
       NFR-001 marked done. Accepted after the human uploaded camera photos from a phone and saw them
       upright on the review screen.
-- [ ] ~~Admin panel behind the single password~~
+- [x] ~~Admin panel behind the single password~~
       — check: a test enumerates the admin routes **from the route contract** rather than by hand,
       and asserts each one redirects when unauthenticated; a route added later without a test fails it
       **Moved to phase 4, 10 Sep** — it exists only to serve FR-023/FR-024 (direct publish), which
       moved with it. See [01-requirements-design.md](01-requirements-design.md) and
       [04-hardening.md](04-hardening.md).
+      **Done 2 Oct in phase 4**, accepted by the human on the stand: [FEAT-021](../features/FEAT-021-publishing-directly.md);
+      `ModeratorLoginTest` enumerates every `/moderate/` route from `routes.yml`.
 - [x] Templates brought up to the design screens; the landing page brought up to the IITM reference
       — check: no literal colour or spacing value in the templates, only tokens; the landing page
       compared against the IITM reference side by side and the differences listed
