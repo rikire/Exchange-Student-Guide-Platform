@@ -123,7 +123,8 @@ phone will be refused.
     which a `<video>` ignores.
   - Tests: `MediaDeliveryTest`, `EditorPreviewTest` and `BrowserVideoTest`, the playable sample being
     `webm.webm` from github.com/mathiasbynens/small (no copyright).
-  - Left to the human: an iPhone `.mov` and an Android `.mp4` on the stand.
+  - Checked by the human on the stand: an iPhone `.mov` on 2 Oct and an Android `.mp4` on 8 Oct,
+    each uploaded, approved by the moderator and played on the published article. Fix 1.4 is closed.
 
 ### 1.5 Search results are noise (F-9)
 

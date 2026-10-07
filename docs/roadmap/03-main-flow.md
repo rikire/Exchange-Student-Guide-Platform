@@ -275,7 +275,7 @@ design pass (3) is the largest piece and starts with redrawn screens.
       **Changed the same day by the human:** each reader sees their own zone, IST as the fallback
       ([ADR-0020](../architecture/adr/ADR-0020-times-in-the-readers-own-zone.md), accepted),
       `BrowserLocalTimeTest`.
-- [ ] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: the common formats (MP4, MOV, WebM, MKV, AVI, 3GP, MPEG, OGG, WMV) as uploaded, no conversion; play on the site where the browser can, a download card otherwise; warn about location metadata
+- [x] [Accept the MP4 files phones write (F-28)](../verification/walkthrough-fixes.md#14-a-real-mp4-refused-f-28) — decided 1 Oct: the common formats (MP4, MOV, WebM, MKV, AVI, 3GP, MPEG, OGG, WMV) as uploaded, no conversion; play on the site where the browser can, a download card otherwise; warn about location metadata
       — check: tests with `isom`, `mp42` and `qt` files
       **Accepting done 1 Oct:** eight formats; Ogg and WMV dropped by the human (Tika cannot tell them
       from audio). **Showing done 1 Oct:** a player, a card when the browser cannot decode it, AVI
@@ -283,7 +283,8 @@ design pass (3) is the largest piece and starts with redrawn screens.
       `.mp4` on the stand, which closes this item.
       **iPhone checked 2 Oct** by the human on the stand: the video uploaded from the phone, reached
       the moderator and played on the published article; full screen fixed to a black ground the
-      same day (FEAT-009). Left: an Android `.mp4`.
+      same day (FEAT-009). **Android checked 8 Oct** by the human on the stand: the `.mp4`
+      uploaded, reached the moderator and played on the published article. Item closed.
       — owner: **Mikhail**
 - [x] [Make search require every word, with snippets (F-9)](../verification/walkthrough-fixes.md#15-search-results-are-noise-f-9)
       — check: "FRRO registration" returns only articles with both words; the markup query returns
