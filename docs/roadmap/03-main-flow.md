@@ -389,7 +389,7 @@ design pass (3) is the largest piece and starts with redrawn screens.
       Built 2 Oct: the sidebar of its design screen, the summary and date under the title, a
       contents list, external links in a new tab, the actions under the title on a phone (FEAT-002).
       Accepted by the human on 2 Oct.
-- [ ] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — decided 1 Oct: Tom Select for tags, FilePond with image previews for the file, by a new ADR
+- [x] [The forms: dynamic tags, a drop zone, a wide editor with a `[[link]]` button, errors at the field, a fuller draft (F-11, F-12, F-13, F-16, F-18, F-20)](../verification/walkthrough-fixes.md#36-the-submission-and-edit-forms-f-12-f-13-f-18-f-20-f-11-f-16) — decided 1 Oct: Tom Select for tags, FilePond with image previews for the file, by a new ADR
       — check: `SubmissionFlowTest` unchanged and green; the human tries the form on desktop and phone
       — owner: **Mikhail**
       **ADR-0022 accepted 2 Oct**, done in steps a–g, each accepted by the human before the next.
@@ -416,6 +416,8 @@ design pass (3) is the largest piece and starts with redrawn screens.
       **Edit form built 2 Oct (g):** headed "Propose an edit to *Title*", "Cancel" back to the
       article, the collision naming the other article; the search page's box says "Search the
       guide" (F-16). All seven steps built; left: the human's try of the form on desktop and phone.
+      **Accepted 8 Oct** by the human ("checked"), on desktop and phone; not on the agent's local run of
+      the same day, whose queue stayed empty.
 - [ ] [The review page: a rendered diff, a summary textarea, the tag field (F-25)](../verification/walkthrough-fixes.md#37-the-moderators-review-page-f-25)
       — check: tests for the toggle and the textarea
       — owner: **Mikhail**
