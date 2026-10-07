@@ -90,6 +90,12 @@ Confirmed by the human on 2 Oct:
 
 Red first, 2 Oct: all twelve `DirectPublishingTest` tests (no route, no link).
 
+**Fix 3.7, 8 Oct (DEBT-024, part):** the form's five tag boxes are the contributor's tag field
+(ADR-0022): every tag in use offered, the article's own selected (`Tags.choices`). Tests:
+`the_form_for_writing_an_article_offers_every_tag_in_use_in_one_tag_field`,
+`the_form_for_editing_an_article_selects_the_tags_it_carries`, both red first. A refusal is still shown
+only at the top: DEBT-024.
+
 ## Deliberately out of scope
 
 - A file over the container's multipart ceiling (larger than the video limit) is answered by

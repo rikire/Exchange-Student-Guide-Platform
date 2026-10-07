@@ -7,9 +7,9 @@ import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.moderate.internal.DirectPublishing;
 import in.ac.iitm.guide.moderate.internal.ModerationService.Published;
 import in.ac.iitm.guide.shared.persistence.Article;
+import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -34,15 +34,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 class DirectPublishingController {
 
-    /** As many tag fields as the contributor's form offers. */
-    private static final int TAG_FIELDS = 5;
-
     private final DirectPublishing publishing;
     private final MediaAssets media;
+    private final Tags tags;
 
-    DirectPublishingController(DirectPublishing publishing, MediaAssets media) {
+    DirectPublishingController(DirectPublishing publishing, MediaAssets media, Tags tags) {
         this.publishing = publishing;
         this.media = media;
+        this.tags = tags;
     }
 
     @GetMapping("/moderate/write")
@@ -127,10 +126,13 @@ class DirectPublishingController {
         model.addAttribute("accepted", media.accepted());
         model.addAttribute("summaryLimit", Article.LONGEST_SUMMARY);
         model.addAttribute("bodyLimit", Draft.LONGEST_BODY);
+        // Fix 3.7 (DEBT-024): the contributor's tag field (ADR-0022), the article's tags chosen.
+        model.addAttribute("tagChoices", Tags.choices(page.tags(), tags.inUse()));
+        model.addAttribute("tagMost", Tags.MOST);
         return "moderate/PublishForm";
     }
 
-    /** What the form template shows. {@code tags} is padded with empty fields to fill in. */
+    /** What the form template shows. {@code tags} are the ones chosen in its tag field. */
     record FormPage(
             String heading, String action, String title, String summary, String body, List<String> tags, String error) {
 
@@ -145,11 +147,7 @@ class DirectPublishingController {
         }
 
         private static FormPage of(String heading, String action, Draft draft) {
-            var fields = new ArrayList<>(draft.tags());
-            do {
-                fields.add("");
-            } while (fields.size() < TAG_FIELDS);
-            return new FormPage(heading, action, draft.title(), draft.summary(), draft.body(), fields, null);
+            return new FormPage(heading, action, draft.title(), draft.summary(), draft.body(), draft.tags(), null);
         }
 
         FormPage refused(String error) {

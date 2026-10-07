@@ -20,28 +20,26 @@ constraint hides it.
 
 ## Register
 
-### DEBT-024 — The moderator's publish form still has five plain tag fields
+### DEBT-024 — The moderator's publish form shows a refusal only at the top, not at the field
 
 **Status:** open
 **Created:** 2026-10-02
-**Marker:** `app/src/main/resources/templates/moderate/PublishForm.html` — `.tag-fields`
+**Narrowed:** 2026-10-08 — fix 3.7 gave the form the tag field; the field errors remain
+**Marker:** `app/src/main/resources/templates/moderate/PublishForm.html` — `.form-error`
 
 **Cause:** fix 3.6 changed the contributor's form only (ADR-0022): one tag list under Tom Select,
 filled from `Tags.inUse`. FEAT-021's form for publishing directly was not in that fix, and fix 3.7
 covers the review page, not this one.
 
-**Consequence:** the moderator types tags into five bare fields with no suggestions, so a stored tag
-is retyped and can be misspelled into a new one; a refusal is shown only in the box at the top, not
-at the field (fix 3.6's step e did the contributor's form); the two forms look and behave
-differently.
+**Consequence:** a refusal is shown only in the box at the top, not at the field at fault, and no
+field is marked `aria-invalid` (fix 3.6's step e did the contributor's form). Until 8 Oct the
+moderator also typed tags into five bare fields; fix 3.7 replaced them with the contributor's tag
+field.
 
-**How to fix:** give `DirectPublishingController` the same tag list (`Tags.inUse`, `Tags.MOST`) and
-the template the `<select class="tag-select">` with `tags.js` and `tags.css`, and the field errors
-(`SubmissionRejectedException.field()`, `form.css`), as `SubmissionForm.html` has; `DirectPublishingTest`
-cases for the selected tags and a marked field.
+**How to fix:** the field errors (`SubmissionRejectedException.field()`, `form.css`), as
+`SubmissionForm.html` has; a `DirectPublishingTest` case for a marked field.
 
-**Trigger:** fix 3.7, which brings the same field to the review page, or the human's look at the
-moderator's pages, whichever is first.
+**Trigger:** the human's look at the moderator's pages, or phase 4's edge cases, whichever is first.
 
 ### DEBT-023 — A tag-field browser test failed once without a known cause
 

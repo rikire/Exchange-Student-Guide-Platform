@@ -108,7 +108,7 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
-| DEBT-024 | The moderator's publish form still has five plain tag fields | fix 3.7, which brings the same field to the review page, or the human's look at the |
+| DEBT-024 | The moderator's publish form shows a refusal only at the top, not at the field | the human's look at the moderator's pages, or phase 4's edge cases, whichever is first. |
 | DEBT-023 | A tag-field browser test failed once without a known cause | its next failure, in CI or locally. |
 | DEBT-015 | A file far over the container's limit gets a closed connection, not the page | the first report of an upload ending in a connection error, or phase 4's hardening. |
 | DEBT-014 | The stand's session cookie is not marked `Secure` | the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any |

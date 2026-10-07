@@ -279,6 +279,37 @@ class DirectPublishingTest {
                 .contains("Edit article");
     }
 
+    @Test
+    // trace:FR-023
+    void the_form_for_writing_an_article_offers_every_tag_in_use_in_one_tag_field() throws Exception {
+        publish("Registering with FRRO");
+        tagEveryArticle("visa");
+
+        var form = mockMvc.perform(get("/moderate/write").session(loggedIn()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(form).containsPattern("<select[^>]*name=\"tags\"[^>]*multiple[^>]*data-most=\"10\"");
+        assertThat(form).contains("<option value=\"visa\">visa</option>");
+        assertThat(form).doesNotContain("tag-fields");
+    }
+
+    @Test
+    // trace:FR-024
+    void the_form_for_editing_an_article_selects_the_tags_it_carries() throws Exception {
+        publish("Registering with FRRO");
+        tagEveryArticle("visa");
+
+        var form = mockMvc.perform(
+                        get("/moderate/articles/registering-with-frro/edit").session(loggedIn()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(form).contains("<option value=\"visa\" selected=\"selected\">visa</option>");
+    }
+
     private void assertRefused(MvcResult result, String message) throws Exception {
         assertThat(result.getResponse().getStatus()).isEqualTo(422);
         assertThat(result.getResponse().getContentAsString())
@@ -344,6 +375,12 @@ class DirectPublishingTest {
         var result = mockMvc.perform(login).andReturn();
         assertThat(result.getResponse().getRedirectedUrl()).isEqualTo("/moderate/queue");
         return (MockHttpSession) result.getRequest().getSession();
+    }
+
+    private void tagEveryArticle(String name) {
+        var tag = UUID.randomUUID();
+        jdbc.update("INSERT INTO tag (id, name) VALUES (?, ?)", tag, name);
+        jdbc.update("INSERT INTO article_tag (article_id, tag_id) SELECT id, ? FROM article", tag);
     }
 
     private void publish(String title) {
