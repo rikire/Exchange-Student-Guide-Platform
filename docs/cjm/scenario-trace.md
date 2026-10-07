@@ -58,3 +58,7 @@ places, and which one it is is not a call to make inside a journey document:
   it as a route reachable from the article, and the screen catches up.
 
 Raised for the route-contract step rather than decided here.
+
+**Resolved 27 September** with [FEAT-005](../features/FEAT-005-submitting-an-article-or-an-edit.md):
+the article page carries **Propose an edit**, the route `GET /articles/{title}/edit` in
+[routes.yml](../architecture/routes.yml), so step 5 now chains to step 4.
