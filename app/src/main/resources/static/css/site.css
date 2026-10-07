@@ -26,10 +26,12 @@ p a, .article-body a { text-decoration: underline; }
   background: var(--paper);
   border-bottom: 1px solid var(--line);
 }
-.site-brand { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); color: var(--ink); }
+.site-brand { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); min-width: 0; min-height: var(--target); color: var(--ink); }
 .site-brand:hover { text-decoration: none; color: var(--ink); }
 .site-logo { height: 30px; width: auto; }
 .site-name { font-weight: 700; }
+/* The moderator's pages, as the design screens label them (walkthrough-fixes 3.9, N9 and N10). */
+.role-label { padding: 2px var(--space-2); border: 1px solid var(--maroon); border-radius: var(--radius-control); color: var(--maroon); font-size: var(--text-small); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 
 .site-main { flex: 1; width: 100%; max-width: var(--page-width); margin: 0 auto; padding: var(--space-5) var(--gutter); }
 
@@ -52,6 +54,9 @@ p a, .article-body a { text-decoration: underline; }
   color: var(--maroon-dark);
 }
 .chip-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-3); padding: 0; list-style: none; }
+.table-chips { margin: 0; }
+.side-more { margin: var(--space-3) 0 0; }
+.side-more a { display: inline-flex; align-items: center; min-height: var(--target); }
 
 .article-title { font-size: var(--text-title); font-weight: 700; margin: 0 0 var(--space-5); }
 .article-body { line-height: 1.7; max-width: 46rem; }
@@ -175,6 +180,7 @@ p a, .article-body a { text-decoration: underline; }
   form .button-row { flex-direction: column; align-items: stretch; }
 }
 .result-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); max-width: 46rem; }
+.login-card { max-width: 26rem; }
 .number-label { margin: 0; font-size: var(--text-small); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
 /* Fix 2.4 (F-29): the site's own face, larger, digits of one width, each group set apart, so a 0 is
    not read as an 8 in a number copied by hand. */
@@ -204,11 +210,22 @@ p a, .article-body a { text-decoration: underline; }
 .empty-state p { max-width: 24rem; color: var(--ink-soft); }
 .empty-icon { width: 40px; height: 40px; fill: none; stroke: var(--ink-soft); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
+/* FR-005's invitation, as docs/design/screens/RedlinkInvite.html draws it (walkthrough-fixes 3.9, N6): a
+   card with the warning icon and the missing title in the red link's colour (4.95:1 on white). */
+.invite-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); max-width: 46rem; margin-bottom: var(--space-5); padding: var(--space-6) var(--space-5); text-align: center; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.invite-card p { margin: 0; max-width: 30rem; }
+.invite-card .button-row { justify-content: center; }
+.invite-icon { width: 40px; height: 40px; fill: none; stroke: var(--red); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.invite-title { margin: 0; font-size: var(--text-lead); font-weight: 700; }
+.invite-target { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--red); overflow-wrap: anywhere; }
+
 /* Moderation (FEAT-006) */
 /* On a phone the queue is wider than the screen; like a table in an article, it scrolls sideways
    inside itself, never the page (NFR-008), and takes focus so the keyboard can scroll it too. Its
    position keeps the visually hidden header label, absolutely positioned, inside the scroll. */
-.queue-table { position: relative; display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+/* On white with a frame, as the moderator's design screens draw their tables (walkthrough-fixes 3.9, N10). */
+.queue-table { position: relative; display: block; max-width: 100%; overflow-x: auto; border-collapse: separate; border-spacing: 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.queue-table tbody tr:last-child td { border-bottom: 0; }
 .queue-table td a { display: inline-flex; align-items: center; min-height: var(--target); }
 .queue-table th, .queue-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
 /* From 1024 px a moderator's table fits, so it is a table again and its rows take the frame's width
@@ -248,15 +265,15 @@ p a, .article-body a { text-decoration: underline; }
 /* FEAT-012: a submission's status, as the pill of docs/design/screens/SubmissionStatus.html, with its dot
    (walkthrough-fixes 3.9, N7 and N8). Rejected takes the diff's red pair: the design's red on its pale
    ground is 4.25:1, under WCAG AA. */
-.status-pill { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--target); padding: 0 var(--space-3); border-radius: var(--radius-pill); font-weight: 600; }
-.status-pill::before { content: ""; width: 6px; height: 6px; border-radius: var(--radius-pill); background: currentColor; }
+.status-pill { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--target); padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); font-weight: 600; }
+.status-pill::before { content: ""; flex-shrink: 0; width: 6px; height: 6px; border-radius: var(--radius-pill); background: currentColor; }
 .status-pending { background: var(--sand-raised); color: var(--ink); }
 .status-received, .status-approved { background: var(--olive-soft); color: var(--olive); }
 .status-rejected { background: var(--diff-removed-bg); color: var(--diff-removed-ink); }
 
 /* Secondary text is small only on a wide screen; on a phone or tablet it is read at body size (NFR-008). */
 @media (max-width: 1023px) {
-  .field-help, .site-footer, .number-label, .rank-badge { font-size: var(--text-body); }
+  .field-help, .site-footer, .number-label, .rank-badge, .role-label { font-size: var(--text-body); }
 }
 
 /* FR-029: what an edit changes, published on the left and proposed on the right; one column on a
@@ -319,7 +336,7 @@ p a, .article-body a { text-decoration: underline; }
 .queue-title { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* On a phone the queue's five columns are wider than the screen and the table scrolls inside itself;
    the last column, "Review", stays pinned to its right edge so the way into a submission is always in view. */
-.queue-table td:last-child, .queue-table th:last-child { position: sticky; right: 0; background: var(--sand); }
+.queue-table td:last-child, .queue-table th:last-child { position: sticky; right: 0; background: var(--paper); }
 
 /* Fix 3.5's layout, as docs/design/screens/Article.html draws it: the title and the text at their
    measure, a 260-px sidebar of cards beside them from the title down, the whole centred in the frame.
@@ -387,3 +404,12 @@ p a, .article-body a { text-decoration: underline; }
 .report-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); max-width: 46rem; }
 .report-entry .article-card-title { margin-bottom: var(--space-1); }
 .report-message { white-space: pre-line; overflow-wrap: anywhere; }
+/* As docs/design/screens/ReportInbox.html draws it (walkthrough-fixes 3.9, N11): the message set
+   apart from the date, and from 1024 px the two actions beside the title rather than under the text. */
+.report-entry .side-title { margin-top: var(--space-3); }
+@media (min-width: 64rem) {
+  .report-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-5); align-items: start; }
+  .report-entry > * { grid-column: 1; }
+  .report-entry > form { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+  .report-entry > .side-title, .report-entry > .report-message { grid-column: 1 / -1; }
+}

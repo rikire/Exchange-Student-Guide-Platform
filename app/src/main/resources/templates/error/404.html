@@ -17,12 +17,13 @@
                                    tag=${path != null && #strings.startsWith(path, '/tags/')}">
     <!-- FR-005, as docs/design/screens/RedlinkInvite.html draws it: a red link's address invites
          the reader to write the article, its title carried to the form. -->
-    <th:block th:if="${invitation != null}">
-      <h1 class="article-title">This article doesn't exist yet</h1>
-      <p class="article-summary" th:text="${invitation}">SIM card registration</p>
+    <section class="invite-card" th:if="${invitation != null}" aria-labelledby="invite-heading">
+      <svg class="invite-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+      <h1 class="invite-title" id="invite-heading">This article doesn't exist yet</h1>
+      <p class="invite-target" th:text="${invitation}">SIM card registration</p>
       <p>Someone linked to this title from another article, but nobody has written it. You can be the first — it goes through the same review as any other submission.</p>
       <p class="button-row"><a class="button-primary" th:href="@{/submit(title=${invitation})}">Create this article</a></p>
-    </th:block>
+    </section>
     <th:block th:if="${invitation == null}">
     <h1 class="article-title" th:text="${tag} ? 'We could not find that tag' : 'We could not find that page'">We could not find that page</h1>
     <p th:if="${article}">There is no published article at this address.</p>

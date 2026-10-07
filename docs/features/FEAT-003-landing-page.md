@@ -57,8 +57,10 @@ None. Reads `article`, `tag`, `article_tag` through its own repository; `article
 The requirement fixes neither the numbers nor the overlap; these are ours, each with a test.
 
 - **A pinned article is not repeated among the recent ones.**
-- **Each of the two lists shows at most 12 cards**, the tag list at most 50 (ADR-0010: every public
-  list has a bound the client cannot raise). One constant each, in `LandingPageService`.
+- **Each of the two lists shows at most 12 cards**, the tag list at most 12, ending in "All tags →"
+  to `GET /tags` (ADR-0010: every public list has a bound the client cannot raise). One constant
+  each, in `LandingPageService`. The tag bound was 50 until 8 Oct, when a phone ended in a wall of
+  tags ([walkthrough-fixes 3.9](../verification/walkthrough-fixes.md), N1).
 - **Pinned articles are ordered by when they were pinned, newest first**; recent ones by when they
   were published, newest first.
 - **Tags come from live articles only**: a tag carried only by removed articles is not listed.

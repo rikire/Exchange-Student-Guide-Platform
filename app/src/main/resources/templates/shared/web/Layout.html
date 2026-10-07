@@ -24,6 +24,7 @@
     <a class="site-brand" th:href="@{/}">
       <img class="site-logo" th:src="@{/img/oge-logo.svg}" alt="OGE logo">
       <span class="site-name">Exchange Student Guide</span>
+      <span class="role-label" th:if="${moderatorArea}">Moderator</span>
     </a>
     <!-- Fix 2.1 (F-6): the four ways on from any page. A wide screen shows the list; a phone or a
          tablet folds it into a native <details> menu, which needs no script under the CSP. -->

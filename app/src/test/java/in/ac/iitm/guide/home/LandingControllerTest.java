@@ -129,7 +129,7 @@ class LandingControllerTest {
     @Test
     // trace:FR-009
     void the_tag_list_is_bounded_and_alphabetical() throws Exception {
-        var names = new String[55];
+        var names = new String[15];
         for (int i = 0; i < names.length; i++) {
             names[i] = String.format("tag-%03d", i);
         }
@@ -138,8 +138,19 @@ class LandingControllerTest {
         var cloud = landing().split("class=\"tag-cloud\"", 2)[1];
 
         // "chip" and not "chip\"": a tag with a page is "chip chip-link" since FEAT-008.
-        assertThat(count(cloud, "<li class=\"chip")).isEqualTo(50);
-        assertThat(cloud).contains(">tag-049<").doesNotContain(">tag-050<");
+        // Walkthrough-fixes 3.9, N1: twelve, so a phone does not end in a wall of tags.
+        assertThat(count(cloud, "<li class=\"chip")).isEqualTo(12);
+        assertThat(cloud).contains(">tag-011<").doesNotContain(">tag-012<");
+    }
+
+    @Test
+    // trace:FR-009
+    void the_tag_list_leads_to_every_tag() throws Exception {
+        publish("Tagged", NOW.minusDays(1), null, "visa");
+
+        var side = landing().split("id=\"tags-heading\"", 2)[1];
+
+        assertThat(side).containsPattern("<a[^>]*href=\"/tags\"[^>]*>All tags");
     }
 
     @Test

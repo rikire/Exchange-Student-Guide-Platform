@@ -35,4 +35,27 @@ class SiteHeaderTest {
                 .contains("href=\"/submissions/status\"")
                 .contains("href=\"/submit\"");
     }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-014
+    void the_moderator_login_carries_the_moderator_label() throws Exception {
+        var header = header("/moderate/login");
+
+        // Walkthrough-fixes 3.9, N9: the label of docs/design/screens/AdminLogin.html.
+        assertThat(header).contains("<span class=\"role-label\">Moderator</span>");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/", "/articles", "/submit"})
+    // trace:FR-009
+    void a_readers_header_carries_no_moderator_label(String path) throws Exception {
+        var header = header(path);
+
+        assertThat(header).doesNotContain("role-label");
+    }
+
+    private String header(String path) throws Exception {
+        var page = mockMvc.perform(get(path)).andReturn().getResponse().getContentAsString();
+        return page.substring(page.indexOf("<header"), page.indexOf("</header>"));
+    }
 }

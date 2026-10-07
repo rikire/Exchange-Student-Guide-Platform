@@ -17,4 +17,13 @@ class ModeratorFrame {
     boolean moderator(HttpServletRequest request) {
         return request.isUserInRole(WebSecurity.MODERATOR);
     }
+
+    /**
+     * Whether the header carries the "Moderator" label (walkthrough-fixes 3.9, N9 and N10): for a
+     * signed-in moderator, and on the moderator's pages before signing in, the login among them.
+     */
+    @ModelAttribute("moderatorArea")
+    boolean moderatorArea(HttpServletRequest request) {
+        return moderator(request) || request.getRequestURI().startsWith(request.getContextPath() + "/moderate/");
+    }
 }

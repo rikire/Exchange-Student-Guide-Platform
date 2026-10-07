@@ -82,6 +82,17 @@ class NotFoundPageTest {
 
     @Test
     // trace:FR-005
+    void the_invitation_is_a_card_naming_the_missing_title_in_the_red_links_colour() {
+        var page = notFound("/articles/sim-card-registration?title=SIM%20card%20registration");
+
+        // Walkthrough-fixes 3.9, N6: the card of docs/design/screens/RedlinkInvite.html.
+        assertThat(page)
+                .containsPattern("<section class=\"invite-card\"[^>]*>")
+                .contains("<p class=\"invite-target\">SIM card registration</p>");
+    }
+
+    @Test
+    // trace:FR-005
     void an_address_typed_without_a_red_links_title_is_not_an_invitation() {
         assertThat(notFound("/articles/sim-card-registration")).doesNotContain("Create this article");
     }

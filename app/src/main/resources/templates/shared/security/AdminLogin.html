@@ -11,24 +11,27 @@
 
     <p class="form-note" role="status" th:if="${param.logout}">You are logged out.</p>
 
-    <div class="form-error" role="alert" th:if="${error}">
-      <p>That password is not right. Try again.</p>
-    </div>
-    <div class="form-error" role="alert" th:if="${tooMany}">
-      <p>Too many failed attempts from your network. Please try again in <span th:text="${tooMany}">15 minutes</span>.</p>
-    </div>
-
-    <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
-    <form class="submission-form" method="post" th:action="@{/moderate/login}">
-      <label class="field">
-        <span class="field-label">Password</span>
-        <input class="field-input" type="password" name="password" required autocomplete="current-password" autofocus>
-      </label>
-      <div class="button-row">
-        <button class="button-primary" type="submit">Sign in</button>
-        <a class="button-quiet button-back" th:href="@{/}">Back to the guide</a>
+    <!-- The narrow card of docs/design/screens/AdminLogin.html (walkthrough-fixes 3.9, N9). -->
+    <div class="result-card login-card">
+      <div class="form-error" role="alert" th:if="${error}">
+        <p>That password is not right. Try again.</p>
       </div>
-    </form>
+      <div class="form-error" role="alert" th:if="${tooMany}">
+        <p>Too many failed attempts from your network. Please try again in <span th:text="${tooMany}">15 minutes</span>.</p>
+      </div>
+
+      <!-- th:action, not action: Spring Security adds the CSRF token only to forms Thymeleaf builds. -->
+      <form class="submission-form" method="post" th:action="@{/moderate/login}">
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input class="field-input" type="password" name="password" required autocomplete="current-password" autofocus>
+        </label>
+        <div class="button-row">
+          <button class="button-primary" type="submit">Sign in</button>
+          <a class="button-quiet button-back" th:href="@{/}">Back to the guide</a>
+        </div>
+      </form>
+    </div>
   </main>
 </body>
 </html>

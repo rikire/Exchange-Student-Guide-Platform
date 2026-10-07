@@ -187,6 +187,17 @@ class ArticleRemovalTest {
     }
 
     @Test
+    // trace:FR-025
+    void the_articles_list_shows_each_tag_as_a_chip() throws Exception {
+        published("Hostel Life", "Rooms and mess.", "hostel", "campus");
+
+        var page = response(get("/moderate/articles").session(loggedIn())).getContentAsString();
+
+        // Walkthrough-fixes 3.9, N12: the chips of docs/design/screens/HomeAdmin.html, not a joined line.
+        assertThat(page).contains("<li class=\"chip\">campus</li>", "<li class=\"chip\">hostel</li>");
+    }
+
+    @Test
     // trace:FR-026
     void removal_without_a_moderator_session_is_refused_and_the_article_stays() throws Exception {
         published("Hostel Life", "Rooms and mess.");

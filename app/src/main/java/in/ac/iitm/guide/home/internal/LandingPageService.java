@@ -25,7 +25,9 @@ public class LandingPageService {
     // place, so changing one is one edit.
     static final int PINNED_LIMIT = 12;
     static final int RECENT_LIMIT = 12;
-    static final int TAG_LIMIT = 50;
+    // Twelve, not fifty: on a phone fifty tags made the page end in a wall of them (walkthrough-fixes 3.9, N1);
+    // the rest are a link away, on GET /tags.
+    static final int TAG_LIMIT = 12;
 
     private final LandingReadRepository articles;
     private final DisplayTime displayTime;

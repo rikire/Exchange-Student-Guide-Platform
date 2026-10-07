@@ -473,6 +473,19 @@ class ModerationFlowTest {
 
     @Test
     // trace:FR-014
+    void a_signed_in_moderators_header_carries_the_moderator_label_on_every_page() throws Exception {
+        var session = loggedIn();
+
+        for (var path : List.of("/moderate/queue", "/")) {
+            var header = header(page(session, path));
+
+            // Walkthrough-fixes 3.9, N10: the label of docs/design/screens/ModerationQueue.html.
+            assertThat(header).as(path).contains("<span class=\"role-label\">Moderator</span>");
+        }
+    }
+
+    @Test
+    // trace:FR-014
     void a_signed_in_moderator_sees_the_moderators_header_on_every_page() throws Exception {
         var session = loggedIn();
 

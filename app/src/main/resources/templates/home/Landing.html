@@ -46,6 +46,7 @@
           <!-- FR-031: most visited first; the number is how many articles carry the tag. -->
           <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${landing.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}"><span th:text="${tag.name}">tag</span> <span class="chip-count" th:text="${tag.articles}">3</span><span class="visually-hidden" th:text="${tag.articles == 1} ? ' article' : ' articles'"> articles</span></a><th:block th:unless="${tag.path}"><span th:text="${tag.name}">tag</span> <span class="chip-count" th:text="${tag.articles}">3</span><span class="visually-hidden" th:text="${tag.articles == 1} ? ' article' : ' articles'"> articles</span></th:block></li>
         </ul>
+        <p class="side-more"><a th:href="@{/tags}">All tags →</a></p>
       </aside>
     </div>
     <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>

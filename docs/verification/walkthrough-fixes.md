@@ -488,6 +488,23 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
   pills carry the dot; Received and Approved are olive (new tokens `--olive`, `--olive-soft`), Rejected
   the diff's red pair, since the design's red on its pale ground is 4.25:1, under WCAG AA.
 
+- **N9 and N10, fixed 8 Oct.** The header carries a "Moderator" label for a signed-in moderator and
+  on every `/moderate/` page, the login among them (`ModeratorFrame.moderatorArea`); on a phone it wraps
+  under the site's name. The login is a narrow card; the moderator's tables are on white in a frame.
+- **N11, fixed 8 Oct.** From 1024 px a report's two actions stand beside its title and date, and its
+  message, set apart from the date, takes the card's width.
+- **N12, fixed 8 Oct, in part.** The tags of a published article are chips. Pin stays a secondary
+  button, as fix 3.2 decided, and the separate "Pinned, in order" table stays, since FR-025's order
+  is set in it.
+- **N6, fixed 8 Oct.** The invitation is the design's card, with the warning icon and the missing title
+  in red monospace; "Did you mean" and the search box stay under it (3.8).
+- **N1, fixed 8 Oct.** The landing page lists 12 tags, not 50, and ends the list in "All tags →".
+
+**Checked 8 Oct** by recapturing every pair: no page of the application is wider than 320 px at 320,
+and none of D1, D3 and D4 is left. `BrowserLayoutTest` (`-P browser`), which holds the new D1, D3 and
+D4 cases, has not run: Playwright's Chromium could not be downloaded on this machine, and CI does not
+run the browser profile.
+
 **Pages with no design screen** — compared with nothing: `/articles`, `/tags`, the plain 404, the
 report form, the moderator's write form, the remove confirmation, the log-out page.
 

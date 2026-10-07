@@ -49,7 +49,8 @@
       <tbody>
         <tr th:each="line : ${screen.published}">
           <td><a th:href="@{${line.path}}" th:text="${line.title}">Opening a bank account</a></td>
-          <td th:text="${#strings.listJoin(line.tags, ', ')}">banking</td>
+          <!-- Walkthrough-fixes 3.9, N12: the tags as chips, as docs/design/screens/HomeAdmin.html draws them. -->
+          <td><ul class="chip-row table-chips"><li class="chip" th:each="tag : ${line.tags}" th:text="${tag}">banking</li></ul></td>
           <td>
             <div class="button-row">
               <span class="chip" th:if="${line.pinned}">Pinned</span>
