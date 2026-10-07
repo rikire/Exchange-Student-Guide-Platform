@@ -180,7 +180,10 @@ p a, .article-body a { text-decoration: underline; }
   form .button-row { flex-direction: column; align-items: stretch; }
 }
 .result-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); max-width: 46rem; }
-.login-card { max-width: 26rem; }
+/* The login in one column at the middle of the page (the human, 8 Oct): heading and note centred,
+   the form inside the card left-aligned as every other form. */
+.login-panel { max-width: 26rem; margin: 0 auto; }
+.login-panel > .article-title, .login-panel > .form-note { text-align: center; }
 .number-label { margin: 0; font-size: var(--text-small); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
 /* Fix 2.4 (F-29): the site's own face, larger, digits of one width, each group set apart, so a 0 is
    not read as an 8 in a number copied by hand. */

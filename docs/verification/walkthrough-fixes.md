@@ -504,6 +504,8 @@ phone (28 Sep, NFR-008), so D2 is not a defect. Everything else is fixed in the 
 and none of D1, D3 and D4 is left. Playwright's Chromium could not be downloaded on this machine, so
 the browser suite ran in the installed Chrome (`-Dbrowser.channel=chrome`, `TestBrowser`). It caught a
 regression of D3 — with no scroll box, a long unbroken title widened `/moderate/articles` to 2,227 px —
+  **Changed 8 Oct by the human:** the login's heading, note and card stand in one column at the middle
+  of the page (`.login-panel`), not at the left as on the design screen.
 now broken inside its cell. What still fails there failed the same way on `a8da741`, before these
 fixes: axe's contrast rule on two elements of `/submit` and the edit form (3.6), and a 404 for
 `/favicon.ico`, which Chrome requests and Playwright's Chromium does not. Both wait for a run in
