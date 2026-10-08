@@ -38,7 +38,7 @@ on no public page until it is approved (steps 5 and 8), and the replaced text is
 
 - The page does not load: `docker compose ps`; if the app is not running, `docker compose up -d`.
 - The stand holds a rehearsal's edit: `docker compose down -v`, then `docker compose up --build -d`.
-  This deletes every submission and upload on the stand and brings back the 36 seed articles.
+  This deletes every submission and upload on the stand and brings back the 38 seed articles.
 
 ## The rubric's rows
 
