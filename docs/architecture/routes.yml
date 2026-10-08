@@ -575,6 +575,35 @@ routes:
     serves: >-
       Ending ADR-0009's session on a shared office computer (DEBT-019, closed)
 
+  - methods: [GET]
+    path: /oge-team
+    slice: about
+    status: built
+    template: >-
+      `about/OgeTeam.html`
+    fields: >-
+      —
+    responses: >-
+      `200` always, to anyone; the header of every reader's page links here
+    serves: >-
+      FR-035 ([FEAT-022](../features/FEAT-022-oge-team-and-developers-pages.md)): the Dean, the
+      Inbound contacts and how to visit the office, static in the template; facts not yet supplied
+      show as blanks (DEBT-025)
+
+  - methods: [GET]
+    path: /developers
+    slice: about
+    status: built
+    template: >-
+      `about/Developers.html`
+    fields: >-
+      —
+    responses: >-
+      `200` always, to anyone; the header of every reader's page links here
+    serves: >-
+      FR-035 ([FEAT-022](../features/FEAT-022-oge-team-and-developers-pages.md)): who built the
+      guide and for whom, static in the template; facts not yet supplied show as blanks (DEBT-025)
+
 # Features whose routes are not designed yet: kept here so the whole contract is in one place.
 deferred:
   - feature: >-

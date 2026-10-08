@@ -1059,3 +1059,38 @@ GIVEN an address that matches no published article
 WHEN a reader opens it and it answers 404
 THEN no view count changes
 ```
+
+### FR-035 — Pages about the OGE team and the developers
+
+**Status:** done
+**Priority:** could
+
+The system shall show a page about the OGE team (the Dean, the Inbound contacts, how to visit the
+office) and a page about the guide's developers, each linked from every reader's header. A fact
+nobody has supplied yet is shown as a visible blank (DEBT-025), so it is filled in rather than
+forgotten (the human, 9 Oct). Asked for by the human on 9 Oct, from the mockups
+[OgeTeam.html](../design/screens/OgeTeam.html) and [Developers.html](../design/screens/Developers.html).
+
+**Acceptance criteria:**
+
+```
+GIVEN any visitor, signed in or not
+WHEN they open the OGE team page or the developers page
+THEN it answers 200
+
+GIVEN the OGE team page
+WHEN a reader opens it
+THEN the Dean is shown before the Inbound contacts
+
+GIVEN the developers page
+WHEN a reader opens it
+THEN all three developers are named
+
+GIVEN any reader's page
+WHEN it is shown
+THEN its header links to the OGE team page and to the developers page
+
+GIVEN the OGE team page or the developers page
+WHEN a reader opens it
+THEN every image on it is served by the site itself
+```

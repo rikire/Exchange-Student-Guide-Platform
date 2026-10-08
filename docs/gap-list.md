@@ -12,7 +12,7 @@ Functional and non-functional requirements by status, out-of-scope ones left out
 
 ```mermaid
 pie showData title Requirements by status
-    "done" : 41
+    "done" : 42
     "in-progress" : 0
     "planned" : 1
 ```
@@ -23,6 +23,7 @@ The arrows are the dependencies Spring Modulith read from the code (`app/target/
 
 ```mermaid
 flowchart LR
+    about["about · 1/1 done"]:::done
     articleview["articleview · 7/7 done"]:::done
     backlink["backlink · 1/1 done"]:::done
     backup["backup · 2/2 done"]:::done
@@ -76,6 +77,7 @@ flowchart LR
 
 | Slice | Requirements covered | Done | State |
 |---|---|---|---|
+| about | 1 | 1 | done |
 | articleview | 7 | 7 | done |
 | backlink | 1 | 1 | done |
 | backup | 2 | 2 | done |
@@ -108,6 +110,7 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
+| DEBT-025 | The OGE team and developers pages show blanks for facts nobody has supplied | the facts arriving from the developers and from OGE, or the final submission, whichever |
 | DEBT-024 | The moderator's publish form shows a refusal only at the top, not at the field | the human's look at the moderator's pages, or phase 4's edge cases, whichever is first. |
 | DEBT-023 | A tag-field browser test failed once without a known cause | its next failure, in CI or locally. |
 | DEBT-015 | A file far over the container's limit gets a closed connection, not the page | the first report of an upload ending in a connection error, or phase 4's hardening. |

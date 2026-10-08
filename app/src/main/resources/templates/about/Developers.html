@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Developers — Exchange Student Guide</title>
+</head>
+<body>
+  <!-- FR-035, as docs/design/screens/Developers.html draws it: who the guide was built for and by,
+       in one lockup as university brand guides draw a partnership; "built for" and "by students of"
+       rather than a collaboration, because the two institutions have none. A blank is a fact nobody
+       has supplied yet (DEBT-025). -->
+  <main class="site-main landing">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Developers</h1>
+        <p class="hero-lead">Three exchange students from Innopolis University built this guide at
+          IIT Madras in 2026, so the next ones would not have to ask the same questions.</p>
+      </div>
+    </section>
+    <section class="lockup-band" aria-label="Who this guide is for and who built it">
+      <div class="lockup">
+        <figure class="lockup-item">
+          <figcaption>Built for</figcaption>
+          <span class="lockup-mark"><img class="lockup-oge" th:src="@{/img/oge-logo.svg}" alt="Office of Global Engagement, IIT Madras"></span>
+        </figure>
+        <span class="lockup-divider" aria-hidden="true"></span>
+        <figure class="lockup-item">
+          <figcaption>By students of</figcaption>
+          <span class="lockup-mark">
+            <img class="lockup-uni" th:src="@{/img/about/innopolis-logo.jpg}" alt="">
+            <span class="lockup-name"><strong>INNOPOLIS UNIVERSITY</strong><span>Innopolis, Russia</span></span>
+          </span>
+        </figure>
+      </div>
+    </section>
+    <div class="landing-body about-body single">
+      <div class="about-main">
+        <h2 class="section-title">Who built it</h2>
+        <div class="dev-grid">
+          <article class="dev-card">
+            <div class="person-photo" aria-hidden="true">MN</div>
+            <h3 class="person-name">Mikhail Novikov</h3>
+            <p class="dev-from">Exchange student at IIT Madras</p>
+            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
+            <p class="dev-quote"><span class="placeholder">a line in their own words: ___</span></p>
+            <p class="dev-links"><a href="https://github.com/rikire">GitHub</a> · <span class="placeholder">LinkedIn ___</span></p>
+          </article>
+          <article class="dev-card">
+            <div class="person-photo" aria-hidden="true">AI</div>
+            <h3 class="person-name">Abdirakhim Ismailov</h3>
+            <p class="dev-from">Exchange student at IIT Madras</p>
+            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
+            <p class="dev-quote"><span class="placeholder">a line in their own words: ___</span></p>
+            <p class="dev-links"><a href="https://github.com/abdra04-gif">GitHub</a> · <span class="placeholder">LinkedIn ___</span></p>
+          </article>
+          <article class="dev-card">
+            <div class="person-photo" aria-hidden="true">IR</div>
+            <h3 class="person-name">Iurii Rudenko</h3>
+            <p class="dev-from">Exchange student at IIT Madras</p>
+            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
+            <p class="dev-quote"><span class="placeholder">a line in their own words: ___</span></p>
+            <p class="dev-links"><span class="placeholder">GitHub ___ · LinkedIn ___</span></p>
+          </article>
+        </div>
+
+        <div class="story-grid">
+          <section class="story-card">
+            <h2 class="section-title">Why we built it</h2>
+            <p>When you arrive on exchange, the answers you need — registration, hostel, banking,
+              getting around Chennai — are spread across emails, group chats and people who have
+              already left. This guide puts them in one place, written by students who have been
+              through it and checked by the office that runs the programme.</p>
+          </section>
+          <section class="story-card">
+            <h2 class="section-title">Thank you</h2>
+            <ul class="thanks-list">
+              <li><strong>Office of Global Engagement</strong>, and Thukaram M Damodhar in particular,
+                for backing the guide and reviewing what goes into it.</li>
+              <li><strong>The CS5013 "Programming with AI" course</strong> at IIT Madras, where it
+                started: <span class="placeholder">instructors ___</span>.</li>
+              <li><strong>Every student who writes or fixes an article</strong>: the guide is only as
+                good as what you add to it.</li>
+            </ul>
+          </section>
+        </div>
+
+        <p class="note-box">Found a mistake in the site itself, not in an article? Write to
+          <a href="mailto:ge26z860@smail.iitm.ac.in">ge26z860@smail.iitm.ac.in</a>. A mistake in an
+          article goes through the report link on that article.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

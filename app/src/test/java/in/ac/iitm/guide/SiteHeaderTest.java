@@ -36,6 +36,16 @@ class SiteHeaderTest {
                 .contains("href=\"/submit\"");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"/", "/articles", "/oge-team", "/developers"})
+    // trace:FR-035
+    void the_header_links_to_the_oge_team_and_developers_pages(String path) throws Exception {
+        var page = mockMvc.perform(get(path)).andReturn().getResponse().getContentAsString();
+        var header = page.substring(page.indexOf("<header"), page.indexOf("</header>"));
+
+        assertThat(header).contains("href=\"/oge-team\"").contains("href=\"/developers\"");
+    }
+
     @org.junit.jupiter.api.Test
     // trace:FR-014
     void the_moderator_login_carries_the_moderator_label() throws Exception {

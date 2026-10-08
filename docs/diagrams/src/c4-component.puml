@@ -27,6 +27,7 @@ Container_Boundary(web, "Web application") {
   Component(wikilink, "wikilink", "plain Java", "The [[link]] parser and renderer. No Spring, no JPA — so its tests run without a context (FR-002 to FR-005)")
   Component(backlink, "backlink", "slice", "Owns article_link: re-reads an article's links on ArticleTextChanged, answers what links here (FR-006, ADR-0016)")
   Component(backup, "backup", "slice", "Export and import of the whole knowledge base (NFR-004, ADR-0007)")
+  Component(about, "about", "slice", "The OGE team and developers pages, static: no table, no other slice (FR-035)")
 
   Component(shared, "shared", "persistence · web · security", "JPA entities and Flyway migrations, layout fragments, CSRF, rate limiting, admin authentication")
 }

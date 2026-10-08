@@ -261,7 +261,7 @@ class BrowserLayoutTest {
 
             page.click(".site-menu summary");
 
-            assertThat(links.count()).isEqualTo(4);
+            assertThat(links.count()).isEqualTo(6);
             for (var i = 0; i < links.count(); i++) {
                 assertThat(links.nth(i).isVisible()).isTrue();
                 assertThat(links.nth(i).boundingBox().height).isGreaterThanOrEqualTo(44);
@@ -299,7 +299,7 @@ class BrowserLayoutTest {
             var page = context.newPage();
             page.navigate("http://localhost:" + port + "/");
 
-            assertThat(page.locator(".site-nav > .site-links a").count()).isEqualTo(4);
+            assertThat(page.locator(".site-nav > .site-links a").count()).isEqualTo(6);
             assertThat(page.locator(".site-nav > .site-links a").first().isVisible())
                     .isTrue();
             assertThat(page.locator(".site-menu").isVisible()).isFalse();

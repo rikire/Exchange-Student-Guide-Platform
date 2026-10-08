@@ -148,7 +148,9 @@ since 27 September `contribute` and `taxonomy` (its tag rule, not yet browsing),
 `moderate` (FEAT-006), `search` (FEAT-007) and `media` (FEAT-009), since 29 September `backlink`
 (FR-006, [ADR-0016](adr/ADR-0016-backlinks-through-an-event-fed-slice.md)), and since 2 October `report`
 (FR-021, FR-022, [FEAT-020](../features/FEAT-020-reporting-an-article.md)), which uses `shared/web`'s
-`AddressLimit`, moved there from `contribute` for it.
+`AddressLimit`, moved there from `contribute` for it. Since 9 October `about` (FR-035,
+[FEAT-022](../features/FEAT-022-oge-team-and-developers-pages.md)) serves two static pages; it
+imports no other slice and owns no table.
 
 Worth stating because the alternative is the usual one: before this, `ModularityTest` called
 `ApplicationModules.of(...).verify()` against an application with no modules at all. It passed —

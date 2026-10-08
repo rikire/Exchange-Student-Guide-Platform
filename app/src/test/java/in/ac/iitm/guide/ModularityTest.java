@@ -32,7 +32,7 @@ class ModularityTest {
     private static final ApplicationModules MODULES = ApplicationModules.of(GuideApplication.class);
 
     /**
-     * The eleven slices of docs/ai/architecture-rules.md, plus {@code shared}.
+     * The twelve slices of docs/ai/architecture-rules.md, plus {@code shared}.
      *
      * <p>Kept as a literal list rather than derived from the packages, because deriving it would
      * make the assertion agree with whatever the code happens to contain — including agreeing that
@@ -50,6 +50,7 @@ class ModularityTest {
         "wikilink",
         "backlink",
         "backup",
+        "about",
         "shared",
     };
 

@@ -47,6 +47,7 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-032 | done | FEAT-016 | PhotoViewer | BrowserPhotoViewerTest |  | GET /articles/{title}, GET /moderate/submissions/{number} |  | Viewing photos full screen |
 | FR-033 | done | FEAT-018 | ArticleList, ArticleListController, ArticleListRepository | ArticleCardTest, ArticleListTest, PageQueryCountTest |  | GET /articles, GET /articles/{title} | article, article_tag, tag | Browsing every article |
 | FR-034 | done | FEAT-018 | ArticleController, ArticleViewRepository | ArticleArchiveTest, ArticleViewCountTest, SeedRunnerTest | V8__add_article_view_count_and_pin_position | GET /articles, GET /articles/{title} | article, article_tag, tag | Counting an article's views |
+| FR-035 | done | FEAT-022 | AboutController | AboutPagesTest, SiteHeaderTest |  | GET /developers, GET /oge-team |  | Pages about the OGE team and the developers |
 
 ## Non-functional requirements
 

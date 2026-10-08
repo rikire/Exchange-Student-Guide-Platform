@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>OGE team — Exchange Student Guide</title>
+</head>
+<body>
+  <!-- FR-035, as docs/design/screens/OgeTeam.html draws it: the Dean first, then the Inbound team an
+       exchange student writes to, and how to visit the office in the sidebar. Names, roles and rooms
+       from ge.iitm.ac.in/team, the address from its contact page (9 Oct). A blank is a fact nobody
+       has supplied yet (DEBT-025). -->
+  <main class="site-main landing">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>OGE team</h1>
+        <p class="hero-lead">The Office of Global Engagement looks after international students at
+          IIT Madras, and checks everything published in this guide.</p>
+      </div>
+    </section>
+    <div class="landing-body about-body">
+      <div class="about-main">
+        <article class="person-card featured">
+          <img class="person-photo" th:src="@{/img/about/dean.jpg}" alt="">
+          <div>
+            <p class="eyebrow-label">Head of the office</p>
+            <h2 class="person-name">Prof. Preeti Aghalayam</h2>
+            <p class="person-role">Dean, Global Engagement — heads the Office of Global Engagement.</p>
+            <dl class="person-facts">
+              <dt>Email</dt><dd><a href="mailto:dean@ge.iitm.ac.in">dean<wbr>@ge.iitm.ac.in</a></dd>
+            </dl>
+          </div>
+        </article>
+
+        <h2 class="section-title">Your contacts as an exchange student</h2>
+        <p class="about-lead">International Academic Programs — Inbound is the team that receives
+          incoming exchange students. Write to them first about anything to do with your exchange.</p>
+        <div class="person-grid">
+          <article class="person-card">
+            <img class="person-photo" th:src="@{/img/about/thukaram.jpg}" alt="">
+            <div>
+              <h3 class="person-name">Thukaram M Damodhar</h3>
+              <p class="person-role">Lead, Inbound International Academic Programs</p>
+              <dl class="person-facts">
+                <dt>Email</dt><dd><a href="mailto:intlstudent_advisor@ge.iitm.ac.in">intlstudent_advisor<wbr>@ge.iitm.ac.in</a></dd>
+                <dt>Phone</dt><dd>+91 44 2257 8865</dd>
+                <dt>Office</dt><dd>Room 123, 2nd floor</dd>
+              </dl>
+            </div>
+          </article>
+          <article class="person-card">
+            <img class="person-photo" th:src="@{/img/about/keziah.jpg}" alt="">
+            <div>
+              <h3 class="person-name">Karlin Keziah</h3>
+              <p class="person-role">International Student Counsellor</p>
+              <dl class="person-facts">
+                <dt>Email</dt><dd><a href="mailto:intl.support@ge.iitm.ac.in">intl.support<wbr>@ge.iitm.ac.in</a></dd>
+                <dt>Phone</dt><dd>+91 44 2257 8865</dd>
+                <dt>Office</dt><dd>Room 123, 2nd floor</dd>
+              </dl>
+            </div>
+          </article>
+        </div>
+
+        <p class="note-box">OGE reviews every article and every edit on this guide before it is
+          published. For questions about your own case — visa, registration, hostel — contact the
+          Inbound team directly: an article cannot answer for you.</p>
+      </div>
+      <aside class="about-side">
+        <section class="side-card" aria-labelledby="visit-heading">
+          <h2 class="section-title" id="visit-heading">Visit OGE</h2>
+          <ul class="visit-list">
+            <li><span class="visit-label">Address</span>2nd floor, Sudha &amp; Shankar Innovation Centre,
+              IIT Madras, Chennai 600 036</li>
+            <li><span class="visit-label">Rooms</span>121 (operations) · 123 (international programmes)</li>
+            <li><span class="visit-label">How to get there</span><span class="placeholder">from the main gate: ___</span></li>
+            <li><span class="visit-label">Office hours</span><span class="placeholder">___</span></li>
+            <li><span class="visit-label">Front office</span>+91 44 2257 8091<br>
+              <a href="mailto:deangeoffice@iitm.ac.in">deangeoffice<wbr>@iitm.ac.in</a></li>
+          </ul>
+          <a class="button-primary" href="https://www.google.com/maps/search/?api=1&amp;query=Sudha+and+Shankar+Innovation+Centre+IIT+Madras">Open in Google Maps</a>
+          <a class="button-secondary" href="https://ge.iitm.ac.in/team">Full OGE team</a>
+        </section>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

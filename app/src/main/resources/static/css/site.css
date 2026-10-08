@@ -428,3 +428,88 @@ p a, .article-body a { text-decoration: underline; }
   .report-entry > form { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
   .report-entry > .side-title, .report-entry > .report-message { grid-column: 1 / -1; }
 }
+
+/* FR-035, as docs/design/screens/OgeTeam.html and Developers.html draw them: the landing page's hero
+   and body, a 300-px sidebar on the OGE page, none on the developers page. */
+.landing-body.about-body { grid-template-columns: minmax(0, 1fr) 300px; }
+.landing-body.about-body.single { grid-template-columns: minmax(0, 1fr); max-width: 1120px; }
+.about-side { display: flex; flex-direction: column; gap: var(--space-5); }
+.about-lead { margin: 0 0 var(--space-5); line-height: 1.7; max-width: 46rem; }
+.hero .hero-lead { max-width: 40rem; }
+.placeholder { color: var(--ink-soft); font-style: italic; }
+.note-box { margin: 0; padding: var(--space-4) var(--space-5); background: var(--sand-raised); border-radius: var(--radius-card); line-height: 1.6; }
+
+.person-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); margin: 0 0 var(--space-6); }
+.person-card { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: var(--space-4); align-items: start; padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.person-photo { width: 80px; height: 80px; border-radius: var(--radius-pill); object-fit: cover; object-position: center top; background: var(--sand-raised); color: var(--maroon-dark); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+.person-name { margin: 0; font-size: var(--text-lead); font-weight: 700; }
+.person-role { margin: var(--space-1) 0 var(--space-3); color: var(--ink-soft); line-height: 1.4; }
+.person-facts { margin: 0; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: var(--space-2) var(--space-3); line-height: 1.4; }
+.person-facts dt { color: var(--ink-soft); }
+.person-facts dd { margin: 0; }
+/* The person the page leads with: the whole width, a larger photo, the role as a label. */
+.person-card.featured { grid-template-columns: 112px minmax(0, 1fr); align-items: center; margin: 0 0 var(--space-6); border-left: 4px solid var(--maroon); }
+.person-card.featured .person-photo { width: 112px; height: 112px; }
+.person-card.featured .person-name { font-size: 22px; }
+.eyebrow-label { margin: 0 0 var(--space-1); font-size: var(--text-small); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--maroon); }
+
+.side-card .button-primary, .side-card .button-secondary { width: 100%; }
+.side-card .button-secondary { margin-top: var(--space-2); }
+.visit-list { list-style: none; margin: 0 0 var(--space-4); padding: 0; }
+.visit-list li { padding: var(--space-3) 0; border-top: 1px solid var(--line); line-height: 1.5; }
+.visit-list li:first-child { border-top: 0; padding-top: 0; }
+.visit-label { display: block; font-size: var(--text-small); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* The credit lockup under the hero, as university brand guides draw a partnership: two marks of the
+   same optical size on one line, a thin rule between them, each under a label on a shared line.
+   Innopolis's seal has no wordmark beside it, so its name is set as OGE's is. */
+.lockup-band { background: var(--paper); border-bottom: 1px solid var(--line); padding: var(--space-5) var(--gutter); }
+.lockup { display: flex; align-items: stretch; justify-content: center; gap: var(--space-6); }
+.lockup-item { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); margin: 0; }
+.lockup-item figcaption { font-size: var(--text-small); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.lockup-mark { flex: 1; display: flex; align-items: center; gap: var(--space-3); }
+.lockup-oge { display: block; height: 52px; width: auto; }
+.lockup-uni { display: block; width: 60px; height: 60px; border-radius: var(--radius-pill); transform: scale(1.12); }
+.lockup-name { display: flex; flex-direction: column; line-height: 1.2; }
+.lockup-name strong { font-size: 17px; letter-spacing: 0.02em; }
+.lockup-name span { font-size: 13px; color: var(--ink-soft); }
+.lockup-divider { width: 1px; background: var(--line); }
+
+.dev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin: 0 0 var(--space-6); }
+.dev-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2); padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--maroon); border-radius: var(--radius-card); }
+.dev-card .person-photo { width: 104px; height: 104px; font-size: 1.8rem; margin-bottom: var(--space-2); }
+.dev-from, .dev-role, .dev-quote { margin: 0; }
+.dev-from { color: var(--ink-soft); }
+.dev-quote { font-style: italic; color: var(--ink-soft); line-height: 1.5; }
+.dev-links { margin: auto 0 0; padding-top: var(--space-3); border-top: 1px solid var(--line); width: 100%; }
+.story-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin: 0 0 var(--space-5); }
+.story-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.story-card .section-title { margin-top: 0; }
+.story-card p { margin: 0; line-height: 1.7; }
+.thanks-list { margin: 0; padding-left: var(--space-5); line-height: 1.7; }
+.thanks-list li + li { margin-top: var(--space-2); }
+
+@media (max-width: 1023px) {
+  .landing-body.about-body { grid-template-columns: minmax(0, 1fr); }
+  .dev-grid, .story-grid { grid-template-columns: minmax(0, 1fr); }
+  /* NFR-008: what a reader reads is 16 px below 1024 px, labels included; a link alone in a fact is
+     a 44-px target. */
+  .eyebrow-label, .visit-label, .lockup-item figcaption, .lockup-name span { font-size: var(--text-body); }
+  .person-facts dd a { display: inline-flex; align-items: center; min-height: var(--target); }
+  .person-facts { align-items: center; }
+}
+@media (max-width: 700px) {
+  .person-grid { grid-template-columns: minmax(0, 1fr); }
+  .person-card.featured { grid-template-columns: 80px minmax(0, 1fr); align-items: start; }
+  .person-card.featured .person-photo { width: 80px; height: 80px; }
+  .lockup { flex-direction: column; align-items: center; gap: var(--space-4); }
+  .lockup-divider { width: 64px; height: 1px; }
+}
+/* On a narrow phone a card's text gets the whole width: the photo above it, each label above its
+   value, so a long address such as intlstudent_advisor@ fits at 320 px. */
+@media (max-width: 480px) {
+  .person-card, .person-card.featured { grid-template-columns: minmax(0, 1fr); }
+  .person-facts { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+  .person-facts dd + dt { margin-top: var(--space-2); }
+  .person-facts dd { overflow-wrap: anywhere; }
+}
