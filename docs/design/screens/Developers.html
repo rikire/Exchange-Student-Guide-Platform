@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<!-- Mockup, not a template: the OGE team and Developers pages, drawn 9 Oct with the site's own
+     stylesheets inlined. No FR or route yet; see docs/design/README.md. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Developers — Exchange Student Guide</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
+  <style>
+/*
+ * Design tokens. Colours are the OGE brand read from the logo's own SVG fills, and the derived
+ * neutrals, green and status tints chosen in the design system — see docs/design/reference.md, which
+ * separates what was observed on the IITM sites from what we chose. A template names these through
+ * classes in site.css and never carries a value itself (TemplateTokensTest).
+ */
+:root {
+  --maroon: #781F19;
+  --maroon-dark: #5C1712;
+  --gold: #D6A64F;
+  --gold-dark: #BDA345;
+  --red: #D9261C;
+  --ink: #1F1917;
+  --ink-soft: #5B534C;
+  --paper: #FFFFFF;
+  --sand: #F7F4EF;
+  --sand-raised: #FBF3E3;
+  --line: #E6DFD3;
+  /* A received or approved submission, from docs/design/screens/SubmissionConfirmation.html (5.0:1). */
+  --olive: #4B7043;
+  --olive-soft: #EDF2EA;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+
+  /* FR-029's marks: dark text on a pale ground, both above 4.5:1 (WCAG 1.4.3). */
+  --diff-removed-bg: #FDE2E1;
+  --diff-removed-ink: #8A1C14;
+  --diff-added-bg: #DDF4E4;
+  --diff-added-ink: #14532D;
+
+  --radius-card: 6px;
+  --radius-pill: 999px;
+  /* A button's corner, as the design screens draw it (fix 3.2). */
+  --radius-control: 4px;
+  /* Behind a video: what shows where the picture does not reach, in full screen above all. */
+  --video-ground: #000000;
+
+  --text-small: 12px;
+  --text-body: 16px;
+  --text-lead: 18px;
+  /* Fluid between a phone and a desktop (NFR-008): 24 px at 320, 32 px from about 640. */
+  --text-title: clamp(24px, 5vw, 32px);
+
+  /* Noto Sans from its WebJar (Latin and Devanagari); Tamil falls back to the system font. */
+  --font-body: 'Noto Sans', system-ui, -apple-system, sans-serif;
+  /* Up to 1440 px, three quarters of a 1920 px window (fix 3.1); running text keeps its own measure. */
+  --page-width: 1440px;
+  /* Page edges: 16 px on a phone, growing to 40 px (NFR-008). */
+  --gutter: clamp(16px, 4vw, 40px);
+  /* The smallest button, control or navigation link on a phone or tablet (NFR-008). */
+  --target: 44px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--ink);
+  background: var(--sand);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--maroon); text-decoration: none; }
+a:hover { color: var(--maroon-dark); text-decoration: underline; }
+/* A link inside running text is underlined, not told apart by colour alone (WCAG 1.4.1, NFR-007). */
+p a, .article-body a { text-decoration: underline; }
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--gutter);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.site-brand { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); min-width: 0; min-height: var(--target); color: var(--ink); }
+.site-brand:hover { text-decoration: none; color: var(--ink); }
+.site-logo { height: 30px; width: auto; }
+.site-name { font-weight: 700; }
+/* The moderator's pages, as the design screens label them (walkthrough-fixes 3.9, N9 and N10). */
+.role-label { padding: 2px var(--space-2); border: 1px solid var(--maroon); border-radius: var(--radius-control); color: var(--maroon); font-size: var(--text-small); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.site-main { flex: 1; width: 100%; max-width: var(--page-width); margin: 0 auto; padding: var(--space-5) var(--gutter); }
+
+.site-footer {
+  padding: var(--space-4) var(--gutter);
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+  border-top: 1px solid var(--line);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-small);
+  font-weight: 600;
+  background: var(--sand-raised);
+  color: var(--maroon-dark);
+}
+.chip-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-3); padding: 0; list-style: none; }
+.table-chips { margin: 0; }
+.side-more { margin: var(--space-3) 0 0; }
+.side-more a { display: inline-flex; align-items: center; min-height: var(--target); }
+
+.article-title { font-size: var(--text-title); font-weight: 700; margin: 0 0 var(--space-5); }
+.article-body { line-height: 1.7; max-width: 46rem; }
+.article-body p, .article-body ul, .article-body ol, .article-body pre, .article-body blockquote { margin: 0 0 var(--space-4); }
+.article-body h2, .article-body h3 { margin: var(--space-5) 0 var(--space-3); }
+.article-body img { max-width: 100%; height: auto; }
+.article-body pre { padding: var(--space-3); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); overflow-x: auto; }
+.article-body code { font-size: 0.92em; }
+.article-body blockquote { padding-left: var(--space-4); border-left: 3px solid var(--gold); color: var(--ink-soft); }
+
+/* FEAT-009: attached media, below the text. */
+.media-list { display: grid; gap: var(--space-4); max-width: 46rem; margin: var(--space-5) 0; }
+.media-photo, .media-video-item { margin: 0; }
+.media-photo img, .media-video { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
+/* A video's ground is black, as players draw it: in full screen the picture keeps its shape and the
+   rest of the screen is black, with no border or rounded corner left from the page. */
+.media-video { background: var(--video-ground); }
+.media-video:fullscreen { width: 100%; height: 100%; max-width: none; border: 0; border-radius: 0; object-fit: contain; background: var(--video-ground); }
+.media-video:-webkit-full-screen { width: 100%; height: 100%; max-width: none; border: 0; border-radius: 0; object-fit: contain; background: var(--video-ground); }
+.media-block { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
+/* videos.js swaps a video for its card with the hidden attribute, which the display rules here would override. */
+.media-list [hidden] { display: none; }
+.media-name { display: inline-block; min-height: var(--target); line-height: var(--target); font-weight: 600; overflow-wrap: anywhere; }
+.media-meta { color: var(--ink-soft); }
+
+/* FR-004: a wiki link to an article that does not exist is red, not a link. */
+.wikilink-missing { color: var(--red); }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: var(--space-4); }
+.article-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+.article-card-title { font-size: var(--text-lead); font-weight: 700; margin: 0; }
+.article-card-title a { display: flex; align-items: center; min-height: var(--target); }
+.article-card-summary { margin: 0; color: var(--ink-soft); }
+.pinned-badge { font-size: var(--text-small); font-weight: 700; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.hero { padding: var(--space-6) var(--gutter); background: var(--maroon); color: var(--paper); }
+.hero-inner { max-width: var(--page-width); margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-3); }
+.hero h1 { margin: 0; font-size: var(--text-title); }
+.hero p { margin: 0; }
+.search-form { display: flex; flex-wrap: wrap; gap: var(--space-2); max-width: 520px; }
+.search-input { flex: 1 1 12rem; min-width: 0; height: 48px; padding: 0 var(--space-4); border: none; border-radius: var(--radius-card); font: inherit; }
+.search-button { height: 48px; padding: 0 var(--space-4); border: none; border-radius: var(--radius-card); background: var(--gold); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+
+.section-title { font-size: var(--text-lead); font-weight: 700; margin: var(--space-5) 0 var(--space-3); }
+.empty-note { color: var(--ink-soft); }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+/* FR-031: how many articles carry the tag, quieter than its name. */
+.chip-count { margin-left: var(--space-1); font-weight: 400; color: var(--ink-soft); }
+
+/* FEAT-007: the results page. Its search box sits on paper, not on the maroon hero, so it needs an
+   edge of its own (3:1 against the page, WCAG 1.4.11). */
+.search-form-page { margin: 0 0 var(--space-4); }
+.search-form-page .search-input { border: 1px solid var(--ink-soft); }
+.results-meta { color: var(--ink-soft); margin: 0 0 var(--space-4); }
+/* FR-007's results as docs/design/screens/SearchResults.html draws them: a list, the query's words marked. */
+.search-hits { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
+.search-hit { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+.search-hit:first-child { padding-top: 0; }
+.search-hit-title { font-size: var(--text-lead); font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+.search-hit-title a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--maroon); }
+.search-hit-passage { margin: 0; color: var(--ink-soft); line-height: 1.5; overflow-wrap: anywhere; }
+.search-hit mark { background: var(--sand-raised); color: var(--ink); padding: 0 2px; }
+/* Fix 2.3 (F-24): what the last decision did, and the queue's mark for a file. */
+.flash { margin: 0 0 var(--space-4); padding: var(--space-3) var(--space-4); background: var(--sand-raised); border-radius: var(--radius-card); }
+.file-mark { margin-left: var(--space-2); color: var(--ink-soft); }
+.rank-badge { font-size: var(--text-small); font-weight: 700; color: var(--maroon-dark); text-transform: uppercase; }
+
+/* FEAT-005: the submission form and its confirmation. */
+.form-note { color: var(--ink-soft); margin: 0 0 var(--space-5); }
+.form-error { padding: var(--space-3) var(--space-4); margin: 0 0 var(--space-5); border: 1px solid var(--red); border-radius: var(--radius-card); background: var(--paper); }
+.form-error p { margin: 0 0 var(--space-2); }
+.form-error p:last-child { margin: 0; }
+.submission-form { display: flex; flex-direction: column; gap: var(--space-4); max-width: 46rem; }
+/* Fix 3.6 (F-17): a form with the editor takes the frame and the editor all of it; its other fields
+   keep the readable width. */
+.submission-form:has(.field-editor) { max-width: none; }
+.submission-form:has(.field-editor) > :not(.field-editor) { max-width: 46rem; }
+.field { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; border: none; }
+.field-label { font-weight: 600; }
+.field-input, .field-textarea { font: inherit; min-height: var(--target); padding: var(--space-2) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
+.field-textarea { min-height: 16rem; resize: vertical; }
+.reason-textarea, .summary-textarea { min-height: calc(var(--target) * 3); }
+.field-help { font-size: var(--text-small); color: var(--ink-soft); }
+.button-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.button-row a:not([class]) { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-2); }
+/* Fix 3.2 (F-27): the four buttons of docs/design/screens/Buttons.html, and the only ones a page uses.
+   Primary for the action a page is for, secondary beside it, quiet for a way back, danger for what
+   removes or refuses. */
+.button-primary, .button-secondary, .button-quiet, .button-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--target); padding: 0 var(--space-5);
+  border: 1.5px solid transparent; border-radius: var(--radius-control);
+  font: inherit; font-weight: 600; text-decoration: none; cursor: pointer;
+}
+.button-primary[hidden], .button-secondary[hidden], .button-quiet[hidden], .button-danger[hidden] { display: none; }
+.button-primary { background: var(--maroon); color: var(--paper); }
+.button-primary:hover { background: var(--maroon-dark); color: var(--paper); text-decoration: none; }
+.button-secondary { background: var(--paper); color: var(--maroon); border-color: var(--maroon); }
+.button-secondary:hover { background: var(--sand-raised); text-decoration: none; }
+.button-quiet { background: none; color: var(--maroon); padding: 0 var(--space-2); }
+.button-quiet:hover { text-decoration: underline; }
+.button-danger { background: var(--paper); color: var(--red); border-color: var(--red); }
+.button-danger:hover { background: var(--red); color: var(--paper); text-decoration: none; }
+/* The quiet way back carries its arrow; the alternative text after the slash keeps a screen reader
+   from reading it, and a browser without that syntax keeps the first declaration. */
+.button-back::before { content: "\2190"; content: "\2190" / ""; }
+/* The site's focus ring instead of the browser's blue (F-21), on everything the keyboard reaches. */
+:focus-visible { outline: 3px solid var(--maroon); outline-offset: 2px; }
+/* On a phone a form's buttons stand in a column, each the full width, as the screens draw them. */
+@media (max-width: 600px) {
+  form .button-row { flex-direction: column; align-items: stretch; }
+}
+.result-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); max-width: 46rem; }
+/* The login in one column at the middle of the page (the human, 8 Oct): heading and note centred,
+   the form inside the card left-aligned as every other form. */
+.login-panel { max-width: 26rem; margin: 0 auto; }
+.login-panel > .article-title, .login-panel > .form-note { text-align: center; }
+.number-label { margin: 0; font-size: var(--text-small); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+/* Fix 2.4 (F-29): the site's own face, larger, digits of one width, each group set apart, so a 0 is
+   not read as an 8 in a number copied by hand. */
+.submission-number { display: inline-block; margin: var(--space-1) 0; font-size: var(--text-title); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+.number-group { white-space: nowrap; }
+.number-dash { margin: 0 0.3em; color: var(--ink-soft); }
+.number-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: 0 0 var(--space-4); }
+.site-nav ul { display: flex; flex-wrap: wrap; gap: var(--space-4); list-style: none; margin: 0; padding: 0; }
+.site-nav a { display: inline-flex; align-items: center; min-height: var(--target); }
+/* Fix 2.1: the list on a wide screen, the menu below it; the one not in use is display: none, so it is
+   out of the page for a screen reader too. */
+.site-menu { display: none; position: relative; }
+.site-menu summary { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-card); cursor: pointer; font-weight: 600; }
+.site-menu ul { position: absolute; right: 0; z-index: 1; flex-direction: column; gap: 0; min-width: 14rem; margin-top: var(--space-2); padding: var(--space-2) var(--space-3); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+@media (max-width: 1023px) {
+  .site-nav > .site-links { display: none; }
+  .site-menu { display: block; }
+  /* The menu keeps to the right edge, on the brand's row or, when the row is too narrow, on its own,
+     so its list, which opens leftwards from the button, stays on the screen. */
+  .site-nav { margin-left: auto; }
+}
+.article-actions { margin: var(--space-5) 0 0; }
+
+/* An empty result, as docs/design/screens/SearchResultsEmpty.html draws it (walkthrough-fixes 3.9, N4). */
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); max-width: 46rem; padding: var(--space-6) var(--space-5); text-align: center; background: var(--paper); border: 1.5px dashed var(--line); border-radius: var(--radius-card); }
+.empty-state .section-title, .empty-state p { margin: 0; }
+.empty-state p { max-width: 24rem; color: var(--ink-soft); }
+.empty-icon { width: 40px; height: 40px; fill: none; stroke: var(--ink-soft); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* FR-005's invitation, as docs/design/screens/RedlinkInvite.html draws it (walkthrough-fixes 3.9, N6): a
+   card with the warning icon and the missing title in the red link's colour (4.95:1 on white). */
+.invite-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); max-width: 46rem; margin-bottom: var(--space-5); padding: var(--space-6) var(--space-5); text-align: center; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.invite-card p { margin: 0; max-width: 30rem; }
+.invite-card .button-row { justify-content: center; }
+.invite-icon { width: 40px; height: 40px; fill: none; stroke: var(--red); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.invite-title { margin: 0; font-size: var(--text-lead); font-weight: 700; }
+.invite-target { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--red); overflow-wrap: anywhere; }
+
+/* Moderation (FEAT-006) */
+/* On a phone the queue is wider than the screen; like a table in an article, it scrolls sideways
+   inside itself, never the page (NFR-008), and takes focus so the keyboard can scroll it too. Its
+   position keeps the visually hidden header label, absolutely positioned, inside the scroll. */
+/* On white with a frame, as the moderator's design screens draw their tables (walkthrough-fixes 3.9, N10). */
+.queue-table { position: relative; display: block; max-width: 100%; overflow-x: auto; border-collapse: separate; border-spacing: 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.queue-table tbody tr:last-child td { border-bottom: 0; }
+.queue-table td a { display: inline-flex; align-items: center; min-height: var(--target); }
+.queue-table th, .queue-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+/* From 1024 px a moderator's table fits, so it is a table again and its rows take the frame's width
+   (fix 3.1; walkthrough-fixes 3.9, D3): as a scrolling block its rows kept their content's width. A
+   long title breaks inside its cell, since no scroll box holds the table any more. */
+@media (min-width: 64rem) { .queue-table { display: table; width: 100%; } .queue-table td { overflow-wrap: anywhere; } }
+.queue-number { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; white-space: nowrap; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.review-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+.review-side { display: flex; flex-direction: column; gap: var(--space-4); }
+/* The moderator's "Log out" (DEBT-019), in their header since fix 2.3; quiet beside the links. */
+.logout-form { display: flex; margin: 0; }
+@media (min-width: 60rem) {
+  .review-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+}
+
+/* Tables in an article body (FEAT-001, 28 Sep). A wide one scrolls sideways inside itself, never the
+   page (NFR-008): display block with overflow, as GitHub renders Markdown tables. */
+.article-body table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 0 0 var(--space-4); }
+.article-body th, .article-body td { border: 1px solid var(--line); padding: var(--space-2) var(--space-3); text-align: left; vertical-align: top; }
+.article-body th { background: var(--sand); font-weight: 600; }
+
+/* FEAT-008: the tag page, and a tag chip that leads to it. */
+.eyebrow { color: var(--ink-soft); margin: 0 0 var(--space-2); }
+.tag-title { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-3); }
+.article-card-meta { margin: 0; color: var(--ink-soft); }
+.chip a { color: inherit; text-decoration: none; }
+.chip a:hover { text-decoration: underline; }
+/* A linked chip is a target: 44 px on a phone or tablet (NFR-008), the design's 26 px pill on a wide screen. */
+@media (max-width: 1023px) {
+  .chip-link { height: auto; padding: 0; }
+  .chip-link > a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--target); min-width: var(--target); padding: 0 var(--space-3); }
+}
+
+/* A link that stands alone rather than in running text is a target, 44 px tall (NFR-008). */
+.page-actions a { display: inline-flex; align-items: center; min-height: var(--target); }
+
+/* FEAT-012: a submission's status, as the pill of docs/design/screens/SubmissionStatus.html, with its dot
+   (walkthrough-fixes 3.9, N7 and N8). Rejected takes the diff's red pair: the design's red on its pale
+   ground is 4.25:1, under WCAG AA. */
+.status-pill { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--target); padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); font-weight: 600; }
+.status-pill::before { content: ""; flex-shrink: 0; width: 6px; height: 6px; border-radius: var(--radius-pill); background: currentColor; }
+.status-pending { background: var(--sand-raised); color: var(--ink); }
+.status-received, .status-approved { background: var(--olive-soft); color: var(--olive); }
+.status-rejected { background: var(--diff-removed-bg); color: var(--diff-removed-ink); }
+
+/* Secondary text is small only on a wide screen; on a phone or tablet it is read at body size (NFR-008). */
+@media (max-width: 1023px) {
+  .field-help, .site-footer, .number-label, .rank-badge, .role-label { font-size: var(--text-body); }
+}
+
+/* FR-029: what an edit changes, published on the left and proposed on the right; one column on a
+   phone, where two would scroll sideways (NFR-008). Red and green are paired with strike-through and
+   underline, so the marks do not depend on colour alone (WCAG 1.4.1). */
+.diff { margin: 0 0 var(--space-5); }
+.diff-fields { margin: 0 0 var(--space-4); }
+.diff-fields div { margin: 0 0 var(--space-2); }
+.diff-fields dt { font-weight: 600; }
+.diff-fields dd { margin: 0; overflow-wrap: anywhere; }
+.diff-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.diff-removed { background: var(--diff-removed-bg); color: var(--diff-removed-ink); text-decoration: line-through; }
+.diff-added { background: var(--diff-added-bg); color: var(--diff-added-ink); text-decoration: underline; }
+.diff-table { border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden; }
+.diff-head { display: none; }
+.diff-row { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
+.diff-row:first-of-type { border-top: none; }
+.diff-before, .diff-after { padding: var(--space-3); white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.diff-side { display: block; font-weight: 600; color: var(--ink-soft); }
+.diff-skipped { margin: 0; padding: var(--space-2) var(--space-3); border-top: 1px solid var(--line); color: var(--ink-soft); background: var(--sand); }
+/* Fix 3.7 (F-25): the comparison as it reads or as its Markdown, two radio buttons and no script.
+   The buttons are hidden and their labels drawn as one two-part switch, a 44-px target (NFR-008);
+   the keyboard still moves between the radio buttons, and the label shows their focus. */
+.diff-view { display: flex; flex-wrap: wrap; margin: 0 0 var(--space-3); padding: 0; border: 0; }
+.diff-view-option { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-4); border: 1px solid var(--maroon); background: var(--paper); color: var(--maroon); font-weight: 600; cursor: pointer; }
+.diff-view-option:first-of-type { border-radius: var(--radius-card) 0 0 var(--radius-card); }
+.diff-view-option:last-of-type { border-left: 0; border-radius: 0 var(--radius-card) var(--radius-card) 0; }
+.diff-view-option:has(input:checked) { background: var(--maroon); color: var(--paper); }
+.diff-view-option:has(input:focus-visible) { outline: 3px solid var(--maroon); outline-offset: 2px; }
+.diff:has(input[value="reading"]:checked) .diff-markdown,
+.diff:has(input[value="markdown"]:checked) .diff-reading { display: none; }
+.full-text { margin: 0 0 var(--space-5); }
+.full-text summary { min-height: var(--target); display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+@media (min-width: 48rem) {
+  .diff-head { display: grid; grid-template-columns: 1fr 1fr; background: var(--sand); font-weight: 600; }
+  .diff-head span { padding: var(--space-2) var(--space-3); }
+  .diff-row { grid-template-columns: 1fr 1fr; }
+  .diff-before { border-right: 1px solid var(--line); }
+  .diff-side { display: none; }
+}
+
+/* FR-016: the Download link in each file's card (fix 3.7, F-25), a 44-px target on a phone (NFR-008). */
+.media-caption { display: flex; justify-content: flex-end; margin: var(--space-2) 0 0; }
+.media-block .media-download { margin-left: auto; flex: none; }
+
+/* FR-030: "Save as PDF" beside "Propose an edit", and the page as it prints — the article alone. */
+.article-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+@media print {
+  .site-header, .site-nav, .site-footer, .article-side, .article-actions, .media-download, .media-video, .backlinks { display: none; }
+  .article-layout { display: block; }
+  body, .site-main { background: var(--paper); color: var(--ink); }
+  .site-main { max-width: none; padding: 0; margin: 0; }
+  .article-body { max-width: none; }
+  .media-photo img { max-width: 100%; break-inside: avoid; }
+  .chip { border: 1px solid var(--ink); background: none; }
+}
+
+/* FR-006: "What links here" under an article; each link a 44-px target on a phone (NFR-008). */
+.backlinks { margin: var(--space-5) 0; }
+.backlink-list { margin: 0; padding-left: var(--space-5); }
+.backlink-list a { display: inline-flex; align-items: center; min-height: var(--target); }
+
+/* FR-032: a photo opens the viewer (photos.js), so it looks like it can be clicked and shows its focus. */
+.photo-opens { cursor: zoom-in; }
+.photo-opens:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* Fix 1.8 (F-31): what a contributor typed never widens a page. A word longer than its box breaks
+   anywhere; a card's summary stops at three lines; the queue shortens a long title, whole on hover
+   and on the review page, so "Review" stays in view. */
+.article-title, .article-summary, .contents-list, .article-card, .article-card-title, .article-card-summary, .article-body, .number-label { overflow-wrap: anywhere; }
+.card-grid > * { min-width: 0; }
+.article-card-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.queue-title { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* On a phone the queue's five columns are wider than the screen and the table scrolls inside itself;
+   the last column, "Review", stays pinned to its right edge so the way into a submission is always in view. */
+.queue-table td:last-child, .queue-table th:last-child { position: sticky; right: 0; background: var(--paper); }
+
+/* Fix 3.5's layout, as docs/design/screens/Article.html draws it: the title and the text at their
+   measure, a 260-px sidebar of cards beside them from the title down, the whole centred in the frame.
+   Below 1024 px one column: the sidebar's box dissolves (display: contents), so its cards take their
+   own places — the actions and the contents under the title, What links here after the text. Beside
+   the text on a tablet the text would be left too narrow to read. */
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 46rem) 260px;
+  grid-template-areas: "head side" "main side";
+  grid-template-rows: auto 1fr;
+  column-gap: var(--space-6);
+  justify-content: center;
+  align-items: start;
+}
+.article-head { grid-area: head; }
+.article-main { grid-area: main; }
+.article-side { grid-area: side; display: flex; flex-direction: column; gap: var(--space-5); }
+.article-summary { margin: calc(-1 * var(--space-3)) 0 var(--space-2); font-size: var(--text-lead); color: var(--ink-soft); }
+.article-meta { margin: 0 0 var(--space-5); color: var(--ink-soft); }
+.side-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); padding: var(--space-4); }
+.side-title { font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin: 0 0 var(--space-2); }
+.article-side .article-actions { flex-direction: column; align-items: stretch; margin: 0; }
+.article-side .backlinks { margin: 0; }
+.article-side .backlink-list, .contents-list { list-style: none; margin: 0; padding: 0; }
+.article-side .backlink-list li + li, .contents-list li + li { border-top: 1px solid var(--line); }
+.contents-list a { display: flex; align-items: center; min-height: var(--target); }
+.contents-list .contents-sub { padding-left: var(--space-4); }
+/* An external link opens in a new tab (WikiLinkRenderer), and says so: an arrow, read as words. */
+.article-body a[target="_blank"]::after { content: " \2197"; content: " \2197" / " (opens in a new tab)"; }
+@media (max-width: 1023px) {
+  .article-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "actions" "contents" "main" "links"; grid-template-rows: none; row-gap: var(--space-5); }
+  .article-side { display: contents; }
+  .article-side .article-actions { grid-area: actions; }
+  .article-side .article-contents { grid-area: contents; }
+  .article-side .backlinks { grid-area: links; }
+  .article-meta { margin-bottom: 0; }
+  .side-title { font-size: var(--text-body); }
+}
+
+/* Fix 3.4 (F-2), as docs/design/screens/Landing.html draws it: the hero the width of the window, its
+   search box white with the icon inside; below it the cards, two across, and the tags in a 260-px
+   sidebar; one column below 1024 px, the tags after the cards. */
+.site-main.landing { max-width: none; padding: 0; }
+.landing .hero { text-align: center; }
+.landing .hero-inner { align-items: center; }
+.search-box { align-items: center; width: 100%; max-width: 560px; padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4); background: var(--paper); border-radius: var(--radius-card); }
+.search-box .search-input { flex: 1 1 8rem; padding: 0 var(--space-2); }
+.search-box .search-input:focus-visible { outline-offset: 0; }
+.search-icon { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; }
+.landing-body { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: var(--space-6); align-items: start; max-width: var(--page-width); margin: 0 auto; padding: var(--space-5) var(--gutter); }
+.landing-main .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.landing-side .section-title { margin-top: 0; }
+@media (max-width: 1023px) {
+  .landing-body { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .landing-main .card-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Fix 3.8 (F-14): the not-found page's suggestions, a card no wider than the text. */
+.suggestions { max-width: 46rem; margin: 0 0 var(--space-5); }
+
+/* FR-021/FR-022: the moderator's inbox of reports, one card each, the message as the reader wrote it. */
+.report-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); max-width: 46rem; }
+.report-entry .article-card-title { margin-bottom: var(--space-1); }
+.report-message { white-space: pre-line; overflow-wrap: anywhere; }
+/* As docs/design/screens/ReportInbox.html draws it (walkthrough-fixes 3.9, N11): the message set
+   apart from the date, and from 1024 px the two actions beside the title rather than under the text. */
+.report-entry .side-title { margin-top: var(--space-3); }
+@media (min-width: 64rem) {
+  .report-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-5); align-items: start; }
+  .report-entry > * { grid-column: 1; }
+  .report-entry > form { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+  .report-entry > .side-title, .report-entry > .report-message { grid-column: 1 / -1; }
+}
+
+/* Preview only: what the OGE team and Developers pages would add to site.css. The frame is the
+   landing page's own: .hero, .landing-body with its sidebar, .side-card. */
+.about-side { display: flex; flex-direction: column; gap: var(--space-5); }
+.landing-body.about-body { grid-template-columns: minmax(0, 1fr) 300px; }
+.about-main > .section-title:first-child { margin-top: 0; }
+.about-lead { margin: 0 0 var(--space-5); line-height: 1.7; max-width: 46rem; }
+
+.person-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); margin: 0 0 var(--space-6); }
+.person-card { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: var(--space-4); align-items: start; padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.person-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; object-position: center top; background: var(--sand-raised); color: var(--maroon-dark); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+.person-name { margin: 0; font-size: var(--text-lead); font-weight: 700; }
+.person-role { margin: var(--space-1) 0 var(--space-3); color: var(--ink-soft); line-height: 1.4; }
+.person-facts { margin: 0; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: var(--space-2) var(--space-3); line-height: 1.4; }
+.person-facts dt { color: var(--ink-soft); }
+.person-facts dd { margin: 0; }
+
+/* The person a page leads with: the whole width, a larger photo, the role as a gold label. */
+.person-card.featured { grid-template-columns: 112px minmax(0, 1fr); align-items: center; margin: 0 0 var(--space-6); border-left: 4px solid var(--maroon); }
+.person-card.featured .person-photo { width: 112px; height: 112px; }
+.person-card.featured .person-name { font-size: 22px; }
+.eyebrow-label { margin: 0 0 var(--space-1); font-size: var(--text-small); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-dark); }
+
+.side-card .section-title { margin-top: 0; }
+.side-card p { margin: 0 0 var(--space-3); line-height: 1.5; }
+.side-card p:last-child { margin-bottom: 0; }
+.visit-list { list-style: none; margin: 0 0 var(--space-4); padding: 0; }
+.visit-list li { padding: var(--space-3) 0; border-top: 1px solid var(--line); line-height: 1.5; }
+.visit-list li:first-child { border-top: 0; padding-top: 0; }
+.visit-label { display: block; font-size: var(--text-small); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); }
+.side-card .button-primary, .side-card .button-secondary { width: 100%; }
+.side-card .button-secondary { margin-top: var(--space-2); }
+
+.placeholder { color: var(--ink-soft); font-style: italic; }
+.note-box { margin: 0; padding: var(--space-4) var(--space-5); background: var(--sand-raised); border-radius: var(--radius-card); line-height: 1.6; }
+.site-nav a[aria-current="page"] { font-weight: 700; text-decoration: underline; text-underline-offset: 6px; }
+.hero .hero-lead { max-width: 40rem; opacity: 0.92; }
+
+@media (max-width: 1023px) {
+  .landing-body.about-body { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .person-grid { grid-template-columns: minmax(0, 1fr); }
+  .person-card.featured { grid-template-columns: 80px minmax(0, 1fr); align-items: start; }
+  .person-card.featured .person-photo { width: 80px; height: 80px; }
+}
+
+/* Developers: no sidebar; three people across, each card standing upright. */
+.landing-body.about-body.single { grid-template-columns: minmax(0, 1fr); max-width: 1120px; }
+.dev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin: 0 0 var(--space-6); }
+.dev-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2); padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--maroon); border-radius: var(--radius-card); }
+.dev-card .person-photo { width: 104px; height: 104px; font-size: 1.8rem; margin-bottom: var(--space-2); }
+.dev-from { margin: 0; color: var(--ink-soft); }
+.dev-role { margin: var(--space-2) 0 0; }
+.dev-quote { margin: var(--space-2) 0; padding: 0; font-style: italic; color: var(--ink-soft); line-height: 1.5; }
+.dev-links { margin: auto 0 0; padding-top: var(--space-3); border-top: 1px solid var(--line); width: 100%; }
+.thanks-list { margin: 0; padding-left: var(--space-5); line-height: 1.7; }
+.thanks-list li + li { margin-top: var(--space-2); }
+@media (max-width: 900px) { .dev-grid { grid-template-columns: minmax(0, 1fr); } }
+.story-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin: 0 0 var(--space-5); }
+.story-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.story-card .section-title { margin-top: 0; }
+.story-card p { margin: 0; line-height: 1.7; }
+@media (max-width: 900px) { .story-grid { grid-template-columns: minmax(0, 1fr); } }
+/* The credit lockup under the hero, as university brand guides draw a partnership: two marks of the
+   same optical size on one line, a thin rule between them, each under a small label on a shared
+   baseline. Innopolis's seal has no wordmark beside it, so its name is set as OGE's is. */
+.lockup-band { background: var(--paper); border-bottom: 1px solid var(--line); padding: var(--space-5) var(--gutter); }
+.lockup { display: flex; align-items: stretch; justify-content: center; gap: var(--space-6); }
+.lockup-item { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); margin: 0; }
+.lockup-item figcaption { font-size: var(--text-small); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.lockup-mark { flex: 1; display: flex; align-items: center; gap: var(--space-3); }
+.lockup-oge { display: block; height: 52px; width: auto; }
+.lockup-uni { display: block; height: 60px; width: 60px; border-radius: 50%; transform: scale(1.12); }
+.lockup-name { display: flex; flex-direction: column; line-height: 1.2; color: var(--ink); }
+.lockup-name strong { font-size: 17px; letter-spacing: 0.02em; }
+.lockup-name span { font-size: 13px; color: var(--ink-soft); }
+.lockup-divider { width: 1px; background: var(--line); }
+@media (max-width: 600px) {
+  .lockup { flex-direction: column; align-items: center; gap: var(--space-4); }
+  .lockup-divider { width: 64px; height: 1px; }
+}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-brand" href="#">
+      <img class="site-logo" src="../assets/oge-logo.svg" alt="OGE logo">
+      <span class="site-name">Exchange Student Guide</span>
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <ul class="site-links">
+        <li><a href="#">All articles</a></li>
+        <li><a href="#">Browse tags</a></li>
+        <li><a href="#">Track a submission</a></li>
+        <li><a href="#">Submit an article</a></li>
+        <li><a href="OgeTeam.html">OGE team</a></li>
+        <li><a href="Developers.html" aria-current="page">Developers</a></li>
+      </ul>
+      <details class="site-menu">
+        <summary>Menu</summary>
+      <ul class="site-links">
+        <li><a href="#">All articles</a></li>
+        <li><a href="#">Browse tags</a></li>
+        <li><a href="#">Track a submission</a></li>
+        <li><a href="#">Submit an article</a></li>
+        <li><a href="OgeTeam.html">OGE team</a></li>
+        <li><a href="Developers.html" aria-current="page">Developers</a></li>
+      </ul>
+      </details>
+    </nav>
+  </header>
+  <main class="site-main landing">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Developers</h1>
+        <p class="hero-lead">Three exchange students from Innopolis University built this guide at IIT Madras in 2026, so the next ones would not have to ask the same questions.</p>
+      </div>
+    </section>
+    <section class="lockup-band" aria-label="Who this guide is for and who built it">
+      <div class="lockup">
+        <figure class="lockup-item">
+          <figcaption>Built for</figcaption>
+          <span class="lockup-mark"><img class="lockup-oge" src="../assets/oge-logo.svg" alt="Office of Global Engagement, IIT Madras"></span>
+        </figure>
+        <span class="lockup-divider" aria-hidden="true"></span>
+        <figure class="lockup-item">
+          <figcaption>By students of</figcaption>
+          <span class="lockup-mark">
+            <img class="lockup-uni" src="../assets/innopolis-logo.jpg" alt="">
+            <span class="lockup-name"><strong>INNOPOLIS UNIVERSITY</strong><span>Innopolis, Russia</span></span>
+          </span>
+        </figure>
+      </div>
+    </section>
+    <div class="landing-body about-body single">
+      <div class="about-main">
+        <h2 class="section-title">Who built it</h2>
+        <div class="dev-grid">
+          <article class="dev-card">
+            <div class="person-photo" aria-hidden="true">MN</div>
+            <h3 class="person-name">Mikhail Novikov</h3>
+            <p class="dev-from">Exchange student at IIT Madras</p>
+            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
+            <blockquote class="dev-quote"><span class="placeholder">a line in their own words: ___</span></blockquote>
+            <p class="dev-links"><a href="https://github.com/rikire">GitHub</a> · <span class="placeholder">LinkedIn ___</span></p>
+          </article>
+          <article class="dev-card">
+            <div class="person-photo" aria-hidden="true">AI</div>
+            <h3 class="person-name">Abdirakhim Ismailov</h3>
+            <p class="dev-from">Exchange student at IIT Madras</p>
+            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
+            <blockquote class="dev-quote"><span class="placeholder">a line in their own words: ___</span></blockquote>
+            <p class="dev-links"><a href="https://github.com/abdra04-gif">GitHub</a> · <span class="placeholder">LinkedIn ___</span></p>
+          </article>
+          <article class="dev-card">
+            <div class="person-photo" aria-hidden="true">IR</div>
+            <h3 class="person-name">Iurii Rudenko</h3>
+            <p class="dev-from">Exchange student at IIT Madras</p>
+            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
+            <blockquote class="dev-quote"><span class="placeholder">a line in their own words: ___</span></blockquote>
+            <p class="dev-links"><span class="placeholder">GitHub ___</span> · <span class="placeholder">LinkedIn ___</span></p>
+          </article>
+        </div>
+
+        <div class="story-grid">
+          <section class="story-card">
+            <h2 class="section-title">Why we built it</h2>
+            <p>When you arrive on exchange, the answers you need — registration, hostel, banking,
+              getting around Chennai — are spread across emails, group chats and people who have
+              already left. This guide puts them in one place, written by students who have been
+              through it and checked by the office that runs the programme.</p>
+          </section>
+          <section class="story-card">
+            <h2 class="section-title">Thank you</h2>
+            <ul class="thanks-list">
+              <li><strong>Office of Global Engagement</strong>, and Thukaram M Damodhar in particular,
+                for backing the guide and reviewing what goes into it.</li>
+              <li><strong>The CS5013 "Programming with AI" course</strong> at IIT Madras, where it
+                started: <span class="placeholder">instructors ___</span>.</li>
+              <li><strong>Every student who writes or fixes an article</strong>: the guide is only as
+                good as what you add to it.</li>
+            </ul>
+          </section>
+        </div>
+
+        <p class="note-box">Found a mistake in the site itself, not in an article? Write to
+          <a href="mailto:ge26z860@smail.iitm.ac.in">ge26z860<wbr>@smail.iitm.ac.in</a>. A mistake in an article goes through the report link
+          on that article.</p>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">Office of Global Engagement, IIT Madras</footer>
+</body>
+</html>

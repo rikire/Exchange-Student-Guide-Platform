@@ -137,6 +137,18 @@ The screen list is built by grouping the written `FR`s by *what page a person is
 | [Submission review/decision](screens/SubmissionReview.html) | `moderate` | FR-015, 017, 018, 019, 020 |
 | [Moderator report inbox](screens/ReportInbox.html) | `report` | FR-021, 022 |
 | [Homepage & article administration](screens/HomeAdmin.html) | `home`, `moderate` | FR-025, FR-026 |
+| [OGE team](screens/OgeTeam.html) | _none yet_ | _none yet — mockup of 9 Oct; no FR, route or template_ |
+| [Developers](screens/Developers.html) | _none yet_ | _none yet — mockup of 9 Oct; no FR, route or template_ |
+
+**Added 9 Oct:** the OGE team and Developers pages, reached from two new header links. Drawn as
+mockups only, with the site's own stylesheets inlined, ahead of any requirement. The OGE team's
+names, roles, rooms and photos are taken from [ge.iitm.ac.in/team](https://ge.iitm.ac.in/team) and
+the address from its contact page; the photos sit in [assets/oge-team/](assets/oge-team/) at 320 px.
+The Developers page credits OGE ("Built for") and Innopolis University ("By students of") in one
+lockup, not as an institutional partnership, because there is none. The Innopolis logo in
+[assets/](assets/) is a 554-px web copy, not an official file. Blanks drawn as `___` are facts
+nobody has supplied yet: directions from the main gate, office hours, each developer's role and
+links.
 
 The Stage 3 claim table in
 [01-requirements-design.md](../roadmap/01-requirements-design.md) still works for *ownership* —
