@@ -25,7 +25,8 @@ in.ac.iitm.guide
 ├── media/             upload, storage, delivery
 ├── wikilink/          plain Java: the [[link]] parser and renderer
 ├── backlink/          the links between articles, and "what links here" (ADR-0016)
-└── backup/            export and import of the whole knowledge base
+├── backup/            export and import of the whole knowledge base
+└── about/             the OGE team and developers pages, static (FR-035)
 ```
 
 Slices sit as first-level packages because that is the module model Spring Modulith uses.
