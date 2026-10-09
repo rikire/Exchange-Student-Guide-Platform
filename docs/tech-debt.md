@@ -110,7 +110,14 @@ field.
 
 ### DEBT-023 — A tag-field browser test failed once without a known cause
 
-**Status:** open
+**Status:** resolved 2026-10-10 — the cause was Tom Select's own: `open()` calls `focus()`, which
+runs `onFocus` a moment later, and `onFocus` opens the list with every tag (`openOnFocus`). When
+Enter came within milliseconds of the last key, Enter made the chip and closed the list, then the
+pending `onFocus` reopened it with the first tag lit; a second Enter picked that tag ("arrival"), and
+a click on Submit landed on it. Found by recording the field's state only after a failure, since
+any logging during the test changed the timing and hid it; seen again by hand in Chrome on the
+stand. `tags.js` sets `openOnFocus: false`: the list opens as a word is typed. Before, the test
+failed in 2 runs of 5; after, in 0 runs of 10, with Enter pressed at once after the word.
 **Created:** 2026-10-02
 **Marker:** `app/src/test/java/in/ac/iitm/guide/BrowserTagFieldTest.java` — `a_word_becomes_a_chip_on_enter_and_on_a_comma`
 

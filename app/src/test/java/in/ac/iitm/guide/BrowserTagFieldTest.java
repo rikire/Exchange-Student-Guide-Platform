@@ -6,6 +6,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
@@ -197,9 +198,15 @@ class BrowserTagFieldTest {
         page.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('Rooms are shared.')");
         page.click(".ts-control");
         page.keyboard().type("hostel");
+        // Enter at once after the word, as fast as a script types: a focus timer Tom Select left
+        // pending reopened the list over the button until openOnFocus was turned off (DEBT-023).
         page.keyboard().press("Enter");
+        page.waitForSelector(".ts-dropdown", new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
 
-        var button = page.locator("button[type=submit]").boundingBox();
+        // Scrolled to as a person would: since 10 Oct the editor is tall enough to push it below a
+        // 900 px window, and a click outside the window reaches nothing.
+        page.locator("main button[type=submit]").scrollIntoViewIfNeeded();
+        var button = page.locator("main button[type=submit]").boundingBox();
         page.mouse().click(button.x + button.width / 2, button.y + button.height / 2);
         page.waitForURL("**/confirmation");
 

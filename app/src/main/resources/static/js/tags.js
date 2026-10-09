@@ -19,6 +19,11 @@
       // The list opens under the field, over "Submit for review"; left open after a tag, a click on
       // the button picked the stored tag under it and sent nothing (the demo rehearsal, 5 Oct).
       closeAfterSelect: true,
+      // The list opens as a word is typed, not when the field takes the focus. Tom Select's open()
+      // calls focus(), whose deferred onFocus reopened the list with every tag in it when Enter came
+      // within milliseconds of the last key: the chip was made and the list stood over Submit again,
+      // or the first tag was picked (DEBT-023, found 10 Oct: 2 runs in 5 before, 0 in 10 after).
+      openOnFocus: false,
       delimiter: ',',
       maxItems: Number(select.getAttribute('data-most')),
       // Tom Select refilters the list 300 ms after typing, and Enter acts on the option lit before
