@@ -45,6 +45,12 @@ services:
       # NFR-005's submissions per client address per hour (guide.contribute.submission-limit),
       # raised in .env for a manual walk where one tester sends many; 5 otherwise.
       GUIDE_CONTRIBUTE_SUBMISSIONLIMIT_REQUESTS: ${GUIDE_CONTRIBUTE_SUBMISSIONLIMIT_REQUESTS:-5}
+      # Behind an HTTPS reverse proxy (DEBT-014, docs/handoff/install.md): trust X-Forwarded-For and
+      # X-Forwarded-Proto from the proxy's address only, and send the session cookie over https alone.
+      # Off by default: on plain http a Secure cookie never comes back and nobody stays signed in.
+      SERVER_FORWARD_HEADERS_STRATEGY: ${GUIDE_FORWARD_HEADERS:-none}
+      SERVER_TOMCAT_REMOTEIP_INTERNAL_PROXIES: ${GUIDE_TRUSTED_PROXY:-}
+      SERVER_SERVLET_SESSION_COOKIE_SECURE: ${GUIDE_COOKIE_SECURE:-false}
       # The zone pages show times in (guide.time-zone); India's unless .env sets another.
       GUIDE_TIMEZONE: ${GUIDE_TIMEZONE:-Asia/Kolkata}
       # NFR-001's upload limits (guide.media.*), the defaults of application.yml repeated because
