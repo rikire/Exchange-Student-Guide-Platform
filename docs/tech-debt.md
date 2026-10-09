@@ -327,8 +327,23 @@ set (review of FEAT-006, 28 Sep).
 **Consequence:** once the stand is reachable over a network, the moderator's session cookie travels
 in clear text and can be copied off the wire; whoever has it is the moderator until it expires.
 
+**Also behind the proxy (found 9 Oct, asked whether the moderator's password can be guessed):** the
+limits count per client address (`FailedLoginLimit`, `ContributionLimits`, the report limit), and the
+address is the connection's own, since `X-Forwarded-For` is not read. Behind IITM's proxy every
+visitor has the proxy's address: ten wrong passwords from anyone lock the real moderator out for 15
+minutes, and five submissions an hour are shared by every student. Reading `X-Forwarded-For` blindly
+is no better: a guesser who sends a new value each time is never limited. The counters live in
+memory and a restart empties them, acceptable for one instance. And the hash in `.env` cannot show
+how strong the password is: ten guesses per 15 minutes per address do not save a short or common
+one.
+
 **How to fix:** put the stand behind TLS (a reverse proxy in `docker-compose.yml`) and set
-`SERVER_SERVLET_SESSION_COOKIE_SECURE: "true"` on the `app` service in the same change.
+`SERVER_SERVLET_SESSION_COOKIE_SECURE: "true"` on the `app` service in the same change. Decided 9 Oct:
+the proxy is IITM's, so set `server.forward-headers-strategy` and trust `X-Forwarded-For` only from the
+proxy's address, with a test that ten failures from one client behind the proxy leave another client
+able to sign in; and have the handoff guide generate the hash of a long random password and say why a
+short one is not enough. A global cap on failed logins was weighed and not taken: anyone could spend
+it and lock the moderator out.
 
 **Trigger:** the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any
 case before the stand is reachable from outside the machine it runs on.
