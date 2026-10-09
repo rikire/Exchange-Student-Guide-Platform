@@ -13,22 +13,23 @@ authorship: they are reported in their own column below and never added to the a
 
 | Slice | mikhail commits | mikhail lines | abdirakhim commits | abdirakhim lines | More work |
 |---|---|---|---|---|---|
-| articleview | 3 | 28 | 8 | 530 | abdirakhim |
+| about | 0 | 0 | 1 | 284 | abdirakhim |
+| articleview | 5 | 661 | 19 | 890 | abdirakhim |
 | backlink | 0 | 0 | 3 | 553 | abdirakhim |
-| backup | 3 | 92 | 4 | 1155 | abdirakhim |
-| contribute | 4 | 1032 | 10 | 1446 | abdirakhim |
-| home | 1 | 12 | 5 | 579 | abdirakhim |
-| media | 2 | 89 | 10 | 1470 | abdirakhim |
-| moderate | 1 | 12 | 18 | 2363 | abdirakhim |
-| report | 1 | 12 | 0 | 0 | mikhail |
-| search | 1 | 12 | 5 | 715 | abdirakhim |
-| shared | 5 | 130 | 18 | 1916 | abdirakhim |
-| taxonomy | 2 | 230 | 3 | 612 | abdirakhim |
-| wikilink | 1 | 12 | 4 | 861 | abdirakhim |
+| backup | 6 | 268 | 7 | 1283 | abdirakhim |
+| contribute | 14 | 2153 | 19 | 1761 | abdirakhim |
+| home | 3 | 41 | 10 | 701 | abdirakhim |
+| media | 5 | 592 | 13 | 1537 | abdirakhim |
+| moderate | 7 | 625 | 27 | 3666 | abdirakhim |
+| report | 1 | 12 | 3 | 647 | abdirakhim |
+| search | 3 | 57 | 13 | 1236 | abdirakhim |
+| shared | 12 | 363 | 29 | 2207 | abdirakhim |
+| taxonomy | 6 | 339 | 6 | 760 | even |
+| wikilink | 2 | 108 | 7 | 1091 | abdirakhim |
 
 ## All authored work, and the hook's
 
 | Member | Authored commits | Journal commits (Stop hook) |
 |---|---|---|
-| mikhail | 141 | 117 |
-| abdirakhim | 162 | 587 |
+| mikhail | 179 | 172 |
+| abdirakhim | 255 | 779 |
