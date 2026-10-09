@@ -222,6 +222,38 @@ class BrowserEditorTest {
 
     @Test
     // trace:FR-027
+    void the_editor_is_tall_enough_to_write_in() {
+        var page = openTheForm();
+
+        var text = page.locator(".EasyMDEContainer .CodeMirror").boundingBox();
+
+        assertThat(text.height).as("the text pane's height in a 900 px window").isGreaterThanOrEqualTo(0.55 * 900);
+    }
+
+    @Test
+    // trace:FR-027
+    void a_heading_in_the_text_pane_is_set_at_the_bodys_size_and_bold() {
+        // Seen 10 Oct: "## A heading" in the text pane was set almost as large as in the preview, and
+        // two such lines filled half the pane.
+        var page = openTheForm();
+        page.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('## A heading\\n\\nText.')");
+
+        @SuppressWarnings("unchecked")
+        var sizes = (java.util.Map<String, Object>)
+                page.evaluate(
+                        "() => ({"
+                                + " heading: parseFloat(getComputedStyle(document.querySelector('.CodeMirror .cm-header')).fontSize),"
+                                + " body: parseFloat(getComputedStyle(document.querySelector('.CodeMirror')).fontSize),"
+                                + " weight: parseInt(getComputedStyle(document.querySelector('.CodeMirror .cm-header')).fontWeight) })");
+
+        assertThat(((Number) sizes.get("heading")).doubleValue())
+                .as("the heading's size in the text pane")
+                .isLessThanOrEqualTo(((Number) sizes.get("body")).doubleValue() * 1.15);
+        assertThat(((Number) sizes.get("weight")).intValue()).isGreaterThanOrEqualTo(600);
+    }
+
+    @Test
+    // trace:FR-027
     void on_a_wide_screen_the_editor_takes_the_width_of_the_page_frame() {
         var page = openTheForm();
 

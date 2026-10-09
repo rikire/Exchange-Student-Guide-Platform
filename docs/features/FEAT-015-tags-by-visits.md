@@ -84,6 +84,8 @@ their shared page, and each keeps its own chip and article count.
       `TagBrowseTest.a_tag_page_that_answers_404_counts_no_visit`
 - [x] Every tag behind one address counts the visit —
       `TagBrowseTest.every_tag_behind_one_address_counts_the_visit`
+- [x] The count beside a tag is a badge inside the chip, in the text's colour and bold, on `/tags`
+      and the landing page (10 Oct, `BrowserTagIndexTest`)
 
 Evidence, 30 Sep: all five were red first. Four failed on the missing `visit_count` column, and the
 count test failed on the absent number. All five are green after V7 and the code.

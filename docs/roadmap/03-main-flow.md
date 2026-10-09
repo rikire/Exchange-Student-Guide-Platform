@@ -486,6 +486,9 @@ Where the streams meet — one owner per file, and the second waits for the firs
   `.ts-control`, as on `.CodeMirror`.
 - `search/SearchResults.html`: the box's placeholder is "Search the guide", as on the landing and
   404 pages (F-16, fix 3.6 step g).
+- 10 Oct, after the human's look at the forms: `moderate/PublishForm.html` (FEAT-021) has the editor
+  across the frame and the FilePond drop zone, as the contributor's form; `site.css`'s `.chip-count`
+  is a badge in ink, bold, since the pale count went unseen.
 - `SubmissionReview.html` is untouched; its tag fields are 3.7's. `PublishForm.html` (FEAT-021)
   still has five text fields: DEBT-024.
 

@@ -113,6 +113,8 @@ And ADR-0013's conditions:
       brackets; every control is named alike for a tooltip and a screen reader; the toolbar stays in
       view while a long body scrolls; at 1920 px the editor is at least 60 % of the window while the
       title field stays readable — `BrowserEditorTest` (fix 3.6)
+- [x] The text pane is at least 24rem or 60 % of the window tall, and a heading in it is set at the
+      text's size, bold (10 Oct, `BrowserEditorTest`)
 
 ## What building it found
 

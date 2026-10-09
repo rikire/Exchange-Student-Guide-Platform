@@ -87,6 +87,8 @@ Confirmed by the human on 2 Oct:
 - [x] The history keeps it as approved at the moment it was sent; "Edit now", "Write an article" and
       the inbox's "Edit article" lead to the forms; every new route sends a visitor without the
       moderator's session to the login (`ModeratorLoginTest`, from `routes.yml`)
+- [x] The moderator's form has the contributor's editor across the page frame and the drop zone for
+      the file (10 Oct, `BrowserPublishFormTest`)
 
 Red first, 2 Oct: all twelve `DirectPublishingTest` tests (no route, no link).
 
