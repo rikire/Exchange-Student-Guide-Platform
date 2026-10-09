@@ -289,7 +289,10 @@ Put off to then by the human on 28 Sep.
 
 ### DEBT-014 — The stand's session cookie is not marked `Secure`
 
-**Status:** open
+**Status:** open — decided by the human on 9 Oct: OGE's stand will most likely run on an IITM server
+behind HTTPS, and hosting will not be ours. So the fix is ours only up to the door: the flag set from
+the environment, Spring told to trust the proxy's `X-Forwarded-*` headers, and the handoff guide saying
+both. Done with the handoff package (phase 5).
 **Created:** 2026-09-28
 **Marker:** `docker-compose.yml` — the `app` service's environment
 
@@ -378,7 +381,11 @@ the stand is reachable from outside the team.
 
 ### DEBT-010 — An article's old address answers `404` after an edit changes its title
 
-**Status:** open
+**Status:** open — decided by the human on 9 Oct, from a trade-off of four options: for now, warn the
+moderator on the review page when an edit changes the address (with the number of articles linking
+to the old title) and record the limit as a constraint. The table of former addresses ("How to fix")
+is built only if OGE says article links will travel outside the site (emails, the printed handbook,
+QR codes); that question is on the agenda of the meeting with OGE.
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java`
 

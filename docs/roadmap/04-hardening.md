@@ -130,6 +130,10 @@ Make it survive real use and real inputs, and make it something a third person c
       `docs/stakeholder/` and turn it into requirements or constraints
       — check: every point he raises becomes a requirement, a recorded constraint with its reason,
       or a line saying plainly that it is not being done — none is left as a note
+      **To ask him (added 9 Oct):** where the guide will run after the handover and who will host it
+      (expected: an IITM server behind HTTPS, not us — DEBT-014); whether links to articles will go
+      out of the site, in emails, the printed handbook or QR codes (decides DEBT-010); the facts the
+      about pages lack (DEBT-025).
 
 ## Readiness criterion
 
