@@ -515,3 +515,20 @@ p a, .article-body a { text-decoration: underline; }
   .person-facts dd + dt { margin-top: var(--space-2); }
   .person-facts dd { overflow-wrap: anywhere; }
 }
+
+/* FR-007 in the header, between the site's name and the links (the human, 9 Oct): it starts at 120 px
+   so the row does not break early, grows into what the row leaves up to 400 px, and sits centred in
+   it; on a phone, a full row of its own under the brand and the menu. Hidden where the page holds its
+   own search. */
+.header-search { display: flex; align-items: center; flex: 1 1 120px; min-width: 0; max-width: 400px; margin-inline: auto; background: var(--paper); border: 1px solid var(--ink-soft); border-radius: var(--radius-card); }
+.header-search-input { flex: 1; min-width: 0; width: 100%; height: 36px; padding: 0 var(--space-1) 0 var(--space-3); border: none; border-radius: var(--radius-card); background: none; font: inherit; }
+.header-search-input:focus-visible { outline-offset: 0; }
+.header-search-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: none; background: none; cursor: pointer; }
+/* Twelve pixels between the links rather than sixteen: what lets the box share their row at 1280 px. */
+@media (min-width: 1024px) { .site-nav ul { gap: var(--space-3); } }
+body:has(main form[role="search"]) .header-search { display: none; }
+@media (max-width: 1023px) {
+  .header-search { order: 3; flex: 1 1 100%; max-width: none; margin-inline: 0; }
+  .header-search-input, .header-search-button { height: var(--target); }
+  .header-search-button { width: var(--target); }
+}

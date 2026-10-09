@@ -180,7 +180,7 @@ class BrowserLocalTimeTest {
         watch(page);
         page.navigate("http://localhost:" + port + "/moderate/login");
         page.fill("input[name=password]", PASSWORD);
-        page.click("button[type=submit]");
+        page.click("main button[type=submit]");
         page.waitForURL(url -> !url.endsWith("/moderate/login"));
         page.navigate("http://localhost:" + port + path);
         return page;

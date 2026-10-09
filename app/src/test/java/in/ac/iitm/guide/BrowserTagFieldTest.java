@@ -178,7 +178,7 @@ class BrowserTagFieldTest {
         page.keyboard().type("vi");
         page.click(".ts-dropdown .option[data-value='visa']");
         page.keyboard().type("Hostel,");
-        page.click("button[type=submit]");
+        page.click("main button[type=submit]");
         page.waitForURL("**/confirmation");
 
         assertThat(jdbc.queryForList(

@@ -246,7 +246,7 @@ class BrowserEditorTest {
         assertThat(reopened.inputValue("input[name=summary]")).isEqualTo("Who shares a room.");
 
         reopened.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('Rooms are shared.')");
-        reopened.click("button[type=submit]");
+        reopened.click("main button[type=submit]");
         reopened.waitForURL("**/confirmation");
         var again = openTheForm();
         assertThat(again.inputValue("input[name=title]")).isEmpty();
@@ -303,7 +303,7 @@ class BrowserEditorTest {
     private static void fillAndSubmit(Page page, String title) {
         page.fill("input[name=title]", title);
         page.fill("input[name=summary]", "A summary.");
-        page.click("button[type=submit]");
+        page.click("main button[type=submit]");
         page.waitForURL("**/confirmation");
     }
 

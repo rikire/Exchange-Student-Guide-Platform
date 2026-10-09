@@ -120,7 +120,7 @@ class BrowserKeyboardTest {
             tabTo(page, ".CodeMirror textarea, .CodeMirror [contenteditable=true]");
             page.keyboard().press("ControlOrMeta+End");
             page.keyboard().type(" Laundry is on the ground floor.");
-            tabTo(page, "button[type=submit]");
+            tabTo(page, "main button[type=submit]");
             page.keyboard().press("Enter");
             page.waitForURL("**/confirmation");
 

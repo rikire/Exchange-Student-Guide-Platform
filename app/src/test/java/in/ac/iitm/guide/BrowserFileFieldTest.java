@@ -122,7 +122,7 @@ class BrowserFileFieldTest {
         page.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('Rooms are shared.')");
         choose(page, "hostel.jpg", "image/jpeg", MediaTestFiles.jpeg(640, 480));
 
-        page.click("button[type=submit]");
+        page.click("main button[type=submit]");
         page.waitForURL("**/confirmation");
 
         assertThat(jdbc.queryForObject(
@@ -140,7 +140,7 @@ class BrowserFileFieldTest {
         page.fill("input[name=summary]", "A summary.");
         page.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('Text.')");
 
-        page.click("button[type=submit]");
+        page.click("main button[type=submit]");
         page.waitForURL("**/confirmation");
 
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM media_asset", Integer.class))

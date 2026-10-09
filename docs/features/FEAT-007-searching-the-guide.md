@@ -20,10 +20,13 @@ code:
   - app/src/main/java/in/ac/iitm/guide/wikilink/WikiLinkRenderer.java
   - app/src/main/resources/static/css/site.css
   - app/src/main/resources/templates/search/SearchResults.html
+  - app/src/main/resources/templates/shared/web/Layout.html
 tests:
   - app/src/test/java/in/ac/iitm/guide/search/SearchFlowTest.java
   - app/src/test/java/in/ac/iitm/guide/StartupOrderTest.java
   - app/src/test/java/in/ac/iitm/guide/wikilink/WikiLinkRendererTest.java
+  - app/src/test/java/in/ac/iitm/guide/SiteHeaderTest.java
+  - app/src/test/java/in/ac/iitm/guide/BrowserLayoutTest.java
 ---
 
 # FEAT-007 — Searching the guide
@@ -43,6 +46,13 @@ the published articles whose title, body or tags contain either word, in any cas
 the article, its summary and its tags. The page keeps the query in its own search box so it can be
 changed. With nothing matched it says so and points to browsing by tag, as `SearchResultsEmpty.html`
 draws it.
+
+**Header search, 9 Oct** (the human): every reader's page also carries a small search box in the
+header, between the site's name and the six links: 139 px at 1280 px so the row holds, wider as the
+window grows, up to 400 px, and on a row of its own on a phone. A page that
+holds its own box (the landing page, the results, the not-found page) hides it, so no page shows
+two. It is a way into this route, not a change to what the route answers; the moderator's header
+has none.
 
 ## Routes
 

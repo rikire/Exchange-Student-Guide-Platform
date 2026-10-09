@@ -37,6 +37,16 @@ class SiteHeaderTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {"/articles", "/tags", "/submit", "/submissions/status", "/oge-team", "/developers"})
+    // trace:FR-007
+    void the_header_offers_search_on_every_reader_page(String path) throws Exception {
+        var page = mockMvc.perform(get(path)).andReturn().getResponse().getContentAsString();
+        var header = page.substring(page.indexOf("<header"), page.indexOf("</header>"));
+
+        assertThat(header).contains("action=\"/search\"").contains("name=\"q\"");
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {"/", "/articles", "/oge-team", "/developers"})
     // trace:FR-035
     void the_header_links_to_the_oge_team_and_developers_pages(String path) throws Exception {

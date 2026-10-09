@@ -307,6 +307,60 @@ class BrowserLayoutTest {
     }
 
     @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void on_a_laptop_the_header_search_fits_beside_every_link_in_one_row() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/articles");
+            var search = page.locator(".header-search").boundingBox();
+            var brand = page.locator(".site-brand").boundingBox();
+            var firstLink = page.locator(".site-nav > .site-links a").first().boundingBox();
+            var lastLink = page.locator(".site-nav > .site-links a").last().boundingBox();
+
+            assertThat(page.locator(".header-search").isVisible()).isTrue();
+            assertThat(search.x).as("after the site's name").isGreaterThan(brand.x + brand.width);
+            assertThat(search.x + search.width).as("before All articles").isLessThan(firstLink.x);
+            assertThat(search.y).as("the search on the links' row").isLessThan(lastLink.y + lastLink.height);
+            assertThat(lastLink.y).as("and the links on the brand's row").isLessThan(search.y + search.height);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void the_header_search_is_hidden_where_the_page_has_its_own() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            for (var path : List.of("/", "/search?q=frro")) {
+                page.navigate("http://localhost:" + port + path);
+
+                assertThat(page.locator(".header-search").count())
+                        .as("in the page, %s", path)
+                        .isEqualTo(1);
+                assertThat(page.locator(".header-search").isVisible()).as(path).isFalse();
+            }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void searching_from_the_header_opens_the_results() {
+        for (var width : List.of(390, 1280)) {
+            try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {
+                var page = context.newPage();
+                page.navigate("http://localhost:" + port + "/articles");
+
+                page.fill(".header-search input[name=q]", "frro");
+                page.press(".header-search input[name=q]", "Enter");
+                page.waitForURL("**/search?q=frro");
+
+                assertThat(page.locator(".search-hit").count())
+                        .as("at %d px", width)
+                        .isPositive();
+            }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
     // trace:NFR-008
     void the_queue_keeps_every_review_link_in_view_beside_a_long_title() {
         for (var width : WIDTHS) {
@@ -444,7 +498,7 @@ class BrowserLayoutTest {
         try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
             var page = context.newPage();
             page.navigate("http://localhost:" + port + "/submit");
-            page.locator("button[type=submit]").focus();
+            page.locator("main button[type=submit]").focus();
             page.keyboard().press("Shift+Tab");
             page.keyboard().press("Tab");
 
@@ -458,7 +512,7 @@ class BrowserLayoutTest {
     private void signIn(Page page) {
         page.navigate("http://localhost:" + port + "/moderate/login");
         page.fill("input[name=password]", PASSWORD);
-        page.click("button[type=submit]");
+        page.click("main button[type=submit]");
         page.waitForURL(url -> !url.endsWith("/moderate/login"));
     }
 

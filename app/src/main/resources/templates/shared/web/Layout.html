@@ -26,6 +26,15 @@
       <span class="site-name">Exchange Student Guide</span>
       <span class="role-label" th:if="${moderatorArea}">Moderator</span>
     </a>
+    <!-- FR-007 from any reader's page, between the site's name and the links (the human, 9 Oct):
+         as wide as the row leaves, up to 400 px. A page with its own search box hides this one
+         (site.css), so the landing page and the results never show two. -->
+    <form class="header-search" th:unless="${moderator}" th:action="@{/search}" method="get" role="search">
+      <input class="header-search-input" type="search" name="q" required placeholder="Search" aria-label="Search the guide">
+      <button class="header-search-button" type="submit" aria-label="Search">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+    </form>
     <!-- Fix 2.1 (F-6): the four ways on from any page. A wide screen shows the list; a phone or a
          tablet folds it into a native <details> menu, which needs no script under the CSP. -->
     <nav class="site-nav" aria-label="Site">
