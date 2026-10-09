@@ -29,6 +29,13 @@ public final class Journal {
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
     private static final ZoneId ZONE = ZoneId.systemDefault();
 
+    /**
+     * DEBT-027: longer than this with no hook firing, an open entry belongs to a turn that was
+     * stopped rather than one still working. The longest command a turn waits on is ten minutes; a
+     * turn that waits on a background task ends, and its Stop hook closes the entry.
+     */
+    static final java.time.Duration INTERRUPTED_AFTER = java.time.Duration.ofMinutes(30);
+
     private final Repo repo;
     private final String sessionId;
     private final Path stateFile;
@@ -48,6 +55,47 @@ public final class Journal {
                 ? (ObjectNode) MAPPER.readTree(Files.readString(file))
                 : MAPPER.createObjectNode();
         return new Journal(repo, id, file, state);
+    }
+
+    /**
+     * A person's prompt, as the {@code UserPromptSubmit} hook receives it: a follow-up when it
+     * arrives while a turn is still working, otherwise the start of an entry. An entry left open by
+     * a turn that was stopped (DEBT-027) is closed first, so the prompt is not filed under it.
+     *
+     * @return the files the human edited since the last turn; none for a follow-up
+     */
+    public List<String> receivePrompt(String prompt, ZonedDateTime now) throws IOException {
+        if (hasOpenEntry() && !interrupted(now)) {
+            addFollowUp(prompt);
+            touch(now);
+            return List.of();
+        }
+        if (hasOpenEntry()) {
+            finishEntry(
+                    "(No outcome was recorded: the turn its prompt opened at "
+                            + state.path("promptAt").asText("?")
+                            + " was interrupted before it ended, and this entry was closed when the next prompt"
+                            + " arrived.)",
+                    List.of("interrupted: closed when the next prompt arrived"),
+                    List.of());
+        }
+        List<String> humanEdits = startEntry(prompt);
+        touch(now);
+        return humanEdits;
+    }
+
+    /** Records that a hook of this session fired, so a working turn is told from a stopped one. */
+    public void touch(ZonedDateTime now) throws IOException {
+        state.put("activityAt", now.toString());
+        save();
+    }
+
+    private boolean interrupted(ZonedDateTime now) {
+        String last = state.path("activityAt").asText(state.path("promptAt").asText(""));
+        if (last.isBlank()) {
+            return false;
+        }
+        return ZonedDateTime.parse(last).plus(INTERRUPTED_AFTER).isBefore(now);
     }
 
     /** Opens an entry for a new prompt and returns the files the human edited since the last turn. */
@@ -237,25 +285,44 @@ public final class Journal {
      * {@link #finishEntry} writes it alongside the original.
      */
     public void setEnglish(String prompt, String outcome) {
+        // DEBT-027: one rendering per call, kept in order. The first prompt rendered is the one that
+        // opened the turn, the next ones its follow-ups; a second call used to replace the first.
         if (prompt != null && !prompt.isBlank()) {
-            state.put("promptEn", prompt);
+            renderings("promptsEn").add(prompt);
         }
         if (outcome != null && !outcome.isBlank()) {
-            state.put("outcomeEn", outcome);
+            renderings("outcomesEn").add(outcome);
         }
+    }
+
+    private ArrayNode renderings(String field) {
+        if (state.path(field).isArray()) {
+            return (ArrayNode) state.get(field);
+        }
+        ArrayNode list = state.putArray(field);
+        // An entry opened before DEBT-027 holds its rendering as a single string.
+        String single = state.path(field.replace("sEn", "En")).asText("");
+        if (!single.isBlank()) {
+            list.add(single);
+        }
+        state.remove(field.replace("sEn", "En"));
+        return list;
     }
 
     /** True when a rendering was supplied for the entry in progress. */
     public boolean hasEnglishRendering() {
-        return !state.path("promptEn").asText("").isBlank()
-                || !state.path("outcomeEn").asText("").isBlank();
+        return !renderings("promptsEn").isEmpty() || !renderings("outcomesEn").isEmpty();
     }
 
     /** Closes the entry: appends prompt, outcome and the human's edits to today's journal file. */
     public void finishEntry(String assistantMessage, List<String> checks, List<String> humanEdits) throws IOException {
         String prompt = state.path("prompt").asText("");
-        String promptEn = state.path("promptEn").asText("");
-        String outcomeEn = state.path("outcomeEn").asText("");
+        List<String> promptsEn = new ArrayList<>();
+        renderings("promptsEn").forEach(node -> promptsEn.add(node.asText()));
+        List<String> outcomesEn = new ArrayList<>();
+        renderings("outcomesEn").forEach(node -> outcomesEn.add(node.asText()));
+        String promptEn = promptsEn.isEmpty() ? "" : promptsEn.get(0);
+        String outcomeEn = String.join("\n\n", outcomesEn);
         if (prompt.isBlank() && (assistantMessage == null || assistantMessage.isBlank())) {
             return;
         }
@@ -280,10 +347,18 @@ public final class Journal {
             entry.append("**Prompt (English)**\n\n").append(quote(promptEn)).append("\n\n");
         }
 
+        int rendered = 1;
         for (JsonNode followUp : state.path("followUps")) {
             entry.append("**Follow-up during the turn**\n\n")
                     .append(quote(followUp.asText()))
                     .append("\n\n");
+            if (rendered < promptsEn.size()
+                    && !promptsEn.get(rendered).strip().equals(followUp.asText().strip())) {
+                entry.append("**Follow-up (English)**\n\n")
+                        .append(quote(promptsEn.get(rendered)))
+                        .append("\n\n");
+            }
+            rendered++;
         }
 
         String outcome = outcomeEn.isBlank() ? assistantMessage : outcomeEn;
@@ -303,8 +378,11 @@ public final class Journal {
         appendToTodaysFile(entry.toString());
         state.remove("followUps");
         state.remove("prompt");
+        state.remove("promptsEn");
+        state.remove("outcomesEn");
         state.remove("promptEn");
         state.remove("outcomeEn");
+        state.remove("activityAt");
         state.remove("needsEnglish");
         state.remove("renderingRefused");
         writeSnapshot(Snapshot.take(repo));

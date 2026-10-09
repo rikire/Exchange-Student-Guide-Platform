@@ -20,6 +20,29 @@ constraint hides it.
 
 ## Register
 
+### DEBT-027 — The journal paired a translation with the wrong prompt
+
+**Status:** resolved 2026-10-09 — `Journal` keeps one English rendering per prompt, in order, and
+every outcome; a prompt after more than 30 minutes with no hook firing closes the open entry as
+interrupted and opens its own (`JournalTest`, four cases red first). The two entries it spoiled are
+corrected by notes in the journal of 9 Oct, not rewritten.
+**Created:** 2026-10-09
+**Marker:** `tools/src/main/java/in/ac/iitm/guide/tools/Journal.java` — `setEnglish`, `receivePrompt`
+
+**Cause:** an entry held one `promptEn` and one `outcomeEn`. A prompt sent while a turn was working
+became a follow-up of it, and the agent's second `hook english` replaced the first rendering. A turn
+the person stopped never reached the `Stop` hook, so its entry stayed open and the next prompt, days
+later, was filed as its follow-up.
+
+**Consequence:** found while choosing sample prompts for the course: the entry of 5 Oct showed
+"after the approval" translated as a question about mutation tests, and the file of 9 Oct opened
+with a prompt of 5 Oct. The journal is the evidence the course reads, and nothing flagged either.
+
+**How to fix:** done as above. The agent still has to render each prompt of a turn, in the order
+they came.
+
+**Trigger:** —
+
 ### DEBT-026 — A stand with volumes from before 2 Oct does not start on the new image
 
 **Status:** open

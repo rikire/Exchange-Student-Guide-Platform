@@ -1,5 +1,6 @@
 package in.ac.iitm.guide.tools;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,15 @@ final class HookCommand {
 
         Journal journal = Journal.open(repo, session);
         journal.setEnglish(prompt, outcome);
-        journal.save();
+        journal.touch(java.time.ZonedDateTime.now());
+    }
+
+    /**
+     * A tool is being used, so the session's turn is working (DEBT-027). From the project root the
+     * hooks run in, not the tool's own directory: a command run elsewhere is still this turn's.
+     */
+    private static void markActivity(HookEvent event) throws IOException {
+        Journal.open(Repo.find(null), event.sessionId()).touch(java.time.ZonedDateTime.now());
     }
 
     /**
@@ -186,13 +195,9 @@ final class HookCommand {
 
         // A person's message in the middle of a turn belongs to that turn: opening an entry for it
         // would overwrite the prompt that began the turn.
-        List<String> humanEdits = List.of();
-        if (journal.hasOpenEntry()) {
-            journal.addFollowUp(event.prompt());
-            journal.save();
-        } else {
-            humanEdits = journal.startEntry(event.prompt());
-        }
+        // A turn stopped by the person never reaches the Stop hook and leaves its entry open; how
+        // long the session has been quiet tells it from a turn still working (DEBT-027).
+        List<String> humanEdits = journal.receivePrompt(event.prompt(), java.time.ZonedDateTime.now());
 
         StringBuilder message = new StringBuilder(CONTRACT_REMINDER);
 
@@ -297,6 +302,7 @@ final class HookCommand {
      */
     private static void guard() throws Exception {
         HookEvent event = HookEvent.readFromStdin();
+        markActivity(event);
         Repo repo = Repo.find(event.cwd());
         String relative = repo.relativize(event.filePath());
 
@@ -392,6 +398,7 @@ final class HookCommand {
     /** Judges a shell command before it runs. */
     private static void bash() throws Exception {
         HookEvent event = HookEvent.readFromStdin();
+        markActivity(event);
         CommandRules.Verdict verdict = CommandRules.forCommand(event.command());
         if (verdict.decision() != CommandRules.Verdict.Decision.ALLOW) {
             HookEvent.emitDecision("PreToolUse", decisionOf(verdict), verdict.reason());
