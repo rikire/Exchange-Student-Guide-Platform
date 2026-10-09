@@ -1,0 +1,175 @@
+\documentclass[11pt]{article}
+% Built with xelatex: the appendix quotes prompts in Russian, set in DejaVu Serif.
+\usepackage{fontspec}
+\newfontfamily\cyrfont{DejaVu Serif}[Scale=MatchLowercase]
+\newcommand{\ru}[1]{{\cyrfont #1}}
+\usepackage[a4paper,margin=0.85in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black}
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{0.45em}
+
+\title{\vspace{-3em}CS5013 Principles \& Practices\\[0.2em]
+\large Exchange Student Guide \& Community Platform}
+\author{Mikhail Novikov, GE26Z858 \and Abdirakhim Ismailov, GE26Z860}
+\date{\vspace{-0.6em}9 October 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+\vspace{-2.2em}
+
+\noindent Repository: \url{https://github.com/rikire/Exchange-Student-Guide-Platform}. The code is
+written with Claude Code. What follows is how we keep that honest: each principle names the file or
+mechanism that enforces it and a dated case from the history where it mattered. The prompt journal
+(\texttt{docs/ai/journal/}, 1087 entries since 3 September) holds every prompt quoted here.
+
+\section{Prompt engineering}
+
+\textbf{Context in layers, not one long prompt.} Standing rules live in files the assistant loads
+itself: \texttt{CLAUDE.md} (six rules and where to look), \texttt{docs/ai/*.md} (one topic each:
+prompting, testing, when to stop) and \texttt{.claude/rules/} (the short part that must be in view
+while code is written). A prompt then carries only the task. A rule read once at the start of a
+session loses to everything said later, so a \texttt{UserPromptSubmit} hook re-injects the core
+rule with every prompt.
+
+\textbf{A contract before any change.} For a request that changes files or state, the assistant
+first reads what the repository can answer, then states the goal, the boundaries, acceptance criteria
+phrased so they can become test names, open questions \emph{each with a suggested answer}, and steps
+each with its check --- and waits for an explicit ``yes'' (\texttt{docs/ai/prompting.md}). ``Propose
+and continue'' is not agreement; choosing a default and announcing it is not compliance. The
+confirmed sentences become the acceptance criteria and the test names, so one sentence runs from
+the prompt to the assertion. Appendix A.1 and A.3.
+
+\textbf{Closed questions with a recommendation.} A question to the human offers options, the
+consequence of each, and which one we would pick, so the answer can be one word (``A'', ``yes'').
+Facts the repository can answer are looked up, never asked.
+
+\textbf{Make the model verify, not recall.} Versions are checked against Maven Central or npm before
+they are written down; a claim about a library is checked in its source. Saying ``not verified'' is
+allowed; a plausible guess is not. When the human challenged a claim (``what is this ban on
+JavaScript?'', A.2), the answer was a search of the requirements, not a defence of the claim.
+
+\textbf{Reusable prompts as skills.} Recurring tasks are slash commands in
+\texttt{.claude/skills/}: \texttt{/sharpen} writes the contract without acting, \texttt{/feature},
+\texttt{/gaps}, \texttt{/dod}, \texttt{/trace-check}.
+
+\section{Debugging}
+
+We follow the order in \texttt{docs/ai/stop-and-ask.md}: reproduce, form one hypothesis that a
+check can refute, test it, and fix with a test that was red first. Observable triggers stop the work:
+a check that refutes a hypothesis, a second attempt with nothing new learned, a result that
+contradicts a requirement. After a stop we write down what is confirmed, refuted and unknown, and
+trace everything that rested on the wrong premise.
+
+\textbf{A case: the moderator's approval answered 500 (5 October).} Seen only in a rehearsal of the
+demo on the Docker stand. \emph{Evidence}: the application log, not the page. \emph{Hypothesis}:
+the search index on the stand's volume predated a change to its fields. \emph{Check}: the database
+held the approval while search did not find it, and the index builder skipped any index that held
+documents. \emph{Fix}: rebuild the index at every start, an ADR amended with the human's decision,
+and a test inverted to state it. The same rehearsal found three more faults no unit test could see:
+volumes the earlier root image had written (\texttt{DEBT-026}), the missing error page, and a list
+of tag suggestions covering the Submit button --- each fixed with the test that would have caught it.
+
+\textbf{Read the library, then prove the reading.} Before adding an image-preview plugin we read its
+bundle and found it loads images from \texttt{blob:} URLs, which our Content-Security-Policy blocks
+(A.3). After widening the policy we restored the old one on purpose and watched the browser test go
+red with the browser's own CSP message, so the test is known to catch it.
+
+\textbf{Do not close what is not proven.} A tag-field browser test failed twice in full runs and
+never alone. Tom Select's source showed a 300\,ms refresh delay that explains it; the fix removed the
+delay, but no test could reproduce the failure first, so \texttt{DEBT-023} stays open with the
+finding and the trigger for reopening it.
+
+\section{Version control: code and prompts}
+
+\textbf{The prompts are in Git.} Hooks write every prompt, an English rendering when it was not in
+English, the outcome, the human's own edits between turns and the checks that passed, into
+\texttt{docs/ai/journal/}; the \texttt{Stop} hook commits the entry. The author is resolved from the
+Git identity. The original prompt is kept beside the translation: it is the artefact.
+
+\textbf{Commits say what they deliver.} \texttt{<type>(<scope>): <subject> [FR-\ldots]}; a
+\texttt{feat} or \texttt{fix} must name its feature and requirement, checked by the
+\texttt{commit-msg} hook. Code carries \texttt{//trace:FR-XXX} anchors, so
+\texttt{docs/traceability.md} is generated from code, tests and commits, and a requirement with no
+test shows as a gap.
+
+\textbf{Checks that cannot be skipped.} \texttt{pre-commit}: Spotless and fast tests;
+\texttt{pre-push}: the full build plus ``generated documents current'' and ``a changed controller is
+described in the route contract''; CI repeats it and runs the suite on PostgreSQL. The client refuses
+\texttt{-{}-no-verify} and \texttt{-DskipTests} outright. On 2 October a push was refused three times
+--- stale traceability, stale gap list, an undocumented controller change --- and each was fixed,
+not bypassed. Unpushed work is rebased onto the partner's (\texttt{pull.ff=only}), and conflicts in
+generated files are resolved by running the generator, never by hand.
+
+\section{Testing, refactoring and documentation}
+
+\textbf{Test first.} Interfaces, a red test, the minimal code, then refactor
+(\texttt{docs/ai/workflow.md}); a test green before the change is reported as a guard, not as
+evidence. Test names are sentences
+(\texttt{a\_refused\_file\_is\_marked\_beside\_the\_file\_field\_and\_must\_be\_chosen\_again}).
+Today: 635 application tests and 352 for the tools; 51 browser tests in Chromium with axe at four
+widths; query-count tests that fail when a page's queries grow with its rows; mutation testing
+(PIT, 130 of 132 mutants killed, the two survivors explained); property-based tests (jqwik, 1000
+generated titles in English, Hindi and Tamil).
+
+\textbf{Refactoring toward one place for each rule.} When the tag field needed to compare typed tags
+with stored ones, the normalisation rule was moved out to \texttt{Tags.storedAs} rather than copied:
+a copy of that rule had already been debt once (\texttt{DEBT-005}). Spring Modulith and ArchUnit
+tests keep the thirteen slices from reaching into each other's internals.
+
+\textbf{Documentation that cannot drift.} Changed behaviour updates its document in the same commit
+(\texttt{docs/ai/docs-sync.md}); a \texttt{PostToolUse} hook names the document an edit puts out of
+date. Four documents are generated and refused at push when stale: traceability, the gap list, the
+route tables, slice ownership. Decisions are ADRs (22, each with the options weighed); anything
+temporary is a \texttt{DEBT} entry with cause, consequence, fix and trigger, and a \texttt{TODO}
+without one is refused.
+
+\clearpage
+\appendix
+\section*{Appendix A. Sample prompts, from the journal}
+
+Each prompt is quoted as typed (Russian), with the English rendering the journal keeps and an
+abridged outcome.
+
+\textbf{A.1 --- A short prompt, a contract before state changes} (\texttt{2026-10-02}, 14:50)\\
+\emph{Prompt:} ``\ru{сделай пулл, проверь что сделано и что нужно сделать}'' --- \emph{Do a pull, check
+what has been done and what needs to be done.}\\
+\emph{Outcome:} fetched 125 commits; did not pull, since the branch had diverged and
+\texttt{pull.ff=only} would refuse; proposed \texttt{pull -{}-rebase -{}-autostash} and waited.
+\emph{Next prompt:} ``\ru{да, делай rebase}'' --- \emph{Yes, do the rebase.}
+
+\textbf{A.2 --- Challenging the model's claim} (\texttt{2026-10-02})\\
+\emph{Prompt:} ``\ru{погоди, а что за запрет на js? откуда он вообще и зачем}'' --- \emph{Wait, what is
+this ban on JS? Where does it come from and why?}\\
+\emph{Outcome:} checked the requirements and ADRs: nothing forbids JavaScript; the ``rule'' was one
+descriptive sentence in a feature file. The assistant said it had overstated it and changed its
+recommendation.
+
+\textbf{A.3 --- A stop on a trigger} (\texttt{2026-10-02})\\
+\emph{Prompt:} ``\ru{1. давай твой вариант. начинай}'' --- \emph{Go with your option. Start.}\\
+\emph{Outcome:} reading the image-preview plugin's bundle against the CSP refuted the assumption that
+it needed no policy change. The assistant stopped before writing the ADR and asked: widen the policy
+by \texttt{img-src blob:} and \texttt{worker-src blob:}, or drop the preview. The human chose the
+first.
+
+\textbf{A.4 --- A contract for a multi-step change} (\texttt{2026-10-02})\\
+The plan for the submission forms, as the assistant proposed it and the human confirmed: seven steps
+(an ADR; the tag field; the drop zone; the editor; errors at the field; the draft; the edit form),
+each with its check, one commit each, ``each step in turn, together''. Open questions came with a
+suggested answer, e.g. \emph{exclude the library's transitive WebJars? --- suggested: yes, the
+bundle contains them}.
+
+\textbf{A.5 --- A debugging prompt} (\texttt{2026-10-05})\\
+\emph{Prompt:} a screenshot of \emph{HTTP Status 500} and ``\ru{после аппрува}'' --- \emph{after the
+approval.}\\
+\emph{Outcome:} read the stand's log; found the approval saved and the index write refused by a
+mapping from an older version; offered three ways forward with a recommendation; the human answered
+``\ru{1A, 2 да, 3 да, 4 да}'' --- \emph{1A, 2 yes, 3 yes, 4 yes}.
+
+\end{document}
