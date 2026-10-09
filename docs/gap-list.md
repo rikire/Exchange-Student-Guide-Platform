@@ -110,11 +110,9 @@ None.
 
 | Debt | Title | Trigger |
 |---|---|---|
-| DEBT-026 | A stand with volumes from before 2 Oct does not start on the new image | the stand reset before the mid-demo (section 4), and any upgrade of a stand with data. |
 | DEBT-025 | The OGE team and developers pages show blanks for facts nobody has supplied | the facts arriving from the developers and from OGE, or the final submission, whichever |
 | DEBT-024 | The moderator's publish form shows a refusal only at the top, not at the field | the human's look at the moderator's pages, or phase 4's edge cases, whichever is first. |
 | DEBT-015 | A file far over the container's limit gets a closed connection, not the page | the first report of an upload ending in a connection error, or phase 4's hardening. |
-| DEBT-014 | The stand's session cookie is not marked `Secure` | the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any |
 | DEBT-010 | An article's old address answers `404` after an edit changes its title | the first renamed article anyone complains about, or the phase 4 edge cases, whichever |
 | DEBT-002 | The process layer cannot be packaged for a second repository | the first time a second repository needs this, or phase 5 handover — whichever comes |
 

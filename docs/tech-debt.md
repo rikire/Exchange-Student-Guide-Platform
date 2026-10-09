@@ -45,7 +45,10 @@ they came.
 
 ### DEBT-026 — A stand with volumes from before 2 Oct does not start on the new image
 
-**Status:** open
+**Status:** resolved 2026-10-10 — not by the image: a root step at start would undo DEBT-018. The stand OGE
+gets is started on new volumes, which take `guide`'s ownership; for any older one,
+`docs/handoff/install.md` ("Updating") gives the one-off `chown`, and `scripts/upgrade-check.sh`
+fails on exactly this when run from an older commit (from 1 Oct: `HSEARCH600001`; from 9 Oct: passes).
 **Created:** 2026-10-05
 **Marker:** `Dockerfile` — `USER guide`
 
@@ -319,10 +322,12 @@ Put off to then by the human on 28 Sep.
 
 ### DEBT-014 — The stand's session cookie is not marked `Secure`
 
-**Status:** open — decided by the human on 9 Oct: OGE's stand will most likely run on an IITM server
-behind HTTPS, and hosting will not be ours. So the fix is ours only up to the door: the flag set from
-the environment, Spring told to trust the proxy's `X-Forwarded-*` headers, and the handoff guide saying
-both. Done with the handoff package (phase 5).
+**Status:** resolved 2026-10-10 — the stand passes `GUIDE_FORWARD_HEADERS`, `GUIDE_TRUSTED_PROXY` and
+`GUIDE_COOKIE_SECURE` to Spring Boot, all off by default; `BehindTrustedProxyTest` and
+`BehindUntrustedAddressTest` show the limits per visitor behind a trusted proxy, the https redirect,
+and `X-Forwarded-For` ignored from anyone else; `docs/handoff/install.md` tells IITM's IT to set them
+with its proxy, the proxy's body-size limit, and a long random moderator password. The decision of
+9 Oct and what the question about guessing found are below.
 **Created:** 2026-09-28
 **Marker:** `docker-compose.yml` — the `app` service's environment
 
