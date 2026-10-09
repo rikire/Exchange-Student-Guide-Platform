@@ -81,3 +81,6 @@ docs/design/canvas-src/**/*.html
 *.fdb_latexmk
 *.synctex.gz
 .jqwik-database
+
+# Backups of the stand (scripts/backup.sh): real content, never committed.
+backups/
