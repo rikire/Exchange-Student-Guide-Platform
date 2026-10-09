@@ -509,7 +509,7 @@ editor's preview.
 **Demo rehearsal on the compose stand, 4–5 Oct** — after fix 3.6, on the stand's existing volumes,
 the student half driven by a headless Chromium (Playwright), the moderator half by the human:
 - The stand did not start: volumes created by the root image cannot be written since the image runs
-  as `guide` (DEBT-018). A one-off `chown` fixed it; recorded as DEBT-025.
+  as `guide` (DEBT-018). A one-off `chown` fixed it; recorded as DEBT-026.
 - "FRRO registration" returns *Registering with FRRO* first; its wiki link leads to *Applying for
   Your Student Visa*; the edit form is headed with that title; a typed tag became a chip; the photo
   was previewed; the edit was sent (`SUB-76A2-NNBC-W6GJ`). No console error and no policy violation
