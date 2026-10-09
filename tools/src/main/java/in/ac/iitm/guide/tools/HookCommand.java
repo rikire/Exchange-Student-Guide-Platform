@@ -171,7 +171,8 @@ final class HookCommand {
               java -jar tools/target/ai-tools.jar hook english \
                 --prompt "<this prompt in English>" --outcome "<what you did, in English>"
 
-            The original is kept beside it. Skip --prompt only if the prompt was already English.\
+            The original is kept beside it. Skip --prompt only if the prompt was already English. \
+            If more prompts arrive during this turn, call it once per prompt, in the order they came.\
             """;
 
     /**
