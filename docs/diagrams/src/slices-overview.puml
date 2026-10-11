@@ -1,0 +1,53 @@
+@startuml slices-overview
+' The thirteen slices grouped by who they serve, for a two-minute overview. The exact arrows between
+' slices, each with what crosses it, are c4-component; the imports themselves, c4-component-actual.
+' An arrow here is a published type or an ApplicationEvent (ADR-0002), never a call into internals.
+!pragma layout smetana
+!include <C4/C4_Component>
+LAYOUT_TOP_DOWN()
+
+title Exchange Student Guide — thirteen slices, grouped by who they serve
+
+Person(student, "Student", "no account")
+Person(moderator, "OGE moderator", "shared password")
+
+Container_Boundary(web, "Web application — one Spring Boot process, slice boundaries enforced by ModularityTest") {
+  Boundary(read, "Reading") {
+    Component(home, "home", "slice", "Pinned and recent articles, tags")
+    Component(articleview, "articleview", "slice", "An article, its media, what links here")
+    Component(search, "search", "slice", "Every word must match; a marked passage")
+    Component(taxonomy, "taxonomy", "slice", "Tags: the only writer of tags")
+  }
+  Boundary(write, "Contributing") {
+    Component(contribute, "contribute", "slice", "Anonymous submission, preview, status by number")
+    Component(media, "media", "slice", "Photos re-encoded, PDF, video")
+    Component(report, "report", "slice", "Report a problem in an article")
+  }
+  Boundary(mod, "Moderating") {
+    Component(moderate, "moderate", "slice", "Queue, diff, approve or reject, publish directly, pin, remove")
+  }
+  Boundary(core, "Shared rules") {
+    Component(wikilink, "wikilink", "plain Java", "~[~[Title]] → link; title → address")
+    Component(backlink, "backlink", "slice", "article_link, updated on ArticleTextChanged")
+    Component(shared, "shared", "entities · security", "JPA entities, login, CSP, rate limits")
+    Component(backup, "backup", "slice", "Export, import, the 38-article seed")
+    Component(about, "about", "slice", "OGE team and developers pages")
+  }
+}
+
+ContainerDb(db, "PostgreSQL", "Flyway V1–V8", "articles, revisions, submissions, tags, reports")
+ContainerDb(index, "Lucene index", "Hibernate Search", "rebuilt at every start")
+ContainerDb(files, "Media root", "volume", "uploaded bytes")
+
+Rel(student, home, "reads, searches")
+Rel(student, contribute, "submits an article or edit")
+Rel(moderator, moderate, "reviews, publishes")
+Rel(moderate, contribute, "the same checks")
+Rel(moderate, backlink, "ArticleTextChanged", "event")
+Rel(contribute, media, "attach")
+Rel(articleview, wikilink, "render")
+Rel(shared, db, "JPA")
+Rel(search, index, "query")
+Rel(media, files, "bytes")
+SHOW_LEGEND(false)
+@enduml

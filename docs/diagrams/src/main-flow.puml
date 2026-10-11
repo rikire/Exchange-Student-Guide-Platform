@@ -1,0 +1,68 @@
+@startuml main-flow
+' The main flow, from a student's edit to the change being live (FR-011, FR-014 to FR-017).
+' Each step names the class that does it, as in docs/viva/README.md "Three flows, file by file".
+' A swimlane is who acts; the notes are the slice and the store each step touches.
+!pragma layout smetana
+skinparam defaultFontName Noto Sans
+skinparam ActivityBackgroundColor #EAF2FB
+skinparam ActivityBorderColor #3C7FC0
+skinparam SwimlaneTitleFontStyle bold
+
+title Exchange Student Guide — an edit, from the student to the published article
+
+|Student (no account)|
+start
+:Searches "FRRO registration";
+note right: search — Lucene through\nHibernate Search (FR-007)
+:Reads the article, follows a ~[~[wiki link]];
+note right: articleview, wikilink (FR-001, FR-002)
+:Proposes an edit: Markdown with a live\npreview, tags, a photo;
+note right: contribute — SubmissionForm\n(editor.js, tags.js, files.js)
+
+|contribute slice|
+:Rate limit: five submissions an hour;
+:SubmissionService checks title, summary,\nbody, address and title collision;
+if (refused?) then (yes)
+  |Student (no account)|
+  :Sees the error beside the field;
+  note right: SubmissionRejectedException\nnames its Field
+  stop
+else (no)
+  |contribute slice|
+endif
+:Saves the Submission; Tags.named,\nMediaAssets.attach (photo re-encoded);
+note right: database: submission, tag\nmedia root: the photo's bytes
+:Issues a number SUB-XXXX-XXXX-XXXX;
+note right: the article itself is unchanged:\nnothing is public until approved
+
+|OGE moderator|
+:Signs in (shared password, 10 tries\nper 15 minutes per visitor);
+:Opens the queue, oldest first;
+:Reviews the edit as a diff of the text\nas it reads, with the photo;
+note right: moderate — TextDiff
+if (decision) then (reject)
+  :Writes an optional reason;
+  |moderate slice|
+  :Submission rejected; its files\ndeleted a week later;
+  |Student (no account)|
+  :Looks up the number: sees the reason;
+  stop
+else (approve)
+  |OGE moderator|
+  :Adjusts summary and tags;
+endif
+
+|moderate slice|
+:ModerationService.approve: the old text\nsaved as a Revision, the Article updated;
+:MediaAssets.moveToArticle;
+:Publishes ArticleTextChanged;
+fork
+  :backlink re-reads the article's links\n("What links here", red links);
+fork again
+  :Hibernate Search updates the index\nwhen the transaction commits;
+end fork
+
+|Student (no account)|
+:The change is live, and search finds it;
+stop
+@enduml
