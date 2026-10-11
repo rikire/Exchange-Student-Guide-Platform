@@ -15,7 +15,7 @@ Legend: `[ ]` no evidence · `[~]` partial · `[x]` defensible
 |---|---|---|---|
 | 2 | Fri 21 Aug 2026 | Proposal | 5 — submitted |
 | 3 | Fri 11 Sep 2026 | Design document | 5 |
-| 4 | Fri 9 Oct 2026 | Mid-demo | 5 |
+| 4 | Sun 11 Oct 2026, then a slot in the week after | Mid-demo report and Principles & Practices; the mid-evaluation | 5 |
 | 5 | Fri 6 Nov 2026 | Final demo and viva | 10 |
 
 ## Proposal — 5 marks (submitted 18 Aug 2026)
@@ -67,7 +67,7 @@ to move, with the repository as the evidence and the PDF as the record of what w
 **Moved to `[x]` on 26 September by the human**, on that evidence. The submitted PDF was not
 rebuilt.
 
-## Mid-demo — 5 marks (due 9 Oct 2026)
+## Mid-demo — 5 marks (documents due 11 Oct 2026; the evaluation in the week after)
 
 | Criterion | Marks | Evidence | State |
 |---|---|---|---|
@@ -75,6 +75,11 @@ rebuilt.
 | Git history shows both members contributing across weeks | 1 | [../team/weekly-log/](../team/weekly-log/), `git log` | [ ] |
 | Gap list is honest | 1 | [../gap-list.md](../gap-list.md) | [ ] |
 | You can explain any part of your code on the spot | 1 | [../viva/](../viva/), [../ai/journal/](../ai/journal/) | [ ] |
+
+**The mid-evaluation's own format** (the TAs' message of 8 October): a Principles & Practices PDF of
+at most three pages, then per student a 20-minute slot with the architecture diagram, a two-minute
+overview and a small change made live with Gemini Pro only. Material for it:
+[mid-eval/presentation.md](mid-eval/presentation.md).
 
 **The demo scenario, in one sentence:** a student opens the landing page, searches for "FRRO
 registration", reads the article, follows a wiki link to a related one, proposes an edit with a
