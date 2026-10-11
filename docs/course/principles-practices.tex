@@ -3,7 +3,7 @@
 \usepackage{fontspec}
 \newfontfamily\cyrfont{DejaVu Serif}[Scale=MatchLowercase]
 \newcommand{\ru}[1]{{\cyrfont #1}}
-\usepackage[a4paper,margin=0.85in]{geometry}
+\usepackage[a4paper,margin=0.75in]{geometry}
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{parskip}
@@ -17,7 +17,7 @@
 \title{\vspace{-3em}CS5013 Principles \& Practices\\[0.2em]
 \large Exchange Student Guide \& Community Platform}
 \author{Mikhail Novikov, GE26Z858 \and Abdirakhim Ismailov, GE26Z860}
-\date{\vspace{-0.6em}9 October 2026}
+\date{\vspace{-0.6em}11 October 2026}
 
 \begin{document}
 \sloppy
@@ -27,7 +27,7 @@
 \noindent Repository: \url{https://github.com/rikire/Exchange-Student-Guide-Platform}. The code is
 written with Claude Code. What follows is how we keep that honest: each principle names the file or
 mechanism that enforces it and a dated case from the history where it mattered. The prompt journal
-(\texttt{docs/ai/journal/}, 1087 entries since 3 September) holds every prompt quoted here.
+(\texttt{docs/ai/journal/}, 1126 entries since 3 September) holds every prompt quoted here.
 
 \section{Prompt engineering}
 
@@ -48,7 +48,7 @@ the prompt to the assertion. Appendix A.1 and A.3.
 
 \textbf{Closed questions with a recommendation.} A question to the human offers options, the
 consequence of each, and which one we would pick, so the answer can be one word (``A'', ``yes'').
-Facts the repository can answer are looked up, never asked.
+Facts the repository holds are looked up, never asked.
 
 \textbf{Make the model verify, not recall.} Versions are checked against Maven Central or npm before
 they are written down; a claim about a library is checked in its source. Saying ``not verified'' is
@@ -72,19 +72,22 @@ demo on the Docker stand. \emph{Evidence}: the application log, not the page. \e
 the search index on the stand's volume predated a change to its fields. \emph{Check}: the database
 held the approval while search did not find it, and the index builder skipped any index that held
 documents. \emph{Fix}: rebuild the index at every start, an ADR amended with the human's decision,
-and a test inverted to state it. The same rehearsal found three more faults no unit test could see:
-volumes the earlier root image had written (\texttt{DEBT-026}), the missing error page, and a list
-of tag suggestions covering the Submit button --- each fixed with the test that would have caught it.
+and a test inverted to state it. The same rehearsal found three more faults no unit test could see, each
+fixed with the test that would have caught it.
 
 \textbf{Read the library, then prove the reading.} Before adding an image-preview plugin we read its
 bundle and found it loads images from \texttt{blob:} URLs, which our Content-Security-Policy blocks
 (A.3). After widening the policy we restored the old one on purpose and watched the browser test go
 red with the browser's own CSP message, so the test is known to catch it.
 
-\textbf{Do not close what is not proven.} A tag-field browser test failed twice in full runs and
-never alone. Tom Select's source showed a 300\,ms refresh delay that explains it; the fix removed the
-delay, but no test could reproduce the failure first, so \texttt{DEBT-023} stays open with the
-finding and the trigger for reopening it.
+\textbf{Do not close what is not proven --- then prove it.} A tag-field browser test failed in 2
+of 5 full runs and never alone. A first fix removed a 300\,ms refresh delay found in Tom Select's
+source, but no test went red without it, so \texttt{DEBT-023} stayed \emph{open}, with that written
+down. Logging during the test changed the timing and hid the fault, so we recorded the field's
+state only \emph{after} a failure: the tag list had reopened with a stored tag lit. Reading the
+library again found the mechanism --- \texttt{open()} calls \texttt{focus()}, whose handler reopens
+the list a moment later --- and the same fault was then reproduced by hand in Chrome on the stand.
+One setting (\texttt{openOnFocus: false}) fixed it: 0 failures in 10 runs. The cause was in the product, not the test: a fast typist could have got the wrong tag.
 
 \section{Version control: code and prompts}
 
@@ -92,6 +95,12 @@ finding and the trigger for reopening it.
 English, the outcome, the human's own edits between turns and the checks that passed, into
 \texttt{docs/ai/journal/}; the \texttt{Stop} hook commits the entry. The author is resolved from the
 Git identity. The original prompt is kept beside the translation: it is the artefact.
+
+\textbf{The journal is tested like the code.} Choosing the sample prompts below, we found two
+entries whose English rendering belonged to a different prompt: a prompt sent while a turn was
+running overwrote the rendering of the first. That is \texttt{DEBT-027}: four \texttt{JournalTest}
+cases red first, then one rendering per prompt in order. The spoiled entries were not rewritten ---
+a note in the journal of 9 October corrects them, because the journal is a record, not a draft.
 
 \textbf{Commits say what they deliver.} \texttt{<type>(<scope>): <subject> [FR-\ldots]}; a
 \texttt{feat} or \texttt{fix} must name its feature and requirement, checked by the
@@ -113,8 +122,8 @@ generated files are resolved by running the generator, never by hand.
 (\texttt{docs/ai/workflow.md}); a test green before the change is reported as a guard, not as
 evidence. Test names are sentences
 (\texttt{a\_refused\_file\_is\_marked\_beside\_the\_file\_field\_and\_must\_be\_chosen\_again}).
-Today: 635 application tests and 352 for the tools; 51 browser tests in Chromium with axe at four
-widths; query-count tests that fail when a page's queries grow with its rows; mutation testing
+Today: 638 application tests and 356 for the tools; 151 browser tests in Chromium with axe
+at four widths; query-count tests that fail when a page's queries grow with its rows; mutation testing
 (PIT, 130 of 132 mutants killed, the two survivors explained); property-based tests (jqwik, 1000
 generated titles in English, Hindi and Tamil).
 
