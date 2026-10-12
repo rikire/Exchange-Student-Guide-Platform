@@ -5,7 +5,7 @@ status: done
 covers: [FR-033, FR-034]
 slice: articleview
 routes: ["GET /articles", "GET /articles/{title}"]
-tables: [article, article_tag, tag]
+tables: [article, article_tag, tag, media_asset]
 code:
   - app/src/main/java/in/ac/iitm/guide/articleview/web/ArticleListController.java
   - app/src/main/java/in/ac/iitm/guide/articleview/persistence/ArticleListRepository.java
@@ -17,6 +17,10 @@ code:
   - app/src/main/resources/db/migration/V8__add_article_view_count_and_pin_position.sql
   - app/src/main/resources/templates/articleview/ArticleList.html
   - app/src/main/resources/templates/home/Landing.html
+  - app/src/main/java/in/ac/iitm/guide/media/MediaAssets.java
+  - app/src/main/java/in/ac/iitm/guide/media/ArticleDocument.java
+  - app/src/main/java/in/ac/iitm/guide/backup/internal/SeedRunner.java
+  - app/src/main/resources/data/seed/attachments/
 tests:
   - app/src/test/java/in/ac/iitm/guide/articleview/ArticleListTest.java
   - app/src/test/java/in/ac/iitm/guide/articleview/ArticleViewCountTest.java
@@ -42,6 +46,9 @@ ordered and narrowed, and for "most viewed" as one of the orders.
 3. The reader switches to "Recently updated" or "Most viewed", or picks a tag. The address carries the
    choice (`/articles?sort=views&tag=visa`), so it can be sent to someone.
 4. Each opening of an article's page by anyone but the signed-in moderator adds one view.
+5. Under the first page, "Documents & slides" lists every PDF attached to a published article by
+   name, each opening in a new tab, with its size and a link to its article. The seed puts the Study
+   in India dashboard slides on the SII dashboard article and the sample e-Visa form on the visa one.
 
 ## Routes
 
@@ -69,6 +76,12 @@ V8 ([ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md)):
   as ADR-0017 did for tag visits).
 - **A view is counted by `ArticleViewRepository`**, apart from `ArticleReadRepository`, which stays
   read only.
+- **Documents are the PDFs already attached to articles** (the human, 12 Oct), not a list of their
+  own: no table, the schema being frozen, and a moderator adds one through the existing attachment
+  field. Only PDF, as CON-006 accepts no slide format; a deck is saved as PDF first. Up to 50, as
+  the list's page; only under the first page, whatever the order or tag.
+- **The list keeps its name "All articles"** (the human, 12 Oct, after "Library" and "Resources" were
+  proposed).
 
 ## Acceptance criteria
 
@@ -78,6 +91,9 @@ V8 ([ADR-0021](../architecture/adr/ADR-0021-article-views-and-pin-order.md)):
 - [x] A reader's view adds one; the moderator's does not; a `404` counts nothing.
 - [x] `views` and `pin` import, export and round-trip; a file without them has none.
 - [x] The list's query count does not grow with the number of articles (ADR-0010).
+- [x] Every PDF on a published article is listed under the documents with a link to its article; a
+      removed article's and a photo are not.
+- [x] The seed attaches the two PDFs to their articles, and seeding again attaches nothing twice.
 
 **Fixed 2 Oct:** narrowed to a tag in the default A–Z order, the list answered `500` on the PostgreSQL stand: `select distinct` ordered by `lower(title)` is refused there and accepted by H2. The tag is now matched in an `exists` subquery. `ArticleListTest.narrowed_to_a_tag_only_the_articles_carrying_it_are_listed` was red under `-P postgres` before the change; the whole suite passes on PostgreSQL after it.
 

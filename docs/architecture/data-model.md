@@ -120,6 +120,7 @@ file, its metadata as YAML front matter, the body after it. Decided 25 Sep.
 | `pinned` | `pinned_at` | no | a date or a timestamp; a file without the key is not pinned |
 | `pin` | `pin_position` | with `pinned` | the place in the pinned section, from 1 (FR-025, ADR-0021); an import without it numbers the pinned articles by `pinned` |
 | `views` | `view_count` | no | a whole number; a file without the key starts at 0 (FR-034, ADR-0021) |
+| `attachments` | `media_asset` | no | a list of file names beside the archive (in the seed, `data/seed/attachments/`); each is attached to the article through `media`, which reads its type and applies its limit (FR-033, 12 Oct); not written by an export yet |
 | `author` | nowhere | no | who wrote a seed draft; read and dropped, and never written by an export |
 
 Any other key refuses the file. A removed article (`removed_at`) is not exported, and an import does

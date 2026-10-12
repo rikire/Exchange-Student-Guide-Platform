@@ -45,8 +45,8 @@ ones carrying `-- trace:`. Routes and tables come from the feature files that co
 | FR-030 | done | FEAT-002 | ArticleController | ArticleControllerTest, BrowserPrintTest |  | GET /articles/{title} | article, article_tag, tag | Saving an article as a PDF |
 | FR-031 | done | FEAT-015 | LandingReadRepository, TagBrowseService, TagController, TagRepository | BrowserTagIndexTest, LandingControllerTest, TagBrowseTest | V7__add_tag_visit_count | GET /, GET /tags/{tag} | article, article_tag, tag | Tags ordered by visits, with their article counts |
 | FR-032 | done | FEAT-016 | PhotoViewer | BrowserPhotoViewerTest |  | GET /articles/{title}, GET /moderate/submissions/{number} |  | Viewing photos full screen |
-| FR-033 | done | FEAT-018 | ArticleList, ArticleListController, ArticleListRepository | ArticleCardTest, ArticleListTest, PageQueryCountTest |  | GET /articles, GET /articles/{title} | article, article_tag, tag | Browsing every article |
-| FR-034 | done | FEAT-018 | ArticleController, ArticleViewRepository | ArticleArchiveTest, ArticleViewCountTest, SeedRunnerTest | V8__add_article_view_count_and_pin_position | GET /articles, GET /articles/{title} | article, article_tag, tag | Counting an article's views |
+| FR-033 | done | FEAT-018 | ArticleDocument, ArticleList, ArticleListController, ArticleListRepository | ArticleCardTest, ArticleListTest, PageQueryCountTest, SeedRunnerTest |  | GET /articles, GET /articles/{title} | article, article_tag, media_asset, tag | Browsing every article |
+| FR-034 | done | FEAT-018 | ArticleController, ArticleViewRepository | ArticleArchiveTest, ArticleViewCountTest, SeedRunnerTest | V8__add_article_view_count_and_pin_position | GET /articles, GET /articles/{title} | article, article_tag, media_asset, tag | Counting an article's views |
 | FR-035 | done | FEAT-022 | AboutController | AboutPagesTest, SiteHeaderTest |  | GET /developers, GET /oge-team |  | Pages about the OGE team and the developers |
 
 ## Non-functional requirements

@@ -273,6 +273,9 @@ there is no way to browse tags.
 over the screen's three; `GET /tags` by name with counts, up to 500; a `<details>` menu below
 1024 px. Recorded in FEAT-008.
 
+**12 Oct:** "Browse tags" removed from the header by the human; the tags are reached from the list
+of all articles, which filters by them, and from the landing page's "All tags →". `GET /tags` stays.
+
 ### 2.2 All articles, not just the newest twelve (F-7)
 
 The landing page shows the twelve newest; the other 24 are reachable only by search or tag, and

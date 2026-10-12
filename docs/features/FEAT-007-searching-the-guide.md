@@ -48,7 +48,7 @@ changed. With nothing matched it says so and points to browsing by tag, as `Sear
 draws it.
 
 **Header search, 9 Oct** (the human): every reader's page also carries a small search box in the
-header, between the site's name and the six links: 139 px at 1280 px so the row holds, wider as the
+header, between the site's name and the header's links: 139 px at 1280 px so the row holds, wider as the
 window grows, up to 400 px, and on a row of its own on a phone. A page that
 holds its own box (the landing page, the results, the not-found page) hides it, so no page shows
 two. It is a way into this route, not a change to what the route answers; the moderator's header

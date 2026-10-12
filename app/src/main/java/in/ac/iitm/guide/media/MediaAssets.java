@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -66,6 +67,27 @@ public class MediaAssets {
      */
     @Transactional
     public MediaItem attach(UUID submissionId, Upload upload) {
+        var asset = stored(upload);
+        asset.setSubmissionId(submissionId);
+        return item(assets.save(asset));
+    }
+
+    /**
+     * As {@link #attach}, but straight onto a published article, with no submission to approve: for an
+     * import, whose articles are published as they are read (NFR-004).
+     *
+     * @return the stored asset
+     * @throws MediaRejectedException if the file is not of an accepted type or is over its limit
+     */
+    @Transactional
+    public MediaItem attachToArticle(UUID articleId, Upload upload) {
+        var asset = stored(upload);
+        asset.setArticleId(articleId);
+        return item(assets.save(asset));
+    }
+
+    /** Checks the file, writes it to the media root and returns its row, not yet owned or saved. */
+    private MediaAsset stored(Upload upload) {
         try {
             var type = typeOf(upload);
             var limit = settings.limitOf(type.kind());
@@ -92,13 +114,12 @@ public class MediaAssets {
             }
 
             var asset = new MediaAsset();
-            asset.setSubmissionId(submissionId);
             asset.setStoredName(storedName);
             asset.setOriginalName(upload.originalName());
             asset.setContentType(type.stored());
             asset.setSizeBytes(size);
             asset.setUploadedAt(OffsetDateTime.now());
-            return item(assets.save(asset));
+            return asset;
         } catch (UnreadablePhotoException e) {
             throw new MediaRejectedException(NOT_ACCEPTED);
         } catch (IOException e) {
@@ -178,6 +199,17 @@ public class MediaAssets {
                     .add(AcceptedType.kindOfStored(asset.getContentType()));
         }
         return kinds;
+    }
+
+    /**
+     * FR-033: the PDFs on published articles, for the list of all articles, by name and at most
+     * {@code limit} of them; a removed article's are left out, as {@code GET /media/{id}} refuses them.
+     */
+    @Transactional(readOnly = true)
+    public List<ArticleDocument> documentsOfPublishedArticles(int limit) {
+        return assets.findPublicOfType(AcceptedType.PDF.stored(), PageRequest.of(0, limit)).stream()
+                .map(asset -> new ArticleDocument(asset.getArticleId(), item(asset)))
+                .toList();
     }
 
     /** @return the assets of an article, oldest first */

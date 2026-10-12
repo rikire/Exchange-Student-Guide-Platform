@@ -19,7 +19,8 @@ routes:
       `404` for a page past the last; the landing page links here
     serves: >-
       FR-033: every article, not only the landing page's newest twelve (walkthrough F-7); `views`
-      orders by FR-034's count
+      orders by FR-034's count; under the first page, "Documents & slides": up to 50 PDFs attached to
+      published articles, each linking to `GET /media/{id}` and to its article (12 Oct)
 
   - methods: [GET]
     path: /articles/{title}

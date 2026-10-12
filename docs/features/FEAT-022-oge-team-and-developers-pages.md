@@ -60,7 +60,7 @@ None. The content is static in the two templates; a change is a commit, not a mo
 - [x] every developer card has a photo and a link to each account the developer has
 - [x] no developer card shows a blank
 - [x] the header links to the OGE team and developers pages
-- [x] on a wide screen the header shows six links
+- [x] on a wide screen the header shows five links (six until 12 Oct, when "Browse tags" left it)
 - [x] every image on the about pages is served from the site
 
 Both pages are also measured by `BrowserLayoutTest` at 320, 768, 1280 and 1920 px with axe, as every

@@ -86,6 +86,15 @@ p a, .article-body a { text-decoration: underline; }
 .wikilink-missing { color: var(--red); }
 
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: var(--space-4); }
+/* FR-033: the documents under the list of all articles, each a card with its name, size and article. */
+.documents { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--line); }
+.documents .section-title { margin-top: 0; }
+.document-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: var(--space-4); }
+.document-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) var(--space-5); background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--maroon); border-radius: var(--radius-card); }
+.document-name { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); font-weight: 700; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
+.document-name:hover span:last-child { text-decoration: underline; }
+.document-badge { flex: none; padding: var(--space-1) var(--space-2); border-radius: 4px; background: var(--maroon); color: var(--paper); font-size: var(--text-small); letter-spacing: 0.06em; }
+.document-meta { margin: 0; color: var(--ink-soft); line-height: 1.5; }
 .article-card {
   display: flex;
   flex-direction: column;

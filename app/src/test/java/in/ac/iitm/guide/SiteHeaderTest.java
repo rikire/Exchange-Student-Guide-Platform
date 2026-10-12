@@ -11,9 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Walkthrough fix 2.1 (F-6): the header of every public page leads to all articles, the tags, the
- * tracking page and the form, so a contributor who closed the confirmation can still find their
- * submission.
+ * Walkthrough fix 2.1 (F-6): the header of every public page leads to all articles, the tracking
+ * page and the form, so a contributor who closed the confirmation can still find their submission. The
+ * tags are reached from the list of all articles and the landing page instead (the human, 12 Oct).
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,15 +25,24 @@ class SiteHeaderTest {
     @ParameterizedTest
     @ValueSource(strings = {"/", "/articles", "/tags", "/search?q=frro", "/submit", "/submissions/status"})
     // trace:FR-009
-    void the_header_links_to_articles_tags_tracking_and_the_form(String path) throws Exception {
+    void the_header_links_to_articles_tracking_and_the_form(String path) throws Exception {
         var page = mockMvc.perform(get(path)).andReturn().getResponse().getContentAsString();
         var header = page.substring(page.indexOf("<header"), page.indexOf("</header>"));
 
         assertThat(header)
                 .contains("href=\"/articles\"")
-                .contains("href=\"/tags\"")
                 .contains("href=\"/submissions/status\"")
                 .contains("href=\"/submit\"");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/", "/articles", "/tags"})
+    // trace:FR-009
+    void the_header_does_not_link_to_the_tag_index(String path) throws Exception {
+        var page = mockMvc.perform(get(path)).andReturn().getResponse().getContentAsString();
+        var header = page.substring(page.indexOf("<header"), page.indexOf("</header>"));
+
+        assertThat(header).doesNotContain("href=\"/tags\"");
     }
 
     @ParameterizedTest

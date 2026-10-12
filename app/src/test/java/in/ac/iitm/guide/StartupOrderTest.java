@@ -2,8 +2,10 @@ package in.ac.iitm.guide;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import in.ac.iitm.guide.media.MediaTestFiles;
 import in.ac.iitm.guide.shared.persistence.Article;
 import jakarta.persistence.EntityManagerFactory;
+import java.io.IOException;
 import org.hibernate.search.mapper.orm.Search;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -20,9 +22,12 @@ import org.springframework.test.context.ActiveProfiles;
 /**
  * F-1 (walkthrough fix 1.6): the guide answers its first request only once the seed is imported and
  * the search index holds it, so a search right after a start from empty volumes sees every article.
- * What the database and the index hold is read at the moment the web server starts.
+ * What the database and the index hold is read at the moment the web server starts. The seed's PDFs
+ * need the document and volume limits of a stand, not the few KB the other tests use.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {"guide.media.document-limit=20MB", "guide.media.volume-limit=100MB"})
 @ActiveProfiles("seed")
 @Import(StartupOrderTest.AtWebServerStart.class)
 class StartupOrderTest {
@@ -57,7 +62,9 @@ class StartupOrderTest {
     // Under -P postgres every context shares one database, and the seed's articles would collide
     // with the titles the next class publishes.
     @AfterEach
-    void clearTheSeed() {
+    void clearTheSeed() throws IOException {
+        jdbc.execute("DELETE FROM media_asset");
+        MediaTestFiles.empty(MediaTestFiles.ROOT);
         jdbc.execute("DELETE FROM article_tag");
         jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");

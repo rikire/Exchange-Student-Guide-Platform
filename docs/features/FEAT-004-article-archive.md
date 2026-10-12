@@ -106,10 +106,15 @@ links to articles and `/articles/registering-with-frro` returned 200.
 - [x] Export, clear, import gives the same articles: title, address, summary, body, both timestamps
       and tags, for titles needing quotes and a body with its own blank lines
 - [x] The `seed` profile loads at least twenty articles, counted in the database, including the FRRO
-      article, and running it again adds nothing
+      article, and running it again adds nothing, attachments included
+- [x] A file naming an attachment gets it attached to its article; one naming a file the archive lacks
+      fails the import
 - [x] `pinned_at` survives the round trip; only a pinned article carries a `pinned` line; a `pinned`
       that is not a date refuses the file
-- [ ] Media assets travel with the articles (ADR-0007): needs the `media` slice, phase 3
+- [ ] Media assets travel with the articles (ADR-0007). Import half done 12 Oct: a file's
+      `attachments` names files beside it, which the import attaches through `media` (its type and
+      limit apply), and the seed carries two PDFs under `data/seed/attachments/`; a missing one fails
+      the import. The export does not write them yet
 
 ## Deliberately out of scope
 

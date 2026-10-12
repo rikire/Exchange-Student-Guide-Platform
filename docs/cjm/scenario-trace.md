@@ -41,8 +41,8 @@ Found while writing this trace, 10 September.
 
 Steps 1–4 chain: the landing page offers search, search results link to the article, the article
 renders wiki links. Step 5 does not chain to step 4. The article screen's only actions are
-**Download** (on the media asset) and **Report this article**; its header offers **Browse tags**,
-**Submit an article** and **Track a submission**. "Submit an article" starts a *new* article
+**Download** (on the media asset) and **Report this article**; its header offers **All articles**,
+**Submit an article** and **Track a submission** ("Browse tags" left it on 12 Oct). "Submit an article" starts a *new* article
 (FR-010) — the submission form is shared between new and edit, but nothing on an article page puts
 a reader into its edit mode.
 

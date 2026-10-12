@@ -29,7 +29,7 @@ public final class FrontMatter {
      * and dropped rather than rejected — the seed files carry it and the archive does not.
      */
     private static final Set<String> KEYS =
-            Set.of("title", "summary", "tags", "author", "created", "updated", "pinned", "pin", "views");
+            Set.of("title", "summary", "tags", "author", "created", "updated", "pinned", "pin", "views", "attachments");
 
     private static final Pattern FILE =
             Pattern.compile("\\A---\\R(?<yaml>.*?)\\R---(?:\\R|\\z)(?<rest>.*)\\z", Pattern.DOTALL);
@@ -70,12 +70,13 @@ public final class FrontMatter {
         return new ArchivedArticle(
                 title,
                 text(fileName, fields, "summary"),
-                tags(fileName, fields.get("tags")),
+                texts(fileName, "tags", fields.get("tags"), "[visa, admin]"),
                 date(fileName, fields, "created"),
                 date(fileName, fields, "updated"),
                 pinned,
                 pin,
                 fields.get("views") == null ? 0 : whole(fileName, fields, "views", 0),
+                texts(fileName, "attachments", fields.get("attachments"), "[\"Arrival slides.pdf\"]"),
                 body);
     }
 
@@ -137,22 +138,23 @@ public final class FrontMatter {
         return string;
     }
 
-    private static List<String> tags(String fileName, Object value) {
+    /** A list of text, such as the tags or the attachments' file names; absent is empty. */
+    private static List<String> texts(String fileName, String key, Object value, String example) {
         if (value == null) {
             return List.of();
         }
         if (!(value instanceof List<?> list)) {
-            throw new ArchiveFormatException(fileName + ": \"tags\" must be a list such as [visa, admin]");
+            throw new ArchiveFormatException(fileName + ": \"" + key + "\" must be a list such as " + example);
         }
-        var tags = new ArrayList<String>();
+        var texts = new ArrayList<String>();
         for (var element : list) {
-            if (!(element instanceof String tag)) {
-                throw new ArchiveFormatException(fileName + ": the tag " + element
-                        + " must be text, and quoted if it could be read as another type");
+            if (!(element instanceof String text)) {
+                throw new ArchiveFormatException(fileName + ": " + element + " in \"" + key
+                        + "\" must be text, and quoted if it could be read as another type");
             }
-            tags.add(tag);
+            texts.add(text);
         }
-        return tags;
+        return texts;
     }
 
     private static long whole(String fileName, Map<String, Object> fields, String key, long least) {

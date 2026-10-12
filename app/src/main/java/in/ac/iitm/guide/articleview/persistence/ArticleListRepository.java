@@ -30,6 +30,9 @@ public interface ArticleListRepository extends Repository<Article, UUID> {
                     + " and exists (select 1 from a.tags t where t.name in :names)")
     Page<Article> findPublishedCarrying(Collection<String> names, Pageable page);
 
+    /** The articles the documents under the list belong to, in one query; only published ones. */
+    List<Article> findByIdInAndRemovedAtIsNull(Collection<UUID> ids);
+
     /** The names of the tags published articles carry, for the filter. */
     @Query("select distinct t.name from Article a join a.tags t where a.removedAt is null order by t.name")
     List<String> findTagNamesInUse();

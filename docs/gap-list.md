@@ -46,6 +46,7 @@ flowchart LR
     backlink --> shared
     backlink --> wikilink
     backup --> backlink
+    backup --> media
     backup --> shared
     backup --> taxonomy
     backup --> wikilink
@@ -56,6 +57,7 @@ flowchart LR
     home --> shared
     home --> taxonomy
     home --> wikilink
+    media --> shared
     moderate --> backlink
     moderate --> contribute
     moderate --> media

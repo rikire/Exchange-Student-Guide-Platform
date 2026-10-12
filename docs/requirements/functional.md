@@ -1011,6 +1011,11 @@ most viewed (FR-034), and narrow it to the articles carrying one tag. The order 
 of the address, so a list can be linked to. The landing page links to it. Asked for by the human on
 1 Oct after the walkthrough found most articles reachable only by search or tag (F-7).
 
+Under the first page, the system shall also list every PDF attached to a published article — slides
+and forms alike — each with its size and a link to its article, so the documents are found in one
+place. One is added by attaching it to a new article or an edit, and publishing it (FR-010, FR-011).
+Asked for by the human on 12 Oct.
+
 **Acceptance criteria:**
 
 ```
@@ -1030,6 +1035,10 @@ THEN only that article is listed
 GIVEN a tag no published article carries
 WHEN a reader narrows the list to it
 THEN the list says no article carries it, and offers the full list
+
+GIVEN a PDF attached to a published article, a PDF attached to a removed one, and a photo
+WHEN a reader opens the list of all articles
+THEN only the first PDF is listed under the documents, with a link to its article
 ```
 
 ### FR-034 — Counting an article's views

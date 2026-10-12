@@ -1,6 +1,9 @@
 package in.ac.iitm.guide.articleview.web;
 
 import in.ac.iitm.guide.articleview.persistence.ArticleListRepository;
+import in.ac.iitm.guide.media.ArticleDocument;
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaItem;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.shared.web.DisplayTime;
@@ -9,6 +12,7 @@ import in.ac.iitm.guide.wikilink.ArticleAddress;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -59,15 +63,20 @@ class ArticleListController {
     record Card(
             String title, String summary, String path, List<TagLink> tags, OffsetDateTime updatedAt, String updated) {}
 
+    /** A document under the list: the file, and the article it is attached to. */
+    record DocumentCard(MediaItem file, String articleTitle, String articlePath) {}
+
     /** An order or a tag the reader can switch to, and whether it is the one shown. */
     record Choice(String label, String href, boolean current) {}
 
     private final ArticleListRepository articles;
     private final DisplayTime displayTime;
+    private final MediaAssets media;
 
-    ArticleListController(ArticleListRepository articles, DisplayTime displayTime) {
+    ArticleListController(ArticleListRepository articles, DisplayTime displayTime, MediaAssets media) {
         this.articles = articles;
         this.displayTime = displayTime;
+        this.media = media;
     }
 
     @GetMapping("/articles")
@@ -126,7 +135,30 @@ class ArticleListController {
         model.addAttribute("pages", found.getTotalPages());
         model.addAttribute("previous", page > 1 ? address(order, wanted, page - 1) : null);
         model.addAttribute("next", found.hasNext() ? address(order, wanted, page + 1) : null);
+        // Under the first page only, whatever the order or the tag: one place to find every document.
+        model.addAttribute("documents", page == 1 ? documents() : List.of());
         return "articleview/ArticleList";
+    }
+
+    /** Two queries whatever the number of documents: theirs, then their articles' titles. */
+    private List<DocumentCard> documents() {
+        var attached = media.documentsOfPublishedArticles(PAGE_SIZE);
+        if (attached.isEmpty()) {
+            return List.of();
+        }
+        var owners = articles
+                .findByIdInAndRemovedAtIsNull(
+                        attached.stream().map(ArticleDocument::articleId).collect(Collectors.toSet()))
+                .stream()
+                .collect(Collectors.toMap(Article::getId, article -> article));
+        return attached.stream()
+                .filter(document -> owners.containsKey(document.articleId()))
+                .map(document -> {
+                    var article = owners.get(document.articleId());
+                    return new DocumentCard(
+                            document.document(), article.getTitle(), ArticleAddress.pathOf(article.getSlug()));
+                })
+                .toList();
     }
 
     private Card card(Article article) {

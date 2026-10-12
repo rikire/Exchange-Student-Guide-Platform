@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
@@ -35,6 +36,9 @@ import org.springframework.jdbc.core.RowCallbackHandler;
  */
 @SpringBootTest
 class ArticleArchiveTest {
+
+    /** Enough of a PDF for the type to be read from its bytes, as an upload's is. */
+    private static final byte[] PDF = "%PDF-1.4\n%%EOF\n".getBytes(StandardCharsets.US_ASCII);
 
     @Autowired
     private ArticleArchive archive;
@@ -47,6 +51,7 @@ class ArticleArchiveTest {
 
     @AfterEach
     void clearTheDatabase() {
+        jdbc.execute("DELETE FROM media_asset");
         jdbc.execute("DELETE FROM article_tag");
         jdbc.execute("DELETE FROM article_link");
         jdbc.execute("DELETE FROM article");
@@ -84,6 +89,35 @@ class ArticleArchiveTest {
         assertThat(published("published_at")).isEqualTo(OffsetDateTime.parse("2026-09-21T00:00:00Z"));
         assertThat(published("updated_at")).isEqualTo(OffsetDateTime.parse("2026-09-22T00:00:00Z"));
         assertThat(tagsOfTheOnlyArticle()).containsExactly("admin", "visa");
+    }
+
+    @Test
+    // trace:NFR-004
+    void a_file_naming_an_attachment_gets_that_file_attached_to_its_article() {
+        var text = article("Arrival", "tags: []", "Text.\n")
+                .replace("updated: 2026-09-21\n", "updated: 2026-09-21\nattachments: [\"Arrival slides.pdf\"]\n");
+
+        archive.importFiles(Map.of("a.md", text), Map.of("Arrival slides.pdf", new ByteArrayResource(PDF)));
+
+        assertThat(jdbc.queryForMap("SELECT a.title, m.original_name, m.content_type FROM media_asset m"
+                        + " JOIN article a ON a.id = m.article_id"))
+                .containsEntry("TITLE", "Arrival")
+                .containsEntry("ORIGINAL_NAME", "Arrival slides.pdf")
+                .containsEntry("CONTENT_TYPE", "application/pdf");
+    }
+
+    @Test
+    // trace:NFR-004
+    void a_file_naming_an_attachment_the_archive_lacks_is_refused_and_nothing_is_imported() {
+        var text = article("Arrival", "tags: []", "Text.\n")
+                .replace("updated: 2026-09-21\n", "updated: 2026-09-21\nattachments: [\"missing.pdf\"]\n");
+
+        assertThatThrownBy(() -> archive.importFiles(Map.of("a.md", text), Map.of()))
+                .isInstanceOf(ArchiveFormatException.class)
+                .hasMessageContaining("a.md")
+                .hasMessageContaining("missing.pdf");
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM article", Integer.class))
+                .isZero();
     }
 
     @Test

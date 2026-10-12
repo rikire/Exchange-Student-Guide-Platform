@@ -4,6 +4,9 @@ import in.ac.iitm.guide.backlink.ArticleTextChanged;
 import in.ac.iitm.guide.backup.internal.ArchivedArticle;
 import in.ac.iitm.guide.backup.internal.FrontMatter;
 import in.ac.iitm.guide.backup.persistence.ArchiveArticleRepository;
+import in.ac.iitm.guide.media.MediaAssets;
+import in.ac.iitm.guide.media.MediaRejectedException;
+import in.ac.iitm.guide.media.Upload;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.shared.persistence.Tag;
 import in.ac.iitm.guide.taxonomy.TagRejectedException;
@@ -24,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -49,11 +54,13 @@ public class ArticleArchive {
     private final ArchiveArticleRepository articles;
     private final Tags tags;
     private final ApplicationEventPublisher events;
+    private final MediaAssets media;
 
-    ArticleArchive(ArchiveArticleRepository articles, Tags tags, ApplicationEventPublisher events) {
+    ArticleArchive(ArchiveArticleRepository articles, Tags tags, ApplicationEventPublisher events, MediaAssets media) {
         this.articles = articles;
         this.tags = tags;
         this.events = events;
+        this.media = media;
     }
 
     /**
@@ -63,6 +70,19 @@ public class ArticleArchive {
      */
     @Transactional
     public ImportReport importFiles(Map<String, String> files) {
+        return importFiles(files, Map.of());
+    }
+
+    /**
+     * As {@link #importFiles(Map)}, and each file named in an article's {@code attachments} is attached
+     * to that article through {@code media}, which reads its type and applies its limit as for an
+     * upload. A name with no file, or a file {@code media} refuses, fails the whole import. A skipped
+     * article gets nothing, so importing twice attaches nothing twice.
+     *
+     * @param attachments the files beside the archive, by file name
+     */
+    @Transactional
+    public ImportReport importFiles(Map<String, String> files, Map<String, ? extends Resource> attachments) {
         var imported = 0;
         var skipped = new ArrayList<String>();
         // Sorted, so the same input always fails on the same file.
@@ -91,6 +111,7 @@ public class ArticleArchive {
             article.setViewCount(parsed.views());
             article.setTags(tagsNamed(file.getKey(), parsed.tags()));
             articles.save(article);
+            attach(file.getKey(), article.getId(), parsed.attachments(), attachments);
             events.publishEvent(new ArticleTextChanged(article.getId()));
             imported++;
         }
@@ -172,6 +193,7 @@ public class ArticleArchive {
                 article.getPinnedAt(),
                 article.getPinPosition(),
                 article.getViewCount(),
+                List.of(),
                 article.getBody());
     }
 
@@ -180,6 +202,23 @@ public class ArticleArchive {
             Files.writeString(file, FrontMatter.render(article), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
             throw new UncheckedIOException("cannot write " + file, e);
+        }
+    }
+
+    private void attach(
+            String fileName, UUID articleId, List<String> names, Map<String, ? extends Resource> attachments) {
+        for (var name : names) {
+            var file = attachments.get(name);
+            if (file == null) {
+                throw new ArchiveFormatException(fileName + ": the attachment \"" + name + "\" is not in the archive");
+            }
+            try {
+                media.attachToArticle(articleId, new Upload(name, file.contentLength(), file));
+            } catch (MediaRejectedException e) {
+                throw new ArchiveFormatException(fileName + ": the attachment \"" + name + "\": " + e.getMessage());
+            } catch (IOException e) {
+                throw new UncheckedIOException("cannot read the attachment " + name, e);
+            }
         }
     }
 

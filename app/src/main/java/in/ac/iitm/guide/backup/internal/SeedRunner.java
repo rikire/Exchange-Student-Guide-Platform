@@ -10,12 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.context.WebServerGracefulShutdownLifecycle;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 /**
  * Loads the starter articles under {@code data/seed/} when the application starts with the
- * {@code seed} profile. The seed is on the classpath, so inside a jar it is not a directory and goes
+ * {@code seed} profile, with the files under {@code data/seed/attachments/} that their front matter
+ * names. The seed is on the classpath, so inside a jar it is not a directory and goes
  * through {@link ArticleArchive#importFiles} rather than {@code importFrom}. Running it again is
  * harmless: an article already there is skipped.
  *
@@ -66,8 +68,13 @@ public class SeedRunner implements SmartLifecycle {
 
     public void seed() {
         var files = new TreeMap<String, String>();
+        var attachments = new TreeMap<String, Resource>();
+        var resolver = new PathMatchingResourcePatternResolver();
         try {
-            for (var resource : new PathMatchingResourcePatternResolver().getResources("classpath:data/seed/*.md")) {
+            for (var resource : resolver.getResources("classpath:data/seed/attachments/*")) {
+                attachments.put(resource.getFilename(), resource);
+            }
+            for (var resource : resolver.getResources("classpath:data/seed/*.md")) {
                 // The README describes the directory; it is the one file there that is not an article.
                 if (!"README.md".equals(resource.getFilename())) {
                     files.put(resource.getFilename(), resource.getContentAsString(StandardCharsets.UTF_8));
@@ -76,7 +83,7 @@ public class SeedRunner implements SmartLifecycle {
         } catch (IOException e) {
             throw new UncheckedIOException("cannot read the seed articles", e);
         }
-        var report = archive.importFiles(files);
+        var report = archive.importFiles(files, attachments);
         log.info(
                 "Seed: {} articles imported, {} already there",
                 report.imported(),

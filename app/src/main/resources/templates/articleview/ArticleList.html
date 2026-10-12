@@ -47,6 +47,22 @@
       <span th:text="'Page ' + ${page} + ' of ' + ${pages}">Page 1 of 2</span>
       <a th:if="${next}" th:href="@{${next}}" rel="next">Next →</a>
     </nav>
+
+    <!-- FR-033: every PDF attached to a published article, slides and forms alike, each leading to the
+         article that explains it. A moderator adds one by attaching it when publishing an article. -->
+    <section class="documents" aria-labelledby="documents-title" th:if="${!documents.isEmpty()}">
+      <h2 id="documents-title" class="section-title">Documents &amp; slides</h2>
+      <ul class="document-list">
+        <li class="document-card" th:each="doc : ${documents}">
+          <a class="document-name" th:href="@{${doc.file.href}}" target="_blank" rel="noopener">
+            <span class="document-badge" aria-hidden="true">PDF</span>
+            <span th:text="${doc.file.originalName}">Sample form.pdf</span>
+          </a>
+          <p class="document-meta"><span th:text="${doc.file.size}">3.6 MB</span> · from
+            <a th:href="@{${doc.articlePath}}" th:text="${doc.articleTitle}">Applying for Your Student Visa</a></p>
+        </li>
+      </ul>
+    </section>
     <th:block th:replace="~{shared/web/LocalTime :: assets}"></th:block>
   </main>
 </body>

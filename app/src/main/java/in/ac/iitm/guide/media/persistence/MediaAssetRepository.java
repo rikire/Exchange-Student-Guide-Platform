@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +23,14 @@ public interface MediaAssetRepository extends JpaRepository<MediaAsset, UUID> {
     @Query("SELECT m FROM MediaAsset m WHERE m.id = :id AND m.articleId IN"
             + " (SELECT a.id FROM Article a WHERE a.removedAt IS NULL)")
     Optional<MediaAsset> findPublic(@Param("id") UUID id);
+
+    /**
+     * The assets of one stored type on articles that are published and not removed, by name, as many
+     * as {@code page} allows (ADR-0010: a public list is bounded).
+     */
+    @Query("SELECT m FROM MediaAsset m WHERE m.contentType = :type AND m.articleId IN"
+            + " (SELECT a.id FROM Article a WHERE a.removedAt IS NULL) ORDER BY lower(m.originalName)")
+    List<MediaAsset> findPublicOfType(@Param("type") String contentType, Pageable page);
 
     /** DEBT-016: the assets of submissions rejected before that moment; never a pending or published one. */
     @Query("SELECT m FROM MediaAsset m WHERE m.submissionId IN (SELECT s.id FROM Submission s"

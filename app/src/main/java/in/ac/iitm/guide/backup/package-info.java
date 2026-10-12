@@ -5,7 +5,9 @@
  * <p>Serves NFR-004. Published: {@link in.ac.iitm.guide.backup.ArticleArchive}, with its
  * {@link in.ac.iitm.guide.backup.ImportReport} and {@link in.ac.iitm.guide.backup.ArchiveFormatException}.
  *
- * <p><strong>Not built yet:</strong> media travelling with the articles, and any way for the admin to
+ * <p>An import attaches the files an article's {@code attachments} names, through {@code media}.
+ *
+ * <p><strong>Not built yet:</strong> an export writing those files, and any way for the admin to
  * start an export — that waits for the admin panel in phase 4. Today an export is called from code, and an import runs from the
  * {@code seed} profile.
  */

@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ class ArticleListTest {
 
     @AfterEach
     void clearTheDatabase() {
+        jdbc.execute("DELETE FROM media_asset");
         jdbc.execute("DELETE FROM article_tag");
         jdbc.execute("DELETE FROM submission_tag");
         jdbc.execute("DELETE FROM submission");
@@ -147,6 +149,56 @@ class ArticleListTest {
     // trace:FR-033
     void the_landing_page_links_to_the_list() throws Exception {
         assertThat(page("/")).contains("href=\"/articles\"");
+    }
+
+    @Test
+    // trace:FR-033
+    void every_pdf_attached_to_a_published_article_is_listed_under_documents_with_a_link_to_its_article()
+            throws Exception {
+        publish("Applying for Your Student Visa", NOW);
+        var id = attach("applying-for-your-student-visa", "Sample eVisa form.pdf", "application/pdf");
+
+        var documents = documents(page("/articles"));
+
+        assertThat(documents)
+                .contains("Sample eVisa form.pdf")
+                .contains("href=\"/media/" + id + "\"")
+                .contains("href=\"/articles/applying-for-your-student-visa\"");
+    }
+
+    @Test
+    // trace:FR-033
+    void neither_a_removed_articles_pdf_nor_a_photo_is_listed_under_documents() throws Exception {
+        publish("Old hostel rules", NOW);
+        attach("old-hostel-rules", "Old rules.pdf", "application/pdf");
+        jdbc.update("UPDATE article SET removed_at = ? WHERE slug = ?", NOW, "old-hostel-rules");
+        publish("Campus landmarks", NOW);
+        attach("campus-landmarks", "Gajendra Circle.jpg", "image/jpeg");
+
+        var list = page("/articles");
+
+        assertThat(list).doesNotContain("Old rules.pdf", "Gajendra Circle.jpg", "Documents &amp; slides");
+    }
+
+    private UUID attach(String slug, String name, String contentType) {
+        var id = UUID.randomUUID();
+        jdbc.update(
+                "INSERT INTO media_asset (id, article_id, stored_name, original_name, content_type, size_bytes,"
+                        + " uploaded_at) VALUES (?, (SELECT id FROM article WHERE slug = ?), ?, ?, ?, ?, ?)",
+                id,
+                slug,
+                id + ".pdf",
+                name,
+                contentType,
+                2048,
+                NOW);
+        return id;
+    }
+
+    /** The documents section of a list page, or an empty string when the page has none. */
+    private static String documents(String page) {
+        var start = page.indexOf("<section class=\"documents\"");
+        return start < 0 ? "" : page.substring(start, page.indexOf("</section>", start));
     }
 
     private String page(String path) throws Exception {
