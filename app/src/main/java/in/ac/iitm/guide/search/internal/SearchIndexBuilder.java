@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * The index is a directory on disk kept between starts (ADR-0004), and every write goes through JPA
- * and is indexed on commit. An empty index — the first start, or a lost {@code guide-index} volume —
- * is filled from the {@code article} table here; one that has documents is left as it is (decided by
- * the human, 28 Sep).
+ * and is indexed on commit. At every start it is dropped and built again from the {@code article}
+ * table (decided by the human, 5 Oct, reversing 28 Sep): an index an older version wrote may hold
+ * another mapping, which Lucene refuses to write into, and the demo rehearsal's approval answered
+ * {@code 500} for it. The guide's few hundred articles make that cheap.
  *
  * <p>It runs as the context starts: after anything that writes articles at start-up, such as the
  * seed, and before the web server, so the first request already searches every article
@@ -57,22 +58,14 @@ class SearchIndexBuilder implements SmartLifecycle {
     }
 
     private void build() {
-        long documents;
-        try (var entityManager = entityManagerFactory.createEntityManager()) {
-            documents = Search.session(entityManager)
-                    .search(Article.class)
-                    .where(f -> f.matchAll())
-                    .fetchTotalHitCount();
-        }
-        if (documents > 0) {
-            log.info("Search index holds {} articles; not rebuilt", documents);
-            return;
-        }
-        log.info("Search index is empty; building it from the article table");
+        log.info("Building the search index from the article table");
         try {
+            // Dropping the schema, not only purging documents: Lucene keeps a field's settings in
+            // its segments, and those are what a changed mapping conflicts with.
             Search.mapping(entityManagerFactory)
                     .scope(Article.class)
                     .massIndexer()
+                    .dropAndCreateSchemaOnStart(true)
                     .startAndWait();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

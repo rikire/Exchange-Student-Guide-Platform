@@ -109,6 +109,22 @@ Decided by the human while `search` was being built.
   and an index on disk would outlive it.
 - **An empty index is filled from the `article` table at start-up**, and one that has documents is
   left alone. That is the reindex step named above: after a restore or a change to the mapping, the
-  volume is removed and the application started again.
+  volume is removed and the application started again. *Reversed on 5 October, below.*
 - **The `search` slice publishes no type yet**, since no other slice calls search
   ([architecture-rules.md](../../ai/architecture-rules.md)); "Reversal" above holds once one does.
+
+## Amended 5 October, after the demo rehearsal
+
+Decided by the human. The mapping changed on 2 Oct (term vectors on `title`, to mark a matched word
+in it) and the stand's index, written before, was kept because it had documents. The step "remove the
+volume after a change to the mapping" was written down and not done; the first approval on the stand
+then answered `500`, since Lucene refuses a field whose settings differ from the ones its segments
+hold.
+
+- **The index is dropped and built again from the `article` table at every start**
+  (`SearchIndexBuilder`, `dropAndCreateSchemaOnStart`). No step is left to remember after a mapping
+  change or a restore. The cost is the start: the guide holds tens of articles, and NFR-002's load
+  check runs with 100.
+- **The directory stays on disk in `guide-index`**, so a running stand still answers from it; what
+  changes is only that a start no longer trusts what an older version left there.
+

@@ -19,6 +19,15 @@
 .cm-s-easymde .cm-link, .cm-s-easymde .cm-url, .cm-s-easymde .cm-quote { color: var(--ink-soft); }
 .cm-s-easymde .cm-tag, .cm-s-easymde .cm-attribute { color: var(--maroon); }
 
+/* A heading in the text pane at the text's own size, bold: EasyMDE sets "## " lines at up to twice
+   the size, and two of them filled half the pane (10 Oct). The preview still shows them as headings. */
+.EasyMDEContainer .cm-s-easymde .cm-header-1,
+.EasyMDEContainer .cm-s-easymde .cm-header-2,
+.EasyMDEContainer .cm-s-easymde .cm-header-3,
+.EasyMDEContainer .cm-s-easymde .cm-header-4,
+.EasyMDEContainer .cm-s-easymde .cm-header-5,
+.EasyMDEContainer .cm-s-easymde .cm-header-6 { font-size: inherit; line-height: inherit; font-weight: 700; }
+
 /* Each control is a 44-px target on every width (NFR-008). The toolbar stays at the top of the
    window while a long body scrolls past it (fix 3.6). */
 .editor-toolbar {

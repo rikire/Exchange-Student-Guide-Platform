@@ -1,0 +1,31 @@
+% The diagrams to bring to the mid-evaluation, one per A4 page, for printing.
+% Rendered from docs/diagrams/src/ by scripts/diagrams.sh; rebuild this after re-rendering them.
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=0.5in]{geometry}
+\usepackage{graphicx}
+\usepackage{pdflscape}
+\pagestyle{empty}
+\newcommand{\diagram}[3]{%
+  \centering{\large\bfseries #1}\par\vspace{0.4em}
+  {\small #2}\par\vspace{0.8em}
+  \includegraphics[width=\linewidth,height=0.86\textheight,keepaspectratio]{../../diagrams/out/#3}}
+
+\begin{document}
+\diagram{1. Containers (C4 level 2)}{Exchange Student Guide, CS5013 --- Mikhail Novikov, Abdirakhim
+Ismailov. One Spring Boot process, a database, a search index on disk, a directory of uploads.}{c4-container.png}
+
+\begin{landscape}
+\diagram{2. Thirteen slices, grouped by who they serve}{Each slice is a package; one may use
+another's published types only, enforced by \texttt{ModularityTest} and ArchUnit.}{slices-overview.png}
+\end{landscape}
+
+\begin{landscape}
+\diagram{3. The main flow: an edit, from the student to the published article}{Each step names
+the class that does it.}{main-flow.png}
+\end{landscape}
+
+\begin{landscape}
+\diagram{4. Every arrow between slices, with what crosses it (C4 level 3)}{The same arrows
+Spring Modulith draws from the imports (\texttt{c4-component-actual}).}{c4-component.png}
+\end{landscape}
+\end{document}

@@ -112,7 +112,9 @@ command that errors is worse than one that is absent, because it is tried.
   ```
 
   The original prompt is kept alongside the translation: it is the artefact, and the translation is
-  an interpretation of it. Skip the flag that is already English.
+  an interpretation of it. Skip the flag that is already English. When more prompts arrive during
+  one turn, call it once per prompt, in the order they came: each rendering is paired with the
+  prompt in that position (DEBT-027).
 - **Authorship** — each journal entry names who sent the prompt, resolved from the git identity via
   `docs/team/members.yml`. If the hook says it could not tell, ask which member is at the keyboard
   and record it with `hook author <id>` before doing the work.

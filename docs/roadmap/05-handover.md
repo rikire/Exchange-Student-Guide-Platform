@@ -16,6 +16,10 @@ The stakeholder uses it without us in the room, and both of us can explain the w
 - [ ] `docs/handoff/`: install, run, admin guide, backup and restore, contacts
       — check: written for a non-technical OGE staff member, and tested on someone who has not seen
       the project before
+      **Written 9–10 Oct:** `install.md` (for IT: configuration, HTTPS behind IITM's proxy, updating),
+      `moderator-guide.md` with screenshots from the stand, `backup.md` with `scripts/backup.sh` and
+      `restore.sh` (checked: backup, `down -v`, restore), `contacts.md`; `scripts/upgrade-check.sh`.
+      Left for the check: someone who has not seen the project follows it.
 - [ ] `docs/viva/`: questions and answers per slice — both of us prepare on all of them
       — check: each of us answers cold on a slice the other one wrote, before the day
 - [ ] Final gap list, `docs/course/final.md`, the private peer contribution split

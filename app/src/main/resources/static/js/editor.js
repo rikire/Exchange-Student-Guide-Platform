@@ -85,6 +85,9 @@
     nativeSpellcheck: true,
     status: false,
     sideBySideFullscreen: false,
+    // Seen 10 Oct: the default 300 px left a long article two paragraphs of room. EasyMDE sets this
+    // on the scroller as an inline style, which a stylesheet cannot override.
+    minHeight: 'max(24rem, 60vh)',
     previewClass: ['editor-preview', 'article-body'],
     previewRender: renderOnPause,
     // binded: EasyMDE's own "clear on submit" listener stays off; see the comment at the top.

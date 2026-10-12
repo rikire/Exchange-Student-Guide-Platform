@@ -1,4 +1,6 @@
-PlantUML sources: C4 levels 1-3 and the ERD. Written in phase 1.
+PlantUML sources: C4 levels 1-3 and the ERD, written in phase 1; `slices-overview` (the slices
+grouped by who they serve) and `main-flow` (an edit, from the student to the published article),
+added for the mid-evaluation on 11 October.
 
 Rendered output goes to [`../out/`](../out/). It is **generated and must not be edited by hand** —
 change the `.puml` source and re-run `scripts/diagrams.sh`.
@@ -17,7 +19,8 @@ MIT.
 `ModularityTest` asks Spring Modulith's `Documenter` to write it under `app/target/`, and
 `scripts/diagrams.sh` renders it beside `c4-component`, which is the designed one. Run `./mvnw test`
 before the script, which stops with a message when the file is missing. The two are meant to be
-compared: a dashed box or arrow in `c4-component` is designed and not built yet.
+compared: since 11 October every slice is built and `c4-component` draws the same arrows as the
+imports, so an arrow in one and not the other is drift. Dashed would mean designed and not built.
 
 **Progress is not drawn here.** How much of each slice is done, and the requirements by status, are
 Mermaid diagrams at the top of [`docs/gap-list.md`](../../gap-list.md), written by `ai-tools gaps`

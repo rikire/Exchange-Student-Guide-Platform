@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+  Spring Boot's page for every error that has none of its own (error/404.html has): the site's frame,
+  what happened in one line, and the way back. The demo rehearsal's failed approval showed Tomcat's
+  bare "HTTP Status 500" instead (5 Oct). Nothing from the exception is shown (security.md: no secret
+  in an error page); the log has it.
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/web/Layout :: page(~{::title}, ~{::main})}">
+<head>
+  <title>Something went wrong — Exchange Student Guide</title>
+</head>
+<body>
+  <main class="site-main">
+    <h1 class="article-title">Something went wrong</h1>
+    <p th:text="${status != null && status >= 500}
+        ? 'The guide could not finish this request. Nothing you did caused it; please try again in a moment.'
+        : 'The guide could not show this page.'">The guide could not finish this request.</p>
+    <p><a class="button-quiet button-back" th:href="@{/}">Back to the guide</a></p>
+  </main>
+</body>
+</html>

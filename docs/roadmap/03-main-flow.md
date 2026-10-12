@@ -486,6 +486,9 @@ Where the streams meet — one owner per file, and the second waits for the firs
   `.ts-control`, as on `.CodeMirror`.
 - `search/SearchResults.html`: the box's placeholder is "Search the guide", as on the landing and
   404 pages (F-16, fix 3.6 step g).
+- 10 Oct, after the human's look at the forms: `moderate/PublishForm.html` (FEAT-021) has the editor
+  across the frame and the FilePond drop zone, as the contributor's form; `site.css`'s `.chip-count`
+  is a badge in ink, bold, since the pale count went unseen.
 - `SubmissionReview.html` is untouched; its tag fields are 3.7's. `PublishForm.html` (FEAT-021)
   still has five text fields: DEBT-024.
 
@@ -505,6 +508,28 @@ way: `guide-media` was declared but not mounted, so an uploaded photo was lost w
 now mounted at `GUIDE_MEDIA_ROOT`, and `.env.example` no longer lists variables the stand ignores.
 Left open: none of the 30 articles contains a red link, so the demo can show one only in the
 editor's preview.
+
+**Demo rehearsal on the compose stand, 4–5 Oct** — after fix 3.6, on the stand's existing volumes,
+the student half driven by a headless Chromium (Playwright), the moderator half by the human:
+- The stand did not start: volumes created by the root image cannot be written since the image runs
+  as `guide` (DEBT-018). A one-off `chown` fixed it; recorded as DEBT-026.
+- "FRRO registration" returns *Registering with FRRO* first; its wiki link leads to *Applying for
+  Your Student Visa*; the edit form is headed with that title; a typed tag became a chip; the photo
+  was previewed; the edit was sent (`SUB-76A2-NNBC-W6GJ`). No console error and no policy violation
+  on any page; the form at 390 px does not scroll sideways.
+- Found: after a tag is added with Enter, Tom Select keeps its list open over "Submit for review",
+  so a mouse click on the button adds the tag under it ("accommodation") and sends nothing. No
+  `BrowserTagFieldTest` case clicks Submit after Enter. Fixed 5 Oct, with that case.
+- Seen: the stand's articles still carry the "Needs checking with OGE" sections fix 1.1 took out
+  of the seed; the reset of section 4 imports the seed again.
+- The moderator's approval (the human) answered Tomcat's bare `500`: the approval was saved, but the
+  index, kept from before the 2 Oct mapping change, refused the write, and no generic error page
+  existed. Fixed the same day: the index is built again at every start (the human's decision,
+  ADR-0004 amended), the tag list closes after each tag, and `error.html` is the site's page for any
+  error. On the rebuilt stand the index was rebuilt at start (39 articles), search finds the
+  approved text, and the article shows the photo and the tags `admin`, `rehearsal`, `visa`: **the
+  demo scenario runs end to end on the stand.** Left for section 4's reset: the walk's and this
+  rehearsal's edits.
 
 ## Open questions
 

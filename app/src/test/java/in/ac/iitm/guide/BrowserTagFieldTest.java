@@ -6,6 +6,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import in.ac.iitm.guide.shared.persistence.Article;
 import in.ac.iitm.guide.taxonomy.Tags;
 import in.ac.iitm.guide.wikilink.ArticleAddress;
@@ -184,6 +185,34 @@ class BrowserTagFieldTest {
         assertThat(jdbc.queryForList(
                         "SELECT t.name FROM submission_tag st JOIN tag t ON t.id = st.tag_id", String.class))
                 .containsExactlyInAnyOrder("visa", "hostel");
+    }
+
+    @Test
+    // trace:FR-010
+    void submit_clicked_with_the_mouse_right_after_a_tag_sends_the_form_with_that_tag_only() {
+        // The demo rehearsal, 5 Oct: the list stayed open over the button, and the click added the
+        // stored tag under the pointer instead of sending the form.
+        var page = openTheForm();
+        page.fill("input[name=title]", "Hostel rooms");
+        page.fill("input[name=summary]", "A summary.");
+        page.evaluate("() => document.querySelector('.CodeMirror').CodeMirror.setValue('Rooms are shared.')");
+        page.click(".ts-control");
+        page.keyboard().type("hostel");
+        // Enter at once after the word, as fast as a script types: a focus timer Tom Select left
+        // pending reopened the list over the button until openOnFocus was turned off (DEBT-023).
+        page.keyboard().press("Enter");
+        page.waitForSelector(".ts-dropdown", new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+
+        // Scrolled to as a person would: since 10 Oct the editor is tall enough to push it below a
+        // 900 px window, and a click outside the window reaches nothing.
+        page.locator("main button[type=submit]").scrollIntoViewIfNeeded();
+        var button = page.locator("main button[type=submit]").boundingBox();
+        page.mouse().click(button.x + button.width / 2, button.y + button.height / 2);
+        page.waitForURL("**/confirmation");
+
+        assertThat(jdbc.queryForList(
+                        "SELECT t.name FROM submission_tag st JOIN tag t ON t.id = st.tag_id", String.class))
+                .containsExactly("hostel");
     }
 
     private Page openTheForm() {

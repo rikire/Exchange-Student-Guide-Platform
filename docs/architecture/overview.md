@@ -115,8 +115,16 @@ is Noto Sans 5.2.6 from its WebJar, served under `/webjars/`.
 
 ![Slices](../diagrams/out/c4-component.svg)
 
-Dashed boxes and arrows are designed and not built yet. What the code has today is drawn by the code
-itself, from the imports between slices, and rendered beside the designed one:
+Every slice is built, so nothing is dashed any more (11 October); each arrow carries what crosses it.
+The same slices grouped by who they serve, for an overview, are `slices-overview`, and the main flow
+from a student's edit to the published article is `main-flow`:
+
+![Slices by who they serve](../diagrams/out/slices-overview.svg)
+
+![An edit, from the student to the published article](../diagrams/out/main-flow.svg)
+
+What the code has is also drawn by the code itself, from the imports between slices, and rendered
+beside the designed one; the two should show the same arrows:
 
 ![Slices as the code has them](../diagrams/out/c4-component-actual.svg)
 

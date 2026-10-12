@@ -85,9 +85,10 @@ agent's suggested answers.
   written in `search`, so `shared/persistence/Article` carries no Hibernate Search annotation.
 - **The index is a Lucene directory on disk on the stand**, in the `guide-index` volume, as ADR-0004
   and the deployment plan decided (human, 28 Sep, after an in-memory index was built and weighed
-  against it). **An empty index is filled from the `article` table at start-up**, which covers the
-  first start and a lost volume; one that has documents is left alone. Rebuilding after a database
-  restore or a change to the mapping is removing the volume and starting again.
+  against it). **The index is dropped and built again from the `article` table at every start**
+  (the human, 5 Oct, reversing "only when empty" of 28 Sep): an index an older version wrote may
+  hold another mapping, and the demo rehearsal's approval answered `500` for it (ADR-0004, amended
+  5 Oct). A restore or a change to the mapping then needs no step of its own.
 - **In development and in tests the index is in memory** (`GUIDE_INDEX_TYPE` unset). Tests: Lucene
   locks a directory to one of the several application contexts a test run starts (human, 28 Sep).
   Development: the H2 database is in memory and emptied at every start, and an index on disk would
@@ -124,7 +125,8 @@ And from the route contract and the decisions above:
 - [x] The match ignores case and word form ("Registering" finds "registration").
 - [x] A removed article (`removed_at` set) does not appear.
 - [x] A query of more than 50 words answers `400`; one of 50 is searched.
-- [x] An empty index is filled from the database at start-up; one that is not empty is left as it is.
+- [x] An empty index is filled from the database at start-up; since 5 Oct one that is not empty is
+      dropped and built again too, losing what the database no longer holds (`SearchFlowTest`).
 - [x] The seed is imported and indexed before the web server starts, so the first search after a
       fresh start finds every article (walkthrough fix 1.6, 2 Oct) —
       `StartupOrderTest.the_seed_is_imported_and_indexed_before_the_web_server_starts`
@@ -160,7 +162,7 @@ characters that `Passage` cuts on, and the template prints every piece escaped: 
 (security.md). The result follows `docs/design/screens/SearchResults.html`: a list, the "Best match"
 badge, the title and the passage marked; the summary when only the title or a tag matched. Seven of
 the new tests were red first. The index's fields changed, so an index kept on disk is rebuilt once,
-by removing the `guide-index` volume.
+by removing the `guide-index` volume. *Not done on the stand; since 5 Oct every start rebuilds it.*
 
 **NFR-002, 30 Sep** ([search-latency.md](../verification/search-latency.md)): `scripts/search-latency.sh`
 measured 100 searches on 100 generated articles of 500 words on the compose stand. The slowest took

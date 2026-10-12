@@ -80,6 +80,10 @@ default is safe only while `article` is empty, as it is everywhere today.
   containing `%2F` or a broken percent sequence is refused by Tomcat with `400` before it reaches
   the controller.
 
+- **Every other error is the site's page too** (`templates/error.html`, 5 Oct): the frame, one line
+  on what happened and the way back, nothing from the exception (security.md). Until then a `500`
+  was Tomcat's bare page, seen in the demo rehearsal (`ErrorPageTest`).
+
 ## Acceptance criteria
 
 - [x] A published article: `200`, its title, body and tags shown (FR-001)

@@ -20,6 +20,56 @@ constraint hides it.
 
 ## Register
 
+### DEBT-027 — The journal paired a translation with the wrong prompt
+
+**Status:** resolved 2026-10-09 — `Journal` keeps one English rendering per prompt, in order, and
+every outcome; a prompt after more than 30 minutes with no hook firing closes the open entry as
+interrupted and opens its own (`JournalTest`, four cases red first). The two entries it spoiled are
+corrected by notes in the journal of 9 Oct, not rewritten.
+**Created:** 2026-10-09
+**Marker:** `tools/src/main/java/in/ac/iitm/guide/tools/Journal.java` — `setEnglish`, `receivePrompt`
+
+**Cause:** an entry held one `promptEn` and one `outcomeEn`. A prompt sent while a turn was working
+became a follow-up of it, and the agent's second `hook english` replaced the first rendering. A turn
+the person stopped never reached the `Stop` hook, so its entry stayed open and the next prompt, days
+later, was filed as its follow-up.
+
+**Consequence:** found while choosing sample prompts for the course: the entry of 5 Oct showed
+"after the approval" translated as a question about mutation tests, and the file of 9 Oct opened
+with a prompt of 5 Oct. The journal is the evidence the course reads, and nothing flagged either.
+
+**How to fix:** done as above. The agent still has to render each prompt of a turn, in the order
+they came.
+
+**Trigger:** —
+
+### DEBT-026 — A stand with volumes from before 2 Oct does not start on the new image
+
+**Status:** resolved 2026-10-10 — not by the image: a root step at start would undo DEBT-018. The stand OGE
+gets is started on new volumes, which take `guide`'s ownership; for any older one,
+`docs/handoff/install.md` ("Updating") gives the one-off `chown`, and `scripts/upgrade-check.sh`
+fails on exactly this when run from an older commit (from 1 Oct: `HSEARCH600001`; from 9 Oct: passes).
+**Created:** 2026-10-05
+**Marker:** `Dockerfile` — `USER guide`
+
+**Cause:** DEBT-018's fix (2 Oct) runs the application as `guide` (uid 999). The stand's `guide-index`
+and `guide-media` volumes were created by the earlier image, which ran as root, so their files belong
+to uid 0. Docker copies an image directory's owner only into a volume that is new and empty.
+
+**Consequence:** found in the demo rehearsal of 4 Oct: `docker compose up --build` on the existing
+volumes fails at start with `HSEARCH600001: Path '/var/lib/guide/index/Article' exists but does not
+point to a writable directory`, and the media root would refuse every new upload. Any stand that holds
+data and is upgraded without a reset breaks the same way; OGE's stand would be one. A reset
+(`down -v`, section 4 of the walkthrough fixes) creates the volumes owned by `guide`, which should
+start; not verified.
+
+**How to fix:** once, on each stand that was started before 2 Oct:
+`docker compose run --rm --no-deps --user root --entrypoint chown app -R guide:guide /var/lib/guide`
+(done on the rehearsal stand on 5 Oct, which then started). Say so where the stand's upgrade is
+described, or have the image take ownership at start, which needs a root step before `USER guide`.
+
+**Trigger:** the stand reset before the mid-demo (section 4), and any upgrade of a stand with data.
+
 ### DEBT-025 — The OGE team and developers pages show blanks for facts nobody has supplied
 
 **Status:** open
@@ -63,7 +113,14 @@ field.
 
 ### DEBT-023 — A tag-field browser test failed once without a known cause
 
-**Status:** open
+**Status:** resolved 2026-10-10 — the cause was Tom Select's own: `open()` calls `focus()`, which
+runs `onFocus` a moment later, and `onFocus` opens the list with every tag (`openOnFocus`). When
+Enter came within milliseconds of the last key, Enter made the chip and closed the list, then the
+pending `onFocus` reopened it with the first tag lit; a second Enter picked that tag ("arrival"), and
+a click on Submit landed on it. Found by recording the field's state only after a failure, since
+any logging during the test changed the timing and hid it; seen again by hand in Chrome on the
+stand. `tags.js` sets `openOnFocus: false`: the list opens as a word is typed. Before, the test
+failed in 2 runs of 5; after, in 0 runs of 10, with Enter pressed at once after the word.
 **Created:** 2026-10-02
 **Marker:** `app/src/test/java/in/ac/iitm/guide/BrowserTagFieldTest.java` — `a_word_becomes_a_chip_on_enter_and_on_a_comma`
 
@@ -265,7 +322,12 @@ Put off to then by the human on 28 Sep.
 
 ### DEBT-014 — The stand's session cookie is not marked `Secure`
 
-**Status:** open
+**Status:** resolved 2026-10-10 — the stand passes `GUIDE_FORWARD_HEADERS`, `GUIDE_TRUSTED_PROXY` and
+`GUIDE_COOKIE_SECURE` to Spring Boot, all off by default; `BehindTrustedProxyTest` and
+`BehindUntrustedAddressTest` show the limits per visitor behind a trusted proxy, the https redirect,
+and `X-Forwarded-For` ignored from anyone else; `docs/handoff/install.md` tells IITM's IT to set them
+with its proxy, the proxy's body-size limit, and a long random moderator password. The decision of
+9 Oct and what the question about guessing found are below.
 **Created:** 2026-09-28
 **Marker:** `docker-compose.yml` — the `app` service's environment
 
@@ -277,8 +339,23 @@ set (review of FEAT-006, 28 Sep).
 **Consequence:** once the stand is reachable over a network, the moderator's session cookie travels
 in clear text and can be copied off the wire; whoever has it is the moderator until it expires.
 
+**Also behind the proxy (found 9 Oct, asked whether the moderator's password can be guessed):** the
+limits count per client address (`FailedLoginLimit`, `ContributionLimits`, the report limit), and the
+address is the connection's own, since `X-Forwarded-For` is not read. Behind IITM's proxy every
+visitor has the proxy's address: ten wrong passwords from anyone lock the real moderator out for 15
+minutes, and five submissions an hour are shared by every student. Reading `X-Forwarded-For` blindly
+is no better: a guesser who sends a new value each time is never limited. The counters live in
+memory and a restart empties them, acceptable for one instance. And the hash in `.env` cannot show
+how strong the password is: ten guesses per 15 minutes per address do not save a short or common
+one.
+
 **How to fix:** put the stand behind TLS (a reverse proxy in `docker-compose.yml`) and set
-`SERVER_SERVLET_SESSION_COOKIE_SECURE: "true"` on the `app` service in the same change.
+`SERVER_SERVLET_SESSION_COOKIE_SECURE: "true"` on the `app` service in the same change. Decided 9 Oct:
+the proxy is IITM's, so set `server.forward-headers-strategy` and trust `X-Forwarded-For` only from the
+proxy's address, with a test that ten failures from one client behind the proxy leave another client
+able to sign in; and have the handoff guide generate the hash of a long random password and say why a
+short one is not enough. A global cap on failed logins was weighed and not taken: anyone could spend
+it and lock the moderator out.
 
 **Trigger:** the demo stand step of phase 4 ([04-hardening.md](roadmap/04-hardening.md)), and in any
 case before the stand is reachable from outside the machine it runs on.
@@ -354,7 +431,11 @@ the stand is reachable from outside the team.
 
 ### DEBT-010 — An article's old address answers `404` after an edit changes its title
 
-**Status:** open
+**Status:** open — decided by the human on 9 Oct, from a trade-off of four options: for now, warn the
+moderator on the review page when an edit changes the address (with the number of articles linking
+to the old title) and record the limit as a constraint. The table of former addresses ("How to fix")
+is built only if OGE says article links will travel outside the site (emails, the printed handbook,
+QR codes); that question is on the agenda of the meeting with OGE.
 **Created:** 2026-09-28
 **Marker:** `app/src/main/java/in/ac/iitm/guide/moderate/internal/ModerationService.java`
 

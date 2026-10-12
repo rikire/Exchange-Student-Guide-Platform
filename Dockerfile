@@ -20,7 +20,7 @@ RUN ./mvnw -B -q -pl app -am package -DskipTests
 FROM eclipse-temurin:21-jre
 # DEBT-018: the JVM runs as an unprivileged user, the owner of the media and index directories. A
 # named volume mounted there for the first time takes this ownership; one created by an earlier,
-# root-run image needs it once (docs/architecture/deployment.md).
+# root-run image needs it once (docs/handoff/install.md, "Updating").
 RUN groupadd --system guide \
     && useradd --system --gid guide --no-create-home --shell /usr/sbin/nologin guide \
     && mkdir -p /var/lib/guide/index /var/lib/guide/media \

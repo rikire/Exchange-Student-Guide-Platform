@@ -407,4 +407,70 @@ class JournalTest {
         String content = journalContent();
         assertEquals(1, content.split("a correction sent mid-turn", -1).length - 1, content);
     }
+
+    @Test
+    void a_rendering_for_each_prompt_of_a_turn_is_paired_with_that_prompt_in_order() throws IOException {
+        // DEBT-027: a second `hook english` in one turn replaced the first, so the prompt that opened
+        // the turn showed the follow-up's translation (journal of 5 Oct).
+        Journal journal = Journal.open(repo, "session-p1");
+        journal.startEntry("после аппрува");
+        journal.addFollowUp("а может добавим мутационных тестов?");
+        journal.setEnglish("After the approval", "Read the stand's log.");
+        journal.setEnglish("How about adding mutation tests?", "Answered with a plan.");
+        journal.finishEntry("Готово.", List.of(), List.of());
+
+        String content = journalContent();
+        int prompt = content.indexOf("> после аппрува");
+        int promptEn = content.indexOf("> After the approval");
+        int followUp = content.indexOf("> а может добавим мутационных тестов?");
+        int followUpEn = content.indexOf("> How about adding mutation tests?");
+        assertTrue(prompt < promptEn && promptEn < followUp && followUp < followUpEn, content);
+    }
+
+    @Test
+    void every_outcome_rendered_in_a_turn_is_kept() throws IOException {
+        Journal journal = Journal.open(repo, "session-p2");
+        journal.startEntry("после аппрува");
+        journal.addFollowUp("а может добавим мутационных тестов?");
+        journal.setEnglish("After the approval", "Read the stand's log.");
+        journal.setEnglish("How about adding mutation tests?", "Answered with a plan.");
+        journal.finishEntry("Готово.", List.of(), List.of());
+
+        String content = journalContent();
+        assertTrue(content.contains("Read the stand's log."), content);
+        assertTrue(content.contains("Answered with a plan."), content);
+    }
+
+    @Test
+    void a_prompt_during_a_turn_that_is_still_working_is_a_follow_up() throws IOException {
+        Journal journal = Journal.open(repo, "session-p3");
+        var start = java.time.ZonedDateTime.now();
+        journal.receivePrompt("the first request", start);
+        journal.touch(start.plusMinutes(25));
+
+        journal.receivePrompt("a correction sent mid-turn", start.plusMinutes(40));
+        journal.finishEntry("Done.", List.of(), List.of());
+
+        String content = journalContent();
+        assertTrue(content.contains("**Follow-up during the turn**"), content);
+        assertEquals(1, content.split("\n## ", -1).length - 1, "one entry: " + content);
+    }
+
+    @Test
+    void a_prompt_after_an_interrupted_turn_closes_that_entry_and_opens_its_own() throws IOException {
+        // DEBT-027: a turn stopped by the person never reaches the Stop hook, so its entry stayed
+        // open, and a prompt four days later was filed as its follow-up (journal of 9 Oct).
+        Journal journal = Journal.open(repo, "session-p4");
+        var start = java.time.ZonedDateTime.now();
+        journal.receivePrompt("1A, 2 да", start);
+
+        journal.receivePrompt("сделай пул", start.plusDays(4));
+        journal.finishEntry("Pulled.", List.of(), List.of());
+
+        String content = journalContent();
+        assertEquals(2, content.split("\n## ", -1).length - 1, "two entries: " + content);
+        assertTrue(content.indexOf("> 1A, 2 да") < content.indexOf("interrupted"), content);
+        assertTrue(content.indexOf("interrupted") < content.indexOf("> сделай пул"), content);
+        assertFalse(content.contains("**Follow-up during the turn**"), content);
+    }
 }
