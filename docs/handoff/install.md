@@ -49,7 +49,7 @@ docker compose up -d --build
 docker compose logs -f app        # until "Started GuideApplication"; Ctrl+C leaves it running
 ```
 
-The first start creates the database, imports the 38 starter articles and builds the search index.
+The first start creates the database, imports the 39 starter articles and builds the search index.
 Open `http://<server>:8080/`. Moderators sign in at `http://<server>:8080/moderate/login`.
 
 Docker restarts nothing by itself after a reboot of the server unless told to: add

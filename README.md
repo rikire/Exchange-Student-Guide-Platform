@@ -14,7 +14,7 @@ Stakeholder: Mr. Thukaram M Damodhar, Lead — International Academic Programs, 
 
 ![An article, with its contents and what links to it](docs/course/mid-demo-report/3-article.jpg)
 
-- **Read and search.** 38 starter articles written from OGE's International Student Handbook 2026.
+- **Read and search.** 39 starter articles written from OGE's International Student Handbook 2026.
   Search matches every word and marks it in a passage; articles link to each other with `[[Title]]`,
   a link to an article nobody has written yet shows in red and invites a reader to write it, and each
   article lists what links to it. Tags, with how many articles carry each.
