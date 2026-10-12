@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 class AboutPagesTest {
 
     private static final Pattern IMAGE_SOURCE = Pattern.compile("<img[^>]*\\ssrc=\"([^\"]*)\"");
+    private static final Pattern DEVELOPER_CARD =
+            Pattern.compile("<article class=\"dev-card\">.*?</article>", Pattern.DOTALL);
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,6 +58,29 @@ class AboutPagesTest {
         assertThat(page("/developers")).contains("Mikhail Novikov", "Abdirakhim Ismailov", "Iurii Rudenko");
     }
 
+    @Test
+    // trace:FR-035
+    void every_developer_card_has_a_photo_and_a_link_to_each_account_the_developer_has() throws Exception {
+        var cards = developerCards();
+
+        assertThat(cards).hasSize(3);
+        assertThat(cards).allMatch(card -> card.contains("<img class=\"person-photo\""), "a photo");
+        assertThat(cards.get(0)).contains("href=\"https://t.me/Rizire\"", "href=\"https://github.com/rikire\"");
+        assertThat(cards.get(1))
+                .contains(
+                        "href=\"https://t.me/abdra04\"",
+                        "href=\"https://github.com/abdra04-gif\"",
+                        "href=\"https://www.linkedin.com/in/abdirakhim-ismailov-55a8b1425\"");
+        assertThat(cards.get(2)).contains("href=\"https://t.me/Yura_Rrrr\"", "href=\"https://github.com/Ten-Do\"");
+    }
+
+    @Test
+    // trace:FR-035
+    void no_developer_card_shows_a_blank() throws Exception {
+        // The human, 12 Oct: a fact a developer does not have is left out of the card, not shown as ___.
+        assertThat(developerCards()).noneMatch(card -> card.contains("placeholder"));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"/oge-team", "/developers"})
     // trace:FR-035
@@ -67,6 +94,15 @@ class AboutPagesTest {
         for (var source : sources) {
             mockMvc.perform(get(source)).andExpect(status().isOk());
         }
+    }
+
+    /** The developer cards in page order, each as its own markup. */
+    private List<String> developerCards() throws Exception {
+        return DEVELOPER_CARD
+                .matcher(page("/developers"))
+                .results()
+                .map(MatchResult::group)
+                .toList();
     }
 
     private String page(String path) throws Exception {

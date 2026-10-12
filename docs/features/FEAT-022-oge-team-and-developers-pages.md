@@ -36,7 +36,8 @@ built it or for whom. The human asked for both on 9 Oct and drew them as the moc
    "Visit OGE" sidebar: address, rooms, front office, a Google Maps search and the full team on
    ge.iitm.ac.in.
 3. The reader follows "Developers": `/developers` shows "Built for" OGE and "By students of"
-   Innopolis University, the three developers, why the guide was built, and thanks.
+   Innopolis University, the three developers — each with a photo and links to their Telegram,
+   GitHub and, where they have one, LinkedIn — why the guide was built, and thanks.
 
 ## Routes
 
@@ -56,6 +57,8 @@ None. The content is static in the two templates; a change is a commit, not a mo
 - [x] the developers page answers 200 to anyone
 - [x] the OGE team page puts the Dean before the Inbound contacts
 - [x] the developers page names all three developers
+- [x] every developer card has a photo and a link to each account the developer has
+- [x] no developer card shows a blank
 - [x] the header links to the OGE team and developers pages
 - [x] on a wide screen the header shows six links
 - [x] every image on the about pages is served from the site
@@ -74,4 +77,6 @@ now stands above the text and each label above its value.
 ## Open questions
 
 None. Decided by the human on 9 Oct: a new slice `about`, static templates, FR-035's wording, and
-the missing facts kept as visible blanks (DEBT-025).
+the missing facts kept as visible blanks (DEBT-025). On 12 Oct the human dropped the developers'
+role, own words and the accounts they do not have from the cards instead, and supplied the photos
+and Telegram handles; the mockup still draws the dropped rows.

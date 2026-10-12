@@ -8,7 +8,7 @@
   <!-- FR-035, as docs/design/screens/Developers.html draws it: who the guide was built for and by,
        in one lockup as university brand guides draw a partnership; "built for" and "by students of"
        rather than a collaboration, because the two institutions have none. A blank is a fact nobody
-       has supplied yet (DEBT-025). -->
+       has supplied yet (DEBT-025); a developer card lists only the accounts its developer has. -->
   <main class="site-main landing">
     <section class="hero">
       <div class="hero-inner">
@@ -38,28 +38,32 @@
         <h2 class="section-title">Who built it</h2>
         <div class="dev-grid">
           <article class="dev-card">
-            <div class="person-photo" aria-hidden="true">MN</div>
+            <img class="person-photo" th:src="@{/img/about/mikhail.jpg}" alt="">
             <h3 class="person-name">Mikhail Novikov</h3>
             <p class="dev-from">Exchange student at IIT Madras</p>
-            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
-            <p class="dev-quote"><span class="placeholder">a line in their own words: ___</span></p>
-            <p class="dev-links"><a href="https://github.com/rikire">GitHub</a> · <span class="placeholder">LinkedIn ___</span></p>
+            <p class="dev-links">
+              <a class="dev-link-primary" href="https://t.me/Rizire">Telegram @Rizire</a>
+              <a href="https://github.com/rikire">GitHub</a>
+            </p>
           </article>
           <article class="dev-card">
-            <div class="person-photo" aria-hidden="true">AI</div>
+            <img class="person-photo" th:src="@{/img/about/abdirakhim.jpg}" alt="">
             <h3 class="person-name">Abdirakhim Ismailov</h3>
             <p class="dev-from">Exchange student at IIT Madras</p>
-            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
-            <p class="dev-quote"><span class="placeholder">a line in their own words: ___</span></p>
-            <p class="dev-links"><a href="https://github.com/abdra04-gif">GitHub</a> · <span class="placeholder">LinkedIn ___</span></p>
+            <p class="dev-links">
+              <a class="dev-link-primary" href="https://t.me/abdra04">Telegram @abdra04</a>
+              <a href="https://github.com/abdra04-gif">GitHub</a>
+              <a href="https://www.linkedin.com/in/abdirakhim-ismailov-55a8b1425">LinkedIn</a>
+            </p>
           </article>
           <article class="dev-card">
-            <div class="person-photo" aria-hidden="true">IR</div>
+            <img class="person-photo" th:src="@{/img/about/iurii.jpg}" alt="">
             <h3 class="person-name">Iurii Rudenko</h3>
             <p class="dev-from">Exchange student at IIT Madras</p>
-            <p class="dev-role"><span class="placeholder">what they built: ___</span></p>
-            <p class="dev-quote"><span class="placeholder">a line in their own words: ___</span></p>
-            <p class="dev-links"><span class="placeholder">GitHub ___ · LinkedIn ___</span></p>
+            <p class="dev-links">
+              <a class="dev-link-primary" href="https://t.me/Yura_Rrrr">Telegram @Yura_Rrrr</a>
+              <a href="https://github.com/Ten-Do">GitHub</a>
+            </p>
           </article>
         </div>
 

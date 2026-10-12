@@ -27,9 +27,9 @@ constraint hides it.
 **Marker:** `app/src/main/resources/templates/about/OgeTeam.html`, `about/Developers.html` — `.placeholder`
 
 **Cause:** FR-035's pages went live with facts missing from every source we have: directions from
-the main gate and office hours (not on ge.iitm.ac.in), each developer's role, own words and
-LinkedIn, Iurii Rudenko's GitHub, and the CS5013 instructors. The human chose to show them as
-`___` rather than hide the rows, so they are not forgotten.
+the main gate and office hours (not on ge.iitm.ac.in), and the CS5013 instructors. The human chose to
+show them as `___` rather than hide the rows, so they are not forgotten. The developers' role, own
+words and missing accounts were blanks too until 12 Oct, when the human removed them from the cards.
 
 **Consequence:** a reader sees unfinished pages, and a blank under "How to get there" is the one a
 newcomer needs most.

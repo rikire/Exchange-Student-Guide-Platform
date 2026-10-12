@@ -479,11 +479,13 @@ p a, .article-body a { text-decoration: underline; }
 .dev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin: 0 0 var(--space-6); }
 .dev-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2); padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--maroon); border-radius: var(--radius-card); }
 .dev-card .person-photo { width: 104px; height: 104px; font-size: 1.8rem; margin-bottom: var(--space-2); }
-.dev-from { margin: 0; }
-.dev-role, .dev-quote { margin: var(--space-2) 0 0; }
-.dev-from { color: var(--ink-soft); }
-.dev-quote { font-style: italic; color: var(--ink-soft); line-height: 1.5; }
-.dev-links { margin: auto 0 0; padding-top: var(--space-3); border-top: 1px solid var(--line); width: 100%; }
+.dev-from { margin: 0; color: var(--ink-soft); }
+/* Each account a pill, so a handle never breaks across lines; the rule above them sits under the same
+   text in every card, and a card with more accounts grows downwards. Telegram leads, outlined. */
+.dev-links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin: var(--space-3) 0 0; padding-top: var(--space-3); border-top: 1px solid var(--line); width: 100%; }
+.dev-links a { display: inline-flex; align-items: center; padding: var(--space-1) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-pill); color: var(--maroon-dark); font-size: var(--text-small); text-decoration: none; }
+.dev-links a:hover { background: var(--sand-raised); }
+.dev-links a.dev-link-primary { border-color: var(--maroon); }
 .story-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin: 0 0 var(--space-5); }
 .story-card { padding: var(--space-5); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); }
 .story-card .section-title { margin-top: 0; }
@@ -498,6 +500,7 @@ p a, .article-body a { text-decoration: underline; }
      a 44-px target. */
   .eyebrow-label, .visit-label, .lockup-item figcaption, .lockup-name span { font-size: var(--text-body); }
   .person-facts dd a { display: inline-flex; align-items: center; min-height: var(--target); }
+  .dev-links a { min-height: var(--target); font-size: var(--text-body); }
   .person-facts { align-items: center; }
 }
 @media (max-width: 700px) {
