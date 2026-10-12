@@ -182,6 +182,17 @@ with `-P postgres`. They were green at once: they hold behaviour the slice alrea
 
 **F-22 check, 8 Oct** ([walkthrough-fixes 3.9](../verification/walkthrough-fixes.md), N4): a search that finds nothing shows the design screen's empty state, a dashed card with a search icon; the words are unchanged.
 
+**The human, 13 Oct:** the results page stood against the left edge of a wide window. Its heading,
+box and results now share one 48rem column (`.search-column`) in the middle of the window, a phone
+unchanged, and both design screens draw it so. A marked word had 2px of side padding, which pushed the
+words after it along the line, and in a title the flex link made it a flex item of its own, which lost
+the space after it and drew it in ink; the padding is gone, and the title's words sit in one span, in
+the title's maroon. `BrowserLayoutTest`'s
+`the_search_page_sits_in_the_middle_of_the_window_with_its_parts_on_one_left_edge`,
+`a_marked_word_in_a_result_title_keeps_the_space_after_it`,
+`a_marked_word_in_a_result_title_is_the_titles_colour` and
+`a_marked_word_in_a_passage_takes_no_more_room_than_the_word` were red first.
+
 ## Deliberately out of scope
 
 - ~~NFR-002 and NFR-003: their own steps~~ — both done, see below. Word forms in Hindi and Tamil: the stemmer is English.
