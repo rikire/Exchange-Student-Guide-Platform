@@ -131,6 +131,8 @@ p a, .article-body a { text-decoration: underline; }
   font-weight: 700;
 }
 
+/* The human, 13 Oct: the results in the middle of a wide window, not against its left edge. */
+.search-column { max-width: 48rem; margin: 0 auto; }
 /* FEAT-007: the results page. Its search box sits on paper, not on the maroon hero, so it needs an
    edge of its own (3:1 against the page, WCAG 1.4.11). */
 .search-form-page { margin: 0 0 var(--space-4); }
@@ -143,7 +145,11 @@ p a, .article-body a { text-decoration: underline; }
 .search-hit-title { font-size: var(--text-lead); font-weight: 700; margin: 0; overflow-wrap: anywhere; }
 .search-hit-title a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--maroon); }
 .search-hit-passage { margin: 0; color: var(--ink-soft); line-height: 1.5; overflow-wrap: anywhere; }
-.search-hit mark { background: var(--sand-raised); color: var(--ink); padding: 0 2px; }
+/* No side padding: it pushed the words after a marked one along the line (the human, 13 Oct). The
+   title's link is a flex box for its 44-px target, so its words sit in one span; there the marked
+   word keeps the title's colour. */
+.search-hit mark { background: var(--sand-raised); color: var(--ink); padding: 0; }
+.search-hit-title mark { color: inherit; }
 /* Fix 2.3 (F-24): what the last decision did, and the queue's mark for a file. */
 .flash { margin: 0 0 var(--space-4); padding: var(--space-3) var(--space-4); background: var(--sand-raised); border-radius: var(--radius-card); }
 .file-mark { margin-left: var(--space-2); color: var(--ink-soft); }

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
@@ -357,6 +358,77 @@ class BrowserLayoutTest {
                         .as("at %d px", width)
                         .isPositive();
             }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void the_search_page_sits_in_the_middle_of_the_window_with_its_parts_on_one_left_edge() {
+        // The human, 13 Oct: the results stood against the left edge of a wide window.
+        for (var width : List.of(390, 1280, 1920)) {
+            try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, 900))) {
+                var page = context.newPage();
+                page.navigate("http://localhost:" + port + "/search?q=frro");
+                var window = ((Number) page.evaluate("document.documentElement.clientWidth")).doubleValue();
+                var hits = page.locator(".search-hits").boundingBox();
+                var heading = page.locator("main h1").boundingBox();
+                var form = page.locator(".search-form-page").boundingBox();
+
+                assertThat(hits.x + hits.width / 2)
+                        .as("the results' middle at %d px", width)
+                        .isCloseTo(window / 2, Offset.offset(1.0));
+                assertThat(List.of(heading.x, form.x))
+                        .as("the heading and the search box start where the results do, %d px", width)
+                        .allSatisfy(x -> assertThat(x).isCloseTo(hits.x, Offset.offset(1.0)));
+            }
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void a_marked_word_in_a_result_title_keeps_the_space_after_it() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/search?q=registering");
+
+            var space = page.evaluate("() => { const next = document"
+                    + ".querySelector(\".search-hit-title a[href$='registering-with-frro'] mark\").nextSibling;"
+                    + " const range = document.createRange(); range.setStart(next, 0); range.setEnd(next, 1);"
+                    + " return range.getBoundingClientRect().width; }");
+
+            assertThat(((Number) space).doubleValue())
+                    .as("the space between \"Registering\" and \"with\"")
+                    .isGreaterThan(0);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void a_marked_word_in_a_result_title_is_the_titles_colour() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/search?q=registering");
+            var title = page.locator(".search-hit-title a[href$='registering-with-frro']");
+
+            var marked = title.locator("mark").evaluate("mark => getComputedStyle(mark).color");
+
+            assertThat(marked).isEqualTo(title.evaluate("a => getComputedStyle(a).color"));
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    // trace:FR-007
+    void a_marked_word_in_a_passage_takes_no_more_room_than_the_word() {
+        try (var context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 900))) {
+            var page = context.newPage();
+            page.navigate("http://localhost:" + port + "/search?q=passport");
+
+            var padding = page.locator(".search-hit-passage mark")
+                    .first()
+                    .evaluate("mark => { const style = getComputedStyle(mark);"
+                            + " return parseFloat(style.paddingLeft) + parseFloat(style.paddingRight); }");
+
+            assertThat(((Number) padding).doubleValue()).isZero();
         }
     }
 

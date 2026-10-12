@@ -6,43 +6,46 @@
 </head>
 <body>
   <main class="site-main">
-    <h1 class="article-title">Search the guide</h1>
+    <!-- One column in the middle of the window (the human, 13 Oct), its parts on one left edge. -->
+    <div class="search-column">
+      <h1 class="article-title">Search the guide</h1>
 
-    <form class="search-form search-form-page" th:action="@{/search}" method="get" role="search">
-      <input class="search-input" type="search" name="q" required th:value="${query}"
-             placeholder="Search the guide" aria-label="Search the guide">
-      <button class="search-button" type="submit">Search</button>
-    </form>
+      <form class="search-form search-form-page" th:action="@{/search}" method="get" role="search">
+        <input class="search-input" type="search" name="q" required th:value="${query}"
+               placeholder="Search the guide" aria-label="Search the guide">
+        <button class="search-button" type="submit">Search</button>
+      </form>
 
-    <p class="empty-note" th:if="${results == null && tooLong == null}">Type a word to search for, such as FRRO or hostel.</p>
-    <p class="empty-note" th:if="${tooLong != null}">That is too many words to search for. Use up to 50, such as FRRO or hostel.</p>
+      <p class="empty-note" th:if="${results == null && tooLong == null}">Type a word to search for, such as FRRO or hostel.</p>
+      <p class="empty-note" th:if="${tooLong != null}">That is too many words to search for. Use up to 50, such as FRRO or hostel.</p>
 
-    <th:block th:if="${results != null}">
-      <p class="results-meta" th:text="${results.total} + (${results.total} == 1 ? ' result' : ' results') + ' for &quot;' + ${results.query} + '&quot;'">4 results for "frro registration"</p>
+      <th:block th:if="${results != null}">
+        <p class="results-meta" th:text="${results.total} + (${results.total} == 1 ? ' result' : ' results') + ' for &quot;' + ${results.query} + '&quot;'">4 results for "frro registration"</p>
 
-      <!-- The empty state of docs/design/screens/SearchResultsEmpty.html (walkthrough-fixes 3.9, N4). -->
-      <div class="empty-state" th:if="${#lists.isEmpty(results.hits)}">
-        <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <h2 class="section-title">No articles matched</h2>
-        <p th:if="${words > 1}">No article holds all of these words. Try fewer words, or <a th:href="@{/tags}">browse the tags</a>.</p>
-        <p th:unless="${words > 1}">Try a different word, or <a th:href="@{/tags}">browse the tags</a>.</p>
-      </div>
+        <!-- The empty state of docs/design/screens/SearchResultsEmpty.html (walkthrough-fixes 3.9, N4). -->
+        <div class="empty-state" th:if="${#lists.isEmpty(results.hits)}">
+          <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <h2 class="section-title">No articles matched</h2>
+          <p th:if="${words > 1}">No article holds all of these words. Try fewer words, or <a th:href="@{/tags}">browse the tags</a>.</p>
+          <p th:unless="${words > 1}">Try a different word, or <a th:href="@{/tags}">browse the tags</a>.</p>
+        </div>
 
-      <!-- The search result of docs/design/screens/SearchResults.html (FR-007): the title and a passage
-           of the text with the query's words marked, each piece printed escaped; the summary when only
-           the title or the tags matched. The one card shared by every list is fix 3.3. -->
-      <ol class="search-hits" th:unless="${#lists.isEmpty(results.hits)}">
-        <li class="search-hit" th:each="hit, row : ${results.hits}">
-          <span class="rank-badge" th:if="${row.first && results.total > 1}">Best match</span>
-          <h2 class="search-hit-title"><a th:href="@{${hit.path}}"><th:block th:each="piece : ${hit.title.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">Registering with </th:block></th:block></a></h2>
-          <p class="search-hit-passage" th:unless="${hit.passage.isEmpty()}">…<th:block th:each="piece : ${hit.passage.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">visit the</th:block></th:block>…</p>
-          <p class="search-hit-passage" th:if="${hit.passage.isEmpty()}" th:text="${hit.summary}">Summary</p>
-          <ul class="chip-row" th:if="${!hit.tags.isEmpty()}">
-            <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${hit.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
-          </ul>
-        </li>
-      </ol>
-    </th:block>
+        <!-- The search result of docs/design/screens/SearchResults.html (FR-007): the title and a passage
+             of the text with the query's words marked, each piece printed escaped; the summary when only
+             the title or the tags matched. The one card shared by every list is fix 3.3. -->
+        <ol class="search-hits" th:unless="${#lists.isEmpty(results.hits)}">
+          <li class="search-hit" th:each="hit, row : ${results.hits}">
+            <span class="rank-badge" th:if="${row.first && results.total > 1}">Best match</span>
+            <h2 class="search-hit-title"><a th:href="@{${hit.path}}"><span><th:block th:each="piece : ${hit.title.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">Registering with </th:block></th:block></span></a></h2>
+            <p class="search-hit-passage" th:unless="${hit.passage.isEmpty()}">…<th:block th:each="piece : ${hit.passage.pieces}"><mark th:if="${piece.marked}" th:text="${piece.text}">FRRO</mark><th:block th:unless="${piece.marked}" th:text="${piece.text}">visit the</th:block></th:block>…</p>
+            <p class="search-hit-passage" th:if="${hit.passage.isEmpty()}" th:text="${hit.summary}">Summary</p>
+            <ul class="chip-row" th:if="${!hit.tags.isEmpty()}">
+              <li class="chip" th:classappend="${tag.path} ? 'chip-link'" th:each="tag : ${hit.tags}"><a th:if="${tag.path}" th:href="@{${tag.path}}" th:text="${tag.name}">tag</a><th:block th:unless="${tag.path}" th:text="${tag.name}">tag</th:block></li>
+            </ul>
+          </li>
+        </ol>
+      </th:block>
+    </div>
   </main>
 </body>
 </html>
