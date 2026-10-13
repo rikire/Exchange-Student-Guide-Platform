@@ -30,7 +30,7 @@ Container_Boundary(web, "Web application — one Spring Boot process, slice boun
     Component(wikilink, "wikilink", "plain Java", "~[~[Title]] → link; title → address")
     Component(backlink, "backlink", "slice", "article_link, updated on ArticleTextChanged")
     Component(shared, "shared", "entities · security", "JPA entities, login, CSP, rate limits")
-    Component(backup, "backup", "slice", "Export, import, the 38-article seed")
+    Component(backup, "backup", "slice", "Export, import, the 39-article seed")
     Component(about, "about", "slice", "OGE team and developers pages")
   }
 }
